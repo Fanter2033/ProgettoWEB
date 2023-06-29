@@ -14,6 +14,5 @@ Le entità sono strutture dati su cui sono definite le operazioni CRUD
 - Utenti
 - Reazioni
 - Squear (post)
-- Post
 - Canali
 NOTA: Successivamente per tutte le entità di cui sopra debbono essere tassativamente definite le API (uri) e anche una tabella che descriva i campi e i loro tipi
