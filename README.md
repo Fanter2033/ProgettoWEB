@@ -17,3 +17,9 @@ Le entità sono strutture dati su cui sono definite le operazioni CRUD
 - Canali
 
 NOTA: Successivamente per tutte le entità di cui sopra debbono essere tassativamente definite le API (uri) e anche una tabella che descriva i campi e i loro tipi
+
+# Lista delle cose da fare
+1. Speicifca swagger
+2. Costruiamo il DB(?)
+3. Autenticazione
+4. .... Idee?
