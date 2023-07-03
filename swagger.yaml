@@ -1,0 +1,58 @@
+swagger: "2.0"
+info:
+  description: "API per Squearel, il social che ha tirato i piedi a Twitter!"
+  version: "1.0.0"
+  title: "Squearel API"
+host: "site222317.tw.cs.unibo.it"
+basePath: "/"
+schemes:
+- "http"
+- "https"
+paths:
+  /user/{username}:
+    put:
+      tags:
+        - user
+      summary: Update the user
+      description: This method can be user only from the logged user or the Squearel admin.
+      parameters:
+        - name: username
+          in: path
+          description: Updating username
+          required: true
+          type: string
+        - name: body
+          in: body
+          description: new User object
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '200':
+          description: 'Updated user'
+          schema:
+            type: string
+        '201':
+          description: 'Created user'
+definitions:
+  User:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: Id generato dal sistema per l'utente, è univoco.
+      username:
+        type: string
+        description: Anche l'username deve essere univoco
+      first_name:
+        type: string
+      last_name:
+        type: string
+      email:
+        type: string
+        description: Email dell'utente, ogni utente ha la propria
+      password:
+        type: string
+      registration_date:
+        type: string
+        format: date-time
