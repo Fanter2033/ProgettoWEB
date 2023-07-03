@@ -23,3 +23,10 @@ NOTA: Successivamente per tutte le entità di cui sopra debbono essere tassativa
 2. Costruiamo il DB(?)
 3. Autenticazione
 4. .... Idee?
+
+
+## Istruzioni: Avviare il sito
+Il sito web si trova nella directory `/home/web/site222317/` in questa directory ci sono varie directory e file di cui a noi non importa (al momento). Il vero sito si trova sotto la directory `html`.
+Per avviare il sito occorre essere collegati ad una macchina di laboratorio, dopodichè occorre collegarsi alla macchina che ospita i Docker che si trova all'indirizzo `gocker.cs.unibo.it`.
+Per collegarcisi si esegua `ssh <nome.cognome>@gocker.cs.unibo.it` e si inserisca la propria password. Tale operazione deve essere fatta da una macchina di laboratorio (altrimenti la connessione ssh non trasmette dati e i vostri terminali rimangono "appesi").
+Una volta collegati alla macchina gocker si esegua `start node-20 site222317 index.js` per avviare il tutto, dopo potete anche uscire dal gocker.
