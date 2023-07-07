@@ -1,8 +1,8 @@
 swagger: "2.0"
 info:
-  description: "API per Squearel, il social che ha tirato i piedi a Twitter!"
+  description: "API per Squealer, il social che ha tirato i piedi a Twitter!"
   version: "1.0.0"
-  title: "Squearel API"
+  title: "Squealer API"
 host: "site222317.tw.cs.unibo.it"
 basePath: "/"
 schemes:
@@ -14,11 +14,11 @@ paths:
       tags:
         - user
       summary: Update the user
-      description: This method can be user only from the logged user or the Squearel admin.
+      description: This method can be user only from the logged user or the Squealer admin.
       parameters:
         - name: username
           in: path
-          description: Updating username
+          description: Update server status
           required: true
           type: string
         - name: body
@@ -30,10 +30,173 @@ paths:
       responses:
         '200':
           description: 'Updated user'
+        '400':
+          description: 'Invalid username'
+        '422':
+          description: 'The user passed in request is not existent or it has not required fields (or invalid type of fields)'
           schema:
             type: string
+            description: 'More information about the error'
+    delete:
+      tags:
+        - user
+      summary: Delete the specified user
+      description: Delete the specified user only if the request is made by the deleting user of if is done from a Squealer admin
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Deleted user'
+        '400':
+          description: 'Invalid username'
+        '403':
+          description: 'The requester is not the deleting user or a Squealer admin (or the requester is not logged)'
+        '404':
+          description: 'Deleting user not found.'
+    get:
+      tags:
+        - user
+      summary: Get the information about the user
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Successful operation'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        '400':
+          description: 'User not specified or other error'
+        '404':
+          description: 'User not found'
+  /user:
+    post:
+      tags:
+        - user
+      summary: Create the user
+      description: Create the user in the request body
+      parameters:
+        - name: user
+          in: body
+          description: new User object
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
         '201':
           description: 'Created user'
+        '400':
+          description: 'Invalid username'
+        '422':
+          description: 'The user passed in request has not required fields (or invalid type of fields)'
+          schema:
+            type: string
+            description: 'More information about the error'
+  /channel:
+    post:
+      tags:
+        - channel
+      summary: Create the channel
+      description: Create the channel in the request body
+      parameters:
+        - name: channel
+          in: body
+          description: new Channel object
+          required: true
+          schema:
+            $ref: '#/definitions/Channel'
+      responses:
+        '201':
+          description: 'Created channel'
+        '400':
+          description: 'Invalid channel name or object'
+          schema:
+            type: string
+            description: 'More info about the error'
+        '403':
+          description: 'Unable to create channel due low privileges'
+          schema:
+            type: string
+            description: 'More information about the error'
+  /channel/{channel_name}:
+    put:
+      tags:
+        - channel
+      summary: Update the channel
+      description: Update the channel with his name in path with the passed Channel object in the body.
+      parameters:
+        - name: channel_name
+          in: path
+          required: true
+          type: string
+        - name: channel
+          in: body
+          description: new Channel object
+          required: true
+          schema:
+            $ref: '#/definitions/Channel'
+      responses:
+        '200':
+          description: 'Updated channel'
+        '400':
+          description: 'Invalid channel name or object'
+          schema:
+            type: string
+            description: 'More info about the error'
+        '403':
+          description: 'Unable to update channel due low privileges'
+          schema:
+            type: string
+            description: 'More information about the error'
+        '404':
+          description: 'The specified channel in URL path is not found'
+    delete:
+      tags:
+        - channel
+      summary: Delete the channel
+      parameters:
+        - name: channel_name
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Deleted channel'
+        '403':
+          description: 'Unable to delete channel due low privileges'
+          schema:
+            type: string
+            description: 'More information about the error'
+        '404':
+          description: 'The specified channel in URL path is not found'
+    get:
+      tags:
+        - channel
+      summary: Get channel information
+      parameters:
+        - name: channel_name
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Channel info'
+          schema:
+            $ref: '#/definitions/Channel'
+        '403':
+          description: 'Unable to read channel due low privileges'
+          schema:
+            type: string
+            description: 'More information about the error'
+        '404':
+          description: 'The specified channel in URL path is not found'
 definitions:
   User:
     type: object
@@ -56,3 +219,20 @@ definitions:
       registration_date:
         type: string
         format: date-time
+  Channel:
+    type: object
+    properties:
+      c_type:
+        type: string
+        enum:
+          - CHANNEL
+          - CHANNEL_TAG #quelli con l'hashtag
+        description: type of channel
+      name:
+        type: string
+        description: Channel name
+      privacy:
+        type: string
+        enum:
+          - PUBLIC
+          - PRIVATE

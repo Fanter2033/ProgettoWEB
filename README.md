@@ -12,9 +12,9 @@ Progetto tecnologie web 2022/2023
 # Entità
 Le entità sono strutture dati su cui sono definite le operazioni CRUD
 - Utenti
+- Canali
 - Reazioni
 - Squear (post)
-- Canali
 
 NOTA: Successivamente per tutte le entità di cui sopra debbono essere tassativamente definite le API (uri) e anche una tabella che descriva i campi e i loro tipi
 
