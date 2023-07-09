@@ -222,7 +222,6 @@ paths:
           description: 'User not logged'
         '404':
           description: 'Identifier not found'
-  /squeal:
     post:
       tags:
         - squeal
