@@ -4,7 +4,7 @@ info:
   version: "1.0.0"
   title: "Squealer API"
 host: "site222317.tw.cs.unibo.it"
-basePath: "/"
+basePath: "/app/"
 schemes:
 - "http"
 - "https"
@@ -197,6 +197,113 @@ paths:
             description: 'More information about the error'
         '404':
           description: 'The specified channel in URL path is not found'
+  /squeal/:
+    get:
+      tags:
+        - squeal
+      summary: Get the squeal to see of the user
+      parameters:
+        - name: last
+          description: Last squeal identifier received from client. This parameter is used to get the user logged content to see after the specified identifier. If not present return the first posts to see.
+          required: false
+          in: query
+          type: string
+      responses:
+        '200':
+          description: 'Successful operation'
+          schema:
+            type: array
+            maxLength: 10
+            items:
+              $ref: '#/definitions/Squeal'
+        '400':
+          description: 'Generic error'
+        '403':
+          description: 'User not logged'
+        '404':
+          description: 'Identifier not found'
+  /squeal:
+    post:
+      tags:
+        - squeal
+      summary: Create a new squeal
+      parameters:
+        - name: new_squeal
+          description: Squeal object to add
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/Squeal'
+      responses:
+        '200':
+          description: 'Successful operation'
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Squeal'
+            description: 'Added Squeal'
+        '400':
+          description: 'Bad request, missing body or missing request field'
+        '401':
+          description: 'Quota exceed'
+        '403':
+          description: 'User not logged'
+  /squeal/{identifier_id}:
+    put:
+      tags:
+        - squeal
+      summary: Update the squeal
+      description: Update the squeal with his identifier in path with the passed Squeal object in the body. The quota used by the final post is the maximum between the old quota and the newer
+      parameters:
+        - name: identifier_id
+          in: path
+          required: true
+          type: integer
+        - name: new_squeal
+          in: body
+          description: new Squeal object
+          required: true
+          schema:
+            $ref: '#/definitions/Squeal'
+      responses:
+        '200':
+          description: 'Updated'
+        '400':
+          description: 'Bad request'
+          schema:
+            type: string
+            description: 'More info about the error'
+        '401':
+          description: 'Unable to update squeal due low quota'
+          schema:
+            type: string
+            description: 'More information about the error'
+        '403':
+          description: 'Unable to update squeal due low privileges'
+          schema:
+            type: string
+            description: 'More information about the error'
+        '404':
+          description: 'The specified squeal in URL path is not found'
+    delete:
+      tags:
+        - squeal
+      summary: Delete the squeal
+      parameters:
+        - name: identifier_id
+          in: path
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: 'Deleted squeal'
+        '403':
+          description: 'Unable to delete channel due low privileges'
+          schema:
+            type: string
+            description: 'More information about the error'
+        '404':
+          description: 'The specified squeal in URL path is not found'
 definitions:
   User:
     type: object
@@ -206,6 +313,7 @@ definitions:
         description: Id generato dal sistema per l'utente, è univoco.
       username:
         type: string
+        maxLength: 32
         description: Anche l'username deve essere univoco
       first_name:
         type: string
@@ -230,9 +338,63 @@ definitions:
         description: type of channel
       name:
         type: string
+        maxLength: 128
         description: Channel name
       privacy:
         type: string
         enum:
           - PUBLIC
           - PRIVATE
+  Destination:
+    type: object
+    properties:
+      dest_type:
+        type: string
+        enum:
+          - CHANNEL
+          - CHANNEL_TAG
+          - USER
+        description: dest type
+      identifier:
+        type: string
+        description: destination name
+  Reaction:
+    type: object
+    properties:
+      importance:
+        type: string
+        enum:
+          - LIKE_A_LOT
+          - LIKE
+          - MEH
+          - DO_NOT_LIKE
+          - DISGUSTED
+        description: enum of possible reactions
+      squeal_identifier:
+        type: string
+        description: squeal id
+  Squeal:
+    type: object
+    description: Squealer post
+    properties:
+      identifier:
+        type: integer
+      destinations:
+        type: array
+        items:
+          $ref: '#/definitions/Destination'
+        minItems: 1
+      message_type:
+        type: string
+        enum:
+          - MESSAGE
+          - IMAGE_URL
+          - VIDEO_URL
+          - POSITION
+      message_value:
+        type: string
+        description: Message value, how this field is used depends on message_type value.
+      reactions:
+        type: array
+        items:
+          $ref: '#/definitions/Reaction'
