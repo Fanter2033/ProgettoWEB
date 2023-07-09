@@ -1,0 +1,538 @@
+openapi: 3.0.1
+info:
+  description: API per Squealer, il social che ha tirato i piedi a Twitter!
+  title: Squealer API
+  version: 1.0.0
+servers:
+- url: http://site222317.tw.cs.unibo.it/app/
+- url: https://site222317.tw.cs.unibo.it/app/
+paths:
+  /user/{username}:
+    delete:
+      description: Delete the specified user only if the request is made by the deleting
+        user of if is done from a Squealer admin
+      operationId: userUsernameDELETE
+      parameters:
+      - in: path
+        name: username
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content: {}
+          description: Deleted user
+        "400":
+          content: {}
+          description: Invalid username
+        "403":
+          content: {}
+          description: The requester is not the deleting user or a Squealer admin
+            (or the requester is not logged)
+        "404":
+          content: {}
+          description: Deleting user not found.
+      summary: Delete the specified user
+      tags:
+      - user
+      x-eov-operation-handler: controllers/UserController
+    get:
+      operationId: userUsernameGET
+      parameters:
+      - in: path
+        name: username
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                items:
+                  $ref: '#/components/schemas/User'
+                type: array
+          description: Successful operation
+        "400":
+          content: {}
+          description: User not specified or other error
+        "404":
+          content: {}
+          description: User not found
+      summary: Get the information about the user
+      tags:
+      - user
+      x-eov-operation-handler: controllers/UserController
+    put:
+      description: This method can be user only from the logged user or the Squealer
+        admin.
+      operationId: userUsernamePUT
+      parameters:
+      - description: Update server status
+        in: path
+        name: username
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/User'
+        description: new User object
+        required: true
+      responses:
+        "200":
+          content: {}
+          description: Updated user
+        "400":
+          content: {}
+          description: Invalid username
+        "422":
+          content:
+            '*/*':
+              schema:
+                description: More information about the error
+                type: string
+          description: The user passed in request is not existent or it has not required
+            fields (or invalid type of fields)
+      summary: Update the user
+      tags:
+      - user
+      x-codegen-request-body-name: body
+      x-eov-operation-handler: controllers/UserController
+  /user:
+    post:
+      description: Create the user in the request body
+      operationId: userPOST
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/User'
+        description: new User object
+        required: true
+      responses:
+        "201":
+          content: {}
+          description: Created user
+        "400":
+          content: {}
+          description: Invalid username
+        "422":
+          content:
+            '*/*':
+              schema:
+                description: More information about the error
+                type: string
+          description: The user passed in request has not required fields (or invalid
+            type of fields)
+      summary: Create the user
+      tags:
+      - user
+      x-codegen-request-body-name: user
+      x-eov-operation-handler: controllers/UserController
+  /channel:
+    post:
+      description: Create the channel in the request body
+      operationId: channelPOST
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/Channel'
+        description: new Channel object
+        required: true
+      responses:
+        "201":
+          content: {}
+          description: Created channel
+        "400":
+          content:
+            '*/*':
+              schema:
+                description: More info about the error
+                type: string
+          description: Invalid channel name or object
+        "403":
+          content:
+            '*/*':
+              schema:
+                description: More information about the error
+                type: string
+          description: Unable to create channel due low privileges
+      summary: Create the channel
+      tags:
+      - channel
+      x-codegen-request-body-name: channel
+      x-eov-operation-handler: controllers/ChannelController
+  /channel/{channel_name}:
+    delete:
+      operationId: channelChannelNameDELETE
+      parameters:
+      - in: path
+        name: channel_name
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content: {}
+          description: Deleted channel
+        "403":
+          content:
+            '*/*':
+              schema:
+                description: More information about the error
+                type: string
+          description: Unable to delete channel due low privileges
+        "404":
+          content: {}
+          description: The specified channel in URL path is not found
+      summary: Delete the channel
+      tags:
+      - channel
+      x-eov-operation-handler: controllers/ChannelController
+    get:
+      operationId: channelChannelNameGET
+      parameters:
+      - in: path
+        name: channel_name
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Channel'
+          description: Channel info
+        "403":
+          content:
+            '*/*':
+              schema:
+                description: More information about the error
+                type: string
+          description: Unable to read channel due low privileges
+        "404":
+          content: {}
+          description: The specified channel in URL path is not found
+      summary: Get channel information
+      tags:
+      - channel
+      x-eov-operation-handler: controllers/ChannelController
+    put:
+      description: Update the channel with his name in path with the passed Channel
+        object in the body.
+      operationId: channelChannelNamePUT
+      parameters:
+      - in: path
+        name: channel_name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/Channel'
+        description: new Channel object
+        required: true
+      responses:
+        "200":
+          content: {}
+          description: Updated channel
+        "400":
+          content:
+            '*/*':
+              schema:
+                description: More info about the error
+                type: string
+          description: Invalid channel name or object
+        "403":
+          content:
+            '*/*':
+              schema:
+                description: More information about the error
+                type: string
+          description: Unable to update channel due low privileges
+        "404":
+          content: {}
+          description: The specified channel in URL path is not found
+      summary: Update the channel
+      tags:
+      - channel
+      x-codegen-request-body-name: channel
+      x-eov-operation-handler: controllers/ChannelController
+  /squeal/:
+    get:
+      operationId: squealGET
+      parameters:
+      - description: Last squeal identifier received from client. This parameter is
+          used to get the user logged content to see after the specified identifier.
+          If not present return the first posts to see.
+        in: query
+        name: last
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                items:
+                  $ref: '#/components/schemas/Squeal'
+                type: array
+          description: Successful operation
+        "400":
+          content: {}
+          description: Generic error
+        "403":
+          content: {}
+          description: User not logged
+        "404":
+          content: {}
+          description: Identifier not found
+      summary: Get the squeal to see of the user
+      tags:
+      - squeal
+      x-eov-operation-handler: controllers/SquealController
+    post:
+      operationId: squealPOST
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/Squeal'
+        description: Squeal object to add
+        required: true
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                description: Added Squeal
+                type: object
+          description: Successful operation
+        "400":
+          content: {}
+          description: Bad request, missing body or missing request field
+        "401":
+          content: {}
+          description: Quota exceed
+        "403":
+          content: {}
+          description: User not logged
+      summary: Create a new squeal
+      tags:
+      - squeal
+      x-codegen-request-body-name: new_squeal
+      x-eov-operation-handler: controllers/SquealController
+  /squeal/{identifier_id}:
+    delete:
+      operationId: squealIdentifierIdDELETE
+      parameters:
+      - in: path
+        name: identifier_id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content: {}
+          description: Deleted squeal
+        "403":
+          content:
+            '*/*':
+              schema:
+                description: More information about the error
+                type: string
+          description: Unable to delete channel due low privileges
+        "404":
+          content: {}
+          description: The specified squeal in URL path is not found
+      summary: Delete the squeal
+      tags:
+      - squeal
+      x-eov-operation-handler: controllers/SquealController
+    put:
+      description: Update the squeal with his identifier in path with the passed Squeal
+        object in the body. The quota used by the final post is the maximum between
+        the old quota and the newer
+      operationId: squealIdentifierIdPUT
+      parameters:
+      - in: path
+        name: identifier_id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/Squeal'
+        description: new Squeal object
+        required: true
+      responses:
+        "200":
+          content: {}
+          description: Updated
+        "400":
+          content:
+            '*/*':
+              schema:
+                description: More info about the error
+                type: string
+          description: Bad request
+        "401":
+          content:
+            '*/*':
+              schema:
+                description: More information about the error
+                type: string
+          description: Unable to update squeal due low quota
+        "403":
+          content:
+            '*/*':
+              schema:
+                description: More information about the error
+                type: string
+          description: Unable to update squeal due low privileges
+        "404":
+          content: {}
+          description: The specified squeal in URL path is not found
+      summary: Update the squeal
+      tags:
+      - squeal
+      x-codegen-request-body-name: new_squeal
+      x-eov-operation-handler: controllers/SquealController
+components:
+  schemas:
+    User:
+      example:
+        password: password
+        registration_date: 2000-01-23T04:56:07.000+00:00
+        last_name: last_name
+        id: 0
+        first_name: first_name
+        email: email
+        username: username
+      properties:
+        id:
+          description: Id generato dal sistema per l'utente, è univoco.
+          type: integer
+        username:
+          description: Anche l'username deve essere univoco
+          maxLength: 32
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          description: Email dell'utente, ogni utente ha la propria
+          type: string
+        password:
+          type: string
+        registration_date:
+          format: date-time
+          type: string
+      type: object
+    Channel:
+      example:
+        c_type: CHANNEL
+        name: name
+        privacy: PUBLIC
+      properties:
+        c_type:
+          description: type of channel
+          enum:
+          - CHANNEL
+          - CHANNEL_TAG
+          type: string
+        name:
+          description: Channel name
+          maxLength: 128
+          type: string
+        privacy:
+          enum:
+          - PUBLIC
+          - PRIVATE
+          type: string
+      type: object
+    Destination:
+      example:
+        identifier: identifier
+        dest_type: CHANNEL
+      properties:
+        dest_type:
+          description: dest type
+          enum:
+          - CHANNEL
+          - CHANNEL_TAG
+          - USER
+          type: string
+        identifier:
+          description: destination name
+          type: string
+      type: object
+    Reaction:
+      example:
+        importance: LIKE_A_LOT
+        squeal_identifier: squeal_identifier
+      properties:
+        importance:
+          description: enum of possible reactions
+          enum:
+          - LIKE_A_LOT
+          - LIKE
+          - MEH
+          - DO_NOT_LIKE
+          - DISGUSTED
+          type: string
+        squeal_identifier:
+          description: squeal id
+          type: string
+      type: object
+    Squeal:
+      description: Squealer post
+      example:
+        identifier: 0
+        message_value: message_value
+        destinations:
+        - identifier: identifier
+          dest_type: CHANNEL
+        - identifier: identifier
+          dest_type: CHANNEL
+        message_type: MESSAGE
+        reactions:
+        - importance: LIKE_A_LOT
+          squeal_identifier: squeal_identifier
+        - importance: LIKE_A_LOT
+          squeal_identifier: squeal_identifier
+      properties:
+        identifier:
+          type: integer
+        destinations:
+          items:
+            $ref: '#/components/schemas/Destination'
+          minItems: 1
+          type: array
+        message_type:
+          enum:
+          - MESSAGE
+          - IMAGE_URL
+          - VIDEO_URL
+          - POSITION
+          type: string
+        message_value:
+          description: Message value, how this field is used depends on message_type
+            value.
+          type: string
+        reactions:
+          items:
+            $ref: '#/components/schemas/Reaction'
+          type: array
+      type: object
+x-original-swagger-version: "2.0"

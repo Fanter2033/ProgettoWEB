@@ -26,8 +26,16 @@ NOTA: Successivamente per tutte le entità di cui sopra debbono essere tassativa
 4. .... Idee?
 
 
-## Istruzioni: Avviare il sito
+## Istruzioni: Avviare il sito sulle macchine di laboratorio
 Il sito web si trova nella directory `/home/web/site222317/` in questa directory ci sono varie directory e file di cui a noi non importa (al momento). Il vero sito si trova sotto la directory `html`.
 Per avviare il sito occorre essere collegati ad una macchina di laboratorio, dopodichè occorre collegarsi alla macchina che ospita i Docker che si trova all'indirizzo `gocker.cs.unibo.it`.
 Per collegarcisi si esegua `ssh <nome.cognome>@gocker.cs.unibo.it` e si inserisca la propria password. Tale operazione deve essere fatta da una macchina di laboratorio (altrimenti la connessione ssh non trasmette dati e i vostri terminali rimangono "appesi").
 Una volta collegati alla macchina gocker si esegua `start node-20 site222317 index.js` per avviare il tutto, dopo potete anche uscire dal gocker.
+
+### Istruzioni: Avviare il sito autogenerato in gen/ in locale
+Note: I passaggi di cui sotto necessitano di node installato (Fare riferimento alla propria distribuzione)
+*L'INSTALLAZIONE DI NODE NON E' ELEMENTARE SE AVETE BISOGNO CHIEDETE.*
+1. Spostarsi in `gen` facendo `cd gen/`
+2. Lanciare `npm install` SOLO PER L'INSTALLAZIONE
+3. Successivamente sempre in `gen` fare `npm install`
+
