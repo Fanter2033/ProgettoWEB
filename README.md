@@ -47,5 +47,9 @@ Note (2): Anche qui avete bisogno di node
 2. Lanciare `npm install` SOLO PER L'INSTALLAZIONE
 3. Successivamente sempre in `gen` fare `npm start`
 
+### MONGODB CREDENZIALI
+Mongodb username: site222317 - Mongodb password: tagira5A
+You can connect your mongodb from your site web using hostname mongo_site222317
+
 ## Dubbi
 1. Ha senso mantenere il Back-end in `app`?
