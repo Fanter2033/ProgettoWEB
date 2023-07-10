@@ -46,3 +46,6 @@ Note (2): Anche qui avete bisogno di node
 1. Spostarsi in `app` facendo `cd app/`
 2. Lanciare `npm install` SOLO PER L'INSTALLAZIONE
 3. Successivamente sempre in `gen` fare `npm run`
+
+## Dubbi
+1. Ha senso mantenere il Back-end in `app`?
