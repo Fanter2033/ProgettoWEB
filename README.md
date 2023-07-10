@@ -37,7 +37,7 @@ Note: I passaggi di cui sotto necessitano di node installato (Fare riferimento a
 *L'INSTALLAZIONE DI NODE NON E' ELEMENTARE SE AVETE BISOGNO CHIEDETE.*
 1. Spostarsi in `gen` facendo `cd gen/`
 2. Lanciare `npm install` SOLO PER L'INSTALLAZIONE
-3. Successivamente sempre in `gen` fare `npm run`
+3. Successivamente sempre in `gen` fare `npm start`
 
 ### Istruzioni: Avviare il sito nostro
 Note: al momento il sito è sotto `app` perchè non ho capito se deve trovarsi sotto un'altra directory il backend o no, eventualmente si sposta.
@@ -45,7 +45,7 @@ Note (2): Anche qui avete bisogno di node
 *L'INSTALLAZIONE DI NODE NON E' ELEMENTARE SE AVETE BISOGNO CHIEDETE.*
 1. Spostarsi in `app` facendo `cd app/`
 2. Lanciare `npm install` SOLO PER L'INSTALLAZIONE
-3. Successivamente sempre in `gen` fare `npm run`
+3. Successivamente sempre in `gen` fare `npm start`
 
 ## Dubbi
 1. Ha senso mantenere il Back-end in `app`?
