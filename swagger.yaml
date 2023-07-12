@@ -1,9 +1,10 @@
 swagger: "2.0"
 info:
-  description: "API per Squealer, il social che ha tirato i piedi a Twitter!"
+  description: "API per Squealer, il social che ha ucciso Twitter!"
   version: "1.0.0"
   title: "Squealer API"
-host: "site222317.tw.cs.unibo.it"
+#host: "site222317.tw.cs.unibo.it"
+host : "localhost:8000"
 basePath: "/app/"
 schemes:
 - "http"

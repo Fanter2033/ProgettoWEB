@@ -27,6 +27,14 @@ app.delete('/test/', (req, res) => {
     res.send('<h1>Vamos a Campobasso</h1>');
 });
 
+app.get("/user/:username", function(req, res){ 
+
+    let username = req.params['username'];
+   
+    console.log("Username :",username);
+    
+   })
+
 app.listen(port, () => {
     console.log(`Server started on port ${port}`);
 })
