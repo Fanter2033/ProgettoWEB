@@ -27,12 +27,14 @@ app.delete('/test/', (req, res) => {
     res.send('<h1>Vamos a Campobasso</h1>');
 });
 
-app.get("/user/:username", function(req, res){ 
+app.get("/app/user/:username", function(req, res){ 
 
     let username = req.params['username'];
    
     console.log("Username :",username);
-    
+
+    res.send('<h1>'+username+'</h1>');
+
    })
 
 app.listen(port, () => {
