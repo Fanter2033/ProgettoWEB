@@ -1,0 +1,12 @@
+# Go away
+
+# Excluding node modules to prevent useless load on git repository
+*/node_modules
+node_modules
+
+# Exclude package that locks installation on other devices
+*/package-lock.json
+package-lock.json
+
+# Excluding ide(s) files
+.idea/

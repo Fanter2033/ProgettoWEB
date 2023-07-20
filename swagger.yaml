@@ -1,0 +1,401 @@
+swagger: "2.0"
+info:
+  description: "API per Squealer, il social che ha ucciso Twitter!"
+  version: "1.0.0"
+  title: "Squealer API"
+#host: "site222317.tw.cs.unibo.it"
+host : "localhost:8000"
+basePath: "/app/"
+#basePath: "/"
+schemes:
+- "http"
+- "https"
+paths:
+  /user/{username}:
+    put:
+      tags:
+        - user
+      summary: Update the user
+      description: This method can be user only from the logged user or the Squealer admin.
+      parameters:
+        - name: username
+          in: path
+          description: Update server status
+          required: true
+          type: string
+        - name: body
+          in: body
+          description: new User object
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '200':
+          description: 'Updated user'
+        '400':
+          description: 'Invalid username'
+        '422':
+          description: 'The user passed in request is not existent or it has not required fields (or invalid type of fields)'
+          schema:
+            type: string
+            description: 'More information about the error'
+    delete:
+      tags:
+        - user
+      summary: Delete the specified user
+      description: Delete the specified user only if the request is made by the deleting user of if is done from a Squealer admin
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Deleted user'
+        '400':
+          description: 'Invalid username'
+        '403':
+          description: 'The requester is not the deleting user or a Squealer admin (or the requester is not logged)'
+        '404':
+          description: 'Deleting user not found.'
+    get:
+      tags:
+        - user
+      summary: Get the information about the user
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Successful operation'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        '400':
+          description: 'User not specified or other error'
+        '404':
+          description: 'User not found'
+  /user:
+    post:
+      tags:
+        - user
+      summary: Create the user
+      description: Create the user in the request body
+      parameters:
+        - name: user
+          in: body
+          description: new User object
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '201':
+          description: 'Created user'
+        '400':
+          description: 'Invalid username'
+        '422':
+          description: 'The user passed in request has not required fields (or invalid type of fields)'
+          schema:
+            type: string
+            description: 'More information about the error'
+  /channel:
+    post:
+      tags:
+        - channel
+      summary: Create the channel
+      description: Create the channel in the request body
+      parameters:
+        - name: channel
+          in: body
+          description: new Channel object
+          required: true
+          schema:
+            $ref: '#/definitions/Channel'
+      responses:
+        '201':
+          description: 'Created channel'
+        '400':
+          description: 'Invalid channel name or object'
+          schema:
+            type: string
+            description: 'More info about the error'
+        '403':
+          description: 'Unable to create channel due low privileges'
+          schema:
+            type: string
+            description: 'More information about the error'
+  /channel/{channel_name}:
+    put:
+      tags:
+        - channel
+      summary: Update the channel
+      description: Update the channel with his name in path with the passed Channel object in the body.
+      parameters:
+        - name: channel_name
+          in: path
+          required: true
+          type: string
+        - name: channel
+          in: body
+          description: new Channel object
+          required: true
+          schema:
+            $ref: '#/definitions/Channel'
+      responses:
+        '200':
+          description: 'Updated channel'
+        '400':
+          description: 'Invalid channel name or object'
+          schema:
+            type: string
+            description: 'More info about the error'
+        '403':
+          description: 'Unable to update channel due low privileges'
+          schema:
+            type: string
+            description: 'More information about the error'
+        '404':
+          description: 'The specified channel in URL path is not found'
+    delete:
+      tags:
+        - channel
+      summary: Delete the channel
+      parameters:
+        - name: channel_name
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Deleted channel'
+        '403':
+          description: 'Unable to delete channel due low privileges'
+          schema:
+            type: string
+            description: 'More information about the error'
+        '404':
+          description: 'The specified channel in URL path is not found'
+    get:
+      tags:
+        - channel
+      summary: Get channel information
+      parameters:
+        - name: channel_name
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Channel info'
+          schema:
+            $ref: '#/definitions/Channel'
+        '403':
+          description: 'Unable to read channel due low privileges'
+          schema:
+            type: string
+            description: 'More information about the error'
+        '404':
+          description: 'The specified channel in URL path is not found'
+  /squeal/:
+    get:
+      tags:
+        - squeal
+      summary: Get the squeal to see of the user
+      parameters:
+        - name: last
+          description: Last squeal identifier received from client. This parameter is used to get the user logged content to see after the specified identifier. If not present return the first posts to see.
+          required: false
+          in: query
+          type: string
+      responses:
+        '200':
+          description: 'Successful operation'
+          schema:
+            type: array
+            maxLength: 10
+            items:
+              $ref: '#/definitions/Squeal'
+        '400':
+          description: 'Generic error'
+        '403':
+          description: 'User not logged'
+        '404':
+          description: 'Identifier not found'
+    post:
+      tags:
+        - squeal
+      summary: Create a new squeal
+      parameters:
+        - name: new_squeal
+          description: Squeal object to add
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/Squeal'
+      responses:
+        '200':
+          description: 'Successful operation'
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Squeal'
+            description: 'Added Squeal'
+        '400':
+          description: 'Bad request, missing body or missing request field'
+        '401':
+          description: 'Quota exceed'
+        '403':
+          description: 'User not logged'
+  /squeal/{identifier_id}:
+    put:
+      tags:
+        - squeal
+      summary: Update the squeal
+      description: Update the squeal with his identifier in path with the passed Squeal object in the body. The quota used by the final post is the maximum between the old quota and the newer
+      parameters:
+        - name: identifier_id
+          in: path
+          required: true
+          type: integer
+        - name: new_squeal
+          in: body
+          description: new Squeal object
+          required: true
+          schema:
+            $ref: '#/definitions/Squeal'
+      responses:
+        '200':
+          description: 'Updated'
+        '400':
+          description: 'Bad request'
+          schema:
+            type: string
+            description: 'More info about the error'
+        '401':
+          description: 'Unable to update squeal due low quota'
+          schema:
+            type: string
+            description: 'More information about the error'
+        '403':
+          description: 'Unable to update squeal due low privileges'
+          schema:
+            type: string
+            description: 'More information about the error'
+        '404':
+          description: 'The specified squeal in URL path is not found'
+    delete:
+      tags:
+        - squeal
+      summary: Delete the squeal
+      parameters:
+        - name: identifier_id
+          in: path
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: 'Deleted squeal'
+        '403':
+          description: 'Unable to delete channel due low privileges'
+          schema:
+            type: string
+            description: 'More information about the error'
+        '404':
+          description: 'The specified squeal in URL path is not found'
+definitions:
+  User:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: Id generato dal sistema per l'utente, è univoco.
+      username:
+        type: string
+        maxLength: 32
+        description: Anche l'username deve essere univoco
+      first_name:
+        type: string
+      last_name:
+        type: string
+      email:
+        type: string
+        description: Email dell'utente, ogni utente ha la propria
+      password:
+        type: string
+      registration_date:
+        type: string
+        format: date-time
+  Channel:
+    type: object
+    properties:
+      c_type:
+        type: string
+        enum:
+          - CHANNEL
+          - CHANNEL_TAG #quelli con l'hashtag
+        description: type of channel
+      name:
+        type: string
+        maxLength: 128
+        description: Channel name
+      privacy:
+        type: string
+        enum:
+          - PUBLIC
+          - PRIVATE
+  Destination:
+    type: object
+    properties:
+      dest_type:
+        type: string
+        enum:
+          - CHANNEL
+          - CHANNEL_TAG
+          - USER
+        description: dest type
+      identifier:
+        type: string
+        description: destination name
+  Reaction:
+    type: object
+    properties:
+      importance:
+        type: string
+        enum:
+          - LIKE_A_LOT
+          - LIKE
+          - MEH
+          - DO_NOT_LIKE
+          - DISGUSTED
+        description: enum of possible reactions
+      squeal_identifier:
+        type: string
+        description: squeal id
+  Squeal:
+    type: object
+    description: Squealer post
+    properties:
+      identifier:
+        type: integer
+      destinations:
+        type: array
+        items:
+          $ref: '#/definitions/Destination'
+        minItems: 1
+      message_type:
+        type: string
+        enum:
+          - MESSAGE
+          - IMAGE_URL
+          - VIDEO_URL
+          - POSITION
+      message_value:
+        type: string
+        description: Message value, how this field is used depends on message_type value.
+      reactions:
+        type: array
+        items:
+          $ref: '#/definitions/Reaction'
