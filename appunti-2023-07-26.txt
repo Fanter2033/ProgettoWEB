@@ -1,0 +1,8 @@
+Login / Sign up
+Schermata comune per accesso e registrazione
+=> Tutti gli utenti accedono dalla stessa schermata
+Schermate di login separate(?) O tutte insieme con select di utenza quando si accede?
+mmmm
+
+Quando si effettua un login SI CREA UNA "SESSIONE" sul database e sui cookie che consiste nel tenere traccia delle operazioni
+Quando si effettua una registrazione si crea un utente sul database.
