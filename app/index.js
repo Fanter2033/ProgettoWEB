@@ -10,13 +10,10 @@ app.use('/data', express.static(global.rootDir +'/public/data'));
 app.use('/docs', express.static(global.rootDir +'/public/html'));
 app.use('/img' , express.static(global.rootDir +'/public/media'));
 
-//testing per registrazione e login
-const bcrypt = require('bcrypt')
-
 //curl -X GET localhost:8000 && echo ""
 app.get('/', (req, res) => {
     //res.send('Hello World!');
-    res.sendFile(__dirname + '/public/html/index.html');
+    res.sendFile(__dirname + '/index.html');
 });
 
 //curl -X GET localhost:8000/test/ && echo ""
@@ -24,11 +21,10 @@ app.get('/test/', (req, res) => {
     res.send('<h1>Vamos a bailar</h1>');
 });
 
-/*
 //curl -X POST localhost:8000/test/ && echo ""
 app.post('/test/', (req, res) => {
     res.send('<h1>Vamos a Faenza</h1>');
-});*/
+});
 
 //curl -X PUT localhost:8000/test/ && echo ""
 app.put('/test/', (req, res) => {
@@ -41,11 +37,16 @@ app.delete('/test/', (req, res) => {
 });
 
 
+
+
 app.get("/app/user/:username", (req, res) => {
     let username = req.params['username'];
     console.log("Username :", username);
     res.send('<h1>'+username+'</h1>');
 });
+
+//testing per registrazione e login
+const bcrypt = require('bcrypt')
 
 //lista utenti temporanea
 const usersList = [];
@@ -53,8 +54,9 @@ const usersList = [];
 //creazione utente
 app.post("/app/user", (req, res) => {
     console.log("creazione user");
-    res.send('password');
-    /*try {
+    
+    /*res.send('password');
+    try {
         let PasswdSalt = bcrypt.genSalt()  //per capire il meccanismo del salt rifarsi alle slide di Renzo
         let PasswdHased = bcrypt.hash(req.body.password, PasswdSalt);
         const NewUser = { username: req.body.username, 
