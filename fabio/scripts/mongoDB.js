@@ -29,7 +29,8 @@ let fieldname = "country"
 
 const { MongoClient } = require("mongodb");
 const fs = require('fs').promises ;
-const template = require(global.rootDir + '/scripts/tpl.js') ; 
+const template = require(global.rootDir + '/scripts/tpl.js') ;
+
 
 exports.create = async function(credentials) {
 	const mongouri = `mongodb://${credentials.user}:${credentials.pwd}@${credentials.site}?writeConcern=majority`;
