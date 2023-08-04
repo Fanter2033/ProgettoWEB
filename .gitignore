@@ -10,3 +10,5 @@ package-lock.json
 
 # Excluding ide(s) files
 .idea/
+
+#react testing folder
