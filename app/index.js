@@ -62,12 +62,14 @@ backEndRouter.get('/home', (req, res) => {
 //DO NOT CANCEL UNTIL THE PROJECT ISN'T FINISHED!!! THIS FUNCTION IS USEFUL TO TEST CONNECTIONS!!!
 
 backEndRouter.get('/random/', async (req, res) => {
+    //QUESTO DEVE STARE NEI MODEL!!!! NE CONTROLLER NE DRIVER!
     let conn = await autoload.mongoConnectionFunctions.getDatabaseConnection();
     await conn.connect();
     let database = await conn.db(autoload.config._DATABASE_NAME);
-    let filter = JSON.parse(`{"username": "romanellas"}`); //Filtro da stringa LE PROPRIETA' VOGLIONO GLI APICI DOPPI
-    let filterObj = {"username": "romanellas"};
-    let collection = await database.collection("users").find(filterObj).toArray();
+    //let filter = JSON.parse(`{"username": "romanellas"}`); //Filtro da stringa LE PROPRIETA' VOGLIONO GLI APICI DOPPI
+    //let filterObj = {"username": "romanellas"};
+    //let filter2 = {"first_name" : "Elisa"};
+    let collection = await database.collection("users").find({}).toArray();
     res.send(collection);
 });
 
@@ -76,6 +78,4 @@ backEndRouter.use('/database', databaseDriver);
 
 backEndRouter.listen(autoload.config._WEBSERVER_PORT, () => {
     console.log(`Server started on port ${autoload.config._WEBSERVER_PORT}`);
-})
-
-
+});
