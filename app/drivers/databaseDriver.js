@@ -2,10 +2,10 @@ const express = require("express");
 const path = require("path");
 const autoload = require("../autoload/autoload");
 const databaseDriver = express();
-//const DatabaseController = require("../controllers/DatabaseController");
-//const DatabaseModel = require("../models/DatabaseModel");
+const DatabaseController = require("../controllers/DatabaseController");
+const DatabaseModel = require("../models/DatabaseModel");
 
-//let controller = new DatabaseController(new DatabaseModel(autoload.mongoConnectionFunctions.getDatabaseConnection()));
+let controller = new DatabaseController(new DatabaseModel(autoload.mongoConnectionFunctions.getDatabaseConnection()));
 
 databaseDriver.get('/', function (req, res) {
     res.sendFile(path.resolve(`../app/public/html/goAway.html`));
@@ -14,7 +14,8 @@ databaseDriver.get('/', function (req, res) {
 databaseDriver.get('/:collection/', async function (req, res) {
     let collectionName = req.params['collection'];
     if (collectionName === 'help') {
-        //res.send(controller.getDatabaseCollections());
+        let ctrlOut = await controller.getDatabaseCollections();
+        res.send(ctrlOut);
     } else {
         /*
         let conn = await autoload.mongoConnectionFunctions.getDatabaseConnection();

@@ -1,4 +1,4 @@
-class DatabaseController {
+module.exports = class DatabaseController {
 
     constructor(model) {
         this._model = model;
@@ -8,8 +8,8 @@ class DatabaseController {
         return this._model;
     }
 
-    getDatabaseCollections() {
-        return this.getModel().getDatabaseCollections();
+    async getDatabaseCollections() {
+        return await this.getModel().getDatabaseCollections();
     }
 
 }
