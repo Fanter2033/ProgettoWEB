@@ -5,11 +5,20 @@ const databaseDriver = express();
 const DatabaseController = require("../controllers/DatabaseController");
 const DatabaseModel = require("../models/DatabaseModel");
 
-let controller = new DatabaseController(new DatabaseModel(autoload.mongoConnectionFunctions.getDatabaseConnection()));
+let controller = new DatabaseController(new DatabaseModel());
 
 databaseDriver.get('/', function (req, res) {
     res.sendFile(path.resolve(`../app/public/html/goAway.html`));
 });
+
+databaseDriver.get('/:collection/unique/:field/', async function(req, res) {
+    let collectionName = req.params['collection'];
+    let field = req.params['field'];
+    let ctrl = await controller.makeUniqueIndex(collectionName, field);
+    res.statusCode = ctrl.code;
+    res.send(ctrl.msg);
+});
+
 
 databaseDriver.get('/:collection/', async function (req, res) {
     let collectionName = req.params['collection'];
@@ -17,17 +26,8 @@ databaseDriver.get('/:collection/', async function (req, res) {
         let ctrlOut = await controller.getDatabaseCollections();
         res.send(ctrlOut);
     } else {
-        /*
-        let conn = await autoload.mongoConnectionFunctions.getDatabaseConnection();
-    await conn.connect();
-    let database = await conn.db(autoload.config._DATABASE_NAME);
-    let filter = JSON.parse(`{"username": "romanellas"}`); //Filtro da stringa LE PROPRIETA' VOGLIONO GLI APICI DOPPI
-    let filterObj = {"username": "romanellas"};
-    let collection = await database.collection(collectionName).find({}).toArray();
-    res.send(collection);
-         */
+        res.send(await controller.getCollectionContent(collectionName));
     }
-
 });
 
 module.exports = databaseDriver;
