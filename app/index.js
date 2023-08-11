@@ -3,6 +3,8 @@ const express = require('express');
 const autoload = require('./autoload/autoload');
 const backEndRouter = express();
 const databaseDriver = require('./drivers/databaseDriver');
+const userDriver = require('./drivers/userDriver');
+
 global.rootDir = __dirname;
 global.startDate = null;
 global.autoload = autoload;
@@ -58,23 +60,9 @@ backEndRouter.get('/home', (req, res) => {
     res.sendFile(__dirname + '/public/html/home.html');
 });
 
-//FOR TESTS ONLY
-//DO NOT CANCEL UNTIL THE PROJECT ISN'T FINISHED!!! THIS FUNCTION IS USEFUL TO TEST CONNECTIONS!!!
-
-backEndRouter.get('/random/', async (req, res) => {
-    //QUESTO DEVE STARE NEI MODEL!!!! NE CONTROLLER NE DRIVER!
-    let conn = await autoload.mongoConnectionFunctions.getDatabaseConnection();
-    await conn.connect();
-    let database = await conn.db(autoload.config._DATABASE_NAME);
-    //let filter = JSON.parse(`{"username": "romanellas"}`); //Filtro da stringa LE PROPRIETA' VOGLIONO GLI APICI DOPPI
-    //let filterObj = {"username": "romanellas"};
-    //let filter2 = {"first_name" : "Elisa"};
-    let collection = await database.collection("users").find({}).toArray();
-    res.send(collection);
-});
-
 //If a request starts with /database is sent to database driver!
 backEndRouter.use('/database', databaseDriver);
+backEndRouter.use('/user', userDriver);
 
 backEndRouter.listen(autoload.config._WEBSERVER_PORT, () => {
     console.log(`Server started on port ${autoload.config._WEBSERVER_PORT}`);

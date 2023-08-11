@@ -1,6 +1,5 @@
 const express = require("express");
 const path = require("path");
-const autoload = require("../autoload/autoload");
 const databaseDriver = express();
 const DatabaseController = require("../controllers/DatabaseController");
 const DatabaseModel = require("../models/DatabaseModel");
