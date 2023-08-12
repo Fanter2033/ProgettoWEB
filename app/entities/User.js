@@ -1,60 +1,60 @@
 module.exports = class User {
 
     constructor(username, email, firstname = '', lastname = '', password = '', registration_timestamp = 0) {
-        this._username = username;
-        this._email = email;
-        this._firstname = firstname;
-        this._lastname = lastname;
-        this._password = password;
-        this._registration_timestamp = registration_timestamp;
+        this.username = username;
+        this.email = email;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.password = password;
+        this.registration_timestamp = registration_timestamp;
     }
 
 
-    get username() {
-        return this._username;
+    getUsername() {
+        return this.username;
     }
 
-    set username(value) {
-        this._username = value;
+    setUsername(value) {
+        this.username = value;
     }
 
-    get email() {
-        return this._email;
+    getEmail() {
+        return this.email;
     }
 
-    set email(value) {
-        this._email = value;
+    setEmail(value) {
+        this.email = value;
     }
 
-    get firstname() {
-        return this._firstname;
+    getFirstname() {
+        return this.firstname;
     }
 
-    set firstname(value) {
-        this._firstname = value;
+    setFirstname(value) {
+        this.firstname = value;
     }
 
-    get lastname() {
-        return this._lastname;
+    getLastname() {
+        return this.lastname;
     }
 
-    set lastname(value) {
-        this._lastname = value;
+    setLastname(value) {
+        this.lastname = value;
     }
 
-    get password() {
-        return this._password;
+    getPassword() {
+        return this.password;
     }
 
-    set password(value) {
-        this._password = value;
+    setPassword(value) {
+        this.password = value;
     }
 
-    get registration_timestamp() {
-        return this._registration_timestamp;
+    getRegistrationTimestamp() {
+        return this.registration_timestamp;
     }
 
-    set registration_timestamp(value) {
-        this._registration_timestamp = value;
+    setRegistrationTimestamp(value) {
+        this.registration_timestamp = value;
     }
 }

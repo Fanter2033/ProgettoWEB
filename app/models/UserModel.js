@@ -1,18 +1,49 @@
 const User = require("../entities/User");
-module.exports = class UserModel {
+const Model = require("./Model");
+module.exports = class UserModel extends Model {
     constructor(userCollectionName) {
-        this.userCollectionName = userCollectionName;
+        super(userCollectionName);
     }
 
     async getUser(username) {
-        let conn = await autoload.mongoConnectionFunctions.getDatabaseConnection();
-        await conn.connect();
-        let database = await conn.db(autoload.config._DATABASE_NAME);
         let filter = {"username": `${username}`};
-        let collection = await database.collection("users").find(filter).toArray();
-        if(collection.length === 1)
-            return new User(collection[0].username, collection[0].email, collection[0].first_name, collection[0].last_name, collection[0].psw_shadow, collection[0].registration_timestamp);
+        filter = this.mongo_escape(filter);
+        let collection = await this.getCollection();
+        let results = await collection.find(filter).toArray();
+        if (results.length === 1)
+            return new User(results[0].username, results[0].email, results[0].first_name, results[0].last_name, results[0].psw_shadow, results[0].registration_timestamp);
         return {};
+    }
+
+    /**
+     *
+     * @param username
+     * @returns {Promise<boolean>}
+     * Given a username returns true if the user exists, false otherwise.
+     */
+    async userExists(username) {
+        let filter = {"username": `${username}`};
+        filter = this.mongo_escape(filter);
+        let collection = await this.getCollection();
+        let results = await collection.find(filter).toArray();
+        return results.length >= 1;
+    }
+
+    /**
+     *
+     * @param username
+     * @returns {Promise<boolean>}
+     *
+     * Given an username this function delete it from database.
+     * Returns true on success, false otherwise.
+     *
+     */
+    async deleteUser(username) {
+        let filter = {"username": `${username}`};
+        filter = this.mongo_escape(filter);
+        let collection = await this.getCollection();
+        let response = await collection.deleteOne(filter);
+        return response.deletedCount > 0;
     }
 
 }
