@@ -323,11 +323,10 @@ definitions:
       email:
         type: string
         description: Email dell'utente, ogni utente ha la propria
-      password:
+      psw_shadow:
         type: string
-      registration_date:
-        type: string
-        format: date-time
+      registration_timestamp:
+        type: integer
   Channel:
     type: object
     properties:

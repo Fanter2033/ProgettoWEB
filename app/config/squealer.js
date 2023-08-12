@@ -22,3 +22,13 @@ if(exports.isDebug){
     exports._DATABASE_NAME = "site222317";
     exports._DATABASE_EXTRA = "";
 }
+
+//Regex
+exports._REGEX_EMAIL = /^[a-zA-Z0-9_.+]+(?<!^[0-9]*)@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+
+
+//Cipher settings
+exports._CIPHER_SALT = 12;
+
+
+

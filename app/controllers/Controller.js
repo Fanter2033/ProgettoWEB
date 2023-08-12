@@ -1,6 +1,11 @@
+//testing per registrazione e login
+const bcrypt = require('bcrypt')
+const config = require('../config/squealer')
 module.exports = class Controller {
 
     constructor() {
+        this._emailRegex = config._REGEX_EMAIL;
+        this.bcrypt = bcrypt;
     }
 
 
@@ -13,7 +18,7 @@ module.exports = class Controller {
      *
      */
     isObjectVoid(obj) {
-        if(Object.keys(obj).length === 0)
+        if (Object.keys(obj).length === 0)
             return true;
         return false;
     }
@@ -24,6 +29,66 @@ module.exports = class Controller {
             'msg': 'Ok.',
             'content': {}
         };
+    }
+
+    /**
+     * @returns {number}
+     */
+    getCurrentTimestampMillis() {
+        return Date.now();
+    }
+
+    /**
+     * @returns {number}
+     */
+    getCurrentTimestampSeconds() {
+        return parseInt(this.getCurrentTimestampMillis() / 1000);
+    }
+
+    /**
+     * @param email
+     * @return {boolean}
+     *
+     * Returns true if param passed is an email, false otherwise.
+     *
+     */
+    isEmail(email) {
+        if (email !== '' && email.match(this._emailRegex))
+            return true;
+        return false;
+    }
+
+    /**
+     *
+     * @param string {string}
+     * @param saltRound {number}
+     */
+    async crypt(string, saltRound = config._CIPHER_SALT) {
+        return bcrypt.genSalt(saltRound)
+            .then(salt => {
+                return bcrypt.hash(string, salt);
+            })
+            .then(hash => {
+                return hash;
+            });
+    }
+
+    /**
+     *
+     * @param hash {string}
+     * @param string {string}
+     * @param saltRound {number}
+     * @return {boolean}
+     *
+     * If the string is the hash passed returns true, false otherwise.
+     *
+     */
+    async decrypt(hash, string, saltRound = config._CIPHER_SALT) {
+        return bcrypt
+            .compare(string, hash)
+            .then(res => {
+                return res;
+            });
     }
 
 }

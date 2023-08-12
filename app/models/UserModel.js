@@ -46,4 +46,16 @@ module.exports = class UserModel extends Model {
         return response.deletedCount > 0;
     }
 
+    /**
+     * @param userObj
+     * @returns {Promise<boolean>}
+     */
+    async createUser(userObj) {
+        let collection = await this.getCollection();
+        let response = await collection.insertOne(userObj);
+        if(response)
+            return true;
+        return false;
+    }
+
 }

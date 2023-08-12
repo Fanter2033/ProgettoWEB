@@ -1,5 +1,4 @@
 const express = require('express');
-//const config = require('./config/squealer');
 const autoload = require('./autoload/autoload');
 const backEndRouter = express();
 const databaseDriver = require('./drivers/databaseDriver');
@@ -21,19 +20,15 @@ backEndRouter.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
+//TODO: DELETE
 backEndRouter.get("/app/user/:username", (req, res) => {
     let username = req.params['username'];
     console.log("Username :", username);
     res.send('<h1>' + username + '</h1>');
 });
 
-//testing per registrazione e login
-const bcrypt = require('bcrypt')
-
-//lista utenti temporanea
-const usersList = [];
-
 //creazione utente
+//TODO : DELETE
 backEndRouter.post("/app/user", (req, res) => {
     console.log("creazione user");
     /*res.send('password');

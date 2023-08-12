@@ -3,9 +3,9 @@ module.exports = class User {
     constructor(username, email, firstname = '', lastname = '', password = '', registration_timestamp = 0) {
         this.username = username;
         this.email = email;
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.password = password;
+        this.first_name = firstname;
+        this.last_name = lastname;
+        this.psw_shadow = password;
         this.registration_timestamp = registration_timestamp;
     }
 
@@ -27,27 +27,27 @@ module.exports = class User {
     }
 
     getFirstname() {
-        return this.firstname;
+        return this.first_name;
     }
 
     setFirstname(value) {
-        this.firstname = value;
+        this.first_name = value;
     }
 
     getLastname() {
-        return this.lastname;
+        return this.last_name;
     }
 
     setLastname(value) {
-        this.lastname = value;
+        this.last_name = value;
     }
 
     getPassword() {
-        return this.password;
+        return this.psw_shadow;
     }
 
     setPassword(value) {
-        this.password = value;
+        this.psw_shadow = value;
     }
 
     getRegistrationTimestamp() {
