@@ -69,6 +69,7 @@ module.exports = class UserController extends Controller {
         let ctrl_response = this.controlUser(userObj);
         if (ctrl_response !== 0) {
             output['code'] = 400;
+            output['req_error'] = -100 + ctrl_response;
             output['msg'] = 'Email not valid or field is not populate.';
             return output;
         }
@@ -76,6 +77,7 @@ module.exports = class UserController extends Controller {
         //Check the username do not exists
         if (await this._model.userExists(userObj.getUsername())) {
             output['code'] = 400;
+            output['req_error'] = -1;
             output['msg'] = 'Username already exists.';
             return output;
         }

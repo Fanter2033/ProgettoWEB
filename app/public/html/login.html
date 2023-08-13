@@ -3,11 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <title>Squealer - Login</title>
-    <link rel="stylesheet" href="../media/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../libraries/font-awesome/css/font-awesome.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <script src="../libraries/jquery/jquery.js"></script>
+    <script src="../libraries/toastr/toastr.js"></script>
+    <link rel="stylesheet" href="../libraries/toastr/toastr.css">
+    <script src="../js/login.js"></script>
+    <link rel="stylesheet" href="../css/login.css">
 </head>
 <body>
-
+<!-- Inizio modali -->
+<!-- Inizio modale registrazione-->
+<div class="modal fade" id="modalRegistrazione" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Registrazione</h5>
+            </div>
+            <div class="modal-body">
+                <div class="card-text text-left">
+                    <div class="mb-3">
+                        <label for="registerUsername" class="form-label">Username</label>
+                        <input type="email" class="form-control" id="registerUsername" placeholder="username">
+                    </div>
+                    <div class="mb-3">
+                        <label for="registerEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="registerEmail" placeholder="user@email.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="registerFirstName" class="form-label">Nome</label>
+                        <input type="email" class="form-control" id="registerFirstName" placeholder="Nome">
+                    </div>
+                    <div class="mb-3">
+                        <label for="registerLastName" class="form-label">Cognome</label>
+                        <input type="email" class="form-control" id="registerLastName" placeholder="Cognome">
+                    </div>
+                    <div class="mb-3">
+                        <label for="registerPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="registerPassword" placeholder="password">
+                        <span class="text-white">Almeno 8 caratteri.</span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Conferma Password</label>
+                        <input type="password" class="form-control" id="confirmPassword" placeholder="password">
+                    </div>
+                    <div class="text-white">Tutti i campi sono obbligatori</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
+                <button type="button" class="btn btn-primary" onclick="registerUser()"><i class="fa fa-user-plus"></i>&nbsp;Registrati</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fine modale registrazione -->
+<!-- Fine modali -->
+<div class="container">
+    <div class="row m-md-3 mt-5 text-center">
+        <div class="col-md-12">
+            <h1>
+                Benvenuti su Squealer!
+            </h1>
+            <h5>
+                Fate login o registratevi per continuare
+            </h5>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Login</h5>
+                    <div class="card-text text-left">
+                        <div class="mb-3">
+                            <label for="loginUsername" class="form-label">Username</label>
+                            <input type="email" class="form-control" id="loginUsername" placeholder="username">
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="loginPassword" placeholder="password">
+                        </div>
+                    </div>
+                    <br/>
+                    <button type="button" class="btn btn-primary" onclick="requestLogin()"><i class="fa fa-sign-in"></i>&nbsp;Log in</button>
+                    <br/>
+                    <span>Non hai ancora un account?&nbsp;<button type="button" class="btn btn-primary" onclick="showModalRegister()"><i class="fa fa-user-plus"></i>&nbsp;Creane uno!</button></span>
+                    <div class="mt-5">
+                        Hai un account ma hai problemi di accesso?&nbsp;<button type="button" class="btn btn-primary" onclick="showModalRecuperaAccount()">Recupera account</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

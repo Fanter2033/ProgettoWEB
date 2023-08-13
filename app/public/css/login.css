@@ -1,0 +1,38 @@
+@media screen and (prefers-color-scheme: dark) {
+    body {
+        background-color: #181514;
+        color: #ffffff;
+    }
+
+    .card-body {
+        background-color: #383232;
+        color: #ffffff;
+    }
+
+    .modal-dialog {
+        color: #ffffff;
+    }
+
+    .modal-header {
+        background-color: #1f1d1d;
+        color: #ffffff;
+    }
+
+    .modal-body {
+        background-color: #383232;
+        color: #ffffff;
+    }
+
+    .modal-footer {
+        background-color: #1f1d1d;
+        color: #ffffff;
+    }
+
+}
+
+@media screen and (prefers-color-scheme: light) {
+    body {
+
+    }
+
+}
