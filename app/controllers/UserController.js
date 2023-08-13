@@ -6,10 +6,6 @@ module.exports = class UserController extends Controller {
         this._model = model;
     }
 
-    getModel() {
-        return this._model;
-    }
-
     /**
      *
      * @param username
@@ -71,14 +67,14 @@ module.exports = class UserController extends Controller {
     async createUser(userObj) {
         let output = this.getDefaultOutput();
         let ctrl_response = this.controlUser(userObj);
-        if(ctrl_response !== 0) {
+        if (ctrl_response !== 0) {
             output['code'] = 400;
             output['msg'] = 'Email not valid or field is not populate.';
             return output;
         }
 
         //Check the username do not exists
-        if(await this._model.userExists(userObj.getUsername())){
+        if (await this._model.userExists(userObj.getUsername())) {
             output['code'] = 400;
             output['msg'] = 'Username already exists.';
             return output;
@@ -89,11 +85,56 @@ module.exports = class UserController extends Controller {
         userObj.setPassword(hash);
 
         let databaseResponse = await this._model.createUser(userObj);
-        if(databaseResponse)
+        if (databaseResponse)
             output['content'] = userObj;
         else {
             output['code'] = 500;
             output['msg'] = 'Error inserting into DB.';
+        }
+
+        return output;
+    }
+
+    /**
+     *
+     * @param newUser {User}
+     * @param oldUsername {string}
+     * @returns {Promise<Object>}
+     */
+    async updateUser(newUser, oldUsername) {
+        let output = this.getDefaultOutput();
+        let ctrl_response = this.controlUser(newUser);
+        if (ctrl_response !== 0) {
+            output['code'] = 400;
+            output['msg'] = 'Email not valid or field is not populate.';
+            return output;
+        }
+
+        if (await this._model.userExists(oldUsername) === false) {
+            output['code'] = 400;
+            output['msg'] = 'Old user do not exists.';
+            return output;
+        }
+
+        if (await this._model.userExists(newUser.getUsername()) && newUser.getUsername() !== oldUsername) {
+            output['code'] = 400;
+            output['msg'] = 'Username already used';
+            return output;
+        }
+
+        let oldUserObj = await this._model.getUser(oldUsername);
+
+        newUser.setRegistrationTimestamp(oldUserObj.getRegistrationTimestamp());
+
+        let hash = await this.crypt(newUser.getPassword())
+        newUser.setPassword(hash);
+
+        let databaseResponse = await this._model.replaceUser(newUser, oldUserObj.getUsername());
+        if (databaseResponse)
+            output['content'] = newUser;
+        else {
+            output['code'] = 500;
+            output['msg'] = 'Error updating into DB.';
         }
 
         return output;
@@ -116,7 +157,7 @@ module.exports = class UserController extends Controller {
         if (username.length === 0 || password.length === 0 || firstname.length === 0 || lastname.length === 0 || email.length === 0)
             return -1;
 
-        if(this.isEmail(email) === false)
+        if (this.isEmail(email) === false)
             return -2;
 
         userObj.setUsername(username);

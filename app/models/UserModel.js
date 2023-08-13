@@ -52,8 +52,25 @@ module.exports = class UserModel extends Model {
      */
     async createUser(userObj) {
         let collection = await this.getCollection();
+        userObj = this.mongo_escape(userObj);
         let response = await collection.insertOne(userObj);
-        if(response)
+        if (response)
+            return true;
+        return false;
+    }
+
+    /**
+     * @param userObj {User}
+     * @param username {string}
+     * @returns {Promise<boolean>}
+     */
+    async replaceUser(userObj, username) {
+        let collection = await this.getCollection();
+        let filter = {"username": `${username}`};
+        filter = this.mongo_escape(filter);
+        userObj = this.mongo_escape(filter);
+        let response = await collection.replaceOne(filter, userObj);
+        if (response.modifiedCount > 0)
             return true;
         return false;
     }
