@@ -16,6 +16,7 @@
     "joi": "^17.9.2",
     "nodemon": "^3.0.1",
     "mongodb": "^5.7.0",
-    "mongo-escape": "^2.0.6"
+    "mongo-escape": "^2.0.6",
+    "bootstrap": "^5.3.1"
   }
 }
