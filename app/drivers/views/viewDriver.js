@@ -5,7 +5,7 @@ const path = require("path")
 const publicDir = path.join(__dirname, '../../public');
 viewDriver.use(express.static(publicDir));
 
-viewDriver.get('/', function (req, res){;
+viewDriver.get('/', function (req, res){
     res.sendFile(publicDir + "/html/login.html");
 });
 
