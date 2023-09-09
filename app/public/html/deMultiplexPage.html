@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Benvenuti su Squealer</title>
+    <!--
+    Ty to Elisa Casalini,
+    this line of code helps the viewing on the mobile. The viewport is the area visible on device
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Globals -->
+    <link rel="stylesheet" href="../libraries/font-awesome/css/font-awesome.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+            crossorigin="anonymous"></script>
+    <script src="../libraries/jquery/jquery.js"></script>
+    <script src="../libraries/toastr/toastr.js"></script>
+    <link rel="stylesheet" href="../libraries/toastr/toastr.css">
+    <link rel="stylesheet" href="../css/squealer.css">
+    <!-- Load javascript file after html -->
+    <script src="../js/squealer.js" defer></script>
+    <!-- Page defined-->
+</head>
+<body>
+<div class="container mt-5 mb-3">
+    <div class="row">
+        <div class="w-100">
+            <div class="row w-100 d-flex justify-content-center">
+                <img src="" class="logo col-6" alt="">
+            </div>
+            <div class="w-100 d-flex justify-content-center">
+                <h1>
+                    Benvenuti in squealer!
+                </h1>
+            </div>
+            <div class="w-100 d-flex justify-content-center">
+                <h3>
+                    Con quale ruolo si desidera continuare?
+                </h3>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card p-3 mb-2">
+                <div class="d-flex justify-content-between">
+                    <span>
+                        Per utenti che utilizzano squealer per svago.
+                    </span>
+                </div>
+                <div class="mt-3">
+                    <h3 class="heading">Utenti e PRO</h3>
+                    <a href="/loginUser" class="btn btn-success">
+                        <i class="fa fa-sign-in"></i>&nbsp;Accedi
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3 mb-2">
+                <div class="d-flex justify-content-between">
+                    <span>
+                        Per professionisti che utilizzano Squealer che gestiscono account di celebrità.
+                    </span>
+                </div>
+                <div class="mt-3">
+                    <h3 class="heading">SMM dashboard</h3>
+                    <a href="/loginSMM" class="btn btn-warning">
+                        <i class="fa fa-sign-in"></i>&nbsp;Accedi
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3 mb-2">
+                <div class="d-flex justify-content-between">
+                    <span>
+                        Per i moderatori ed amministratori che si occupano del mantenimento della piattaforma
+                    </span>
+                </div>
+                <div class="mt-3">
+                    <h3 class="heading">Moderator dashborad</h3>
+                    <a href="/loginAdmin" class="btn btn-danger">
+                        <i class="fa fa-sign-in"></i>&nbsp;Accedi
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
