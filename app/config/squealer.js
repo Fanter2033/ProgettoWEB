@@ -30,5 +30,8 @@ exports._REGEX_EMAIL = /^[a-zA-Z0-9_.+]+(?<!^[0-9]*)@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.
 //Cipher settings
 exports._CIPHER_SALT = 12;
 
+//Collection name
+exports._USER_COLLECTION = 'users';
+
 
 

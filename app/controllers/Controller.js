@@ -78,12 +78,12 @@ module.exports = class Controller {
      * @param hash {string}
      * @param string {string}
      * @param saltRound {number}
-     * @return {boolean}
+     * @return Promise
      *
      * If the string is the hash passed returns true, false otherwise.
      *
      */
-    async decrypt(hash, string, saltRound = config._CIPHER_SALT) {
+    async hashCheck(hash, string, saltRound = config._CIPHER_SALT) {
         return bcrypt
             .compare(string, hash)
             .then(res => {

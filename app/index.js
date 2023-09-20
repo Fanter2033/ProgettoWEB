@@ -2,6 +2,7 @@ const express = require('express');
 const autoload = require('./autoload/autoload');
 const backEndRouter = express();
 const databaseDriver = require('./drivers/databaseDriver');
+const authDriver = require('./drivers/authDriver.js')
 const userDriver = require('./drivers/userDriver');
 const viewDriver = require('./drivers/views/viewDriver');
 
@@ -23,6 +24,7 @@ backEndRouter.get('/home', (req, res) => {
 
 //If a request starts with /database is sent to database driver!
 backEndRouter.use('/database', databaseDriver);
+backEndRouter.use('/auth', authDriver);
 backEndRouter.use('/user', userDriver);
 backEndRouter.use('/', viewDriver);
 

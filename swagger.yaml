@@ -11,6 +11,28 @@ schemes:
 - "http"
 - "https"
 paths:
+  /auth/{username}:
+    post:
+      summary: Authenticate the user
+      description: Authenticate the user with his password and start new session for them.
+      parameters:
+        - name : username
+          in: path
+          description: Authentication user
+          type: string
+          required: true
+        - name : password
+          in: body
+          type: string
+          required: true
+          description: User password
+      responses:
+        '204':
+          description: Returns no content, the client knows what do. In this case the session is created.
+        '500':
+          description: Failed authentication due server error
+        '403':
+          description: Failed authentication due wrong password or username.
   /user/{username}:
     put:
       tags:

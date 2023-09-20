@@ -16,6 +16,7 @@
 <body>
 <!-- Inizio modali -->
 <!-- Inizio modale registrazione-->
+<!-- TODO: REMOVE -->
 <div class="modal fade" id="modalRegistrazione" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -67,8 +68,11 @@
             <h1>
                 Benvenuti su Squealer!
             </h1>
+            <h3>
+                Accesso riservato agli amministratori ed ai moderatori.
+            </h3>
             <h5>
-                Fate login o registratevi per continuare
+                Fate login per continuare.
             </h5>
             <div class="card mb-3">
                 <div class="card-body">
@@ -76,20 +80,15 @@
                     <div class="card-text text-left">
                         <div class="mb-3">
                             <label for="loginUsername" class="form-label">Username</label>
-                            <input type="email" class="form-control" id="loginUsername" placeholder="username">
+                            <input type="email" class="form-control" id="loginUsername" placeholder="Username">
                         </div>
                         <div class="mb-3">
                             <label for="loginPassword" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="loginPassword" placeholder="password">
+                            <input type="password" class="form-control" id="loginPassword" placeholder="Password">
                         </div>
                     </div>
                     <br/>
                     <button type="button" class="btn btn-primary" onclick="requestLogin()"><i class="fa fa-sign-in"></i>&nbsp;Log in</button>
-                    <br/>
-                    <span>Non hai ancora un account?&nbsp;<button type="button" class="btn btn-primary" onclick="showModalRegister()"><i class="fa fa-user-plus"></i>&nbsp;Creane uno!</button></span>
-                    <div class="mt-5">
-                        Hai un account ma hai problemi di accesso?&nbsp;<button type="button" class="btn btn-primary" onclick="showModalRecuperaAccount()">Recupera account</button>
-                    </div>
                 </div>
             </div>
         </div>

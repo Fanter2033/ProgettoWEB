@@ -1,8 +1,40 @@
 function requestLogin() {
-    //TODO IMPLEMENT THIS
-    toastr["error"]("Funzione ancora non implementata");
-}
+    let username = $('#loginUsername').val();
+    let password = $('#loginPassword').val();
 
+    if(username.length === 0 || password.length === 0) {
+        toastr["error"]("Tutti i campi sono obbligatori", "Attenzione");
+        return;
+    }
+
+    let dataReq = JSON.stringify({
+        password: password
+    });
+
+    //Se siamo arrivati fin qui tutto ok. Facciamo una richiesta POST per registrare il nostro utente.
+
+    $.ajax({
+        async: true,
+        url: `auth/${username}`,
+        method: 'POST',
+        data: dataReq,
+        dataType: 'json',
+        contentType: "application/json",
+        success: function (data) {
+
+        },
+        error: function (data, status, error) {
+            switch (data.responseJSON.req_error) {
+                default:
+                    toastr["error"]("Errore nella richiesta al server. Riprovare.", "Attenzione");
+                    break;
+            }
+
+        }
+    });
+
+}
+/*
 function showModalRegister() {
     $('#registerUsername').val('');
     $('#registerEmail').val('');
@@ -12,7 +44,9 @@ function showModalRegister() {
     $('#confirmPassword').val('');
     $('#modalRegistrazione').modal('show');
 }
+ */
 
+/*
 function registerUser() {
     let username = $('#registerUsername').val();
     let email = $('#registerEmail').val();
@@ -81,11 +115,13 @@ function registerUser() {
 
         }
     });
-
-
 }
+ */
 
+/*
 function showModalRecuperaAccount() {
     //TODO IMPLEMENT THIS
     toastr["error"]("Funzione ancora non implementata");
 }
+
+ */
