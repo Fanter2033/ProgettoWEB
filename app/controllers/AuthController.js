@@ -20,9 +20,7 @@ module.exports = class AuthController extends Controller {
             return output;
         }
         let user = userControllerOutput.content;
-        console.log(await this.crypt('59741404'));
         let checkResult = await this.hashCheck(user.getPassword(), password_attempt);
-        console.log(checkResult);
         if(checkResult === false){
             output.code = 403;
             output.msg = '';
@@ -32,5 +30,4 @@ module.exports = class AuthController extends Controller {
         console.log('Ei');
         return output;
     }
-
 }
