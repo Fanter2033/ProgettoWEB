@@ -24,12 +24,14 @@ function requestLogin() {
 
         },
         error: function (data, status, error) {
-            switch (data.responseJSON.req_error) {
+            switch (data.status) {
+                case 403:
+                    toastr["error"]("Autenticazione fallita. Riprovare", "Attenzione");
+                    break;
                 default:
-                    toastr["error"]("Errore nella richiesta al server. Riprovare.", "Attenzione");
+                    toastr["error"]("Errore di sistema, contattare assistenza.", "Attenzione");
                     break;
             }
-
         }
     });
 
