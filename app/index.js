@@ -16,7 +16,7 @@ backEndRouter.use('/data', express.static(global.rootDir + '/public/data'));
 backEndRouter.use('/docs', express.static(global.rootDir + '/public/html'));
 backEndRouter.use('/img', express.static(global.rootDir + '/public/media'));
 
-backEndRouter.get('/', );
+//backEndRouter.get('/', );
 
 backEndRouter.get('/home', (req, res) => {
     res.sendFile(__dirname + '/public/html/home.html');
