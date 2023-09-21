@@ -1,12 +1,15 @@
 module.exports = class User {
 
-    constructor(username, email, firstname = '', lastname = '', password = '', registration_timestamp = 0) {
+    constructor(username, email, firstname = '', lastname = '', password = '', registration_timestamp = 0, isUser = false, isSmm = false, isAdmin = false) {
         this.username = username;
         this.email = email;
         this.first_name = firstname;
         this.last_name = lastname;
         this.psw_shadow = password;
         this.registration_timestamp = registration_timestamp;
+        this.isUser = isUser;
+        this.isSmm = isSmm;
+        this.isAdmin = isAdmin;
     }
 
 
@@ -56,5 +59,18 @@ module.exports = class User {
 
     setRegistrationTimestamp(value) {
         this.registration_timestamp = value;
+    }
+
+
+    getIsUser() {
+        return this.isUser;
+    }
+
+    getIsSmm() {
+        return this.isSmm;
+    }
+
+    getIsAdmin() {
+        return this.isAdmin;
     }
 }
