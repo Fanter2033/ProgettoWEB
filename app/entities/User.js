@@ -62,15 +62,24 @@ module.exports = class User {
     }
 
 
-    getIsUser() {
+    /**
+     * @return {boolean}
+     */
+    checkIsUser() {
         return this.isUser;
     }
 
-    getIsSmm() {
+    /**
+     * @return {boolean}
+     */
+    checkIsSmm() {
         return this.isSmm;
     }
 
-    getIsAdmin() {
+    /**
+     * @return {boolean}
+     */
+    checkIsAdmin() {
         return this.isAdmin;
     }
 }

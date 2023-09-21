@@ -11,7 +11,7 @@ module.exports = class UserModel extends Model {
         let collection = await this.getCollection();
         let results = await collection.find(filter).toArray();
         if (results.length === 1)
-            return new User(results[0].username, results[0].email, results[0].first_name, results[0].last_name, results[0].psw_shadow, results[0].registration_timestamp);
+            return new User(results[0].username, results[0].email, results[0].first_name, results[0].last_name, results[0].psw_shadow, results[0].registration_timestamp, results[0].isUser, results[0].isSmm, results[0].isAdmin);
         return {};
     }
 

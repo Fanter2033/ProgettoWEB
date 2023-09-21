@@ -15,7 +15,7 @@ function requestLogin() {
 
     $.ajax({
         async: true,
-        url: `auth/${username}`,
+        url: `auth/${username}/2`,
         method: 'POST',
         data: dataReq,
         dataType: 'json',

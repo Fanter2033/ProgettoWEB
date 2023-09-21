@@ -8,13 +8,14 @@ let controller = new AuthController(new AuthModel('users'));
 authDriver.use(express.json());
 authDriver.use(express.urlencoded({extended: true}));
 
-authDriver.post('/:username', async function (req, res) {
+authDriver.post('/:username/:auth_field', async function (req, res) {
     if (typeof req.body === 'undefined') {
         req.body = {};
     }
     let username = req.params['username'];
+    let auth_field = req.params['auth_field'];
     let password = (typeof req.body.password !== 'undefined' ? req.body.password : '');
-    let ctrl = await controller.authenticateUser(username, password);
+    let ctrl = await controller.authenticateUser(username, password, auth_field);
     if (ctrl.code === 200)
         res.status(ctrl.code).send(ctrl.content);
     else
