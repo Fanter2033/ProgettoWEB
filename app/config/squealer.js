@@ -1,4 +1,5 @@
 //Config file
+exports._APPLICATION_NAME = 'squealer';
 
 //Developing mode
 exports.isDebug = true;
@@ -32,6 +33,9 @@ exports._CIPHER_SALT = 12;
 
 //Collection name
 exports._USER_COLLECTION = 'users';
+exports._AUTH_ATTEMPTS_COLLECTION = 'auth_attempts';
 
+//Session params
+exports._SESSION_SECRET = '5DE1ya358SlHeJY52MbH8SHssFJqQh8TZVAyiVKBGDuCl1ZmFlXMqRTRj8hzSqFUJ5iPZwzKt1ERhqR0oabSMFSVxV9HM7KNZhkhQ1wdpkgY70QB5wixx5QvFbeV0uml';
 
 

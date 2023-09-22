@@ -18,6 +18,7 @@
     "mongodb": "^5.7.0",
     "mongo-escape": "^2.0.6",
     "bootstrap": "^5.3.1",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "express-session": "^1.17.3"
   }
 }
