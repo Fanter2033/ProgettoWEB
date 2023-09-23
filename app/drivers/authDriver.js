@@ -2,7 +2,6 @@ const express = require("express");
 const authDriver = express();
 const AuthController = require("../controllers/AuthController");
 const AuthModel = require("../models/AuthModel");
-const User = require("../entities/User");
 const {_AUTH_ATTEMPTS_COLLECTION} = require("../config/squealer");
 let controller = new AuthController(new AuthModel(_AUTH_ATTEMPTS_COLLECTION));
 

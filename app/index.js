@@ -6,28 +6,18 @@ const authDriver = require('./drivers/authDriver.js')
 const userDriver = require('./drivers/userDriver');
 const viewDriver = require('./drivers/views/viewDriver');
 const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
 
 global.rootDir = __dirname;
 global.startDate = null;
 global.autoload = autoload;
+backEndRouter.set('trust proxy', 1);
 
 backEndRouter.use('/js', express.static(global.rootDir + '/public/js'));
 backEndRouter.use('/css', express.static(global.rootDir + '/public/css'));
 backEndRouter.use('/data', express.static(global.rootDir + '/public/data'));
 backEndRouter.use('/docs', express.static(global.rootDir + '/public/html'));
 backEndRouter.use('/img', express.static(global.rootDir + '/public/media'));
-
-backEndRouter.use(session({
-    name: autoload.config._APPLICATION_NAME,
-    resave: false,
-    saveUninitialized: false,
-    secret: autoload.config._SESSION_SECRET,
-    cookie: {
-        maxAge: 24 * 60 * 60,
-        sameSite: true,
-        secure: true
-    }
-}));
 
 /*
 backEndRouter.get('/home', (req, res) => {
