@@ -22,9 +22,11 @@ module.exports = class AuthController extends Controller {
 
     async authenticateUser(requestObject, responseObject, username, password_attempt, requested_role = 0) {
 
+        /*
         if(typeof requestObject.session.username !== 'undefined') {
             responseObject.redirect('admin/dashboard');
         }
+         */
 
         let output = this.getDefaultOutput();
         requested_role = parseInt(requested_role);
@@ -65,7 +67,7 @@ module.exports = class AuthController extends Controller {
         attempt.setTimestampEnd(this.getCurrentTimestampMillis());
         attempt.setServerResponseCode(200);
         this._model.insertAttempt(attempt);
-        requestObject.session.username = user.getUsername();
+        //requestObject.session.username = user.getUsername();
         return output;
     }
 
