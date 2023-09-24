@@ -63,11 +63,11 @@ module.exports = class AuthController extends Controller {
             output.msg = '';
             return output;
         }
-        //TODO CRARE LA SESSIONE e REGISTRARE I TENTATIVI E AGGIORNARE IL TENTATIVO
         attempt.setTimestampEnd(this.getCurrentTimestampMillis());
         attempt.setServerResponseCode(200);
         this._model.insertAttempt(attempt);
-        //requestObject.session.username = user.getUsername();
+        requestObject.session.user = user;
+        requestObject.session.save();
         return output;
     }
 
@@ -94,5 +94,4 @@ module.exports = class AuthController extends Controller {
 
         }
     }
-
 }

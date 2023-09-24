@@ -15,15 +15,15 @@ function requestLogin() {
 
     $.ajax({
         async: true,
-        url: `auth/${username}/2`,
+        url: `../auth/${username}/2`,
         method: 'POST',
         data: dataReq,
         dataType: 'json',
         contentType: "application/json",
-        success: function (data) {
-
+        success: function () {
+            location.reload();
         },
-        error: function (data, status, error) {
+        error: function (data) {
             switch (data.status) {
                 case 403:
                     toastr["error"]("Autenticazione fallita. Riprovare", "Attenzione");

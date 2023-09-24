@@ -3,6 +3,7 @@ const viewDriver = express();
 const path = require("path")
 const publicDir = path.join(__dirname, '../../public');
 viewDriver.use(express.static(publicDir));
+const viewAdminDriver = require('./viewAdminDriver');
 
 viewDriver.get('/', function (req, res) {
     res.sendFile(publicDir + "/html/deMultiplexPage.html");
@@ -20,9 +21,7 @@ viewDriver.get('/smm/', function (req, res){
     res.send('HELLO! Cambiare qui (2)');
 });
 
-viewDriver.get('/admin/', function (req, res){
-    res.sendFile(publicDir + "/html/loginAdmin.html");
-});
+viewDriver.use('/admin', viewAdminDriver);
 
 module.exports = viewDriver;
 
