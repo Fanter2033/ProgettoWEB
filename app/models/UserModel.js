@@ -4,18 +4,30 @@ const mongoose = require("mongoose");
 module.exports = class UserModel extends Model {
     constructor(userCollectionName) {
         super(userCollectionName);
+        this.connectedMongoose = null;
+        this.userMongoose = null;
+    }
+
+    async checkMongoose(){
+        if(this.connectedMongoose === null) {
+            this.connectedMongoose = await this.connectMongoose();
+            this.userMongoose = this.getMongooseUserModel(this.connectedMongoose, User);
+        }
     }
 
     getMongooseUserModel(mongoose, schema) {
         return mongoose.model('User', schema);
     }
 
+    /**
+     * @param username
+     * @return {{}|User}
+     */
     async getUser(username) {
-        let connectMongoose = await this.connectMongoose();
-        let userMongoose = this.getMongooseUserModel(connectMongoose, User);
+        await this.checkMongoose();
         let filter = {"username": `${username}`};
         filter = this.mongo_escape(filter);
-        let results = await userMongoose.find(filter);
+        let results = await this.userMongoose.find(filter);
         if (results.length === 1)
             return results[0];
         return {};
@@ -28,11 +40,8 @@ module.exports = class UserModel extends Model {
      * Given a username returns true if the user exists, false otherwise.
      */
     async userExists(username) {
-        let filter = {"username": `${username}`};
-        filter = this.mongo_escape(filter);
-        let collection = await this.getCollection();
-        let results = await collection.find(filter).toArray();
-        return results.length >= 1;
+        let user = this.getUser(username);
+        return (Object.keys(user).length > 0);
     }
 
     /**
@@ -45,9 +54,9 @@ module.exports = class UserModel extends Model {
      *
      */
     async deleteUser(username) {
+        await this.checkMongoose();
         let filter = {"username": `${username}`};
         filter = this.mongo_escape(filter);
-        let collection = await this.getCollection();
         let response = await collection.deleteOne(filter);
         return response.deletedCount > 0;
     }
@@ -57,9 +66,8 @@ module.exports = class UserModel extends Model {
      * @returns {Promise<boolean>}
      */
     async createUser(userObj) {
-        let collection = await this.getCollection();
         userObj = this.mongo_escape(userObj);
-        let response = await collection.insertOne(userObj);
+        let response = await this.userMongoose.insertOne(userObj);
         if (response)
             return true;
         return false;

@@ -143,7 +143,7 @@ module.exports = class UserController extends Controller {
     }
 
     /**
-     * @param userObj {User}
+     * @param userObj {Object}
      * @returns number
      * Execute data control. Returns 1 on success. Returns negative numbers on errors.
      * Please control the code to understand the errors handled.
@@ -153,7 +153,7 @@ module.exports = class UserController extends Controller {
         let password = userObj.getPassword().trim();
         let firstname = userObj.getFirstname().trim();
         let lastname = userObj.getLastname().trim();
-        let email = userObj.getEmail().trim();
+        let email = userObj.getEmail().trim().toLowerCase();
         userObj.setRegistrationTimestamp(this.getCurrentTimestampSeconds());
 
         if (username.length === 0 || password.length === 0 || firstname.length === 0 || lastname.length === 0 || email.length === 0)
