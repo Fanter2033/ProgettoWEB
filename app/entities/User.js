@@ -1,3 +1,17 @@
+const {Schema} = require( "mongoose");
+
+module.exports = new Schema({
+    username: {type: String, index: true, unique: true},
+    email: {type: String, index: true, unique: true},
+    first_name: String,
+    last_name: String,
+    psw_shadow: String,
+    registration_timestamp: Number,
+    isUser: Boolean,
+    isSmm: Boolean,
+    isAdmin: Boolean
+});
+/*
 module.exports = class User {
 
     constructor(username, email, firstname = '', lastname = '', password = '', registration_timestamp = 0, isUser = false, isSmm = false, isAdmin = false) {
@@ -62,24 +76,16 @@ module.exports = class User {
     }
 
 
-    /**
-     * @return {boolean}
-     */
     checkIsUser() {
         return this.isUser;
     }
 
-    /**
-     * @return {boolean}
-     */
     checkIsSmm() {
         return this.isSmm;
     }
 
-    /**
-     * @return {boolean}
-     */
     checkIsAdmin() {
         return this.isAdmin;
     }
 }
+ */

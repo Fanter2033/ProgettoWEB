@@ -1,17 +1,23 @@
 const User = require("../entities/User");
 const Model = require("./Model");
+const mongoose = require("mongoose");
 module.exports = class UserModel extends Model {
     constructor(userCollectionName) {
         super(userCollectionName);
     }
 
+    getMongooseUserModel(mongoose, schema) {
+        return mongoose.model('User', schema);
+    }
+
     async getUser(username) {
+        let connectMongoose = await this.connectMongoose();
+        let userMongoose = this.getMongooseUserModel(connectMongoose, User);
         let filter = {"username": `${username}`};
         filter = this.mongo_escape(filter);
-        let collection = await this.getCollection();
-        let results = await collection.find(filter).toArray();
+        let results = await userMongoose.find(filter);
         if (results.length === 1)
-            return new User(results[0].username, results[0].email, results[0].first_name, results[0].last_name, results[0].psw_shadow, results[0].registration_timestamp, results[0].isUser, results[0].isSmm, results[0].isAdmin);
+            return results[0];
         return {};
     }
 

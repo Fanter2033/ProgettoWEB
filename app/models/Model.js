@@ -1,4 +1,6 @@
 const mongo_escape = require('mongo-escape').escape;
+const mongoose = require('mongoose');
+const autoload = require('../autoload/autoload');
 module.exports = class Model {
 
     mongo_escape;
@@ -18,6 +20,13 @@ module.exports = class Model {
         let conn = await autoload.mongoConnectionFunctions.getDatabaseConnection();
         await conn.connect();
         return conn.db(autoload.config._DATABASE_NAME);
+    }
+
+    /**
+     * @return {Promise<void>}
+     */
+    async connectMongoose(){
+        return mongoose.connect(autoload.mongoConnectionFunctions.getDatabaseConnectionUri());
     }
 
     /**
