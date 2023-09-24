@@ -36,6 +36,7 @@ backEndRouter.use(express.urlencoded({ extended: true }));
 backEndRouter.use(cookieParser());
 
 backEndRouter.get('*', (req, res, next) => {
+    //TODO FARE UPDATE DELLA SESSION COLLEGANDO L'utente QUI
     console.log(req.session);
     next();
 });
