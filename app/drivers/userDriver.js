@@ -2,7 +2,8 @@ const express = require("express");
 const userDriver = express();
 const UserController = require("../controllers/UserController");
 const UserModel = require("../models/UserModel");
-const User = require("../entities/User");
+const User = require("../entities/schemas/UserSchema");
+const UserDto = require("../entities/dtos/UserDto");
 let controller = new UserController(new UserModel('users'));
 
 userDriver.use(express.json());
@@ -42,7 +43,12 @@ userDriver.post('/', async function (req, res) {
     let lastname = (typeof req.body.user.lastname !== 'undefined' ? req.body.user.lastname : '');
     let password = (typeof req.body.user.password !== 'undefined' ? req.body.user.password : '');
 
-    let user = new User(username, email, firstname, lastname, password, 0);
+    let user = new UserDto();
+    user.username = username
+    user.email = email;
+    user.first_name = firstname
+    user.last_name = lastname;
+    user.psw_shadow = password;
     let ctrl = await controller.createUser(user);
     if (ctrl.code === 200)
         res.status(ctrl.code).send(ctrl.content);
@@ -69,7 +75,12 @@ userDriver.put('/:username', async function (req, res) {
     let password = (typeof req.body.user.password !== 'undefined' ? req.body.user.password : '');
     let username_old = req.params['username'];
 
-    let user = new User(username, email, firstname, lastname, password, 0);
+    let user = new UserDto();
+    user.username = username
+    user.email = email;
+    user.first_name = firstname
+    user.last_name = lastname;
+    user.psw_shadow = password;
     let ctrl = await controller.updateUser(user, username_old);
     if (ctrl.code === 200)
         res.status(ctrl.code).send(ctrl.content);

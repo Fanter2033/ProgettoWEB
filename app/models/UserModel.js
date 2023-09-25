@@ -1,6 +1,7 @@
-const User = require("../entities/User");
+const User = require("../entities/schemas/UserSchema");
 const Model = require("./Model");
 const mongoose = require("mongoose");
+const UserDto = require("../entities/dtos/UserDto");
 module.exports = class UserModel extends Model {
     constructor(userCollectionName) {
         super(userCollectionName);
@@ -21,7 +22,7 @@ module.exports = class UserModel extends Model {
 
     /**
      * @param username
-     * @return {{}|User}
+     * @return {{}|UserDto}
      */
     async getUser(username) {
         await this.checkMongoose();
@@ -29,7 +30,7 @@ module.exports = class UserModel extends Model {
         filter = this.mongo_escape(filter);
         let results = await this.userMongoose.find(filter);
         if (results.length === 1)
-            return results[0];
+            return new UserDto(results[0]._doc);
         return {};
     }
 
@@ -40,8 +41,8 @@ module.exports = class UserModel extends Model {
      * Given a username returns true if the user exists, false otherwise.
      */
     async userExists(username) {
-        let user = this.getUser(username);
-        return (Object.keys(user).length > 0);
+        let user = await this.getUser(username);
+        return (user).constructor.name === 'UserDto';
     }
 
     /**
@@ -57,8 +58,12 @@ module.exports = class UserModel extends Model {
         await this.checkMongoose();
         let filter = {"username": `${username}`};
         filter = this.mongo_escape(filter);
-        let response = await collection.deleteOne(filter);
-        return response.deletedCount > 0;
+        try {
+            await this.userMongoose.deleteOne(filter);
+        } catch (ignored) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -66,27 +71,34 @@ module.exports = class UserModel extends Model {
      * @returns {Promise<boolean>}
      */
     async createUser(userObj) {
-        userObj = this.mongo_escape(userObj);
-        let response = await this.userMongoose.insertOne(userObj);
-        if (response)
-            return true;
-        return false;
+        await this.checkMongoose();
+        userObj = this.mongo_escape(userObj.getDocument());
+        let userInserting = new this.userMongoose(userObj);
+        try {
+            await userInserting.save();
+        } catch (ignored) {
+            return false;
+        }
+        return true;
     }
 
     /**
-     * @param userObj {User}
+     * @param userObj {UserDto}
      * @param username {string}
      * @returns {Promise<boolean>}
      */
     async replaceUser(userObj, username) {
-        let collection = await this.getCollection();
+        await this.checkMongoose();
         let filter = {"username": `${username}`};
         filter = this.mongo_escape(filter);
-        userObj = this.mongo_escape(filter);
-        let response = await collection.replaceOne(filter, userObj);
-        if (response.modifiedCount > 0)
-            return true;
-        return false;
+        userObj = this.mongo_escape(userObj.getDocument());
+        try {
+            await this.userMongoose.replaceOne(filter, userObj);
+        } catch (ignored) {
+            return false;
+        }
+        return true;
+
     }
 
 }

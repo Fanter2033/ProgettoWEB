@@ -23,6 +23,10 @@ module.exports = class Controller {
         return false;
     }
 
+    isInstanceOfClass(object, className) {
+        return object.constructor.name === className;
+    }
+
     getDefaultOutput() {
         return {
             'code': 200,

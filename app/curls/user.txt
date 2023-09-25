@@ -1,1 +1,4 @@
 curl -i -X POST -H "Content-Type: application/json" -d '{"user":{"username":"piedini32", "firstname" : "Piedi", "lastname" : "Sami              e   ", "email" : "dad@pied.it", "password" : "cazzini282"}}' http://localhost:8000/user/
+curl -i -X GET -H "Content-Type: application/json"  http://localhost:8000/user/romanellas
+curl -i -X DELETE -H "Content-Type: application/json"  http://localhost:8000/user/romanellas
+curl -i -X PUT -H "Content-Type: application/json" -d '{"user":{"username":"birba", "firstname" : "Birba", "lastname" : "Biii", "email" : "birba.casalini@gmail.com", "password" : "ciaociao"}}' http://localhost:8000/user/romanellas_2

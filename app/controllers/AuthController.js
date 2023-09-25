@@ -55,7 +55,7 @@ module.exports = class AuthController extends Controller {
             output.msg = '';
             return output;
         }
-        let checkResult = await this.hashCheck(user.getPassword(), password_attempt);
+        let checkResult = await this.hashCheck(user.psw_shadow, password_attempt);
         if(checkResult === false){
             attempt.setTimestampEnd(this.getCurrentTimestampMillis());
             this._model.insertAttempt(attempt);
@@ -74,7 +74,7 @@ module.exports = class AuthController extends Controller {
 
     /**
      *
-     * @param {User} user
+     * @param {UserDto} user
      * @param {number} requested_role
      * @return {boolean}
      *
@@ -84,11 +84,11 @@ module.exports = class AuthController extends Controller {
     hasUserRequestedRole(user, requested_role = 0) {
         switch (requested_role){
             case 0:
-                return user.checkIsUser();
+                return user.isUser;
             case 1:
-                return user.checkIsSmm();
+                return user.isSmm;
             case 2:
-                return user.checkIsAdmin();
+                return user.isAdmin;
             default:
                 return false;
 
