@@ -9,7 +9,7 @@ module.exports = class UserController extends Controller {
     /**
      *
      * @param username
-     * @returns {Promise<*|User|{}>}
+     * @returns {Promise<*|UserDto|{}>}
      * Given a username, this functions returns the user, if found. Error 404 otherwise.
      */
     async getUser(username) {
@@ -23,13 +23,13 @@ module.exports = class UserController extends Controller {
         }
 
         let user = await this._model.getUser(username);
-        if (this.isObjectVoid(user)) {
+        if (!this.isInstanceOfClass(user, 'UserDto')) {
             //User not found!
             output['code'] = 404;
             output['msg'] = 'User not found.';
         } else
             //User found
-            output['content'] = user;
+            output['content'] = user.getDocument();
         return output;
     }
 
@@ -60,7 +60,7 @@ module.exports = class UserController extends Controller {
     }
 
     /**
-     * @param userObj {User}
+     * @param userObj {UserDto}
      * @returns {Promise<Object>}
      * Given the user object returns code 200 if the user is created, false otherwise.
      */
@@ -75,7 +75,7 @@ module.exports = class UserController extends Controller {
         }
 
         //Check the username do not exists
-        if (await this._model.userExists(userObj.getUsername())) {
+        if (await this._model.userExists(userObj.username)) {
             output['code'] = 400;
             output['req_error'] = -1;
             output['msg'] = 'Username already exists.';
@@ -83,8 +83,8 @@ module.exports = class UserController extends Controller {
         }
 
         //Salt! - A lot of SALT!!!
-        let hash = await this.crypt(userObj.getPassword())
-        userObj.setPassword(hash);
+        let hash = await this.crypt(userObj.psw_shadow)
+        userObj.psw_shadow = hash;
 
         let databaseResponse = await this._model.createUser(userObj);
         if (databaseResponse)
@@ -99,7 +99,7 @@ module.exports = class UserController extends Controller {
 
     /**
      *
-     * @param newUser {User}
+     * @param newUser {UserDto}
      * @param oldUsername {string}
      * @returns {Promise<Object>}
      */
@@ -118,20 +118,17 @@ module.exports = class UserController extends Controller {
             return output;
         }
 
-        if (await this._model.userExists(newUser.getUsername()) && newUser.getUsername() !== oldUsername) {
+        if (await this._model.userExists(newUser.username) && newUser.username !== oldUsername) {
             output['code'] = 400;
             output['msg'] = 'Username already used';
             return output;
         }
 
         let oldUserObj = await this._model.getUser(oldUsername);
+        newUser.registration_timestamp = oldUserObj.registration_timestamp;
+        newUser.psw_shadow = await this.crypt(newUser.psw_shadow);
 
-        newUser.setRegistrationTimestamp(oldUserObj.getRegistrationTimestamp());
-
-        let hash = await this.crypt(newUser.getPassword())
-        newUser.setPassword(hash);
-
-        let databaseResponse = await this._model.replaceUser(newUser, oldUserObj.getUsername());
+        let databaseResponse = await this._model.replaceUser(newUser, oldUserObj.username);
         if (databaseResponse)
             output['content'] = newUser;
         else {
@@ -143,18 +140,18 @@ module.exports = class UserController extends Controller {
     }
 
     /**
-     * @param userObj {User}
+     * @param userObj {UserDto}
      * @returns number
      * Execute data control. Returns 1 on success. Returns negative numbers on errors.
      * Please control the code to understand the errors handled.
      */
     controlUser(userObj) {
-        let username = userObj.getUsername().trim().toLowerCase();
-        let password = userObj.getPassword().trim();
-        let firstname = userObj.getFirstname().trim();
-        let lastname = userObj.getLastname().trim();
-        let email = userObj.getEmail().trim();
-        userObj.setRegistrationTimestamp(this.getCurrentTimestampSeconds());
+        let username = userObj.username.trim().toLowerCase();
+        let password = userObj.psw_shadow.trim();
+        let firstname = userObj.first_name.trim();
+        let lastname = userObj.last_name.trim();
+        let email = userObj.email.trim().toLowerCase();
+        userObj.registration_timestamp = this.getCurrentTimestampSeconds();
 
         if (username.length === 0 || password.length === 0 || firstname.length === 0 || lastname.length === 0 || email.length === 0)
             return -1;
@@ -162,11 +159,14 @@ module.exports = class UserController extends Controller {
         if (this.isEmail(email) === false)
             return -2;
 
-        userObj.setUsername(username);
-        userObj.setPassword(password);
-        userObj.setFirstname(firstname);
-        userObj.setLastname(lastname);
-        userObj.setEmail(email);
+        userObj.username = username;
+        userObj.psw_shadow = password;
+        userObj.first_name = firstname;
+        userObj.last_name = lastname;
+        userObj.email = email;
+        userObj.isUser = true;
+        userObj.isSmm = false;
+        userObj.isAdmin = false;
 
         return 0;
     }

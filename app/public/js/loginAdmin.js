@@ -15,15 +15,15 @@ function requestLogin() {
 
     $.ajax({
         async: true,
-        url: `auth/${username}`,
+        url: `../auth/${username}/2`,
         method: 'POST',
         data: dataReq,
         dataType: 'json',
         contentType: "application/json",
-        success: function (data) {
-
+        success: function () {
+            location.reload();
         },
-        error: function (data, status, error) {
+        error: function (data) {
             switch (data.status) {
                 case 403:
                     toastr["error"]("Autenticazione fallita. Riprovare", "Attenzione");
@@ -36,7 +36,8 @@ function requestLogin() {
     });
 
 }
-/*
+
+
 function showModalRegister() {
     $('#registerUsername').val('');
     $('#registerEmail').val('');
@@ -46,9 +47,6 @@ function showModalRegister() {
     $('#confirmPassword').val('');
     $('#modalRegistrazione').modal('show');
 }
- */
-
-/*
 function registerUser() {
     let username = $('#registerUsername').val();
     let email = $('#registerEmail').val();
@@ -93,7 +91,7 @@ function registerUser() {
 
     $.ajax({
         async: true,
-        url: 'user/',
+        url: '../user/',
         method: 'POST',
         data: dataReq,
         dataType: 'json',
@@ -118,7 +116,6 @@ function registerUser() {
         }
     });
 }
- */
 
 /*
 function showModalRecuperaAccount() {
