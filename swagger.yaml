@@ -37,6 +37,17 @@ paths:
           description: Failed authentication due server error
         '403':
           description: Failed authentication due wrong password or username.
+  /auth/logout:
+    post:
+      summary: De-Authenticate user
+      description: De-Authenticate the requesting user, if one is logged, the user is got by the server using session id!
+      responses:
+        '204':
+          description: Returns no content, the client knows what do.
+        '500':
+          description: Failed authentication due server error
+        '404':
+          description: No user to de-authenticate found.
   /user/{username}:
     put:
       tags:

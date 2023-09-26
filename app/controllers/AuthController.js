@@ -6,7 +6,7 @@ const session = require('express-session')
 const AuthenticationAttemptDto = require('../entities/dtos/AuthenticationAttemptDto');
 module.exports = class AuthController extends Controller {
 
-    constructor(model, invokerIp) {
+    constructor(model) {
         super();
         this._model = model;
         this._userController = new UserController(new UserModel(config._USER_COLLECTION));
@@ -63,10 +63,23 @@ module.exports = class AuthController extends Controller {
             return output;
         }
         attempt.timestampEnd = this.getCurrentTimestampMillis();
-        attempt.serverResponseCode = 200;
+        attempt.serverResponseCode = 204;
         await this._model.insertAttempt(attempt);
         requestObject.session.user = user;
         requestObject.session.save();
+        return output;
+    }
+
+    deAuthenticateUser(requestObject){
+        let output = this.getDefaultOutput();
+        if(this.isAuthLogged(requestObject) === false){
+            output.code = 404;
+            output.msg = 'Not authenticated.';
+            return output;
+        }
+
+        requestObject.session.destroy();
+        output.code = 204;
         return output;
     }
 
@@ -93,4 +106,27 @@ module.exports = class AuthController extends Controller {
 
         }
     }
+
+    /**
+     * @param request
+     * return {Boolean}
+     */
+    isAuthLogged(request) {
+        if(request.session && request.session.user && request.session.user.username)
+            return true;
+        return false;
+    }
+
+
+    /**
+     * @param request
+     * return {Promise<Boolean>}
+     */
+    async isAuthAdmin(request) {
+        if(this.isAuthLogged(request) === false)
+            return false;
+        let user = await this._userController.getUser(request.session.user.username);
+        return user.isAdmin;
+    }
+
 }
