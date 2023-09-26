@@ -19,11 +19,29 @@ Le entità sono strutture dati su cui sono definite le operazioni CRUD
 
 NOTA: Successivamente per tutte le entità di cui sopra debbono essere tassativamente definite le API (uri) e anche una tabella che descriva i campi e i loro tipi
 
-# Lista delle cose da fare
-1. Speicifca swagger
-2. Costruiamo il DB(?)
-3. Autenticazione
-4. .... Idee?
+# Lista delle cose da fare - Obbligatorie
+- [x] Speicifca swagger
+- [x] Costruiamo il DB(?)
+- [x] Autenticazione
+- [ ] [USR] Realizzare interfaccia
+- [ ] [SMM] Realizzare interfaccia
+- [ ] [MOD] Realizzare interfaccia
+- [ ] [ALL] Gestione quota (mensile/settimanale/annuale) *Per i messaggi pubbllici (CANALI E PUBBLICI)*
+- [ ] [ALL] Squeal Testuali - Interfaccia e implementazione back-end
+- [ ] [ALL] Squeal con immagini - Interfaccia e implementazione back-end
+- [ ] [ALL] Squeal con posizioni - Interfaccia e implementazione back-end
+- [ ] [BACK-END] Parametrizzare la quota di caratteri giornalieri D, la quota di caratteri settimanali W e la quota mensile M ricordando che deve valere: W < 7 * D e anche che M < W * 4.
+- [ ] [MOD][BACK-END] Realizzare la modifica dei parametri D, W ed M di cui sopra. La modifica deve essere consentita ai moderratori in quanto deve essere fatta "velocemente".
+- [ ] [USR][SMM] La quota deve essere sempre visibile, mostrata ed aggiornata mentre si scrive
+- [ ] [USR][SMM][BACK-END] I messaggi privati non tengono conto della quota
+- [ ] [ALL] Realizzare il sistema che permette di comprare la quota (non so se si può simulare)
+- [ ] [BACK-END] Realizzare il cambiamento della quota a causa della reazione degli utenti.
+- [ ] CONTINUARE QUESTA LISTA
+
+# Lista delle cose da fare - Consigliate dalla specifica o idee
+- [ ] [EXTRA][MOD][BACK-END] Sia il parametro F (anch'essi modificabile rapidamente da un MOD) tale che consente di scrivere F caratteri extra per concludere il messaggio in corso. Se all'inizio la quota è 0 non deve far scrivere il messaggio. La quota viene "scontata" nel periodo successivo a quella (o quelle) sulle quali si verifica un eccesso.
+- 
+
 
 
 ## Istruzioni: Avviare il sito sulle macchine di laboratorio
