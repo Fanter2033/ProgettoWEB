@@ -6,7 +6,6 @@ info:
 #host: "site222317.tw.cs.unibo.it"
 host : "localhost:8000"
 basePath: "/"
-#basePath: "/"
 schemes:
 - "http"
 - "https"

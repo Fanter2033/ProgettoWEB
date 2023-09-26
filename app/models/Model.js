@@ -10,6 +10,15 @@ module.exports = class Model {
     constructor(collection_name) {
         this.mongo_escape = mongo_escape;
         this.collection_name = collection_name;
+        this.connectedMongoose = null;
+        this.entityMongooseModel = null;
+    }
+
+    async checkMongoose(name, schema){
+        if(this.connectedMongoose === null || this.entityMongooseModel === null) {
+            this.connectedMongoose = await this.connectMongoose();
+            this.entityMongooseModel = this.connectedMongoose.model(name, schema);
+        }
     }
 
     /**

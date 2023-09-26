@@ -3,7 +3,7 @@ const UserController = require("./UserController");
 const UserModel = require("../models/UserModel");
 const {config} = require("../autoload/autoload");
 const session = require('express-session')
-const AuthenticationAttempt = require('../entities/AuthenticationAttempt');
+const AuthenticationAttemptDto = require('../entities/dtos/AuthenticationAttemptDto');
 module.exports = class AuthController extends Controller {
 
     constructor(model, invokerIp) {
@@ -21,13 +21,6 @@ module.exports = class AuthController extends Controller {
     }
 
     async authenticateUser(requestObject, responseObject, username, password_attempt, requested_role = 0) {
-
-        /*
-        if(typeof requestObject.session.username !== 'undefined') {
-            responseObject.redirect('admin/dashboard');
-        }
-         */
-
         let output = this.getDefaultOutput();
         requested_role = parseInt(requested_role);
         if(isNaN(requested_role)) {
@@ -36,12 +29,18 @@ module.exports = class AuthController extends Controller {
             return output;
         }
 
-        let attempt = new AuthenticationAttempt(this.invokerIp, this.getCurrentTimestampMillis(), 403, username, requested_role);
+        let attempt = new AuthenticationAttemptDto();
+        //this.invokerIp, this.getCurrentTimestampMillis(), 403, username, requested_role
+        attempt.ipAddress = this.invokerIp;
+        attempt.timestampStart = this.getCurrentTimestampMillis();
+        attempt.serverResponseCode = 403;
+        attempt.requestedUsername = username;
+        attempt.requestedRole = requested_role;
 
         let userControllerOutput = await this._userController.getUser(username);
         if(userControllerOutput.code !== 200) {
-            attempt.setTimestampEnd(this.getCurrentTimestampMillis());
-            this._model.insertAttempt(attempt);
+            attempt.timestampEnd = this.getCurrentTimestampMillis();
+            await this._model.insertAttempt(attempt);
             output.code = 403;
             output.msg = '';
             return output;
@@ -49,23 +48,23 @@ module.exports = class AuthController extends Controller {
         let user = userControllerOutput.content;
         let hasRole = this.hasUserRequestedRole(user, requested_role);
         if(hasRole === false){
-            attempt.setTimestampEnd(this.getCurrentTimestampMillis());
-            this._model.insertAttempt(attempt);
+            attempt.timestampEnd = this.getCurrentTimestampMillis();
+            await this._model.insertAttempt(attempt);
             output.code = 403;
             output.msg = '';
             return output;
         }
         let checkResult = await this.hashCheck(user.psw_shadow, password_attempt);
         if(checkResult === false){
-            attempt.setTimestampEnd(this.getCurrentTimestampMillis());
-            this._model.insertAttempt(attempt);
+            attempt.timestampEnd = this.getCurrentTimestampMillis();
+            await this._model.insertAttempt(attempt);
             output.code = 403;
             output.msg = '';
             return output;
         }
-        attempt.setTimestampEnd(this.getCurrentTimestampMillis());
-        attempt.setServerResponseCode(200);
-        this._model.insertAttempt(attempt);
+        attempt.timestampEnd = this.getCurrentTimestampMillis();
+        attempt.serverResponseCode = 200;
+        await this._model.insertAttempt(attempt);
         requestObject.session.user = user;
         requestObject.session.save();
         return output;
