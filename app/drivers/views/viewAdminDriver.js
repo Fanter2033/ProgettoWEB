@@ -21,7 +21,7 @@ viewAdminDriver.get('/', function (req, res){
 viewAdminDriver.get('/dashboard', async function (req, res) {
     let authAdmin = await authController.isAuthAdmin(req);
     if (authAdmin === false) {
-        res.redirect('../');
+        res.redirect('./');
         return;
     }
     //If we are here, we can send the page, cause them are an admin!
