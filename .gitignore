@@ -8,5 +8,8 @@ node_modules
 */package-lock.json
 package-lock.json
 
+#Exclude logs
+logs/
+
 # Excluding ide(s) files
 .idea/

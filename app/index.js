@@ -36,8 +36,8 @@ backEndRouter.use(express.urlencoded({ extended: true }));
 backEndRouter.use(cookieParser());
 
 backEndRouter.get('*', (req, res, next) => {
-    //TODO FARE LOGGING QUI (ANCHE SU FILE)
-    console.log(req.session);
+    autoload.loggerFile.write(autoload.logger, `logs/accesslog_${(new Date).toISOString().split('T')[0]}.txt`);
+    autoload.logger.info(`[${(new Date).toISOString().split('T')[0]} ${(new Date).toISOString().split('T')[1].split('.')[0]}][${req.method}][${req.socket.remoteAddress}] Has requested the document: ${req.originalUrl}. \n Request body: ${JSON.stringify(req.body)} \n`);
     next();
 });
 

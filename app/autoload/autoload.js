@@ -10,3 +10,8 @@ mongoConnection.setDatabaseParams(config._DATABASE_USER, config._DATABASE_PWD, c
 exports.config = config;
 exports.mongoConnectionFunctions = mongoConnection;
 
+const logger = require('npmlog');
+const loggerFile = require('npmlog-file');
+
+exports.logger = logger;
+exports.loggerFile = loggerFile;

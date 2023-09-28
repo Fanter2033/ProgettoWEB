@@ -23,6 +23,8 @@
     "mongo-escape": "^2.0.6",
     "mongodb": "^5.7.0",
     "mongoose": "^7.5.2",
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "npmlog": "^7.0.1",
+    "npmlog-file": "^0.1.4"
   }
 }
