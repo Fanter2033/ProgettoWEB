@@ -83,8 +83,7 @@ module.exports = class UserController extends Controller {
         }
 
         //Salt! - A lot of SALT!!!
-        let hash = await this.crypt(userObj.psw_shadow)
-        userObj.psw_shadow = hash;
+        userObj.psw_shadow = await this.crypt(userObj.psw_shadow);
 
         let databaseResponse = await this._model.createUser(userObj);
         if (databaseResponse)
