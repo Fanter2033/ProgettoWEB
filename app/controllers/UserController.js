@@ -8,14 +8,14 @@ module.exports = class UserController extends Controller {
 
     /**
      *
-     * @param username
+     * @param username {String}
      * @returns {Promise<*|UserDto|{}>}
      * Given a username, this functions returns the user, if found. Error 404 otherwise.
      */
     async getUser(username) {
         let output = this.getDefaultOutput();
 
-        username = username.trim();
+        username = username.trim().toLowerCase();
         if (username.length === 0) {
             output['code'] = 400;
             output['msg'] = 'No username sent.';
