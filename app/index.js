@@ -36,9 +36,16 @@ backEndRouter.use(express.urlencoded({ extended: true }));
 backEndRouter.use(cookieParser());
 
 backEndRouter.get('*', (req, res, next) => {
-    autoload.loggerFile.write(autoload.logger, `logs/accesslog_${(new Date).toISOString().split('T')[0]}.txt`);
-    autoload.logger.info(`[${(new Date).toISOString().split('T')[0]} ${(new Date).toISOString().split('T')[1].split('.')[0]}][${req.method}][${req.socket.remoteAddress}] Has requested the document: ${req.originalUrl}. \n Request body: ${JSON.stringify(req.body)} \n`);
-    next();
+    autoload.logRequests(req, next);
+});
+backEndRouter.post('*', (req, res, next) => {
+    autoload.logRequests(req, next);
+});
+backEndRouter.put('*', (req, res, next) => {
+    autoload.logRequests(req, next);
+});
+backEndRouter.delete('*', (req, res, next) => {
+    autoload.logRequests(req, next);
 });
 
 backEndRouter.use('/js', express.static(global.rootDir + '/public/js'));

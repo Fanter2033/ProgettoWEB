@@ -54,7 +54,7 @@ module.exports = class UserModel extends Model {
     }
 
     /**
-     * @param userObj
+     * @param userObj {UserDto}
      * @returns {Promise<boolean>}
      */
     async createUser(userObj) {

@@ -8,14 +8,14 @@ module.exports = class UserController extends Controller {
 
     /**
      *
-     * @param username
+     * @param username {String}
      * @returns {Promise<*|UserDto|{}>}
      * Given a username, this functions returns the user, if found. Error 404 otherwise.
      */
     async getUser(username) {
         let output = this.getDefaultOutput();
 
-        username = username.trim();
+        username = username.trim().toLowerCase();
         if (username.length === 0) {
             output['code'] = 400;
             output['msg'] = 'No username sent.';
@@ -83,8 +83,7 @@ module.exports = class UserController extends Controller {
         }
 
         //Salt! - A lot of SALT!!!
-        let hash = await this.crypt(userObj.psw_shadow)
-        userObj.psw_shadow = hash;
+        userObj.psw_shadow = await this.crypt(userObj.psw_shadow);
 
         let databaseResponse = await this._model.createUser(userObj);
         if (databaseResponse)
