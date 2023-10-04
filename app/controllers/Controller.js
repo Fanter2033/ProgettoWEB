@@ -95,4 +95,12 @@ module.exports = class Controller {
             });
     }
 
+    /**
+     * @param max {number}
+     * @return {number}
+     */
+    getRandomInt(max) {
+        return Math.floor(Math.random() * max);
+    }
+
 }
