@@ -6,31 +6,28 @@ const authDriver = require('./drivers/authDriver.js')
 const userDriver = require('./drivers/userDriver');
 const viewDriver = require('./drivers/views/viewDriver');
 const session = require('express-session');
-const MongoDBStore = require('connect-mongodb-session')(session);
+const MongoStore = require('connect-mongo');
 const cookieParser = require('cookie-parser');
 
 global.rootDir = __dirname;
 global.startDate = null;
 global.autoload = autoload;
 
-
-const store = new MongoDBStore({
-    uri: `mongodb://${autoload.config._DATABASE_USER}:${autoload.config._DATABASE_PWD}@${autoload.config._DATABASE_HOST}:${autoload.config._DATABASE_PORT}/${autoload.config._DATABASE_NAME}${autoload.config._DATABASE_EXTRA}`,
-    collection: autoload.config._SESSION_COLLECTION
-});
-
 const oneDay = 1000 * 60 * 60 * 24;
 backEndRouter.use(session({
     secret: autoload.config._SESSION_SECRET,
-    store: store,
-    saveUninitialized:true,
-    cookie: { maxAge: oneDay },
+    store: MongoStore.create({
+        mongoUrl: `mongodb://${autoload.config._DATABASE_USER}:${autoload.config._DATABASE_PWD}@${autoload.config._DATABASE_HOST}:${autoload.config._DATABASE_PORT}/${autoload.config._DATABASE_NAME}${autoload.config._DATABASE_EXTRA}`,
+        collection: autoload.config._SESSION_COLLECTION
+    }),
+    saveUninitialized: true,
+    cookie: {maxAge: oneDay},
     resave: false
 }));
 
 // parsing the incoming data
 backEndRouter.use(express.json());
-backEndRouter.use(express.urlencoded({ extended: true }));
+backEndRouter.use(express.urlencoded({extended: true}));
 
 // cookie parser middleware
 backEndRouter.use(cookieParser());
