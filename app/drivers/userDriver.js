@@ -2,9 +2,11 @@ const express = require("express");
 const userDriver = express();
 const UserController = require("../controllers/UserController");
 const UserModel = require("../models/UserModel");
-const User = require("../entities/schemas/UserSchema");
 const UserDto = require("../entities/dtos/UserDto");
 let controller = new UserController(new UserModel('users'));
+const AuthController = require("../controllers/AuthController");
+const AuthModel = require("../models/AuthModel");
+let authController = new AuthController(new AuthModel());
 
 userDriver.use(express.json());
 userDriver.use(express.urlencoded({extended: true}));
@@ -87,5 +89,23 @@ userDriver.put('/:username', async function (req, res) {
     else
         res.status(ctrl.code).send(ctrl);
 });
+
+userDriver.get('/', async function (req, res) {
+    let authUser = authController.getAuthenticatedUser(req);
+
+    let offset = (typeof req.query.offset !== 'undefined' ? req.query.offset : 0);
+    let limit = (typeof req.query.limit !== 'undefined' ? req.query.limit : 10);
+    let search = (typeof req.query.search !== 'undefined' ? req.query.search : '');
+    let orderBy = (typeof req.query.orderBy !== 'undefined' ? req.query.orderBy : '');
+    let orderDir = (typeof req.query.orderDir !== 'undefined' ? req.query.orderDir : '');
+    authUser = await authUser;
+
+    let ctrl = await controller.getUserList(authUser, offset, limit, search, orderBy, orderDir);
+    if (ctrl.code === 200)
+        res.status(ctrl.code).send(ctrl.content);
+    else
+        res.status(ctrl.code).send(ctrl);
+});
+
 
 module.exports = userDriver;

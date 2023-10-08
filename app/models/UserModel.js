@@ -88,4 +88,49 @@ module.exports = class UserModel extends Model {
 
     }
 
+    /**
+     *
+     * @param {number} offset
+     * @param {number} limit
+     * @param {string} search
+     * @param {string} orderBy
+     * @param {string} orderDir
+     * @returns {Promise<UserDto | {}>}
+     */
+    async getUserList(offset, limit, search, orderBy, orderDir) {
+        await this.checkMongoose("User", User);
+        orderDir = (orderDir === 'ORDER_ASC' ? 'asc' : 'desc');
+        let filter = {
+            $or: [
+                {username: {$regex: this.mongo_escape(search)}},
+                {first_name: {$regex: this.mongo_escape(search)}},
+                {last_name: {$regex: this.mongo_escape(search)}},
+                {email: {$regex: this.mongo_escape(search)}}
+            ]
+        };
+        let sorting = {};
+        sorting[orderBy] = orderDir;
+        sorting = this.mongo_escape(sorting);
+
+        if (orderBy === '')
+            sorting = {};
+
+        offset = this.mongo_escape(offset);
+        limit = this.mongo_escape(limit);
+        try {
+            let results = await this.entityMongooseModel
+                .find(filter)
+                .sort(sorting)
+                .skip(offset)
+                .limit(limit);
+
+            let output = [];
+            for (let i = 0; i < results.length; i++)
+                output.push(new UserDto(results[i]._doc));
+            return output;
+        } catch (ignored) {
+            return {}
+        }
+    }
+
 }

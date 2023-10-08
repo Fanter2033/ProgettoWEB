@@ -47,13 +47,14 @@ module.exports = class UserController extends Controller {
             //User not found!
             output['code'] = 404;
             output['msg'] = 'User not found.';
-        } else {
-            //Let's delete the user!
-            if (await this._model.deleteUser(username) === false) {
-                //Errors!
-                output['code'] = 400;
-                output['msg'] = 'Delete executed but no user were deleted.';
-            }
+            return output;
+        }
+
+        //Let's delete the user!
+        if (await this._model.deleteUser(username) === false) {
+            //Errors!
+            output['code'] = 400;
+            output['msg'] = 'Delete executed but no user were deleted.';
         }
 
         return output;
@@ -169,5 +170,52 @@ module.exports = class UserController extends Controller {
 
         return 0;
     }
+
+
+    /**
+     * @param {UserDto | {}} requestingUser
+     * @param {number} offset
+     * @param {number} limit
+     * @param {string} search
+     * @param {string} orderBy
+     * @param {string} orderDir
+     * @return Promise<>
+     */
+    async getUserList(requestingUser, offset, limit, search, orderBy, orderDir) {
+        let output = this.getDefaultOutput();
+
+        let isAdmin = false;
+        if(this.isObjectVoid(requestingUser) === false)
+            isAdmin = requestingUser.isAdmin;
+
+        offset = parseInt(offset);
+        limit = parseInt(limit);
+        search = search.trim();
+        orderBy = orderBy.trim();
+        orderDir = orderDir.trim();
+
+        offset = (isNaN(offset) ? 0 : offset);
+        limit = (isNaN(limit) ? 10 : limit);
+        if(limit > 100) limit = 100;
+
+        orderDir = ((orderDir === 'ORDER_ASC') ? 'ORDER_ASC' : 'ORDER_DESC');
+
+        output.content = await this._model.getUserList(offset, limit, search, orderBy, orderDir);
+
+        for (let i = 0; i < output.content.length; i++) {
+            if(isAdmin === false) {
+                output.content[i].registration_timestamp = null;
+                output.content[i].psw_shadow = null;
+                output.content[i].isAdmin = null;
+                output.content[i].isSmm = null;
+                output.content[i].isUser = null;
+            }
+
+            output.content[i] = output.content[i].getDocument();
+        }
+
+        return output;
+    }
+
 
 }

@@ -108,7 +108,7 @@ paths:
         '200':
           description: 'Successful operation'
           schema:
-            type: array
+            type: object
             items:
               $ref: '#/definitions/User'
         '400':
@@ -138,6 +138,43 @@ paths:
           schema:
             type: string
             description: 'More information about the error'
+    get:
+      tags:
+        - user
+      summary: Get a list of users
+      description: Returns an array of User. If the user is not authenticated or is not an admin only some fields are populated
+      parameters:
+        - name: offset
+          in: query
+          required: false
+          type: integer
+        - name: limit
+          in: query
+          required: false
+          type: integer
+        - name: search
+          in: query
+          required: false
+          type: string
+        - name: orderBy
+          in: query
+          required: false
+          description: The order by value should be a key of User.
+          type: string
+        - name: orderDir
+          in: query
+          required: false
+          type: string
+          enum:
+              - ORDER_ASC
+              - ORDER_DESC
+      responses:
+        '200':
+          description: 'Successful operation'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
   /channel:
     post:
       tags:

@@ -129,4 +129,31 @@ module.exports = class AuthController extends Controller {
         return user.isAdmin;
     }
 
+    /**
+     * Given request param returns the
+     * @param request
+     * @return {Promise<{}|UserDto>}
+     */
+    async getAuthenticatedUser(request) {
+        if (this.isAuthLogged(request)) {
+            await this.updateUser(request);
+            return request.session.user;
+        }
+        return {};
+    }
+
+    /**
+     * @param {object} request
+     * @return Promise<void>
+     */
+    async updateUser(request) {
+        if (this.isAuthLogged(request)) {
+            let requestUser = await this._userController.getUser(request.session.user.username);
+            if(requestUser.code === 200) {
+                request.session.user = requestUser.content;
+                request.session.save();
+            }
+        }
+    }
+
 }
