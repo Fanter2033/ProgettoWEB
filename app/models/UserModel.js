@@ -133,4 +133,12 @@ module.exports = class UserModel extends Model {
         }
     }
 
+    /**
+     * @return {Promise<number>}
+     * Returns the number of all users in the DB.
+     */
+    async getUserCount() {
+        return await this.entityMongooseModel.count();
+    }
+
 }

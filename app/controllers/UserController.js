@@ -9,6 +9,7 @@ module.exports = class UserController extends Controller {
     /**
      *
      * @param username {String}
+     * @param authenticatedUser {UserDto}
      * @returns {Promise<*|UserDto|{}>}
      * Given a username, this functions returns the user, if found. Error 404 otherwise.
      */
@@ -185,7 +186,7 @@ module.exports = class UserController extends Controller {
         let output = this.getDefaultOutput();
 
         let isAdmin = false;
-        if(this.isObjectVoid(requestingUser) === false)
+        if (this.isObjectVoid(requestingUser) === false)
             isAdmin = requestingUser.isAdmin;
 
         offset = parseInt(offset);
@@ -196,25 +197,35 @@ module.exports = class UserController extends Controller {
 
         offset = (isNaN(offset) ? 0 : offset);
         limit = (isNaN(limit) ? 10 : limit);
-        if(limit > 100) limit = 100;
+        if (limit > 100) limit = 100;
 
         orderDir = ((orderDir === 'ORDER_ASC') ? 'ORDER_ASC' : 'ORDER_DESC');
 
-        output.content = await this._model.getUserList(offset, limit, search, orderBy, orderDir);
+        output.content = {}
+        output.content['users'] = await this._model.getUserList(offset, limit, search, orderBy, orderDir);
+        output.content['totalCount'] = await this._model.getUserCount();
 
-        for (let i = 0; i < output.content.length; i++) {
-            if(isAdmin === false) {
-                output.content[i].registration_timestamp = null;
-                output.content[i].psw_shadow = null;
-                output.content[i].isAdmin = null;
-                output.content[i].isSmm = null;
-                output.content[i].isUser = null;
-            }
-
-            output.content[i] = output.content[i].getDocument();
+        for (let i = 0; i < output.content['users'].length; i++) {
+            if (isAdmin === false)
+                output.content['users'][i] = this.clearSensitiveInformation(output.content['users'][i]);
+            output.content['users'][i] = output.content['users'][i].getDocument();
         }
 
         return output;
+    }
+
+
+    /**
+     * @param {UserDto} user
+     * @return {UserDto}
+     */
+    clearSensitiveInformation(user) {
+        user.registration_timestamp = null;
+        user.psw_shadow = null;
+        user.isAdmin = null;
+        user.isSmm = null;
+        user.isUser = null;
+        return user;
     }
 
 

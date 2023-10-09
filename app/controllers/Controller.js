@@ -18,6 +18,7 @@ module.exports = class Controller {
      *
      */
     isObjectVoid(obj) {
+        if(obj === undefined || obj === null) return true;
         if (Object.keys(obj).length === 0)
             return true;
         return false;

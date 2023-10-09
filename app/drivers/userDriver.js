@@ -11,8 +11,9 @@ let authController = new AuthController(new AuthModel());
 userDriver.use(express.json());
 userDriver.use(express.urlencoded({extended: true}));
 userDriver.get('/:username', async function (req, res) {
+    let authUser = authController.getAuthenticatedUser(req);
     let username = req.params['username'];
-    let ctrl = await controller.getUser(username);
+    let ctrl = await controller.getUserAuth(username, await authUser);
     if (ctrl.code === 200)
         res.status(ctrl.code).send(ctrl.content);
     else

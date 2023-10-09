@@ -8,6 +8,7 @@ class ServerTablesUsers {
     #orderDir;
     #search;
     #data;
+    #userCount;
 
     /**
      * @param {string} id
@@ -22,20 +23,31 @@ class ServerTablesUsers {
         this.#orderDir = 'ORDER_ASC';
         this.#search = '';
         this.#data = [];
+        this.#userCount = 0;
     }
 
     /**
      * @return {number}
      */
-    getRealTable() {
+    getRealPage() {
         return this.#page - 1;
     }
 
     /**
      * @return {number}
      */
+    getMaxPage() {
+        let pages = parseInt(this.#userCount / this.#limit);
+        if(this.#userCount % this.#limit > 0)
+            pages = pages + 1;
+        return pages;
+    }
+
+    /**
+     * @return {number}
+     */
     getOffset() {
-        return this.getRealTable() * this.#limit;
+        return this.getRealPage() * this.#limit;
     }
 
     async askData2Server() {
@@ -46,7 +58,9 @@ class ServerTablesUsers {
             }
         });
         if (response.ok) {
-            this.#data = await response.json();
+            let temp = await response.json();
+            this.#data = temp.users;
+            this.#userCount = temp.totalCount;
         }
     }
 
@@ -64,7 +78,7 @@ class ServerTablesUsers {
             </div>
             <div class="col-md-4 offset-md-6 col-sm-12">
                 <div class="row">
-                    <input type="email" name="serverTableSearch" class="form-control" placeholder="Cerca fra gli utenti...">
+                    <input type="email" name="serverTableSearch" class="form-control" placeholder="Cerca fra gli utenti..." maxlength="32">
                 </div>
             </div>
         </div>
@@ -73,26 +87,68 @@ class ServerTablesUsers {
             ${this.getTableHeader()}
             ${this.getTableBody()}
         </table>
-        <div class="row w-100">
-            <div class="offset-md-8 col-md-4 col-sm-12">
-                <div class="row">
-                    <button type="button" class="col-2 btn btn-light"><<<</button>
-                    &nbsp;
-                    <button type="button" class="col-2 btn btn-light"><</button>
-                    &nbsp;
-                    <button type="button" class="col-2 btn btn-primary">1</button>
-                    &nbsp;
-                    <button type="button" class="col-2 btn btn-light">></button>
-                    &nbsp;
-                    <button type="button" class="col-2 btn btn-light">>>></button>                
-                </div>
-            </div>
-            
-        </div>
-        
+        ${this.drawNavigationButtons()}
         `;
         containerNode.innerHTML = html;
     }
+
+    //TODO FARE QUESTA TABELLA ACCESSIBILE!
+
+    drawNavigationButtons(){
+        switch (this.getNumberOfButtonsRequired()){
+            case 0:
+                return '';
+            case 3:
+                if(this.getRealPage() === 0){ //start
+                    return `
+                        <div class="row w-100">
+                            <div class="offset-md-8 col-md-4 col-sm-12">
+                                <div class="row">
+                                    <button type="button" class="col-2 btn btn-primary">${this.#page}</button>
+                                    &nbsp;
+                                    <button type="button" class="col-2 btn btn-light">></button>
+                                    &nbsp;
+                                    <button type="button" class="col-2 btn btn-light">>>></button>                
+                                </div>
+                            </div>    
+                        </div>`;
+                } else { //end
+                    return `
+                        <div class="row w-100">
+                            <div class="offset-md-8 col-md-4 col-sm-12">
+                                <div class="row">
+                                    <button type="button" class="col-2 btn btn-light"><<<</button>
+                                    &nbsp;
+                                    <button type="button" class="col-2 btn btn-light"><</button>
+                                    &nbsp;
+                                    <button type="button" class="col-2 btn btn-primary">${this.#page}</button>                
+                                </div>
+                            </div>    
+                        </div>`;
+                }
+                break;
+            case 5:
+                return `
+                <div class="row w-100">
+                    <div class="offset-md-8 col-md-4 col-sm-12">
+                        <div class="row">
+                            <button type="button" class="col-2 btn btn-light"><<<</button>
+                            &nbsp;
+                            <button type="button" class="col-2 btn btn-light"><</button>
+                            &nbsp;
+                            <button type="button" class="col-2 btn btn-primary">${this.getRealPage()}</button>
+                            &nbsp;
+                            <button type="button" class="col-2 btn btn-light">></button>
+                            &nbsp;
+                            <button type="button" class="col-2 btn btn-light">>>></button>                
+                        </div>
+                    </div>    
+                </div>
+                `
+                break;
+        }
+    }
+
 
     /**
      * @return {string}
@@ -153,7 +209,6 @@ class ServerTablesUsers {
      * @return {string}
      */
     getAuthList(userRowElement) {
-        console.log(userRowElement);
         if(!userRowElement.isUser && !userRowElement.isSmm && !userRowElement.isAdmin)
             return ' - ';
         let html = `<ul>`;
@@ -166,5 +221,23 @@ class ServerTablesUsers {
         html = html + `</ul>`;
         return html;
     }
+
+    /**
+     * @return {number}
+     */
+    getNumberOfButtonsRequired(){
+        if(this.#page === this.getMaxPage() && this.getMaxPage() === 1)
+            return 0;
+        //From here we have multiple pages!
+
+        if(this.#page === 1) //At the start
+            return 3;
+
+        if(this.#page === this.getMaxPage()) //At the end
+            return 3;
+
+        return 5; //Between the pages
+    }
+
 
 }

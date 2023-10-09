@@ -172,9 +172,14 @@ paths:
         '200':
           description: 'Successful operation'
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/User'
+            type: object
+            properties:
+              users:
+                type: array
+                items:
+                  $ref: '#/definitions/User'
+              totalCount:
+                type: integer
   /channel:
     post:
       tags:
