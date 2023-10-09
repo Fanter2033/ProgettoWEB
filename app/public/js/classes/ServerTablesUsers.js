@@ -58,11 +58,14 @@ class ServerTablesUsers {
         if (containerNode === null)
             return;
         let html = `
-        <div class="w-100">
-            <div class="col-md-4 offset-md-8 col-sm-12">
-            <div class="row">
-                <input type="email" class="form-control" placeholder="Cerca fra gli utenti...">
+        <div class="row w-100">
+            <div class="col-md-2">
+                <button type="button" class="btn btn-primary">Aggiungi</button>
             </div>
+            <div class="col-md-4 offset-md-6 col-sm-12">
+                <div class="row">
+                    <input type="email" name="serverTableSearch" class="form-control" placeholder="Cerca fra gli utenti...">
+                </div>
             </div>
         </div>
         <br>
@@ -70,6 +73,23 @@ class ServerTablesUsers {
             ${this.getTableHeader()}
             ${this.getTableBody()}
         </table>
+        <div class="row w-100">
+            <div class="offset-md-8 col-md-4 col-sm-12">
+                <div class="row">
+                    <button type="button" class="col-2 btn btn-light"><<<</button>
+                    &nbsp;
+                    <button type="button" class="col-2 btn btn-light"><</button>
+                    &nbsp;
+                    <button type="button" class="col-2 btn btn-primary">1</button>
+                    &nbsp;
+                    <button type="button" class="col-2 btn btn-light">></button>
+                    &nbsp;
+                    <button type="button" class="col-2 btn btn-light">>>></button>                
+                </div>
+            </div>
+            
+        </div>
+        
         `;
         containerNode.innerHTML = html;
     }
@@ -83,7 +103,6 @@ class ServerTablesUsers {
             let displayName = this.#assoc_json[assocJsonKey];
             html = html + `<th class="text-center">${displayName}</th>`;
         }
-        html = html + `<th class="text-center">Azioni</th>`;
         html = html + '</thead>';
 
         return html;
@@ -97,8 +116,18 @@ class ServerTablesUsers {
         let html = '';
         let objKeys = Object.keys(userRow);
         for (const assocJsonKey in this.#assoc_json)
-            if (objKeys.includes(assocJsonKey))
+            if(assocJsonKey === 'null'){
+                html = html + `<td>${this.getAuthList(userRow)}</td>`;
+            } else if (objKeys.includes(assocJsonKey))
                 html = html + `<td>${userRow[assocJsonKey]}</td>`;
+
+        if(Object.keys(this.#assoc_json).includes('actions')){
+            html = html + `<td>
+                <button type="button" class="btn btn-warning">Modifica</button>
+                &nbsp;
+                <button type="button" class="btn btn-danger">Elimina</button>
+                </td>`;
+        }
 
         return html;
     }
@@ -118,4 +147,24 @@ class ServerTablesUsers {
         html = html + '</tbody>';
         return html;
     }
+
+    /**
+     * @param {UserDto} userRowElement
+     * @return {string}
+     */
+    getAuthList(userRowElement) {
+        console.log(userRowElement);
+        if(!userRowElement.isUser && !userRowElement.isSmm && !userRowElement.isAdmin)
+            return ' - ';
+        let html = `<ul>`;
+        if(userRowElement.isUser)
+            html = html + `<li>User</li>`;
+        if(userRowElement.isSmm)
+            html = html + `<li>Social Media Manager</li>`;
+        if(userRowElement.isAdmin)
+            html = html + `<li>Moderator</li>`;
+        html = html + `</ul>`;
+        return html;
+    }
+
 }
