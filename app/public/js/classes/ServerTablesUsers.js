@@ -28,7 +28,7 @@ class ServerTablesUsers {
      * @return {number}
      */
     getRealTable() {
-        return this.#page -1;
+        return this.#page - 1;
     }
 
     /**
@@ -55,7 +55,7 @@ class ServerTablesUsers {
      */
     draw() {
         let containerNode = document.getElementById(this.#containerId);
-        if(containerNode === null)
+        if (containerNode === null)
             return;
         let html = `
         <div class="w-100">
@@ -94,7 +94,13 @@ class ServerTablesUsers {
      * @return {string}
      */
     getUserRow(userRow) {
+        let html = '';
+        let objKeys = Object.keys(userRow);
+        for (const assocJsonKey in this.#assoc_json)
+            if (objKeys.includes(assocJsonKey))
+                html = html + `<td>${userRow[assocJsonKey]}</td>`;
 
+        return html;
     }
 
 
@@ -102,9 +108,14 @@ class ServerTablesUsers {
      * @return {string}
      */
     getTableBody() {
-        let html = '';
-        for (let i = 0; i < this.#data.length; i++)
+        let html = '<tbody>';
+        for (let i = 0; i < this.#data.length; i++){
+            html = html + `<tr>`
             html = html + this.getUserRow(this.#data[i]);
+            html = html + `</tr>`
+        }
+
+        html = html + '</tbody>';
         return html;
     }
 }

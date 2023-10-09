@@ -111,9 +111,14 @@
         "isSmm": "Social MM?",
         "isAdmin": "Moderatore?"
     });
-    st.askData2Server();
-    st.getTableHeader();
-    st.draw();
+
+    loadTable();
+
+    async function loadTable() {
+        await st.askData2Server();
+        st.draw();
+    }
+
 </script>
 </body>
 </html>

@@ -21,7 +21,7 @@ if(exports.isDebug){
     exports._DATABASE_HOST = "mongo_site222317";
     exports._DATABASE_PORT = '27017';
     exports._DATABASE_NAME = "site222317";
-    exports._DATABASE_EXTRA = "";
+    exports._DATABASE_EXTRA = "?authSource=admin&writeConcern=majority";
 }
 
 //Regex
