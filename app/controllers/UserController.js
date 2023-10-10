@@ -37,21 +37,26 @@ module.exports = class UserController extends Controller {
 
     /**
      *
-     * @param username
+     * @param username {string}
+     * @param authenticatedUser {UserDto}
      * @returns {Promise<{msg: string, code: number, content: {}}>}
      *
-     * Delete a user if it exist
+     * Delete a user if it exist, the operation can be made only by the deleting user or a squealer Admin.
      *
-     * TODO: a normal user can only delete his account, the admin can delete all the non-admin-accounts.
-     * - return 403 -> if a user has no privilege to delete accounts
      */
-    async deleteUser(username) {
+    async deleteUser(username, authenticatedUser) {
         let output = this.getDefaultOutput();
 
         username = username.trim();
         if (username.length === 0) {
             output['code'] = 400;
             output['msg'] = 'No username sent.';
+            return output;
+        }
+
+        if (this.isObjectVoid(authenticatedUser) || (!authenticatedUser.isAdmin && authenticatedUser.username !== username)) {
+            output['code'] = 403;
+            output['msg'] = 'Forbidden.';
             return output;
         }
 
@@ -114,14 +119,21 @@ module.exports = class UserController extends Controller {
      *
      * @param newUser {UserDto}
      * @param oldUsername {string}
+     * @param authenticatedUser {UserDto}
      * @returns {Promise<Object>}
      */
-    async updateUser(newUser, oldUsername) {
+    async updateUser(newUser, oldUsername, authenticatedUser) {
         let output = this.getDefaultOutput();
         let ctrl_response = this.controlUser(newUser);
         if (ctrl_response !== 0) {
             output['code'] = 400;
             output['msg'] = 'Email not valid or field is not populate.';
+            return output;
+        }
+
+        if (this.isObjectVoid(authenticatedUser) || (!authenticatedUser.isAdmin && authenticatedUser.username !== oldUsername)) {
+            output['code'] = 403;
+            output['msg'] = 'Forbidden.';
             return output;
         }
 

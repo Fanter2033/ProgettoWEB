@@ -22,7 +22,7 @@ userDriver.get('/:username', async function (req, res) {
 
 userDriver.delete('/:username', async function (req, res) {
     let username = req.params['username'];
-    let ctrl = await controller.deleteUser(username);
+    let ctrl = await controller.deleteUser(username, await authController.getAuthenticatedUser(req));
     if (ctrl.code === 200)
         res.status(ctrl.code).send(ctrl.content);
     else
@@ -84,7 +84,7 @@ userDriver.put('/:username', async function (req, res) {
     user.first_name = firstname
     user.last_name = lastname;
     user.psw_shadow = password;
-    let ctrl = await controller.updateUser(user, username_old);
+    let ctrl = await controller.updateUser(user, username_old, await authController.getAuthenticatedUser(req));
     if (ctrl.code === 200)
         res.status(ctrl.code).send(ctrl.content);
     else
