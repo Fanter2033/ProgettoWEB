@@ -134,11 +134,20 @@ module.exports = class UserModel extends Model {
     }
 
     /**
+     * @param {string} search
      * @return {Promise<number>}
      * Returns the number of all users in the DB.
      */
-    async getUserCount() {
-        return await this.entityMongooseModel.count();
+    async getUserCount(search) {
+        let filter = {
+            $or: [
+                {username: {$regex: this.mongo_escape(search)}},
+                {first_name: {$regex: this.mongo_escape(search)}},
+                {last_name: {$regex: this.mongo_escape(search)}},
+                {email: {$regex: this.mongo_escape(search)}}
+            ]
+        };
+        return await this.entityMongooseModel.count(filter);
     }
 
 }

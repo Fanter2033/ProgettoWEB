@@ -203,7 +203,7 @@ module.exports = class UserController extends Controller {
 
         output.content = {}
         output.content['users'] = await this._model.getUserList(offset, limit, search, orderBy, orderDir);
-        output.content['totalCount'] = await this._model.getUserCount();
+        output.content['totalCount'] = await this._model.getUserCount(search);
 
         for (let i = 0; i < output.content['users'].length; i++) {
             if (isAdmin === false)
