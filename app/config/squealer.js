@@ -1,4 +1,5 @@
-//Config file
+/* CONFIG FILE */
+
 exports._APPLICATION_NAME = 'squealer';
 
 //Developing mode
@@ -18,7 +19,7 @@ if(exports.isDebug){
 }else{
     exports._DATABASE_USER = "site222317";
     exports._DATABASE_PWD = "tagira5A";
-    exports._DATABASE_HOST = "mongo_site222317";
+    exports._DATABASE_HOST = "mongo_site222317"; //macchina lab dimmerda
     exports._DATABASE_PORT = '27017';
     exports._DATABASE_NAME = "site222317";
     exports._DATABASE_EXTRA = "?authSource=admin&writeConcern=majority";
@@ -26,7 +27,6 @@ if(exports.isDebug){
 
 //Regex
 exports._REGEX_EMAIL = /^[a-zA-Z0-9_.+]+(?<!^[0-9]*)@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-
 
 //Cipher settings
 exports._CIPHER_SALT = 12;
