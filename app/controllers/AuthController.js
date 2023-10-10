@@ -2,7 +2,6 @@ const Controller = require("./Controller");
 const UserController = require("./UserController");
 const UserModel = require("../models/UserModel");
 const {config} = require("../autoload/autoload");
-const session = require('express-session')
 const AuthenticationAttemptDto = require('../entities/dtos/AuthenticationAttemptDto');
 module.exports = class AuthController extends Controller {
 

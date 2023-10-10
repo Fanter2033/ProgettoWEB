@@ -1,7 +1,9 @@
+//node module for the database connection with Mongo
 const { MongoClient } = require("mongodb");
 let username, password, host, port, database, extra;
 let uri = '';
 
+//init the variables and create a single uri for the database
 exports.setDatabaseParams = function (Fusername, Fpassword, Fhost, Fport, Fdatabase, Fextra) {
     username = Fusername;
     password = Fpassword;
@@ -17,6 +19,7 @@ exports.getDatabaseConnection = function () {
 }
 
 /**
+ * get the uri from the Mongo server
  * @return {string}
  */
 exports.getDatabaseConnectionUri = function () {

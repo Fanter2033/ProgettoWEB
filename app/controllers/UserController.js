@@ -11,6 +11,7 @@ module.exports = class UserController extends Controller {
      * @param username {String}
      * @param authenticatedUser {UserDto}
      * @returns {Promise<*|UserDto|{}>}
+     *
      * Given a username, this functions returns the user, if found. Error 404 otherwise.
      */
     async getUser(username) {
@@ -34,13 +35,28 @@ module.exports = class UserController extends Controller {
         return output;
     }
 
-    async deleteUser(username) {
+    /**
+     *
+     * @param username {string}
+     * @param authenticatedUser {UserDto}
+     * @returns {Promise<{msg: string, code: number, content: {}}>}
+     *
+     * Delete a user if it exist, the operation can be made only by the deleting user or a squealer Admin.
+     *
+     */
+    async deleteUser(username, authenticatedUser) {
         let output = this.getDefaultOutput();
 
         username = username.trim();
         if (username.length === 0) {
             output['code'] = 400;
             output['msg'] = 'No username sent.';
+            return output;
+        }
+
+        if (this.isObjectVoid(authenticatedUser) || (!authenticatedUser.isAdmin && authenticatedUser.username !== username)) {
+            output['code'] = 403;
+            output['msg'] = 'Forbidden.';
             return output;
         }
 
@@ -64,6 +80,7 @@ module.exports = class UserController extends Controller {
     /**
      * @param userObj {UserDto}
      * @returns {Promise<Object>}
+     *
      * Given the user object returns code 200 if the user is created, false otherwise.
      */
     async createUser(userObj) {
@@ -102,14 +119,21 @@ module.exports = class UserController extends Controller {
      *
      * @param newUser {UserDto}
      * @param oldUsername {string}
+     * @param authenticatedUser {UserDto}
      * @returns {Promise<Object>}
      */
-    async updateUser(newUser, oldUsername) {
+    async updateUser(newUser, oldUsername, authenticatedUser) {
         let output = this.getDefaultOutput();
         let ctrl_response = this.controlUser(newUser);
         if (ctrl_response !== 0) {
             output['code'] = 400;
             output['msg'] = 'Email not valid or field is not populate.';
+            return output;
+        }
+
+        if (this.isObjectVoid(authenticatedUser) || (!authenticatedUser.isAdmin && authenticatedUser.username !== oldUsername)) {
+            output['code'] = 403;
+            output['msg'] = 'Forbidden.';
             return output;
         }
 
