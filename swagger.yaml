@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  description: "API per Squealer, il social che ha ucciso Twitter!"
+  description: "API per Squealer, il social che ha ucciso Twitter! (Anche se si è ucciso da solo)"
   version: "1.0.0"
   title: "Squealer API"
 #host: "site222317.tw.cs.unibo.it"
