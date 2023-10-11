@@ -77,7 +77,8 @@ class ServerTablesUsers {
         let html = `
         <div class="row w-100">
             <div class="col-md-2">
-                <button type="button" class="btn btn-primary">Aggiungi</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAggiungiUtente">
+                Aggiungi</button>
             </div>
             <div class="col-md-4 offset-md-6 col-sm-12">
                 <div class="row">
