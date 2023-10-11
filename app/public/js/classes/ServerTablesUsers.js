@@ -77,7 +77,7 @@ class ServerTablesUsers {
         let html = `
         <div class="row w-100">
             <div class="col-md-2">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAggiungiUtente">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAggiungiUtente" onclick="cleanModalAddUser()">
                 Aggiungi</button>
             </div>
             <div class="col-md-4 offset-md-6 col-sm-12">
@@ -254,6 +254,8 @@ class ServerTablesUsers {
         document.getElementById('registerLastName').value = userDto.last_name;
         document.getElementById('registerPassword').value = '';
         document.getElementById('confirmPassword').value = '';
+        document.getElementById('executeOperation').setAttribute('onclick', `applicaCambiamentiUtente('${username}')`);
+        document.getElementById('executeOperation').innerHTML = 'Modifica utente';
     }
 
     /**

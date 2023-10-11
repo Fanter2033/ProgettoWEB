@@ -70,8 +70,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
-                <button type="button" class="btn btn-primary" onclick="registerUser()"><i class="fa fa-user-plus"></i>&nbsp;Aggiungi
-                    utente
+                <button type="button" class="btn btn-primary" id="executeOperation" onclick="applicaCambiamentiUtente()">
+                    Aggiungi utente
                 </button>
             </div>
         </div>
@@ -93,7 +93,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
-                <button type="button" id="executeDeleteButton" class="btn btn-danger">Elimina utente</button>
+                <button type="button" id="executeDeleteButton" class="btn btn-danger" data-bs-dismiss="modal">Elimina utente</button>
             </div>
         </div>
     </div>
@@ -187,29 +187,35 @@
         </div>
     </div>
 </div>
-<!-- Inizio toasts-->
 <div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 200px;">
-    <!-- Position it -->
-    <div style="position: absolute; top: 0; right: 0;">
-        <div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-delay="10000" id="toastFail">
-            <div class="toast-header">
-                <strong class="mr-auto">Attenzione</strong>
-            </div>
-            <div class="toast-body">
-                <p class="text-danger">Operazione fallita</p>
-            </div>
+    <div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-delay="10000" id="toastFail"
+         style="z-index: 1200; position: fixed; top: 0; right: 0;">
+        <div class="toast-header">
+            <strong class="mr-auto">Attenzione</strong>
         </div>
-        <div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-delay="10000" id="toastSuccess">
-            <div class="toast-header">
-                <strong class="mr-auto">Ok</strong>
-            </div>
-            <div class="toast-body">
-                <p class="text-success">Operazione effettuata con successo</p>
-            </div>
+        <div class="toast-body">
+            <p class="text-danger">Operazione fallita</p>
+        </div>
+    </div>
+    <div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-delay="10000" id="toastFailGeneric"
+         style="z-index: 1200; position: fixed; top: 0; right: 0;">
+        <div class="toast-header">
+            <strong class="mr-auto">Attenzione</strong>
+        </div>
+        <div class="toast-body">
+            <p class="text-danger" id="toasFailProblem">Operazione fallita</p>
+        </div>
+    </div>
+    <div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-delay="10000" id="toastSuccess"
+         style="z-index: 1200; position: fixed; top: 0; right: 0;">
+        <div class="toast-header">
+            <strong class="mr-auto">Ok</strong>
+        </div>
+        <div class="toast-body">
+            <p class="text-success">Operazione effettuata con successo</p>
         </div>
     </div>
 </div>
-<!-- Fine toasts -->
 <script>
     let st = new ServerTablesUsers('tableContainer', {
         "username": "Username",
@@ -227,6 +233,63 @@
         st.draw();
     }
 
+    function cleanModalAddUser() {
+        document.getElementById('exampleModalLongTitle').innerHTML = 'Aggiungi utente';
+        document.getElementById('registerUsername').value = '';
+        document.getElementById('registerEmail').value = '';
+        document.getElementById('registerFirstName').value = '';
+        document.getElementById('registerLastName').value = '';
+        document.getElementById('registerPassword').value = '';
+        document.getElementById('confirmPassword').value = '';
+        document.getElementById('isUser').checked = false;
+        document.getElementById('isSmm').checked = false;
+        document.getElementById('isMod').checked = false;
+        document.getElementById('executeOperation').setAttribute('onclick', 'applicaCambiamentiUtente()');
+        document.getElementById('executeOperation').innerHTML = 'Aggiungi utente';
+    }
+
+    function notifyError(msg){
+        document.getElementById('toasFailProblem').innerHTML = msg;
+        $('#toastFailGeneric').toast('show');
+    }
+
+    function applicaCambiamentiUtente(oldUsername = null) {
+        let username = document.getElementById('registerUsername').value;
+        let email = document.getElementById('registerEmail').value;
+        let firstName = document.getElementById('registerFirstName').value;
+        let lastName = document.getElementById('registerLastName').value;
+        let password = document.getElementById('registerPassword').value;
+        let confPassword = document.getElementById('confirmPassword').value;
+        let isUser = document.getElementById('isUser').checked;
+        let isSmm = document.getElementById('isSmm').checked;
+        let isMod = document.getElementById('isMod').checked;
+
+        username = username.trim();
+        email = email.trim();
+        firstName = firstName.trim();
+        lastName = lastName.trim();
+        password = password.trim();
+        confPassword = confPassword.trim();
+
+        if(username === '' || email === '' || firstName === '' || lastName === ''){
+            notifyError('Compilare tutti i campi');
+            return;
+        }
+
+        if(!isUser && !isSmm && !isMod){
+            notifyError('Dare almeno un ruolo all\'utente');
+            return;
+        }
+
+        if(confPassword !== password) {
+            notifyError('Le due password non coincidono');
+            return;
+        }
+
+
+
+    }
+
     function executeDeleteOnServer(username) {
         fetch(`../../user/${username}`, {
             method: 'DELETE',
@@ -236,9 +299,10 @@
         }).then((response) => {
             console.log(response);
             if (response.status === 200) {
-                $('#toastSuccess').toast();
+                $('#toastSuccess').toast('show');
+                loadTable();
             } else {
-                $('#toastFail').toast();
+                $('#toastFail').toast('show');
             }
         });
 
