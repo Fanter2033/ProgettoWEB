@@ -4,7 +4,6 @@ const autoload = require('../autoload/autoload');
 module.exports = class Model {
 
     mongo_escape;
-
     collection_name;
 
     constructor(collection_name) {
@@ -14,6 +13,13 @@ module.exports = class Model {
         this.entityMongooseModel = null;
     }
 
+    /**
+     * @param name
+     * @param schema
+     * @returns {Promise<void>}
+     *
+     * check the connection and get the entity
+     */
     async checkMongoose(name, schema){
         if(this.connectedMongoose === null || this.entityMongooseModel === null) {
             this.connectedMongoose = await this.connectMongoose();
@@ -23,6 +29,7 @@ module.exports = class Model {
 
     /**
      * @returns {Promise<Db>}
+     *
      * Ritorna la promessa del database in config.
      */
     async getDatabase() {
@@ -33,6 +40,8 @@ module.exports = class Model {
 
     /**
      * @return {Promise<void>}
+     *
+     * connect to DataBase (stored in autoload module)
      */
     async connectMongoose(){
         return mongoose.connect(autoload.mongoConnectionFunctions.getDatabaseConnectionUri());
@@ -41,6 +50,7 @@ module.exports = class Model {
     /**
      * @param collection
      * @returns {Promise<Collection<Document>>}
+     *
      * Data il nome di una collezione ritorna la promessa per quella collezione.
      */
     async getCollection(collection = '') {
