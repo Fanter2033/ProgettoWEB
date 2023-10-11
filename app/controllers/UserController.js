@@ -151,6 +151,7 @@ module.exports = class UserController extends Controller {
             return output;
         }
 
+        //if the user doesn't exist then we are in a error situation
         if (await this._model.userExists(oldUsername) === false) {
             output['code'] = 400;
             output['req_error'] = -3;
@@ -160,20 +161,23 @@ module.exports = class UserController extends Controller {
 
         let oldUserObj = await this._model.getUser(oldUsername);
 
-        if (await this._model.userExistsByEmail(newUser.email) && newUser.email !== oldUserObj.email) {
+        //Checking if the new email is used. But if the email isn't changed we are safe. But if the email is changed, then we verify that the new one isn't used.
+        if (newUser.email !== oldUserObj.email && await this._model.userExistsByEmail(newUser.email)) {
             output['code'] = 400;
             output['req_error'] = -1;
             output['msg'] = 'Email already used';
             return output;
         }
 
-        if (await this._model.userExists(newUser.username) && newUser.username !== oldUsername) {
+        //Same for users (see email comment)
+        if (newUser.username !== oldUsername && await this._model.userExists(newUser.username)) {
             output['code'] = 400;
             output['req_error'] = -1;
             output['msg'] = 'Email already used';
             return output;
         }
 
+        //Checking all authorizations
         if (!newUser.isUser && !newUser.isSmm && !newUser.isAdmin) {
             output['code'] = 400;
             output['req_error'] = -2;
@@ -183,9 +187,9 @@ module.exports = class UserController extends Controller {
 
 
         newUser.registration_timestamp = oldUserObj.registration_timestamp;
-        if(newUser.psw_shadow !== '')
+        if(newUser.psw_shadow !== '') //if password isn't set, save the old password
             newUser.psw_shadow = await this.crypt(newUser.psw_shadow);
-        else
+        else //Password set, save new in the database.
             newUser.psw_shadow = oldUserObj.psw_shadow;
 
         let databaseResponse = await this._model.replaceUser(newUser, oldUserObj.username);
