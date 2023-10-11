@@ -10,6 +10,7 @@ module.exports = class UserController extends Controller {
      *
      * @param username {String}
      * @returns {Promise<*|UserDto|{}>}
+     *
      * Given a username, this functions returns the user, if found. Error 404 otherwise.
      */
     async getUser(username) {
@@ -33,6 +34,16 @@ module.exports = class UserController extends Controller {
         return output;
     }
 
+    /**
+     *
+     * @param username
+     * @returns {Promise<{msg: string, code: number, content: {}}>}
+     *
+     * Delete a user if it exist
+     *
+     * TODO: a normal user can only delete his account, the admin can delete all the non-admin-accounts.
+     * - return 403 -> if a user has no privilege to delete accounts
+     */
     async deleteUser(username) {
         let output = this.getDefaultOutput();
 
@@ -62,6 +73,7 @@ module.exports = class UserController extends Controller {
     /**
      * @param userObj {UserDto}
      * @returns {Promise<Object>}
+     *
      * Given the user object returns code 200 if the user is created, false otherwise.
      */
     async createUser(userObj) {
