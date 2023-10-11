@@ -191,7 +191,7 @@ paths:
       parameters:
         - name: channel
           in: body
-          description: new Channel object
+          description: new Channel object. The creation of Official channels is allowed only for admins, the creation of channel tags is forbidden because its exists for every keyword.
           required: true
           schema:
             $ref: '#/definitions/Channel'
@@ -204,7 +204,7 @@ paths:
             type: string
             description: 'More info about the error'
         '403':
-          description: 'Unable to create channel due low privileges'
+          description: 'Unable to create channel due low privileges or created a TAG channel'
           schema:
             type: string
             description: 'More information about the error'
@@ -213,7 +213,7 @@ paths:
       tags:
         - channel
       summary: Update the channel
-      description: Update the channel with his name in path with the passed Channel object in the body. If the password is not passed the system handle old password. Registration timestamp do not be changed
+      description: Update the channel with his name in path with the passed Channel object in the body. If the password is not passed the system handle old password. Registration timestamp do not be changed. Cannot update TAG channels
       parameters:
         - name: channel_name
           in: path
@@ -234,7 +234,7 @@ paths:
             type: string
             description: 'More info about the error'
         '403':
-          description: 'Unable to update channel due low privileges'
+          description: 'Unable to update channel due low privileges or tried to update tag channel'
           schema:
             type: string
             description: 'More information about the error'
@@ -253,7 +253,7 @@ paths:
         '200':
           description: 'Deleted channel'
         '403':
-          description: 'Unable to delete channel due low privileges'
+          description: 'Unable to delete channel due low privileges or tired to delete tag channel. For Public channels only administrators can execute delete. For user channels only admins can execute delete'
           schema:
             type: string
             description: 'More information about the error'
@@ -420,18 +420,18 @@ definitions:
       c_type:
         type: string
         enum:
-          - CHANNEL
+          - CHANNEL_OFFICIAL
+          - CHANNEL_USERS
           - CHANNEL_TAG #quelli con l'hashtag
         description: type of channel
       name:
         type: string
         maxLength: 128
         description: Channel name
-      privacy:
-        type: string
-        enum:
-          - PUBLIC
-          - PRIVATE
+      private:
+        type: boolean
+        default: false
+        description: This attribute can be true only for private channels, not allowed on TAG and PUBLIC channels
   Destination:
     type: object
     properties:
