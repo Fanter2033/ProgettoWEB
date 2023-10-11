@@ -114,9 +114,11 @@ class ServerTablesUsers {
      */
     async executeSearch(inputElement) {
         this.#search = inputElement.value;
+        let searched = this.#search;
         this.#page = 1;
         await this.askData2Server();
-        this.drawData();
+        if(searched === this.#search)
+            this.drawData();
     }
 
     /**
@@ -216,9 +218,9 @@ class ServerTablesUsers {
 
         if (Object.keys(this.#assoc_json).includes('actions')) {
             html = html + `<td>
-                <button type="button" class="btn btn-warning" onclick="${this.#variableName}.updateUser('${userRow.username}')">Modifica</button>
+                <button type="button" class="btn btn-warning" onclick="${this.#variableName}.updateUser('${userRow.username}')" data-bs-toggle="modal" data-bs-target="#modalAggiungiUtente">Modifica</button>
                 &nbsp;
-                <button type="button" class="btn btn-danger" onclick="${this.#variableName}.deleteUser('${userRow.username}')">Elimina</button>
+                <button type="button" class="btn btn-danger" onclick="${this.#variableName}.deleteUser('${userRow.username}')" data-bs-toggle="modal" data-bs-target="#modalEliminaUtente">Elimina</button>
                 </td>`;
         }
 
@@ -244,7 +246,14 @@ class ServerTablesUsers {
         let userDto = this.extractUserByUsername(username);
         if (userDto === null)
             return userDto;
-        //TODO RIPOPOLARE MODALE DI REGISTRAZIONE
+
+        document.getElementById('exampleModalLongTitle').innerHTML = 'Modifica utente';
+        document.getElementById('registerUsername').value = userDto.username;
+        document.getElementById('registerEmail').value = userDto.email;
+        document.getElementById('registerFirstName').value = userDto.first_name;
+        document.getElementById('registerLastName').value = userDto.last_name;
+        document.getElementById('registerPassword').value = '';
+        document.getElementById('confirmPassword').value = '';
     }
 
     /**
@@ -252,7 +261,8 @@ class ServerTablesUsers {
      * This function shows modal to delete user.
      */
     deleteUser(username) {
-
+        document.getElementById('eliminaUtenteUsername').innerHTML = `Volete eliminare l'utente "${username}"?`;
+        document.getElementById('executeDeleteButton').setAttribute('onclick', `executeDeleteOnServer("${username}")`);
     }
 
 
