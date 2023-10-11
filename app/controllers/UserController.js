@@ -9,7 +9,6 @@ module.exports = class UserController extends Controller {
     /**
      *
      * @param username {String}
-     * @param authenticatedUser {UserDto}
      * @returns {Promise<*|UserDto|{}>}
      *
      * Given a username, this functions returns the user, if found. Error 404 otherwise.
