@@ -21,14 +21,44 @@ module.exports = class UserModel extends Model {
         return {};
     }
 
+
+    /**
+     * @param email
+     * @return {{}|UserDto}
+     */
+    async getUserByEmail(email) {
+        await this.checkMongoose("User", User);
+        let filter = {"email": `${email}`};
+        filter = this.mongo_escape(filter);
+        let results = await this.entityMongooseModel.find(filter);
+        if (results.length === 1)
+            return new UserDto(results[0]._doc);
+        return {};
+    }
+
     /**
      *
-     * @param username
+     * @param {String} username
+     * @param {String} email
      * @returns {Promise<boolean>}
      * Given a username returns true if the user exists, false otherwise.
      */
-    async userExists(username) {
+    async userExists(username, email= '') {
         let user = await this.getUser(username);
+        if((user).constructor.name === 'UserDto')
+            return true;
+        if(email === '')
+            return false;
+        user = await this.getUserByEmail(email);
+        return (user).constructor.name === 'UserDto';
+    }
+
+    /**
+     * @param {string} email
+     * @return {Promise<boolean>}
+     */
+    async userExistsByEmail(email) {
+        let user = await this.getUserByEmail(email);
         return (user).constructor.name === 'UserDto';
     }
 

@@ -70,7 +70,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
-                <button type="button" class="btn btn-primary" id="executeOperation" onclick="applicaCambiamentiUtente()">
+                <button type="button" class="btn btn-primary" id="executeOperation"
+                        onclick="applicaCambiamentiUtente()">
                     Aggiungi utente
                 </button>
             </div>
@@ -93,7 +94,9 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
-                <button type="button" id="executeDeleteButton" class="btn btn-danger" data-bs-dismiss="modal">Elimina utente</button>
+                <button type="button" id="executeDeleteButton" class="btn btn-danger" data-bs-dismiss="modal">Elimina
+                    utente
+                </button>
             </div>
         </div>
     </div>
@@ -187,33 +190,31 @@
         </div>
     </div>
 </div>
-<div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 200px;">
-    <div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-delay="10000" id="toastFail"
-         style="z-index: 1200; position: fixed; top: 0; right: 0;">
-        <div class="toast-header">
-            <strong class="mr-auto">Attenzione</strong>
-        </div>
-        <div class="toast-body">
-            <p class="text-danger">Operazione fallita</p>
-        </div>
+<div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-delay="10000" id="toastFail"
+     style="z-index: 1200; position: fixed; top: 0; right: 0;">
+    <div class="toast-header">
+        <strong class="mr-auto">Attenzione</strong>
     </div>
-    <div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-delay="10000" id="toastFailGeneric"
-         style="z-index: 1200; position: fixed; top: 0; right: 0;">
-        <div class="toast-header">
-            <strong class="mr-auto">Attenzione</strong>
-        </div>
-        <div class="toast-body">
-            <p class="text-danger" id="toasFailProblem">Operazione fallita</p>
-        </div>
+    <div class="toast-body">
+        <p class="text-danger">Operazione fallita</p>
     </div>
-    <div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-delay="10000" id="toastSuccess"
-         style="z-index: 1200; position: fixed; top: 0; right: 0;">
-        <div class="toast-header">
-            <strong class="mr-auto">Ok</strong>
-        </div>
-        <div class="toast-body">
-            <p class="text-success">Operazione effettuata con successo</p>
-        </div>
+</div>
+<div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-delay="10000" id="toastFailGeneric"
+     style="z-index: 1200; position: fixed; top: 0; right: 0;">
+    <div class="toast-header">
+        <strong class="mr-auto">Attenzione</strong>
+    </div>
+    <div class="toast-body">
+        <p class="text-danger" id="toasFailProblem">Operazione fallita</p>
+    </div>
+</div>
+<div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-delay="10000" id="toastSuccess"
+     style="z-index: 1200; position: fixed; top: 0; right: 0;">
+    <div class="toast-header">
+        <strong class="mr-auto">Ok</strong>
+    </div>
+    <div class="toast-body">
+        <p class="text-success">Operazione effettuata con successo</p>
     </div>
 </div>
 <script>
@@ -248,7 +249,7 @@
         document.getElementById('executeOperation').innerHTML = 'Aggiungi utente';
     }
 
-    function notifyError(msg){
+    function notifyError(msg) {
         document.getElementById('toasFailProblem').innerHTML = msg;
         $('#toastFailGeneric').toast('show');
     }
@@ -271,21 +272,82 @@
         password = password.trim();
         confPassword = confPassword.trim();
 
-        if(username === '' || email === '' || firstName === '' || lastName === ''){
+        if (username === '' || email === '' || firstName === '' || lastName === '') {
             notifyError('Compilare tutti i campi');
             return;
         }
 
-        if(!isUser && !isSmm && !isMod){
+        if (!isUser && !isSmm && !isMod) {
             notifyError('Dare almeno un ruolo all\'utente');
             return;
         }
 
-        if(confPassword !== password) {
+        if (confPassword.length < 8 && !(oldUsername !== null && confPassword.length === 0)) {
+            notifyError('La password è troppo breve');
+        }
+
+        if (confPassword !== password) {
             notifyError('Le due password non coincidono');
             return;
         }
 
+        let method = 'POST'
+        let uri = '../../user/';
+        if (oldUsername !== null) {
+            //UPDATE
+            method = 'PUT';
+            uri = uri + oldUsername;
+        }
+
+        let dataReq = JSON.stringify({
+            user: {
+                username: username,
+                email: email,
+                firstname: firstName,
+                lastname: lastName,
+                password: password,
+                isUser: isUser,
+                isSmm: isSmm,
+                isMod: isMod
+            }
+        });
+
+        fetch(uri, {
+            method: method,
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: dataReq
+        }).then((response) => {
+            if (response.ok === false)
+                return response.json();
+            else {
+                //tutto ok chiudiamo il modale
+                $('#toastSuccess').toast('show');
+                loadTable();
+                $('#modalAggiungiUtente').modal('hide');
+            }
+        }).then((json) => {
+            console.log(json);
+            if (typeof json === 'undefined')
+                return;
+
+            switch (json.req_error) {
+                case -1:
+                    notifyError("Username o email già usati, sceglierne altri.");
+                    break;
+                case -2:
+                    notifyError("Nessuna autorizzazione concessa.");
+                    break;
+                case -102:
+                    notifyError("Email non valida.");
+                    break;
+                default:
+                    notifyError("Errore generico, riprovare.");
+                    break;
+            }
+
+        });
 
 
     }

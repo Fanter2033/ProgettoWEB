@@ -30,6 +30,7 @@ userDriver.delete('/:username', async function (req, res) {
 });
 
 userDriver.post('/', async function (req, res) {
+    let authUser = authController.getAuthenticatedUser(req);
     if (typeof req.body === 'undefined' || typeof req.body.user === 'undefined') {
         req.body = {};
         req.body.user = {};
@@ -45,6 +46,9 @@ userDriver.post('/', async function (req, res) {
     let firstname = (typeof req.body.user.firstname !== 'undefined' ? req.body.user.firstname : '');
     let lastname = (typeof req.body.user.lastname !== 'undefined' ? req.body.user.lastname : '');
     let password = (typeof req.body.user.password !== 'undefined' ? req.body.user.password : '');
+    let isUser = (typeof req.body.user.isUser !== 'undefined' ? req.body.user.isUser : null);
+    let isSmm = (typeof req.body.user.isSmm !== 'undefined' ? req.body.user.isSmm : null);
+    let isMod = (typeof req.body.user.isMod !== 'undefined' ? req.body.user.isMod : null);
 
     let user = new UserDto();
     user.username = username
@@ -52,7 +56,10 @@ userDriver.post('/', async function (req, res) {
     user.first_name = firstname
     user.last_name = lastname;
     user.psw_shadow = password;
-    let ctrl = await controller.createUser(user);
+    user.isUser = isUser;
+    user.isSmm = isSmm;
+    user.isAdmin = isMod;
+    let ctrl = await controller.createUser(user, await authUser);
     if (ctrl.code === 200)
         res.status(ctrl.code).send(ctrl.content);
     else
@@ -76,6 +83,10 @@ userDriver.put('/:username', async function (req, res) {
     let firstname = (typeof req.body.user.firstname !== 'undefined' ? req.body.user.firstname : '');
     let lastname = (typeof req.body.user.lastname !== 'undefined' ? req.body.user.lastname : '');
     let password = (typeof req.body.user.password !== 'undefined' ? req.body.user.password : '');
+    let isUser = (typeof req.body.user.isUser !== 'undefined' ? req.body.user.isUser : null);
+    let isSmm = (typeof req.body.user.isSmm !== 'undefined' ? req.body.user.isSmm : null);
+    let isMod = (typeof req.body.user.isMod !== 'undefined' ? req.body.user.isMod : null);
+
     let username_old = req.params['username'];
 
     let user = new UserDto();
@@ -84,6 +95,9 @@ userDriver.put('/:username', async function (req, res) {
     user.first_name = firstname
     user.last_name = lastname;
     user.psw_shadow = password;
+    user.isUser = isUser;
+    user.isSmm = isSmm;
+    user.isAdmin = isMod;
     let ctrl = await controller.updateUser(user, username_old, await authController.getAuthenticatedUser(req));
     if (ctrl.code === 200)
         res.status(ctrl.code).send(ctrl.content);

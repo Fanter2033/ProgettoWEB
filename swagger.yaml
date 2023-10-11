@@ -213,7 +213,7 @@ paths:
       tags:
         - channel
       summary: Update the channel
-      description: Update the channel with his name in path with the passed Channel object in the body.
+      description: Update the channel with his name in path with the passed Channel object in the body. If the password is not passed the system handle old password. Registration timestamp do not be changed
       parameters:
         - name: channel_name
           in: path
@@ -408,6 +408,12 @@ definitions:
         type: string
       registration_timestamp:
         type: integer
+      isUser:
+        type: boolean
+      isSmm:
+        type: boolean
+      isMod:
+        type: boolean
   Channel:
     type: object
     properties:

@@ -254,6 +254,9 @@ class ServerTablesUsers {
         document.getElementById('registerLastName').value = userDto.last_name;
         document.getElementById('registerPassword').value = '';
         document.getElementById('confirmPassword').value = '';
+        document.getElementById('isUser').checked = userDto.isUser;
+        document.getElementById('isMod').checked = userDto.isAdmin;
+        document.getElementById('isSmm').checked = userDto.isSmm;
         document.getElementById('executeOperation').setAttribute('onclick', `applicaCambiamentiUtente('${username}')`);
         document.getElementById('executeOperation').innerHTML = 'Modifica utente';
     }

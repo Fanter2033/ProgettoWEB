@@ -79,11 +79,12 @@ module.exports = class UserController extends Controller {
 
     /**
      * @param userObj {UserDto}
+     * @param authenticatedUser {UserDto}
      * @returns {Promise<Object>}
      *
      * Given the user object returns code 200 if the user is created, false otherwise.
      */
-    async createUser(userObj) {
+    async createUser(userObj, authenticatedUser) {
         let output = this.getDefaultOutput();
         let ctrl_response = this.controlUser(userObj);
         if (ctrl_response !== 0) {
@@ -94,10 +95,21 @@ module.exports = class UserController extends Controller {
         }
 
         //Check the username do not exists
-        if (await this._model.userExists(userObj.username)) {
+        if (await this._model.userExists(userObj.username, userObj.email)) {
             output['code'] = 400;
             output['req_error'] = -1;
             output['msg'] = 'Username already exists.';
+            return output;
+        }
+
+        if(userObj.isAdmin && this.isObjectVoid(authenticatedUser) && !authenticatedUser.isAdmin){
+            userObj.isAdmin = false;
+        }
+
+        if (!userObj.isUser && !userObj.isSmm && !userObj.isAdmin) {
+            output['code'] = 400;
+            output['req_error'] = -2;
+            output['msg'] = 'User has no authorization.';
             return output;
         }
 
@@ -124,40 +136,64 @@ module.exports = class UserController extends Controller {
      */
     async updateUser(newUser, oldUsername, authenticatedUser) {
         let output = this.getDefaultOutput();
-        let ctrl_response = this.controlUser(newUser);
+        let ctrl_response = this.controlUser(newUser, true);
         if (ctrl_response !== 0) {
             output['code'] = 400;
+            output['req_error'] = -100 + ctrl_response;
             output['msg'] = 'Email not valid or field is not populate.';
             return output;
         }
 
         if (this.isObjectVoid(authenticatedUser) || (!authenticatedUser.isAdmin && authenticatedUser.username !== oldUsername)) {
             output['code'] = 403;
+            output['req_error'] = -4;
             output['msg'] = 'Forbidden.';
             return output;
         }
 
         if (await this._model.userExists(oldUsername) === false) {
             output['code'] = 400;
+            output['req_error'] = -3;
             output['msg'] = 'Old user do not exists.';
+            return output;
+        }
+
+        let oldUserObj = await this._model.getUser(oldUsername);
+
+        if (await this._model.userExistsByEmail(newUser.email) && newUser.email !== oldUserObj.email) {
+            output['code'] = 400;
+            output['req_error'] = -1;
+            output['msg'] = 'Email already used';
             return output;
         }
 
         if (await this._model.userExists(newUser.username) && newUser.username !== oldUsername) {
             output['code'] = 400;
-            output['msg'] = 'Username already used';
+            output['req_error'] = -1;
+            output['msg'] = 'Email already used';
             return output;
         }
 
-        let oldUserObj = await this._model.getUser(oldUsername);
+        if (!newUser.isUser && !newUser.isSmm && !newUser.isAdmin) {
+            output['code'] = 400;
+            output['req_error'] = -2;
+            output['msg'] = 'User has no authorization.';
+            return output;
+        }
+
+
         newUser.registration_timestamp = oldUserObj.registration_timestamp;
-        newUser.psw_shadow = await this.crypt(newUser.psw_shadow);
+        if(newUser.psw_shadow !== '')
+            newUser.psw_shadow = await this.crypt(newUser.psw_shadow);
+        else
+            newUser.psw_shadow = oldUserObj.psw_shadow;
 
         let databaseResponse = await this._model.replaceUser(newUser, oldUserObj.username);
         if (databaseResponse)
             output['content'] = newUser;
         else {
             output['code'] = 500;
+            output['req_error'] = -5;
             output['msg'] = 'Error updating into DB.';
         }
 
@@ -166,11 +202,12 @@ module.exports = class UserController extends Controller {
 
     /**
      * @param userObj {UserDto}
+     * @param isEdit {boolean}
      * @returns number
      * Execute data control. Returns 1 on success. Returns negative numbers on errors.
      * Please control the code to understand the errors handled.
      */
-    controlUser(userObj) {
+    controlUser(userObj, isEdit = false) {
         let username = userObj.username.trim().toLowerCase();
         let password = userObj.psw_shadow.trim();
         let firstname = userObj.first_name.trim();
@@ -178,20 +215,26 @@ module.exports = class UserController extends Controller {
         let email = userObj.email.trim().toLowerCase();
         userObj.registration_timestamp = this.getCurrentTimestampSeconds();
 
-        if (username.length === 0 || password.length === 0 || firstname.length === 0 || lastname.length === 0 || email.length === 0)
+        if (username.length === 0 || (password.length === 0 && isEdit === false) || firstname.length === 0 || lastname.length === 0 || email.length === 0)
             return -1;
 
         if (this.isEmail(email) === false)
             return -2;
+
+        if(userObj.isUser !== true && userObj.isUser !== false)
+            return -3;
+
+        if(userObj.isSmm !== true && userObj.isSmm !== false)
+            return -3;
+
+        if(userObj.isAdmin !== true && userObj.isAdmin !== false)
+            return -3;
 
         userObj.username = username;
         userObj.psw_shadow = password;
         userObj.first_name = firstname;
         userObj.last_name = lastname;
         userObj.email = email;
-        userObj.isUser = true;
-        userObj.isSmm = false;
-        userObj.isAdmin = false;
 
         return 0;
     }
