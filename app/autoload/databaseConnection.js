@@ -14,6 +14,11 @@ exports.setDatabaseParams = function (Fusername, Fpassword, Fhost, Fport, Fdatab
     uri = `mongodb://${username}:${password}@${host}:${port}/${database}${extra}`;
 }
 
+/**
+ * @returns {Promise<MongoClient>}
+ *
+ * connect to the mongo client
+ */
 exports.getDatabaseConnection = function () {
     return MongoClient.connect(uri);
 }
@@ -21,6 +26,8 @@ exports.getDatabaseConnection = function () {
 /**
  * get the uri from the Mongo server
  * @return {string}
+ *
+ * get the database uri
  */
 exports.getDatabaseConnectionUri = function () {
     return `mongodb://${username}:${password}@${host}:${port}/${database}${extra}`;
