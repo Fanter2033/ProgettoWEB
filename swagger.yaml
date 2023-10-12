@@ -208,6 +208,48 @@ paths:
           schema:
             type: string
             description: 'More information about the error'
+    get:
+      tags:
+        - channel
+      summary: Get a list of channels
+      description: Returns an array of Channels.
+      parameters:
+        - name: offset
+          in: query
+          required: false
+          type: integer
+        - name: limit
+          in: query
+          required: false
+          type: integer
+        - name: search
+          in: query
+          required: false
+          type: string
+        - name: orderBy
+          in: query
+          required: false
+          description: The order by value should be a key of Channel.
+          type: string
+        - name: orderDir
+          in: query
+          required: false
+          type: string
+          enum:
+            - ORDER_ASC
+            - ORDER_DESC
+      responses:
+        '200':
+          description: 'Successful operation'
+          schema:
+            type: object
+            properties:
+              users:
+                type: array
+                items:
+                  $ref: '#/definitions/Channel'
+              totalCount:
+                type: integer
   /channel/{channel_name}:
     put:
       tags:
