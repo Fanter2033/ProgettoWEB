@@ -428,6 +428,24 @@ paths:
             description: 'More information about the error'
         '404':
           description: 'The specified squeal in URL path is not found'
+  /user/{username}/quote:
+    get:
+      tags:
+        - quote
+      summary: See the user quota
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Successful operation'
+          schema:
+            type: object
+            $ref: '#/definitions/Quote'
+        '404':
+          description: 'User not found'
 definitions:
   User:
     type: object
