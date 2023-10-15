@@ -113,6 +113,8 @@ module.exports = class UserController extends Controller {
      * @param newUser {UserDto}
      * @param oldUsername {string}
      * @returns {Promise<Object>}
+     *
+     * change a user from a given username
      */
     async updateUser(newUser, oldUsername) {
         let output = this.getDefaultOutput();
@@ -153,6 +155,7 @@ module.exports = class UserController extends Controller {
     /**
      * @param userObj {UserDto}
      * @returns number
+     *
      * Execute data control. Returns 1 on success. Returns negative numbers on errors.
      * Please control the code to understand the errors handled.
      */

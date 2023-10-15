@@ -15,11 +15,25 @@ module.exports = class AuthController extends Controller {
 
     /**
      * @param {string} invokerIp
+     *
+     *
      */
     setInvokerIp(invokerIp) {
         this.invokerIp = invokerIp;
     }
 
+    /**
+     *
+     * @param requestObject
+     * @param responseObject
+     * @param username
+     * @param password_attempt
+     * @param requested_role
+     * @returns {Promise<{msg: string, code: number, content: {}}>}
+     *
+     * open a session
+     *
+     */
     async authenticateUser(requestObject, responseObject, username, password_attempt, requested_role = 0) {
         let output = this.getDefaultOutput();
         requested_role = parseInt(requested_role);
@@ -70,6 +84,13 @@ module.exports = class AuthController extends Controller {
         return output;
     }
 
+    /**
+     *
+     * @param requestObject
+     * @returns {{msg: string, code: number, content: {}}}
+     *
+     * close a session
+     */
     deAuthenticateUser(requestObject){
         let output = this.getDefaultOutput();
         if(this.isAuthLogged(requestObject) === false){
@@ -95,11 +116,11 @@ module.exports = class AuthController extends Controller {
      */
     hasUserRequestedRole(user, requested_role = 0) {
         switch (requested_role){
-            case 0:
+            case 0:         //user
                 return user.isUser;
-            case 1:
+            case 1:         //Smm
                 return user.isSmm;
-            case 2:
+            case 2:         //Admin
                 return user.isAdmin;
             default:
                 return false;
@@ -110,6 +131,9 @@ module.exports = class AuthController extends Controller {
     /**
      * @param request
      * return {Boolean}
+     *
+     *
+     *
      */
     isAuthLogged(request) {
         if(request.session && request.session.user && request.session.user.username)
@@ -121,6 +145,9 @@ module.exports = class AuthController extends Controller {
     /**
      * @param request
      * return {Promise<Boolean>}
+     *
+     *
+     *
      */
     async isAuthAdmin(request) {
         if(this.isAuthLogged(request) === false)
