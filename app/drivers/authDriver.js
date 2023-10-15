@@ -8,6 +8,10 @@ let authController = new AuthController(new AuthModel(_AUTH_ATTEMPTS_COLLECTION)
 authDriver.use(express.json());
 authDriver.use(express.urlencoded({extended: true}));
 
+/*
+* quando mi fai una post da client il driver intercetta la richiesta fa il parsing per
+* il controller
+* */
 authDriver.post('/:username/:auth_field', async function (req, res) {
     if (typeof req.body === 'undefined') {
         req.body = {};

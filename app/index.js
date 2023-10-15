@@ -15,6 +15,10 @@ global.startDate = null;
 global.autoload = autoload;
 
 const oneDay = 1000 * 60 * 60 * 24;
+
+/*
+* save and crypt sessions
+* */
 backEndRouter.use(session({
     secret: autoload.config._SESSION_SECRET,
     store: MongoStore.create({
@@ -33,6 +37,7 @@ backEndRouter.use(express.urlencoded({extended: true}));
 // cookie parser middleware
 backEndRouter.use(cookieParser());
 
+/*log requests*/
 backEndRouter.get('*', (req, res, next) => {
     autoload.logRequests(req, next);
 });
@@ -45,6 +50,7 @@ backEndRouter.put('*', (req, res, next) => {
 backEndRouter.delete('*', (req, res, next) => {
     autoload.logRequests(req, next);
 });
+
 
 backEndRouter.use('/js', express.static(global.rootDir + '/public/js'));
 backEndRouter.use('/css', express.static(global.rootDir + '/public/css'));

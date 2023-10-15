@@ -14,6 +14,8 @@ module.exports = class AuthController extends Controller {
 
     /**
      * @param {string} invokerIp
+     *
+     * save the client ip addr
      */
     setInvokerIp(invokerIp) {
         this.invokerIp = invokerIp;
