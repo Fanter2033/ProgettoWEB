@@ -432,9 +432,6 @@ definitions:
   User:
     type: object
     properties:
-      id:
-        type: integer
-        description: Id generato dal sistema per l'utente, è univoco.
       username:
         type: string
         maxLength: 32
@@ -527,3 +524,23 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Reaction'
+  Quote:
+    type: object
+    description: User quote
+    properties:
+      id:
+        type: string
+        description: reference user
+      limit_daily:
+        type: integer
+      limit_weekly:
+        type: integer
+      limit_monthly:
+        type: integer
+      remaining_daily:
+        type: integer
+      remaining_weekly:
+        type: integer
+      remaining_monthly:
+        type: integer
+
