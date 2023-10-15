@@ -474,17 +474,17 @@ definitions:
   Channel:
     type: object
     properties:
-      c_type:
+      name:
+        type: string
+        maxLength: 128
+        description: Channel name
+      type:
         type: string
         enum:
           - CHANNEL_OFFICIAL
           - CHANNEL_USERS
           - CHANNEL_TAG #quelli con l'hashtag
         description: type of channel
-      name:
-        type: string
-        maxLength: 128
-        description: Channel name
       private:
         type: boolean
         default: false
