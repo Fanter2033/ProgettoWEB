@@ -3,6 +3,7 @@ const userDriver = express();
 const UserController = require("../controllers/UserController");
 const UserModel = require("../models/UserModel");
 const UserDto = require("../entities/dtos/UserDto");
+const quoteDriver = require('./quoteDriver');
 let controller = new UserController(new UserModel('users'));
 const AuthController = require("../controllers/AuthController");
 const AuthModel = require("../models/AuthModel");
@@ -121,6 +122,9 @@ userDriver.get('/', async function (req, res) {
     else
         res.status(ctrl.code).send(ctrl);
 });
+
+userDriver.use(`/:username/quote`, quoteDriver);
+
 
 
 module.exports = userDriver;

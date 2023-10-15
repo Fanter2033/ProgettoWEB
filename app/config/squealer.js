@@ -36,6 +36,11 @@ exports._USER_COLLECTION = 'users';
 exports._AUTH_ATTEMPTS_COLLECTION = 'auth_attempts';
 exports._SESSION_COLLECTION = 'sessions';
 
+//Quote
+exports._QUOTE_DEFAULT_DAILY = 1000;
+exports._QUOTE_DEFAULT_WEEKLY = 1000 * 6;
+exports._QUOTE_DEFAULT_MONTHLY = 1000 * 20;
+
 //Session params
 exports._SESSION_SECRET = '5DE1ya358SlHeJY52MbH8SHssFJqQh8TZVAyiVKBGDuCl1ZmFlXMqRTRj8hzSqFUJ5iPZwzKt1ERhqR0oabSMFSVxV9HM7KNZhkhQ1wdpkgY70QB5wixx5QvFbeV0uml';
 
