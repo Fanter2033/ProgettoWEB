@@ -36,6 +36,9 @@ module.exports = class UserDto {
     }
 
 
+    /**
+     * @return {string}
+     */
     get username() {
         return this.#username;
     }

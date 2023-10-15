@@ -4,6 +4,7 @@ const backEndRouter = express();
 const databaseDriver = require('./drivers/databaseDriver');
 const authDriver = require('./drivers/authDriver.js')
 const userDriver = require('./drivers/userDriver');
+const channelDriver = require('./drivers/channelDriver');
 const viewDriver = require('./drivers/views/viewDriver');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
@@ -14,6 +15,10 @@ global.startDate = null;
 global.autoload = autoload;
 
 const oneDay = 1000 * 60 * 60 * 24;
+
+/*
+* save and crypt sessions
+* */
 backEndRouter.use(session({
     secret: autoload.config._SESSION_SECRET,
     store: MongoStore.create({
@@ -32,6 +37,7 @@ backEndRouter.use(express.urlencoded({extended: true}));
 // cookie parser middleware
 backEndRouter.use(cookieParser());
 
+/*log requests*/
 backEndRouter.get('*', (req, res, next) => {
     autoload.logRequests(req, next);
 });
@@ -44,6 +50,7 @@ backEndRouter.put('*', (req, res, next) => {
 backEndRouter.delete('*', (req, res, next) => {
     autoload.logRequests(req, next);
 });
+
 
 backEndRouter.use('/js', express.static(global.rootDir + '/public/js'));
 backEndRouter.use('/css', express.static(global.rootDir + '/public/css'));
@@ -61,6 +68,7 @@ backEndRouter.get('/home', (req, res) => {
 backEndRouter.use('/auth', authDriver);
 backEndRouter.use('/database', databaseDriver);
 backEndRouter.use('/user', userDriver);
+backEndRouter.use('/channel', channelDriver);
 backEndRouter.use('/', viewDriver);
 
 backEndRouter.listen(autoload.config._WEBSERVER_PORT, () => {

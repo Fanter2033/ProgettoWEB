@@ -2,7 +2,6 @@ const Controller = require("./Controller");
 const UserController = require("./UserController");
 const UserModel = require("../models/UserModel");
 const {config} = require("../autoload/autoload");
-const session = require('express-session')
 const AuthenticationAttemptDto = require('../entities/dtos/AuthenticationAttemptDto');
 module.exports = class AuthController extends Controller {
 
@@ -16,24 +15,12 @@ module.exports = class AuthController extends Controller {
     /**
      * @param {string} invokerIp
      *
-     *
+     * save the client ip addr
      */
     setInvokerIp(invokerIp) {
         this.invokerIp = invokerIp;
     }
 
-    /**
-     *
-     * @param requestObject
-     * @param responseObject
-     * @param username
-     * @param password_attempt
-     * @param requested_role
-     * @returns {Promise<{msg: string, code: number, content: {}}>}
-     *
-     * open a session
-     *
-     */
     async authenticateUser(requestObject, responseObject, username, password_attempt, requested_role = 0) {
         let output = this.getDefaultOutput();
         requested_role = parseInt(requested_role);
@@ -84,13 +71,6 @@ module.exports = class AuthController extends Controller {
         return output;
     }
 
-    /**
-     *
-     * @param requestObject
-     * @returns {{msg: string, code: number, content: {}}}
-     *
-     * close a session
-     */
     deAuthenticateUser(requestObject){
         let output = this.getDefaultOutput();
         if(this.isAuthLogged(requestObject) === false){
@@ -116,11 +96,11 @@ module.exports = class AuthController extends Controller {
      */
     hasUserRequestedRole(user, requested_role = 0) {
         switch (requested_role){
-            case 0:         //user
+            case 0:
                 return user.isUser;
-            case 1:         //Smm
+            case 1:
                 return user.isSmm;
-            case 2:         //Admin
+            case 2:
                 return user.isAdmin;
             default:
                 return false;
@@ -131,9 +111,6 @@ module.exports = class AuthController extends Controller {
     /**
      * @param request
      * return {Boolean}
-     *
-     *
-     *
      */
     isAuthLogged(request) {
         if(request.session && request.session.user && request.session.user.username)
@@ -145,15 +122,39 @@ module.exports = class AuthController extends Controller {
     /**
      * @param request
      * return {Promise<Boolean>}
-     *
-     *
-     *
      */
     async isAuthAdmin(request) {
         if(this.isAuthLogged(request) === false)
             return false;
         let user = await this._userController.getUser(request.session.user.username);
         return user.isAdmin;
+    }
+
+    /**
+     * Given request param returns the
+     * @param request
+     * @return {Promise<{}|UserDto>}
+     */
+    async getAuthenticatedUser(request) {
+        if (this.isAuthLogged(request)) {
+            await this.updateUser(request);
+            return request.session.user;
+        }
+        return {};
+    }
+
+    /**
+     * @param {object} request
+     * @return Promise<void>
+     */
+    async updateUser(request) {
+        if (this.isAuthLogged(request)) {
+            let requestUser = await this._userController.getUser(request.session.user.username);
+            if(requestUser.code === 200) {
+                request.session.user = requestUser.content;
+                request.session.save();
+            }
+        }
     }
 
 }
