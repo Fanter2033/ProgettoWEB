@@ -8,6 +8,12 @@ module.exports = class DatabaseController {
         return this._model;
     }
 
+    /**
+     *
+     * @returns {Promise<*>}
+     *
+     * returns
+     */
     async getDatabaseCollections() {
         return await this.getModel().getDatabaseCollections();
     }

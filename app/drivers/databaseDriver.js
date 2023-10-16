@@ -6,6 +6,10 @@ const DatabaseModel = require("../models/DatabaseModel");
 
 let controller = new DatabaseController(new DatabaseModel());
 
+/**
+ * method: GET
+ * route: /
+ */
 databaseDriver.get('/', function (req, res) {
     res.sendFile(path.resolve(`../app/public/html/goAway.html`));
 });

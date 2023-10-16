@@ -1,22 +1,21 @@
 swagger: "2.0"
 info:
-  description: "API per Squealer, il social che ha ucciso Twitter!"
+  description: "API per Squealer, il social che ha ucciso Twitter! (Anche se si è ucciso da solo)"
   version: "1.0.0"
   title: "Squealer API"
 #host: "site222317.tw.cs.unibo.it"
-host : "localhost:8000"
+host: "localhost:8000"
 basePath: "/"
-#basePath: "/"
 schemes:
-- "http"
-- "https"
+  - "http"
+  - "https"
 paths:
   /auth/{username}/{auth_field}:
     post:
       summary: Authenticate the user
       description: Authenticate the user with his password and start new session for them.
       parameters:
-        - name : username
+        - name: username
           in: path
           description: Authentication user
           type: string
@@ -26,7 +25,7 @@ paths:
           type: integer
           required: true
           description: Required role authenticating
-        - name : password
+        - name: password
           in: body
           type: string
           required: true
@@ -38,6 +37,17 @@ paths:
           description: Failed authentication due server error
         '403':
           description: Failed authentication due wrong password or username.
+  /auth/logout:
+    post:
+      summary: De-Authenticate user
+      description: De-Authenticate the requesting user, if one is logged, the user is got by the server using session id!
+      responses:
+        '204':
+          description: Returns no content, the client knows what do.
+        '500':
+          description: Failed authentication due server error
+        '404':
+          description: No user to de-authenticate found.
   /user/{username}:
     put:
       tags:
@@ -61,6 +71,8 @@ paths:
           description: 'Updated user'
         '400':
           description: 'Invalid username'
+        '403':
+          description: 'The requester is not the deleting user or a Squealer admin (or the requester is not logged)'
         '422':
           description: 'The user passed in request is not existent or it has not required fields (or invalid type of fields)'
           schema:
@@ -98,7 +110,7 @@ paths:
         '200':
           description: 'Successful operation'
           schema:
-            type: array
+            type: object
             items:
               $ref: '#/definitions/User'
         '400':
@@ -128,6 +140,48 @@ paths:
           schema:
             type: string
             description: 'More information about the error'
+    get:
+      tags:
+        - user
+      summary: Get a list of users
+      description: Returns an array of User. If the user is not authenticated or is not an admin only some fields are populated
+      parameters:
+        - name: offset
+          in: query
+          required: false
+          type: integer
+        - name: limit
+          in: query
+          required: false
+          type: integer
+        - name: search
+          in: query
+          required: false
+          type: string
+        - name: orderBy
+          in: query
+          required: false
+          description: The order by value should be a key of User.
+          type: string
+        - name: orderDir
+          in: query
+          required: false
+          type: string
+          enum:
+            - ORDER_ASC
+            - ORDER_DESC
+      responses:
+        '200':
+          description: 'Successful operation'
+          schema:
+            type: object
+            properties:
+              users:
+                type: array
+                items:
+                  $ref: '#/definitions/User'
+              totalCount:
+                type: integer
   /channel:
     post:
       tags:
@@ -137,7 +191,7 @@ paths:
       parameters:
         - name: channel
           in: body
-          description: new Channel object
+          description: new Channel object. The creation of Official channels is allowed only for admins, the creation of channel tags is forbidden because its exists for every keyword.
           required: true
           schema:
             $ref: '#/definitions/Channel'
@@ -150,18 +204,64 @@ paths:
             type: string
             description: 'More info about the error'
         '403':
-          description: 'Unable to create channel due low privileges'
+          description: 'Unable to create channel due low privileges or created a TAG channel'
           schema:
             type: string
             description: 'More information about the error'
-  /channel/{channel_name}:
+    get:
+      tags:
+        - channel
+      summary: Get a list of channels
+      description: Returns an array of Channels.
+      parameters:
+        - name: offset
+          in: query
+          required: false
+          type: integer
+        - name: limit
+          in: query
+          required: false
+          type: integer
+        - name: search
+          in: query
+          required: false
+          type: string
+        - name: orderBy
+          in: query
+          required: false
+          description: The order by value should be a key of Channel.
+          type: string
+        - name: orderDir
+          in: query
+          required: false
+          type: string
+          enum:
+            - ORDER_ASC
+            - ORDER_DESC
+      responses:
+        '200':
+          description: 'Successful operation'
+          schema:
+            type: object
+            properties:
+              users:
+                type: array
+                items:
+                  $ref: '#/definitions/Channel'
+              totalCount:
+                type: integer
+  /channel/{type}/{channel_name}:
     put:
       tags:
         - channel
       summary: Update the channel
-      description: Update the channel with his name in path with the passed Channel object in the body.
+      description: Update the channel with his name in path with the passed Channel object in the body. If the password is not passed the system handle old password. Registration timestamp do not be changed. Cannot update TAG channels
       parameters:
         - name: channel_name
+          in: path
+          required: true
+          type: string
+        - name: type
           in: path
           required: true
           type: string
@@ -180,7 +280,7 @@ paths:
             type: string
             description: 'More info about the error'
         '403':
-          description: 'Unable to update channel due low privileges'
+          description: 'Unable to update channel due low privileges or tried to update tag channel'
           schema:
             type: string
             description: 'More information about the error'
@@ -195,11 +295,15 @@ paths:
           in: path
           required: true
           type: string
+        - name: type
+          in: path
+          required: true
+          type: string
       responses:
         '200':
           description: 'Deleted channel'
         '403':
-          description: 'Unable to delete channel due low privileges'
+          description: 'Unable to delete channel due low privileges or tired to delete tag channel. For Public channels only administrators can execute delete. For user channels only admins can execute delete'
           schema:
             type: string
             description: 'More information about the error'
@@ -214,11 +318,17 @@ paths:
           in: path
           required: true
           type: string
+        - name: type
+          in: path
+          required: true
+          type: string
       responses:
         '200':
           description: 'Channel info'
           schema:
             $ref: '#/definitions/Channel'
+        '400':
+          description: 'Bad Request.'
         '403':
           description: 'Unable to read channel due low privileges'
           schema:
@@ -332,13 +442,28 @@ paths:
             description: 'More information about the error'
         '404':
           description: 'The specified squeal in URL path is not found'
+  /user/{username}/quote:
+    get:
+      tags:
+        - quote
+      summary: See the user quota
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Successful operation'
+          schema:
+            type: object
+            $ref: '#/definitions/Quote'
+        '404':
+          description: 'User not found'
 definitions:
   User:
     type: object
     properties:
-      id:
-        type: integer
-        description: Id generato dal sistema per l'utente, è univoco.
       username:
         type: string
         maxLength: 32
@@ -354,24 +479,30 @@ definitions:
         type: string
       registration_timestamp:
         type: integer
+      isUser:
+        type: boolean
+      isSmm:
+        type: boolean
+      isMod:
+        type: boolean
   Channel:
     type: object
     properties:
-      c_type:
-        type: string
-        enum:
-          - CHANNEL
-          - CHANNEL_TAG #quelli con l'hashtag
-        description: type of channel
       name:
         type: string
         maxLength: 128
         description: Channel name
-      privacy:
+      type:
         type: string
         enum:
-          - PUBLIC
-          - PRIVATE
+          - CHANNEL_OFFICIAL
+          - CHANNEL_USERS
+          - CHANNEL_HASHTAG
+        description: type of channel
+      private:
+        type: boolean
+        default: false
+        description: This attribute can be true only for private channels, not allowed on TAG and PUBLIC channels
   Destination:
     type: object
     properties:
@@ -425,3 +556,23 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Reaction'
+  Quote:
+    type: object
+    description: User quote
+    properties:
+      id:
+        type: string
+        description: reference user
+      limit_daily:
+        type: integer
+      limit_weekly:
+        type: integer
+      limit_monthly:
+        type: integer
+      remaining_daily:
+        type: integer
+      remaining_weekly:
+        type: integer
+      remaining_monthly:
+        type: integer
+

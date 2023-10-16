@@ -1,4 +1,6 @@
 //testing per registrazione e login
+
+/* BASE CONTROLLER CLASS */
 const bcrypt = require('bcrypt')
 const config = require('../config/squealer')
 module.exports = class Controller {
@@ -18,11 +20,28 @@ module.exports = class Controller {
      *
      */
     isObjectVoid(obj) {
+        if(obj === undefined || obj === null) return true;
         if (Object.keys(obj).length === 0)
             return true;
         return false;
     }
 
+    /**
+     *
+     * @param object
+     * @param className
+     * @returns {boolean}
+     *
+     * check if a given object is an instance of a given class
+     */
+    isInstanceOfClass(object, className) {
+        return object.constructor.name === className;
+    }
+
+    /**
+     *
+     * @returns {{msg: string, code: number, content: {}}}
+     */
     getDefaultOutput() {
         return {
             'code': 200,
@@ -33,6 +52,8 @@ module.exports = class Controller {
 
     /**
      * @returns {number}
+     *
+     * return the current date
      */
     getCurrentTimestampMillis() {
         return Date.now();
@@ -40,6 +61,8 @@ module.exports = class Controller {
 
     /**
      * @returns {number}
+     *
+     * return the current date in
      */
     getCurrentTimestampSeconds() {
         return parseInt(this.getCurrentTimestampMillis() / 1000);
@@ -62,6 +85,8 @@ module.exports = class Controller {
      *
      * @param string {string}
      * @param saltRound {number}
+     *
+     * crypt a string then create the hash with the salt and return the final hash
      */
     async crypt(string, saltRound = config._CIPHER_SALT) {
         return bcrypt.genSalt(saltRound)
@@ -89,6 +114,16 @@ module.exports = class Controller {
             .then(res => {
                 return res;
             });
+    }
+
+    /**
+     * @param max {number}
+     * @return {number}
+     *
+     * get a random value
+     */
+    getRandomInt(max) {
+        return Math.floor(Math.random() * max);
     }
 
 }

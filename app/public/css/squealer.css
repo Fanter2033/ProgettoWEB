@@ -4,6 +4,11 @@
         color: #ffffff;
     }
 
+    .card {
+        background-color: #383232;
+        color: #ffffff;
+    }
+
     .card-body {
         background-color: #383232;
         color: #ffffff;
@@ -28,11 +33,28 @@
         color: #ffffff;
     }
 
+    .header-title {
+        font-size: 1.5rem !important;
+        color: #ffffff;
+    }
+
+    .text-theme-adaptive {
+        color: #FFFFFF;
+    }
+
 }
 
 @media screen and (prefers-color-scheme: light) {
     body {
 
+    }
+
+    .header-title {
+        font-size: 1.5rem !important;
+    }
+
+    .text-theme-adaptive {
+        color: #000000;
     }
 
 }

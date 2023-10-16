@@ -1,32 +1,62 @@
-const User = require("../entities/User");
+const User = require("../entities/schemas/UserSchema");
 const Model = require("./Model");
+const UserDto = require("../entities/dtos/UserDto");
 module.exports = class UserModel extends Model {
     constructor(userCollectionName) {
         super(userCollectionName);
     }
 
+    /**
+     * @param username
+     * @return {{}|UserDto}
+     */
     async getUser(username) {
-        let filter = {"username": `${username}`};
+        await this.checkMongoose("User", User);
+        let filter = {username: `${username}`};
         filter = this.mongo_escape(filter);
-        let collection = await this.getCollection();
-        let results = await collection.find(filter).toArray();
+        let results = await this.entityMongooseModel.find(filter);
+        if (results.length === 1) return new UserDto(results[0]._doc);
+        return {};
+    }
+
+    /**
+     * @param email
+     * @return {{}|UserDto}
+     */
+    async getUserByEmail(email) {
+        await this.checkMongoose("User", User);
+        let filter = {"email": `${email}`};
+        filter = this.mongo_escape(filter);
+        let results = await this.entityMongooseModel.find(filter);
         if (results.length === 1)
-            return new User(results[0].username, results[0].email, results[0].first_name, results[0].last_name, results[0].psw_shadow, results[0].registration_timestamp);
+            return new UserDto(results[0]._doc);
         return {};
     }
 
     /**
      *
-     * @param username
+     * @param {String} username
+     * @param {String} email
      * @returns {Promise<boolean>}
      * Given a username returns true if the user exists, false otherwise.
      */
-    async userExists(username) {
-        let filter = {"username": `${username}`};
-        filter = this.mongo_escape(filter);
-        let collection = await this.getCollection();
-        let results = await collection.find(filter).toArray();
-        return results.length >= 1;
+    async userExists(username, email = '') {
+        let user = await this.getUser(username);
+        if ((user).constructor.name === 'UserDto')
+            return true;
+        if (email === '')
+            return false;
+        user = await this.getUserByEmail(email);
+        return (user).constructor.name === 'UserDto';
+    }
+
+    /**
+     * @param {string} email
+     * @return {Promise<boolean>}
+     */
+    async userExistsByEmail(email) {
+        let user = await this.getUserByEmail(email);
+        return (user).constructor.name === 'UserDto';
     }
 
     /**
@@ -39,40 +69,112 @@ module.exports = class UserModel extends Model {
      *
      */
     async deleteUser(username) {
+        await this.checkMongoose("User", User);
         let filter = {"username": `${username}`};
         filter = this.mongo_escape(filter);
-        let collection = await this.getCollection();
-        let response = await collection.deleteOne(filter);
-        return response.deletedCount > 0;
+        try {
+            await this.entityMongooseModel.deleteOne(filter);
+        } catch (ignored) {
+            return false;
+        }
+        return true;
     }
 
     /**
-     * @param userObj
+     * @param userObj {UserDto}
      * @returns {Promise<boolean>}
      */
     async createUser(userObj) {
-        let collection = await this.getCollection();
-        userObj = this.mongo_escape(userObj);
-        let response = await collection.insertOne(userObj);
-        if (response)
-            return true;
-        return false;
+        await this.checkMongoose("User", User);
+        userObj = this.mongo_escape(userObj.getDocument());
+        let userInserting = new this.entityMongooseModel(userObj);
+        try {
+            await userInserting.save();
+        } catch (ignored) {
+            return false;
+        }
+        return true;
     }
 
     /**
-     * @param userObj {User}
+     * @param userObj {UserDto}
      * @param username {string}
      * @returns {Promise<boolean>}
      */
     async replaceUser(userObj, username) {
-        let collection = await this.getCollection();
+        await this.checkMongoose("User", User);
         let filter = {"username": `${username}`};
         filter = this.mongo_escape(filter);
-        userObj = this.mongo_escape(filter);
-        let response = await collection.replaceOne(filter, userObj);
-        if (response.modifiedCount > 0)
-            return true;
-        return false;
+        userObj = this.mongo_escape(userObj.getDocument());
+        try {
+            await this.entityMongooseModel.replaceOne(filter, userObj);
+        } catch (ignored) {
+            return false;
+        }
+        return true;
+
+    }
+
+    /**
+     *
+     * @param {number} offset
+     * @param {number} limit
+     * @param {string} search
+     * @param {string} orderBy
+     * @param {string} orderDir
+     * @returns {Promise<UserDto | {}>}
+     */
+    async getUserList(offset, limit, search, orderBy, orderDir) {
+        await this.checkMongoose("User", User);
+        orderDir = (orderDir === 'ORDER_ASC' ? 'asc' : 'desc');
+        let filter = {
+            $or: [
+                {username: {$regex: this.mongo_escape(search)}},
+                {first_name: {$regex: this.mongo_escape(search)}},
+                {last_name: {$regex: this.mongo_escape(search)}},
+                {email: {$regex: this.mongo_escape(search)}}
+            ]
+        };
+        let sorting = {};
+        sorting[orderBy] = orderDir;
+        sorting = this.mongo_escape(sorting);
+
+        if (orderBy === '')
+            sorting = {};
+
+        offset = this.mongo_escape(offset);
+        limit = this.mongo_escape(limit);
+        try {
+            let results = await this.entityMongooseModel
+                .find(filter)
+                .sort(sorting)
+                .skip(offset)
+                .limit(limit);
+
+            let output = [];
+            for (let i = 0; i < results.length; i++)
+                output.push(new UserDto(results[i]._doc));
+            return output;
+        } catch (ignored) {
+            return {}
+        }
+    }
+
+    /**
+     * @param {string} search
+     * @return {Promise<number>}
+     * Returns the number of all users in the DB.
+     */
+    async getUserCount(search) {
+        let filter = {
+            $or: [
+                {username: {$regex: this.mongo_escape(search)}},
+                {first_name: {$regex: this.mongo_escape(search)}},
+                {last_name: {$regex: this.mongo_escape(search)}},
+                {email: {$regex: this.mongo_escape(search)}}
+            ]
+        };
+        return await this.entityMongooseModel.count(filter);
     }
 
 }
