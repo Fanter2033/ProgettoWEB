@@ -1,4 +1,5 @@
 # Go away
+testremote/
 
 # Excluding node modules to prevent useless load on git repository
 */node_modules

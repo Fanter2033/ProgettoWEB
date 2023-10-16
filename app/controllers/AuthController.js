@@ -4,6 +4,8 @@ const UserModel = require("../models/UserModel");
 const { config } = require("../autoload/autoload");
 const session = require("express-session");
 const AuthenticationAttemptDto = require("../entities/dtos/AuthenticationAttemptDto");
+const {config} = require("../autoload/autoload");
+const AuthenticationAttemptDto = require('../entities/dtos/AuthenticationAttemptDto');
 module.exports = class AuthController extends Controller {
   constructor(model) {
     super();
@@ -84,6 +86,13 @@ module.exports = class AuthController extends Controller {
       output.code = 404;
       output.msg = "Not authenticated.";
       return output;
+    /**
+     * @param {string} invokerIp
+     *
+     * save the client ip addr
+     */
+    setInvokerIp(invokerIp) {
+        this.invokerIp = invokerIp;
     }
 
     requestObject.session.destroy();
@@ -139,3 +148,42 @@ module.exports = class AuthController extends Controller {
     return user.isAdmin;
   }
 };
+    /**
+     * @param request
+     * return {Promise<Boolean>}
+     */
+    async isAuthAdmin(request) {
+        if(this.isAuthLogged(request) === false)
+            return false;
+        let user = await this._userController.getUser(request.session.user.username);
+        return user.isAdmin;
+    }
+
+    /**
+     * Given request param returns the
+     * @param request
+     * @return {Promise<{}|UserDto>}
+     */
+    async getAuthenticatedUser(request) {
+        if (this.isAuthLogged(request)) {
+            await this.updateUser(request);
+            return request.session.user;
+        }
+        return {};
+    }
+
+    /**
+     * @param {object} request
+     * @return Promise<void>
+     */
+    async updateUser(request) {
+        if (this.isAuthLogged(request)) {
+            let requestUser = await this._userController.getUser(request.session.user.username);
+            if(requestUser.code === 200) {
+                request.session.user = requestUser.content;
+                request.session.save();
+            }
+        }
+    }
+
+}
