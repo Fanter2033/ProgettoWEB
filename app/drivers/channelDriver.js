@@ -3,6 +3,8 @@ const channelDriver = express();
 
 const ChannelController = require("../controllers/ChannelController");
 const ChannelModel = require("../models/ChannelModel");
+const ChannelDto = require("../entities/dtos/ChannelDto");
+
 let controller = new ChannelController(new ChannelModel());
 
 channelDriver.use(express.json());
@@ -15,16 +17,20 @@ channelDriver.get('/', async function (req, res) {
     res.send('2');
 });
 
-channelDriver.put('/:channel', async function (req, res) {
+channelDriver.put('/:type/:channel', async function (req, res) {
     res.send('3');
 });
 
-channelDriver.delete('/:channel', async function (req, res) {
+channelDriver.delete('/:type/:channel', async function (req, res) {
     res.send('4');
 });
 
-channelDriver.get('/:channel', async function (req, res) {
-    let ctrlOut = await controller.getChannel(req.params['channel']);
+channelDriver.get('/:type/:channel', async function (req, res) {
+    let channelDto = new ChannelDto();
+    channelDto.type = (typeof req.params['type'] !== 'undefined' ? req.params['type']: null);
+    channelDto.channel_name = (typeof req.params['channel'] !== 'undefined' ? req.params['channel']: null);
+
+    let ctrlOut = await controller.getChannel(channelDto);
     if (ctrlOut.code === 200)
         res.status(ctrlOut.code).send(ctrlOut.content);
     else

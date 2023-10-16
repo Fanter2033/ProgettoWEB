@@ -1,5 +1,5 @@
 const {repository: documentFromMongoose} = require("ejs/ejs");
-module.exports = class QuoteDto {
+module.exports = class ChannelDto {
 
     #channel_name;
     #type;
