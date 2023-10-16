@@ -14,8 +14,9 @@ module.exports = class ModeController extends Controller {
     async getQuote(username){
         let out = this.getDefaultOutput()
         let userOut = await userController.getUser(username);
-        if(this.isObjectVoid(userOut) && userOut.code !== 200){
+        if(userOut.code !== 200 || this.isObjectVoid(userOut['content'])){
             out['code'] = 404;
+            out['msg'] = 'Not found';
             return out;
         }
         let quote = await this._model.getQuote(username);
