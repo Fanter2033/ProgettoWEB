@@ -13,13 +13,7 @@ module.exports = class AuthController extends Controller {
         this.invokerIp = "";
     }
 
-    async authenticateUser(
-        requestObject,
-        responseObject,
-        username,
-        password_attempt,
-        requested_role = 0
-    ) {
+    async authenticateUser(requestObject, responseObject, username, password_attempt, requested_role = 0) {
         let output = this.getDefaultOutput();
         requested_role = parseInt(requested_role);
         if (isNaN(requested_role)) {
