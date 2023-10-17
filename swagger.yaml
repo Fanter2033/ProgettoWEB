@@ -250,7 +250,7 @@ paths:
                   $ref: '#/definitions/Channel'
               totalCount:
                 type: integer
-  /channel/{channel_name}:
+  /channel/{type}/{channel_name}:
     put:
       tags:
         - channel
@@ -258,6 +258,10 @@ paths:
       description: Update the channel with his name in path with the passed Channel object in the body. If the password is not passed the system handle old password. Registration timestamp do not be changed. Cannot update TAG channels
       parameters:
         - name: channel_name
+          in: path
+          required: true
+          type: string
+        - name: type
           in: path
           required: true
           type: string
@@ -291,6 +295,10 @@ paths:
           in: path
           required: true
           type: string
+        - name: type
+          in: path
+          required: true
+          type: string
       responses:
         '200':
           description: 'Deleted channel'
@@ -310,11 +318,21 @@ paths:
           in: path
           required: true
           type: string
+        - name: type
+          in: path
+          required: true
+          type: string
+          enum:
+            - CHANNEL_OFFICIAL
+            - CHANNEL_USERS
+            - CHANNEL_HASHTAG
       responses:
         '200':
           description: 'Channel info'
           schema:
             $ref: '#/definitions/Channel'
+        '400':
+          description: 'Bad Request.'
         '403':
           description: 'Unable to read channel due low privileges'
           schema:
@@ -446,6 +464,27 @@ paths:
             $ref: '#/definitions/Quote'
         '404':
           description: 'User not found'
+    patch:
+      tags:
+        - quote
+      summary: Change user quota by percentage
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+        - name: percentage
+          in: formData
+          type: integer
+          minimum: 0
+          maximum: 10000
+      responses:
+        '200':
+          description: 'Successful operation'
+        '403':
+          description: 'Requesting user is not an admin'
+        '404':
+          description: 'User not found'
 definitions:
   User:
     type: object
@@ -474,17 +513,17 @@ definitions:
   Channel:
     type: object
     properties:
-      c_type:
-        type: string
-        enum:
-          - CHANNEL_OFFICIAL
-          - CHANNEL_USERS
-          - CHANNEL_TAG #quelli con l'hashtag
-        description: type of channel
       name:
         type: string
         maxLength: 128
         description: Channel name
+      type:
+        type: string
+        enum:
+          - CHANNEL_OFFICIAL
+          - CHANNEL_USERS
+          - CHANNEL_HASHTAG
+        description: type of channel
       private:
         type: boolean
         default: false

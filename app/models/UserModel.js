@@ -1,6 +1,5 @@
 const User = require("../entities/schemas/UserSchema");
 const Model = require("./Model");
-const mongoose = require("mongoose");
 const UserDto = require("../entities/dtos/UserDto");
 module.exports = class UserModel extends Model {
     constructor(userCollectionName) {
@@ -13,14 +12,12 @@ module.exports = class UserModel extends Model {
      */
     async getUser(username) {
         await this.checkMongoose("User", User);
-        let filter = {"username": `${username}`};
+        let filter = {username: `${username}`};
         filter = this.mongo_escape(filter);
         let results = await this.entityMongooseModel.find(filter);
-        if (results.length === 1)
-            return new UserDto(results[0]._doc);
+        if (results.length === 1) return new UserDto(results[0]._doc);
         return {};
     }
-
 
     /**
      * @param email
@@ -43,11 +40,11 @@ module.exports = class UserModel extends Model {
      * @returns {Promise<boolean>}
      * Given a username returns true if the user exists, false otherwise.
      */
-    async userExists(username, email= '') {
+    async userExists(username, email = '') {
         let user = await this.getUser(username);
-        if((user).constructor.name === 'UserDto')
+        if ((user).constructor.name === 'UserDto')
             return true;
-        if(email === '')
+        if (email === '')
             return false;
         user = await this.getUserByEmail(email);
         return (user).constructor.name === 'UserDto';
