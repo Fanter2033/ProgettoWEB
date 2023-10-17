@@ -1,7 +1,7 @@
 //testing per registrazione e login
 
 /* BASE CONTROLLER CLASS */
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const config = require('../config/squealer')
 module.exports = class Controller {
 
