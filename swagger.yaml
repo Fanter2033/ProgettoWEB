@@ -322,6 +322,10 @@ paths:
           in: path
           required: true
           type: string
+          enum:
+            - CHANNEL_OFFICIAL
+            - CHANNEL_USERS
+            - CHANNEL_HASHTAG
       responses:
         '200':
           description: 'Channel info'
@@ -458,6 +462,27 @@ paths:
           schema:
             type: object
             $ref: '#/definitions/Quote'
+        '404':
+          description: 'User not found'
+    patch:
+      tags:
+        - quote
+      summary: Change user quota by percentage
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+        - name: percentage
+          in: formData
+          type: integer
+          minimum: 0
+          maximum: 10000
+      responses:
+        '200':
+          description: 'Successful operation'
+        '403':
+          description: 'Requesting user is not an admin'
         '404':
           description: 'User not found'
 definitions:

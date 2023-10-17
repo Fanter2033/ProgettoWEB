@@ -54,7 +54,7 @@ module.exports = class ModeController extends Controller {
             return output;
         }
 
-        //TODO CONTINUE HERE
+        //TODO CONTINUE HERE - BUT FIRST WE SHOULD IMPLEMENT CREATING CHANNELS
 
         return output;
     };

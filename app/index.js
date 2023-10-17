@@ -55,6 +55,10 @@ backEndRouter.delete('*', (req, res, next) => {
     autoload.logRequests(req, next);
 });
 
+backEndRouter.patch('*', (req, res, next) => {
+    autoload.logRequests(req, next);
+});
+
 
 backEndRouter.use('/js', express.static(global.rootDir + '/public/js'));
 backEndRouter.use('/css', express.static(global.rootDir + '/public/css'));
