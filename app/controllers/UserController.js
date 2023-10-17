@@ -127,6 +127,8 @@ module.exports = class UserController extends Controller {
             output['msg'] = 'Error inserting into DB.';
             return  output;
         }
+
+        //Ok quindi che ci facciamo col risultato?
         let quoteCtrl = quoteController.createQuote(userObj.username);
 
         return output;
