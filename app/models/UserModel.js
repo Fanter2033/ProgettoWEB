@@ -89,7 +89,7 @@ module.exports = class UserModel extends Model {
      */
     async createUser(userObj) {
         await this.checkMongoose("User", User);
-        userObj = this.mongo_escape(userObj.getDocument());
+        userObj = this.mongo_escape(userObj.getDocument()); //
         let userInserting = new this.entityMongooseModel(userObj);
         try {
             await userInserting.save();
@@ -166,6 +166,7 @@ module.exports = class UserModel extends Model {
     /**
      * @param {string} search
      * @return {Promise<number>}
+     *
      * Returns the number of all users in the DB.
      */
     async getUserCount(search) {

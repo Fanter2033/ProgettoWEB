@@ -30,7 +30,7 @@ module.exports = class QuoteDto {
 
     getDocument() {
         return {
-            id: this.#id,
+            _id: this.#id,
             limit_daily: this.#limit_daily,
             limit_weekly: this.#limit_weekly,
             limit_monthly: this.#limit_monthly,

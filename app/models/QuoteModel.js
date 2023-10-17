@@ -22,5 +22,20 @@ module.exports = class UserModel extends Model {
             return new QuoteDto(quoteResult[0]);
         return {}
     }
+
+    async createQuote(quoteObj){
+        await this.checkMongoose("Quote", Quote);
+        quoteObj = this.mongo_escape(quoteObj.getDocument());
+        let newQuote = new this.entityMongooseModel(quoteObj);
+
+        try {
+            await newQuote.save();
+        } catch (ignored) {
+            return false;
+        }
+
+        return true;
+
+    }
 }
 

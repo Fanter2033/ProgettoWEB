@@ -11,6 +11,5 @@ quoteDriver.get('/', async function (req, res) {
         res.status(ctrlOut.code).send(ctrlOut);
 });
 
-
 module.exports = quoteDriver;
 

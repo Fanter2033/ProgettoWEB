@@ -1,4 +1,7 @@
 const Controller = require("./Controller");
+const QuoteController = require ("./QuoteController");
+const QuoteModel = require ("../models/QuoteModel");
+let quoteController = new QuoteController(new QuoteModel())
 module.exports = class UserController extends Controller {
 
     constructor(model) {
@@ -121,7 +124,9 @@ module.exports = class UserController extends Controller {
         else {
             output['code'] = 500;
             output['msg'] = 'Error inserting into DB.';
+            return  output;
         }
+        let quoteCtrl = quoteController.createQuote(userObj.username);
 
         return output;
     }
