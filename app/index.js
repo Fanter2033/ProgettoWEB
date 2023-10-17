@@ -9,6 +9,7 @@ const viewDriver = require('./drivers/views/viewDriver');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const cookieParser = require('cookie-parser');
+const cors = require('cors')
 
 global.rootDir = __dirname;
 global.startDate = null;
@@ -33,6 +34,9 @@ backEndRouter.use(session({
 // parsing the incoming data
 backEndRouter.use(express.json());
 backEndRouter.use(express.urlencoded({extended: true}));
+
+//Allow CORS
+backEndRouter.use(cors())
 
 // cookie parser middleware
 backEndRouter.use(cookieParser());

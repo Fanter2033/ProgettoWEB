@@ -1,5 +1,7 @@
 import React from "react";
 import { Outlet, NavLink } from "react-router-dom";
+import ReactConfig from "../config/ReactConfig";
+
 /*
 pe aggiungere altro elemento alla navbar
 <li className="nav-item">
@@ -19,7 +21,7 @@ function Navbar() {
             return isActive ? { color: "red" } : {};
           }}
           className="navbar-brand"
-          to="/home/account"
+          to={ReactConfig.pathFunction('/home/account')}
         >
           Account
         </NavLink>
@@ -42,7 +44,7 @@ function Navbar() {
                   return isActive ? { color: "red" } : {};
                 }}
                 className="navbar-brand"
-                to="/home/channels"
+                to={ReactConfig.pathFunction('/home/channels')}
               >
                 Channels
               </NavLink>
@@ -53,7 +55,7 @@ function Navbar() {
                   return isActive ? { color: "red" } : {};
                 }}
                 className="navbar-brand"
-                to="/home/about"
+                to={ReactConfig.pathFunction('/home/about')}
               >
                 About
               </NavLink>

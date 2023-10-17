@@ -10,7 +10,7 @@ viewDriver.get('/', (req, res) => {
 });
 
 //view di react
-viewDriver.get('/userView', (req, res) => {
+viewDriver.get('/userView*', (req, res) => {
     const path = require("path")
     //serve the static files from react
     const reactDir = path.join(__dirname, '../../react-squealer/build');
