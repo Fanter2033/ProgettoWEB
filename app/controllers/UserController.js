@@ -1,7 +1,6 @@
 const Controller = require("./Controller");
 const QuoteController = require ("./QuoteController");
 const QuoteModel = require ("../models/QuoteModel");
-let quoteController = new QuoteController(new QuoteModel())
 module.exports = class UserController extends Controller {
 
     constructor(model) {
@@ -88,6 +87,8 @@ module.exports = class UserController extends Controller {
      */
     async createUser(userObj, authenticatedUser) {
         let output = this.getDefaultOutput();
+        let quoteController = new QuoteController(new QuoteModel())
+
         let ctrl_response = this.controlUser(userObj);
         if (ctrl_response !== 0) {
             output['code'] = 400;
