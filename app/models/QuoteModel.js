@@ -2,6 +2,7 @@ const Quote = require("../entities/schemas/QuoteSchema");
 const Model = require("./Model");
 const mongoose = require("mongoose");
 const QuoteDto = require("../entities/dtos/QuoteDto");
+const User = require("../entities/schemas/UserSchema");
 module.exports = class UserModel extends Model {
     constructor(userCollectionName) {
         super(userCollectionName);
@@ -35,7 +36,23 @@ module.exports = class UserModel extends Model {
         }
 
         return true;
-
     }
+
+    /**
+     * @param username {string}
+     * @return {Promise<boolean>}
+     */
+    async deleteQuote(username) {
+        await this.checkMongoose("Quote", Quote);
+        let filter = {"_id": `${username}`};
+        filter = this.mongo_escape(filter);
+        try {
+            await this.entityMongooseModel.deleteOne(filter);
+        } catch (ignored) {
+            return false;
+        }
+        return true;
+    }
+
 }
 

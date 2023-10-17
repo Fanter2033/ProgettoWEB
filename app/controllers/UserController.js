@@ -40,12 +40,13 @@ module.exports = class UserController extends Controller {
      *
      * @param username {string}
      * @param authenticatedUser {UserDto}
+     * @param escapeControl {boolean}
      * @returns {Promise<{msg: string, code: number, content: {}}>}
      *
-     * Delete a user if it exist, the operation can be made only by the deleting user or a squealer Admin.
+     * Delete a user if it exists, the operation can be made only by the deleting user or a squealer Admin.
      *
      */
-    async deleteUser(username, authenticatedUser) {
+    async deleteUser(username, authenticatedUser, escapeControl = false) {
         let output = this.getDefaultOutput();
 
         username = username.trim();
@@ -55,10 +56,12 @@ module.exports = class UserController extends Controller {
             return output;
         }
 
-        if (this.isObjectVoid(authenticatedUser) || (!authenticatedUser.isAdmin && authenticatedUser.username !== username)) {
-            output['code'] = 403;
-            output['msg'] = 'Forbidden.';
-            return output;
+        if(escapeControl === false){
+            if (this.isObjectVoid(authenticatedUser) || (!authenticatedUser.isAdmin && authenticatedUser.username !== username)) {
+                output['code'] = 403;
+                output['msg'] = 'Forbidden.';
+                return output;
+            }
         }
 
         if (await this._model.userExists(username) === false) {
@@ -67,6 +70,15 @@ module.exports = class UserController extends Controller {
             output['msg'] = 'User not found.';
             return output;
         }
+
+        let quoteController = new QuoteController(new QuoteModel())
+        let deleteQuotaResult = await quoteController.deleteQuote(username);
+        if(deleteQuotaResult['code'] !== 200){
+            //Errors!
+            output['code'] = 500;
+            output['msg'] = 'Internal server error.';
+        }
+
 
         //Let's delete the user!
         if (await this._model.deleteUser(username) === false) {
@@ -128,8 +140,13 @@ module.exports = class UserController extends Controller {
             return  output;
         }
 
-        //Ok quindi che ci facciamo col risultato?
-        let quoteCtrl = quoteController.createQuote(userObj.username);
+        let quoteCtrl = await quoteController.createQuote(userObj.username);
+        if(quoteCtrl.code !== 200){
+            //if we are in this case we should revert all and throw an error
+            output['code'] = 500;
+            output['msg'] = 'Warning! Cannot create associate quota. Operation failed';
+            await this.deleteUser(userObj.username, null, true);
+        }
 
         return output;
     }
