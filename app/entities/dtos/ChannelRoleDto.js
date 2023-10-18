@@ -1,0 +1,87 @@
+module.exports = class ChannelRoleDto {
+
+    #channel_name;
+    #type;
+    #username;
+    #role
+
+    constructor(documentFromMongoose = null) {
+        if (documentFromMongoose === null) {
+            this.#channel_name = null;
+            this.#type = null;
+            this.#username = null;
+            this.#role = null;
+        } else {
+            this.#channel_name = documentFromMongoose.channel_name;
+            this.#type = documentFromMongoose.type;
+            this.#username = documentFromMongoose.username;
+            this.#role = documentFromMongoose.role;
+        }
+    }
+
+    getDocument() {
+        return {
+            channel_name: this.#channel_name,
+            type: this.#type,
+            username: this.#username,
+            role: this.#role
+        }
+    }
+
+
+    /**
+     * @return {string}
+     */
+    get channel_name() {
+        return this.#channel_name;
+    }
+
+    /**
+     * @param {string} value
+     */
+    set channel_name(value) {
+        this.#channel_name = value;
+    }
+
+    /**
+     * @return {string}
+     */
+    get type() {
+        return this.#type;
+    }
+
+    /**
+     * @param {string} value
+     */
+    set type(value) {
+        this.#type = value;
+    }
+
+    /**
+     * @return {string}
+     */
+    get username() {
+        return this.#username;
+    }
+
+    /**
+     * @param {string} value
+     */
+    set username(value) {
+        this.#username = value;
+    }
+
+    /**
+     * @return {number}
+     */
+    get role() {
+        return this.#role;
+    }
+
+    /**
+     * @param {number} value
+     */
+    set role(value) {
+        this.#role = value;
+    }
+}

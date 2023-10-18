@@ -23,6 +23,22 @@ module.exports = class ChannelModel extends Model {
         return {};
     }
 
+    /**
+     * @param {ChannelDto} channelDto
+     * @return {Promise<boolean>}
+     */
+    async createChannel(channelDto){
+        await this.checkMongoose("Channel", Channel);
+        channelDto = this.mongo_escape(channelDto.getDocument());
+        let channelInserting = new this.entityMongooseModel(channelDto);
+        try {
+            await channelInserting.save();
+        } catch (ignored) {
+            return false;
+        }
+        return true;
+    }
+
 
 }
 

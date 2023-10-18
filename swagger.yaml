@@ -26,7 +26,7 @@ paths:
           required: true
           description: Required role authenticating
         - name: password
-          in: body
+          in: formData
           type: string
           required: true
           description: User password
@@ -199,15 +199,19 @@ paths:
         '201':
           description: 'Created channel'
         '400':
-          description: 'Invalid channel name or object'
+          description: 'Invalid channel name, object or invalid type'
           schema:
             type: string
             description: 'More info about the error'
+        '401':
+          description: 'User authenticated but tried to create an official channel.'
         '403':
-          description: 'Unable to create channel due low privileges or created a TAG channel'
+          description: 'Unable to create channel due low privileges'
           schema:
             type: string
             description: 'More information about the error'
+        '409':
+          description: 'Channel already exists. Cannot create'
     get:
       tags:
         - channel
