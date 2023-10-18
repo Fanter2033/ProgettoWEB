@@ -38,16 +38,26 @@ module.exports = class ChannelController extends Controller {
             return output;
         }
 
-        let ctrlOut = await this.getChannel(channelDto);
-        if (ctrlOut['content'] instanceof ChannelDto) {
+        if (channelDto.type === 'CHANNEL_OFFICIAL') {
+            channelDto.channel_name = channelDto.channel_name.toUpperCase();
+        } else { //unofficial
+            channelDto.channel_name = channelDto.channel_name.toLowerCase();
+        }
+
+        let channelExists = await this.channelExists(channelDto);
+        if (channelExists === true) {
             //Channel found. Cannot create
             output['code'] = 409;
             output['msg'] = 'Already exists.';
             return output;
+        } else if(channelExists === null){
+            output['code'] = 500;
+            output['msg'] = 'Internal server error. The Existing channel control has an error. This message should never be send';
+            return output;
         }
 
         //if we are here, the authentication is required
-        if (this.isObjectVoid(authenticatedUser)) {
+        if (this.isAuthenticatedUser(authenticatedUser) === false) {
             //User not logged
             output['code'] = 403;
             output['msg'] = 'Please login.';
@@ -61,12 +71,6 @@ module.exports = class ChannelController extends Controller {
             output['code'] = 401;
             output['msg'] = 'Non-moderators cannot create official channels.';
             return output;
-        }
-
-        if (channelDto.type === 'CHANNEL_OFFICIAL') {
-            channelDto.channel_name = channelDto.channel_name.toUpperCase();
-        } else { //unofficial
-            channelDto.channel_name = channelDto.channel_name.toLowerCase();
         }
 
         //if we are here al checks is OK!
@@ -100,6 +104,19 @@ module.exports = class ChannelController extends Controller {
 
 
         return output;
+    }
+
+
+    /**
+     * @param {ChannelDto} channelDto
+     * @return {Promise<boolean | null>}
+     * Given a ChannelDto returns true if the channel exists, false otherwise, null in case of error.
+     */
+    async channelExists(channelDto){
+        let getChannelOutput = await this.getChannel(channelDto);
+        if(getChannelOutput['code'] === 200) return true;
+        if(getChannelOutput['code'] === 404) return false;
+        return null;
     }
 
 

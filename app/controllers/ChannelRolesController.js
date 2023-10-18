@@ -22,7 +22,7 @@ module.exports = class ChannelRolesController extends Controller {
 
     /**
      * @param {ChannelRoleDto} channelRoleDto
-     * @return {Promise<void>}
+     * @return {Promise<{msg: string, code: number, content: {}}>}
      * Precondition: User exists
      * Precondition: Channel exists
      * Precondition: Requesting user has authorization to do this
