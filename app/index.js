@@ -10,6 +10,7 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const cookieParser = require('cookie-parser');
 const cors = require('cors')
+const cronDaemon = require('node-cron');
 
 global.rootDir = __dirname;
 global.startDate = null;
@@ -78,6 +79,13 @@ backEndRouter.use('/database', databaseDriver);
 backEndRouter.use('/user', userDriver);
 backEndRouter.use('/channel', channelDriver);
 backEndRouter.use('/', viewDriver);
+
+//Cron handler
+cronDaemon.schedule("0 0 * * *", function () {
+    //Every day at 00:00 execute this code
+    console.log("Hey. It's midnight!")
+});
+
 
 backEndRouter.listen(autoload.config._WEBSERVER_PORT, () => {
     console.log(`Server started on port ${autoload.config._WEBSERVER_PORT}`);
