@@ -67,6 +67,12 @@ module.exports = class QuoteController extends Controller {
     return output;
   }
 
+    /**
+     * @param {UserDto} userAuth
+     * @param {string} username
+     * @param {number} percentage
+     * @return {Promise<{msg: string, code: number, content: {}}>}
+     */
   async applyPercentageQuote(userAuth, username, percentage) {
     let output = this.getDefaultOutput();
     if (this.isObjectVoid(userAuth)) {
@@ -92,23 +98,14 @@ module.exports = class QuoteController extends Controller {
       return output;
     }
     //Quote found! :D
+
     let quoteDto = new QuoteDto(userQuote.content);
-    quoteDto.limit_daily = parseInt(quoteDto.limit_daily * (percentage / 100));
-    quoteDto.limit_weekly = parseInt(
-      quoteDto.limit_weekly * (percentage / 100)
-    );
-    quoteDto.limit_monthly = parseInt(
-      quoteDto.limit_monthly * (percentage / 100)
-    );
-    quoteDto.remaining_daily = parseInt(
-      quoteDto.remaining_daily * (percentage / 100)
-    );
-    quoteDto.remaining_weekly = parseInt(
-      quoteDto.remaining_weekly * (percentage / 100)
-    );
-    quoteDto.remaining_monthly = parseInt(
-      quoteDto.remaining_monthly * (percentage / 100)
-    );
+    quoteDto.limit_daily = Math.floor(quoteDto.limit_daily * (percentage / 100));
+    quoteDto.limit_weekly = Math.floor(quoteDto.limit_weekly * (percentage / 100));
+    quoteDto.limit_monthly = Math.floor(quoteDto.limit_monthly * (percentage / 100));
+    quoteDto.remaining_daily = Math.floor(quoteDto.remaining_daily * (percentage / 100));
+    quoteDto.remaining_weekly = Math.floor(quoteDto.remaining_weekly * (percentage / 100));
+    quoteDto.remaining_monthly = Math.floor(quoteDto.remaining_monthly * (percentage / 100));
 
     let modelOut = this._model.patchQuote(quoteDto);
     if (modelOut === false) {
