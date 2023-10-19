@@ -1,4 +1,5 @@
 const Controller = require("./Controller");
+const ChannelRoleDto = require("../entities/dtos/ChannelRoleDto");
 /**
  * @type {ChannelRolesController}
  * HUGELY IMPORTANT
@@ -33,10 +34,23 @@ module.exports = class ChannelRolesController extends Controller {
         let insertSuccessful = await this.#_model.insertRole(channelRoleDto);
         if(insertSuccessful === false){
             output['code'] = 500;
-            output['msg'] = 'error inserting';
+            output['msg'] = 'Error inserting';
         }
 
         output['content'] = channelRoleDto.getDocument();
+        return output;
+    }
+
+    /**
+     * @param {string} username
+     * @return {Promise<{msg: string, code: number, sub_code: number,content: {}}>}
+     */
+    async deleteUserRole(username) {
+        let output = this.getDefaultOutput();
+        let channelRoleDto = new ChannelRoleDto();
+        channelRoleDto.username = username;
+        channelRoleDto.role = autoload.config._CHANNEL_ROLE_OWNER;
+        let channels = await this.#_model.getChannelsByRoleDto(channelRoleDto);
         return output;
     }
 

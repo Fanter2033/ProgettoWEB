@@ -71,6 +71,9 @@ module.exports = class UserController extends Controller {
             return output;
         }
 
+        //Before deleting quote information we should delete all channel relationship.
+        //TODO CHIAMARE IL ChannelRolesController
+
         let quoteController = new QuoteController(new QuoteModel())
         let deleteQuotaResult = await quoteController.deleteQuote(username);
         if(deleteQuotaResult['code'] !== 200){

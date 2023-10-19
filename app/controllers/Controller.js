@@ -41,11 +41,12 @@ module.exports = class Controller {
 
     /**
      *
-     * @returns {{msg: string, code: number, content: {}}}
+     * @returns {{msg: string, code: number, sub_code: number,content: {}}}
      */
     getDefaultOutput() {
         return {
             'code': 200,
+            'sub_code': 0,
             'msg': 'Ok.',
             'content': {}
         };

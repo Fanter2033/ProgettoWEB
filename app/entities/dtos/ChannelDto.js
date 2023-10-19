@@ -49,4 +49,15 @@ module.exports = class ChannelDto {
     set private(value) {
         this.#private = value;
     }
+
+    /**
+     * @param {ChannelRoleDto} channelRoleDto
+     * @return void
+     */
+    createFromChannelRole(channelRoleDto){
+        this.#channel_name = channelRoleDto.channel_name;
+        this.#type = channelRoleDto.type;
+        this.#private = null;
+    }
+
 }
