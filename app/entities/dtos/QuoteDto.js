@@ -18,7 +18,7 @@ module.exports = class QuoteDto {
             this.#remaining_weekly = null;
             this.#remaining_monthly = null;
         } else {
-            this.#id = documentFromMongoose.id;
+            this.#id = documentFromMongoose._id;
             this.#limit_daily = documentFromMongoose.limit_daily;
             this.#limit_weekly = documentFromMongoose.limit_weekly;
             this.#limit_monthly = documentFromMongoose.limit_monthly;
