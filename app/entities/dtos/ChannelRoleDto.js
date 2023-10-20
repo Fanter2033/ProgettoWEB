@@ -3,7 +3,8 @@ module.exports = class ChannelRoleDto {
     #channel_name;
     #type;
     #username;
-    #role
+    #role;
+    #role_since;
 
     constructor(documentFromMongoose = null) {
         if (documentFromMongoose === null) {
@@ -11,11 +12,13 @@ module.exports = class ChannelRoleDto {
             this.#type = null;
             this.#username = null;
             this.#role = null;
+            this.#role_since = null;
         } else {
             this.#channel_name = documentFromMongoose.channel_name;
             this.#type = documentFromMongoose.type;
             this.#username = documentFromMongoose.username;
             this.#role = documentFromMongoose.role;
+            this.#role_since = documentFromMongoose.role_since;
         }
     }
 
@@ -24,7 +27,8 @@ module.exports = class ChannelRoleDto {
             channel_name: this.#channel_name,
             type: this.#type,
             username: this.#username,
-            role: this.#role
+            role: this.#role,
+            role_since: this.#role_since
         }
     }
 
@@ -83,5 +87,13 @@ module.exports = class ChannelRoleDto {
      */
     set role(value) {
         this.#role = value;
+    }
+
+    get role_since() {
+        return this.#role_since;
+    }
+
+    set role_since(value) {
+        this.#role_since = value;
     }
 }

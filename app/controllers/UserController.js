@@ -1,6 +1,9 @@
 const Controller = require("./Controller");
 const QuoteController = require ("./QuoteController");
 const QuoteModel = require ("../models/QuoteModel");
+const ChannelRolesController = require("./ChannelRolesController");
+const ChannelRolesModel = require("../models/ChannelRolesModel");
+
 module.exports = class UserController extends Controller {
 
     constructor(model) {
@@ -56,6 +59,9 @@ module.exports = class UserController extends Controller {
             return output;
         }
 
+
+        let channelRoleController = new ChannelRolesController(new ChannelRolesModel());
+
         if(escapeControl === false){
             if (this.isObjectVoid(authenticatedUser) || (!authenticatedUser.isAdmin && authenticatedUser.username !== username)) {
                 output['code'] = 403;
@@ -72,7 +78,8 @@ module.exports = class UserController extends Controller {
         }
 
         //Before deleting quote information we should delete all channel relationship.
-        //TODO CHIAMARE IL ChannelRolesController
+        let roleCtrlOut = await channelRoleController.deleteUserRole(username, authenticatedUser);
+        //TODO GESTIRE ERRORI!
 
         let quoteController = new QuoteController(new QuoteModel())
         let deleteQuotaResult = await quoteController.deleteQuote(username);
@@ -163,7 +170,7 @@ module.exports = class UserController extends Controller {
      *
      * change a user from a given username
      */
-    async updateUser(newUser, oldUsername, authenticatedUser) {
+    async updateUser(newUser, oldUsername, authenticatedUser) { //TODO GESTIRE CAMBIO QUOTA AL VARIARE DELL'USERNAME
         let output = this.getDefaultOutput();
         let ctrl_response = this.controlUser(newUser, true);
         if (ctrl_response !== 0) {

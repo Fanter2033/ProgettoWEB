@@ -7,5 +7,6 @@ module.exports = new Schema({
     type: {type: String},
     username : {type: String, index: true, unique: false},
     role : {type: Number, index: true, unique: false},
+    role_since : {type: Number, index: true}
 });
 
