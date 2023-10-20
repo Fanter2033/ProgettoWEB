@@ -17,6 +17,7 @@ function Creators() {
             <div class="col-sm-4">
               <div class="card"></div>
               <p className="cool-font sfondo_about">El P</p>
+              <p>cereal lover</p>
             </div>
           </div>
         </div>

@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
-import { NavLink } from "react-router-dom";
+//import { Link } from "react-router-dom";
 import "../LoginForm.css";
 
 //import { response } from "../../../drivers/views/viewAdminDriver";
 //import "../LoginForm.css";
 
-//TODO: implementa il bottone per chi non si vuole autenticare
+//TODO: impedire ereditarietà della navbar
+//TODO: manda i dati al driver, onClick del button
+
 //radio button: does one have to be clicked or not?
 //do we want to put some constraints on the password or not?
 
-function LoginForm() {
+function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -55,13 +57,38 @@ function LoginForm() {
 
   //reminder: input tag in React <input/>
   return (
-    <div id="" className="container">
+    <div className="container">
       <div className="row justify-content-center">
         <div className="col-6 ">
           <form onSubmit={handleLogin}>
             <h1 className="text-center mb-5 mt-5 cool-font-medium">
-              Log in to &#129413;
+              Register to &#129413;
             </h1>
+
+            <div className="form-group row p-2 mb-3">
+              <label for="inputName" className="form-label cool-font-small">
+                Nome
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="inputName"
+                placeholder="Name"
+              />
+            </div>
+
+            <div className="form-group row p-2 mb-3">
+              <label for="inputSurname" className="form-label cool-font-small">
+                Cognome
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="inputSurname"
+                placeholder="Cognome"
+              />
+            </div>
+
             <div className="form-group row p-2 mb-3">
               <label for="inputUsername" className="form-label cool-font-small">
                 Username
@@ -71,12 +98,24 @@ function LoginForm() {
                 className="form-control"
                 id="inputUsername"
                 value={username}
-                placeholder="username"
+                placeholder="Username"
                 onChange={handleUsernameChange}
               />
             </div>
 
-            <div className="form-group row p-2 mb-4">
+            <div className="form-group row p-2 mb-3">
+              <label for="email" className="form-label cool-font-small">
+                Email
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="email"
+                placeholder="nomecognome@example.it"
+              />
+            </div>
+
+            <div className="form-group row p-2">
               <label
                 for="inputPassword5"
                 className="form-label cool-font-small"
@@ -88,10 +127,56 @@ function LoginForm() {
                 id="inputPassword"
                 className="form-control"
                 aria-describedby="passwordHelpBlock"
-                placeholder="password"
+                placeholder="Password"
                 value={password}
                 onChange={handlePasswordChange}
               />
+              <div id="passwordHelpBlock" className="form-text p-2 mb-5">
+                Vincoli sulla password
+              </div>
+            </div>
+
+            <div className="form-group row p-2">
+              <p className="cool-font-small">Type of account:</p>
+              <div className="col-4 offset-4 mb-5 d-flex justify-content-center">
+                <div className="form-check">
+                  <input
+                    id="user"
+                    name="typeAccount"
+                    type="radio"
+                    className="form-check-input"
+                    required=""
+                    wfd-id="id10"
+                  />
+                  <label className="form-check-label" for="user">
+                    User
+                  </label>
+                </div>
+                <div className="form-check">
+                  <input
+                    id="pro"
+                    name="typeAccount"
+                    type="radio"
+                    className="form-check-input"
+                    required=""
+                  />
+                  <label className="form-check-label" for="pro">
+                    PRO
+                  </label>
+                </div>
+                <div className="form-check">
+                  <input
+                    id="mod"
+                    name="typeAccount"
+                    type="radio"
+                    className="form-check-input"
+                    required=""
+                  />
+                  <label className="form-check-label" for="mod">
+                    Mod
+                  </label>
+                </div>
+              </div>
             </div>
 
             <div className="form-group row p-2">
@@ -100,29 +185,10 @@ function LoginForm() {
                 type="button"
                 onClick={handleLogin}
               >
-                LOGIN
+                REGISTER
               </button>
             </div>
-
-            <div className="form-group row p-2 mb-5">
-              <div className="col-12 mb-5">
-                <NavLink
-                  style={{ color: "#072f38" }}
-                  className="cool-font-small"
-                  to={ReactConfig.pathFunction("/home/registration")}
-                >
-                  New Here
-                </NavLink>
-              </div>
-              <div className="col-12 mb-5">
-                <NavLink
-                  style={{ color: "#072f38" }}
-                  className="cool-font-small"
-                >
-                 Skip the log in
-                </NavLink>
-              </div>
-            </div>
+            <div className="mb-5"></div>
           </form>
         </div>
       </div>
@@ -130,4 +196,4 @@ function LoginForm() {
   );
 }
 
-export default LoginForm;
+export default Register;

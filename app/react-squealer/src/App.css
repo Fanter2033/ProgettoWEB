@@ -1,74 +1,104 @@
+/* ------------ ATTENZIONE AGLI ALTRI FILE CSS -------------*/
+
+body {
+  text-align: center;
+  background-color: #e0bb76;
+  color: #08353f;
+}
+.App {
+  text-align: center;
+  background-color: #e0bb76;
+  color: #08353f;
+}
+#elemento-espanso {
+  position: absolute; /* Posizionamento assoluto rispetto alla view
+  top: 0; /* Inizia dall'alto della viewport */
+  right: 0; /* Finisce a destra della viewport */
+  bottom: 0; /* Finisce in basso della viewport */
+  left: 0; /* Inizia da sinistra della viewport */
+  background-color: #e0bb76;
+}
+/* -----------------FONT STUFF------------------ */
 .cool-font {
   font-family: "Cool-Font", sans-serif;
   font-size: 10vw;
 }
-
+.cool-font-medium {
+  font-family: "Cool-Font", sans-serif;
+  font-size: 5vw;
+}
+.cool-font-small {
+  font-family: "Cool-Font", sans-serif;
+  font-size: 3vw;
+}
 @font-face {
   font-family: "Cool-Font";
   src: url("../public/ArchivoBlack-Regular.ttf");
 }
 .list:hover {
-  background-color: red;
+  background-color: #072f38;
   color: #ffffff;
 }
-.test_sfondo {
-  background-image: url(577406-cat-wallpaper.jpg);
-  color: white;
-  width: 100vw;
-  height: 90vh;
+
+/* -------------------- COLOR STUFF ------------------*/
+.my-green {
+  background-color: #325434;
+}
+.my-yellow {
+  background-color: #e0bb76;
+}
+.my-blu {
+  background-color: #072f38;
+}
+.no-bg {
+  background-color: transparent;
+}
+/* -------------------- BUTTON STUFF: 2 tipi ------------------*/
+.custom-button {
+  background-color: #072f38;
+  color: #e0bb76;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer; /* Cambia il cursore al passaggio del mouse */
+}
+.custom-button:hover {
+  background-color: #325434; /* Cambia il colore di sfondo quando si passa sopra il bottone */
+}
+.bottoni_omologati {
+  background-color: #325434;
+  width: 5em;
+  min-height: 5em;
+  border-radius: 2em;
+}
+.bottoni_omologati:hover {
+  background-color: #072f38;
 }
 
-.sfondo_about {
-  background-color: green;
+/* -------------------- IMG STUFF ------------------*/
+/* Stile predefinito per l'immagine */
+img {
+  max-width: 100%; /* L'immagine si adatta alla larghezza del suo contenitore */
+  height: auto; /* Altezza automatica per evitare distorsioni */
 }
 
-.footer {
-  position: absolute;
-  bottom: 0;
-  margin: 0%;
-  padding: 0%;
-  width: 100vw;
-  text-align: center;
-}
-
-@keyframes rainbow-animation {
-  0% {
-    background-position: 100% 0;
+/* Stile per schermi di dimensioni medie (ad esempio, tablet) */
+@media (max-width: 768px) {
+  img {
+    max-width: 30%; /* Riduci la larghezza dell'immagine al 80% del suo contenitore */
   }
-  100% {
-    background-position: -100% 0;
+}
+
+/* Stile per schermi di dimensioni piccole (ad esempio, smartphone) */
+@media (max-width: 300px) {
+  img {
+    max-width: 70vw;
+    max-height: 30vh; /* Riduci ulteriormente la larghezza dell'immagine al 60% del suo contenitore */
   }
 }
 
-.rainbow {
-  width: 100vw;
-  height: 10vh;
-  background: linear-gradient(
-    to right,
-    #ff0000,
-    #ff7f00,
-    #ffff00,
-    #00ff00,
-    #0000ff,
-    #4b0082,
-    #8b00ff
-  );
-  background-size: 1400% 100%;
-  animation: rainbow-animation 15s linear infinite;
-}
-
+/* -------------------- MADE BY REACT STUFF ------------------*/
 /*
-.background-image {
-  background-color: red;
-  background-size: cover;
-  background-position: center;
-}
-*/
-
-.App {
-  text-align: center;
-}
-
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -80,21 +110,6 @@
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -103,3 +118,13 @@
     transform: rotate(360deg);
   }
 }
+*/
+
+/* -------------------- ESPERIMENTI PAZZI  img ------------------*/
+/*
+.background-image {
+  background-color: red;
+  background-size: cover;
+  background-position: center;
+}
+*/

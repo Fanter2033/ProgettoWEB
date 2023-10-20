@@ -1,6 +1,87 @@
-/* si estende anche  a tutti gli altri url
+/* ------------ ATTENZIONE AGLI ALTRI FILE CSS -------------*/
+
 body {
-  background-image: url("577406-cat-wallpaper.jpg");
-  background-repeat: repeat;
+  text-align: center;
+  background-color: #e0bb76;
+  color: #072f38;
 }
-*/
+
+/*---------------- SFONDO SU TUTTA LA PAGE --------------------*/
+#elemento-espanso {
+  position: absolute; /* Posizionamento assoluto rispetto alla viewport */
+  top: 0; /* Inizia dall'alto della viewport */
+  right: 0; /* Finisce a destra della viewport */
+  bottom: 0; /* Finisce in basso della viewport */
+  left: 0; /* Inizia da sinistra della viewport */
+  background-color: #e0bb76;
+}
+
+/* ------------ TODO STUFF -------------*/
+.list:hover {
+  background-color: #325434;
+  color: #ffffff;
+}
+
+/* ------------ NAV STUFF -------------*/
+.nav-pc {
+  background-color: #325434;
+  color: #e0bb76;
+}
+.icon-nav {
+  background-color: #e0bb76;
+  color: #e0bb76;
+}
+
+/* ------------ FOOTER STUFF -------------*/
+.footer {
+  position: absolute;
+  bottom: 0;
+  margin: 0%;
+  padding: 0%;
+  width: 100vw;
+  text-align: center;
+}
+@keyframes rainbow-animation {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+.rainbow {
+  width: 100vw;
+  height: 10vh;
+  background: linear-gradient(to right, #e0bb76, #325434, #072f38);
+  background-size: 1400% 100%;
+  animation: rainbow-animation 15s linear infinite;
+}
+
+/* ------------ COLOR STUFF -------------*/
+.my-green {
+  background-color: #325434;
+}
+.my-yellow {
+  background-color: #e0bb76;
+}
+.my-blu {
+  background-color: #072f38;
+}
+
+/* ------------ FONT STUFF -------------*/
+@font-face {
+  font-family: "Cool-Font";
+  src: url("../public/ArchivoBlack-Regular.ttf");
+}
+.cool-font {
+  font-family: "Cool-Font", sans-serif;
+  font-size: 10vw;
+}
+.cool-font-small {
+  font-family: "Cool-Font", sans-serif;
+  font-size: 3vw;
+}
+.cool-font-medium {
+  font-family: "Cool-Font", sans-serif;
+  font-size: 5vw;
+}

@@ -1,4 +1,5 @@
-import Creators from "./Creators"
+import Creators from "./Creators";
+
 function About() {
   return (
     <div>

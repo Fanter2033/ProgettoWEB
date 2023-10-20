@@ -7,8 +7,6 @@ import HomeRoutes from "./pages/HomeRoutes";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 
-import "./App.css";
-
 function App() {
 
   return (
