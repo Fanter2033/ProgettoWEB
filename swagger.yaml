@@ -344,6 +344,111 @@ paths:
             description: 'More information about the error'
         '404':
           description: 'The specified channel in URL path is not found'
+  /channel/{type}/{channel_name}/{username}/:
+    patch:
+      tags:
+        - channel
+      summary: Change the role of the user.
+      parameters:
+        - name: channel_name
+          in: path
+          required: true
+          type: string
+        - name: type
+          in: path
+          required: true
+          type: string
+          enum:
+            - CHANNEL_OFFICIAL
+            - CHANNEL_USERS
+            - CHANNEL_HASHTAG
+        - name: username
+          in: path
+          type: string
+          required: true
+        - name: new_role
+          in: formData
+          type: number
+          required: true
+      responses:
+        '200':
+          description: 'Everything is ok'
+        '400':
+          description: 'Bad Request.'
+        '401':
+          description: 'User logged but not authorized to execute the operation'
+        '403':
+          description: 'User not logged'
+        '404':
+          description: 'User not found'
+        '500':
+          description: 'Internal server error'
+  /channel/{type}/{channel_name}/users/:
+    get:
+      tags:
+        - channel
+      summary: Get the users following a channel.
+      parameters:
+        - name: channel_name
+          in: path
+          required: true
+          type: string
+        - name: type
+          in: path
+          required: true
+          type: string
+          enum:
+            - CHANNEL_OFFICIAL
+            - CHANNEL_USERS
+            - CHANNEL_HASHTAG
+      responses:
+        '200':
+          description: 'Everything is ok'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        '400':
+          description: 'Bad Request.'
+        '401':
+          description: 'User logged but not authorized to execute the operation'
+        '403':
+          description: 'User not logged'
+        '500':
+          description: 'Internal server error'
+  /channel/{type}/{channel_name}/users/{username}/:
+    get:
+      tags:
+        - channel
+      summary: Get the role of the user in the channel.
+      parameters:
+        - name: channel_name
+          in: path
+          required: true
+          type: string
+        - name: type
+          in: path
+          required: true
+          type: string
+          enum:
+            - CHANNEL_OFFICIAL
+            - CHANNEL_USERS
+            - CHANNEL_HASHTAG
+        - name: username
+          type: string
+          required: true
+          in: path
+      responses:
+        '200':
+          description: 'Everything is ok'
+        '400':
+          description: 'Bad Request.'
+        '401':
+          description: 'User logged but not authorized to execute the operation'
+        '403':
+          description: 'User not logged'
+        '500':
+          description: 'Internal server error'
   /squeal/:
     get:
       tags:

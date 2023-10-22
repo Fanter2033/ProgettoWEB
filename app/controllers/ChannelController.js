@@ -3,6 +3,9 @@ const ChannelDto = require("../entities/dtos/ChannelDto");
 const ChannelRolesController = require("./ChannelRolesController");
 const ChannelRolesModel = require("../models/ChannelRolesModel");
 const ChannelRoleDto = require("../entities/dtos/ChannelRoleDto");
+const UserController = require("./UserController");
+const UserModel = require("../models/UserModel");
+let userController = new UserController(new UserModel());
 
 module.exports = class ChannelController extends Controller {
 
