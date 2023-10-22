@@ -79,13 +79,20 @@ module.exports = class UserController extends Controller {
 
         //Before deleting quote information we should delete all channel relationship.
         let roleCtrlOut = await channelRoleController.deleteUserRole(username, authenticatedUser);
-        //TODO GESTIRE ERRORI!
+
+        if(roleCtrlOut['code'] !== 200){
+            //Errors!
+            output['code'] = 500;
+            output['sub_code'] = 2;
+            output['msg'] = 'Internal server error.';
+        }
 
         let quoteController = new QuoteController(new QuoteModel())
         let deleteQuotaResult = await quoteController.deleteQuote(username);
         if(deleteQuotaResult['code'] !== 200){
             //Errors!
             output['code'] = 500;
+            output['sub_code'] = 1;
             output['msg'] = 'Internal server error.';
         }
 
@@ -262,14 +269,9 @@ module.exports = class UserController extends Controller {
         if (this.isEmail(email) === false)
             return -2;
 
-        if(userObj.isUser !== true && userObj.isUser !== false)
-            return -3;
-
-        if(userObj.isSmm !== true && userObj.isSmm !== false)
-            return -3;
-
-        if(userObj.isAdmin !== true && userObj.isAdmin !== false)
-            return -3;
+        if(userObj.isUser !== true && userObj.isUser !== false) return -3;
+        if(userObj.isSmm !== true && userObj.isSmm !== false) return -3;
+        if(userObj.isAdmin !== true && userObj.isAdmin !== false) return -3;
 
         userObj.username = username;
         userObj.psw_shadow = password;

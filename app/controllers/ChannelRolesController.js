@@ -77,15 +77,26 @@ module.exports = class ChannelRolesController extends Controller {
             }
 
             channelRoleDto.username = userResults[0].username;
+            channelRoleDto.role = autoload.config._CHANNEL_ROLE_OWNER;
+            channelRoleDto.role_since = this.getCurrentTimestampSeconds();
             channelRolesSubstitutes.push(channelRoleDto);
         }
 
-        output['content'] = channelRolesSubstitutes;
+        let promises = [];
 
         //Update substitutes!
         for (const key in channelRolesSubstitutes) {
-            await this.updateUserRole(channelRolesSubstitutes[key], authenticatedUser);
-            //TODO DEBUG MEGLIO
+            //Eseguiamo tutte le operazioni in parallelo e le aspettiamo tutte
+            promises.push(this.updateUserRole(channelRolesSubstitutes[key], authenticatedUser));
+        }
+
+        for (let i = 0; i < promises.length; i++) {
+            let result = await promises[i];
+            if(result['code'] !== 200){
+                output['code'] = 500;
+                output['sub_code'] = 3;
+                output['msg'] = `Error updating roles`;
+            }
         }
 
 
@@ -94,7 +105,7 @@ module.exports = class ChannelRolesController extends Controller {
         if (deleteResult === false) {
             output['code'] = 500;
             output['sub_code'] = 2;
-            output['msg'] = `Error trying to delete the user's role. This message should be never shown!`
+            output['msg'] = `Error trying to delete the user's role. This message should be never shown!`;
         }
 
 
@@ -156,7 +167,7 @@ module.exports = class ChannelRolesController extends Controller {
             //TODO FARE CONTROLLO NEL CASO CI SIA UN ALTRO OWNER
         }
 
-        let result = this.#_model.updateRoleGrade(channelRole);
+        let result = await this.#_model.updateRoleGrade(channelRole);
         if(result === false) {
             output['code'] = 500;
             output['msg'] = 'Internal server error';
