@@ -111,7 +111,7 @@ function Navbar() {
 
       <nav class="d-sm-none navbar navbar-expand-sm nav-pc fixed-bottom p-3 ">
         {/*Barra di navigazione in basso per schermi sm*/}
-        <ul class="navbar-nav d-flex flex-row justify-content-start">
+        <ul class="navbar-nav d-flex flex-row justify-content-evenly w-100">
           <li>
             <NavLink
               style={({ isActive }) => {

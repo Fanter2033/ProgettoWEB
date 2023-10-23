@@ -69,13 +69,12 @@ body {
   background-color: #528b57; /* Cambia il colore di sfondo quando si passa sopra il bottone */
 }
 .bottoni_omologati {
-  background-color: #528b57;
-  width: 5em;
-  min-height: 5em;
-  border-radius: 2em;
+  width: 3em;
+  min-height: 3em;
+  border-radius: 50%;
 }
 .bottoni_omologati:hover {
-  background-color: #072f38;
+  background-color: #528b57;
 }
 
 /* -------------------- IMG STUFF ------------------*/
