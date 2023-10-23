@@ -18,14 +18,15 @@ body {
 
 /* ------------ TODO STUFF -------------*/
 .list:hover {
-  background-color: #325434;
+  background-color: #528b57;
   color: #ffffff;
 }
 
 /* ------------ NAV STUFF -------------*/
 .nav-pc {
-  background-color: #325434;
+  background-color: #528b57;
   color: #e0bb76;
+  font-size: 2em;
 }
 .icon-nav {
   background-color: #e0bb76;
@@ -52,14 +53,14 @@ body {
 .rainbow {
   width: 100vw;
   height: 10vh;
-  background: linear-gradient(to right, #e0bb76, #325434, #072f38);
+  background: linear-gradient(to right, #e0bb76, #528b57, #072f38);
   background-size: 1400% 100%;
   animation: rainbow-animation 15s linear infinite;
 }
 
 /* ------------ COLOR STUFF -------------*/
 .my-green {
-  background-color: #325434;
+  background-color: #528b57;
 }
 .my-yellow {
   background-color: #e0bb76;

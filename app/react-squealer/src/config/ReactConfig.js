@@ -1,11 +1,11 @@
 const ReactConfig = {
     //DEBUG
-    //base_url_requests : 'http://localhost:8000',
-    //base_url_navigation : '',
+    base_url_requests : 'http://localhost:8000',
+    base_url_navigation : '',
 
     //PRODUCTION
-    base_url_requests: '',
-    base_url_navigation: '/userView',
+    //base_url_requests: '',
+    //base_url_navigation: '/userView',
 
     pathFunction: function (path) {
         if (path.charAt(0) !== '/')

@@ -7,7 +7,7 @@ body {
 
 /* ------------ COLOR STUFF -------------*/
 .my-green {
-  background-color: #325434;
+  background-color: #528b57;
 }
 .my-yellow {
   background-color: #e0bb76;
@@ -47,8 +47,6 @@ body {
   background-color: #325434; /* Cambia il colore di sfondo quando si passa sopra il bottone */
 }
 
-
-
 input[type="radio"] {
   display: none;
 }
@@ -69,6 +67,6 @@ label {
   display: inline-block;
   cursor: pointer;
   padding: 4px 8px;
-  border: 1px solid #325434;
+  border: 1px solid #528b57;
   border-radius: 4px;
 }
