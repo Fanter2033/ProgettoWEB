@@ -1,13 +1,13 @@
 //testing per registrazione e login
 
 /* BASE CONTROLLER CLASS */
-const bcrypt = require('bcrypt')
+const bcryptjs = require('bcryptjs')
 const config = require('../config/squealer')
 module.exports = class Controller {
 
     constructor() {
         this._emailRegex = config._REGEX_EMAIL;
-        this.bcrypt = bcrypt;
+        this.bcryptjs = bcryptjs;
     }
 
 
