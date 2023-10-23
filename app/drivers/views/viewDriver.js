@@ -4,13 +4,23 @@ const path = require("path");
 const publicDir = path.join(__dirname, '../../public');
 viewDriver.use(express.static(publicDir));
 const viewAdminDriver = require('./viewAdminDriver');
+const AuthController = require('../../controllers/AuthController');
+const AuthModel = require('../../models/AuthModel');
+let authController = new AuthController(new AuthModel());
 
 viewDriver.get('/', (req, res) => {
     res.sendFile(publicDir + "/html/deMultiplexPage.html");
 });
 
-//view di react
-viewDriver.get('/userView*', (req, res) => {
+viewDriver.get('/userView*', async (req, res) => {
+    if(authController.isAuthLogged(req) === false && req.path !== '/userView/'){
+        res.redirect('/userView/');
+        return;
+    }
+    if(authController.isAuthLogged(req) && req.path === '/userView/'){
+        res.redirect('./home');
+        return;
+    }
     const path = require("path")
     //serve the static files from react
     const reactDir = path.join(__dirname, '../../react-squealer/build');
