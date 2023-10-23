@@ -174,7 +174,17 @@ module.exports = class ChannelRolesController extends Controller {
             return output;
         }
 
+        return output;
+    }
 
+    /**
+     * @param {ChannelRoleDto} channelRoleDto
+     * @return {Promise<{msg: string, code: number, sub_code: number,content: {}}>}
+     */
+    async getChannelRoleOfUser(channelRoleDto){
+        let output = this.getDefaultOutput();
+
+        //TODO CONTINUE HERE 
 
         return output;
     }

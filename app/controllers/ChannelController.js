@@ -172,6 +172,63 @@ module.exports = class ChannelController extends Controller {
         return output;
     };
 
+    /**
+     * @param {ChannelDto} channelDto
+     * @param {UserDto} authenticatedUser
+     * @return {Promise<{msg: string, code: number, content: {object}}>}
+     */
+    async deleteChannel(channelDto, authenticatedUser) {
+        let output = this.getDefaultOutput();
+
+        if(this.isObjectVoid(authenticatedUser) === true){
+            output['code'] = 403;
+            output['msg'] = 'User not authenticated';
+            return output;
+        }
+
+        //TODO CONTINUE HERE GETTING THE USER ROLE.
+
+
+        return output;
+    }
+
+    /**
+     * @param {ChannelDto} channelDto
+     * @param {string} username
+     * @return {Promise<{msg: string, code: number, content: {object}}>}
+     */
+    async getChannelUserRole(channelDto, username) {
+        let output = this.getDefaultOutput();
+
+        username = username.trim();
+        if(username.length === 0){
+            output['code'] = 400;
+            output['msg'] = 'Not valid username';
+            return output;
+        }
+
+        //Note: the Type hashtag channels exists in everytime by definition. Escape useless controls.
+        if(channelDto.channel_name === autoload.config._CHANNEL_TYPE_HASHTAG){
+            output['content'] = autoload.config._CHANNEL_ROLE_WRITE; //All users for channel type hashtag are writers!
+            return output;
+        }
+
+        let channelExists = await this.channelExists(channelDto);
+        if(channelExists !== true){
+            output['code'] = 404;
+            output['msg'] = 'Not found. (1)';
+        }
+
+        //Channel exists! So... use sub-controller to get the user role, if exists!
+        let roleDto = new ChannelRoleDto();
+        roleDto.channel_name = channelDto.channel_name;
+        roleDto.type = channelDto.type;
+        roleDto.username = username;
+        this.#channelRolesController.getChannelRoleOfUser();
+
+        return output;
+    }
+
 
     /**
      * @param {string} type
