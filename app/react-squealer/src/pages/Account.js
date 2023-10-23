@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 import cattyy from "./catty.jpg";
 import "../App.css";
+import Navbar from "./Navbar";
 //col-12 col-md-6
 //su schermi md e più grandi ho due colonne
 //tutti gli altri (quelli sm e xs) ho 1 col
@@ -13,6 +14,7 @@ function Account() {
   return (
     <div>
       <div className="container-flex" id="elemento-espanso">
+        <Navbar/>
         <div className="row mb-5 mt-4">
           <div className="col-12 col-md-3">
             <img

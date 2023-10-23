@@ -1,25 +1,38 @@
-const viewDriver = require("./viewDriver");
-const viewReactDriver = express();
 const path = require("path");
+const reactDir = path.join(__dirname, "../../public");
+
+const express = require("express");
+const reactDriver = express();
+reactDriver.use(express.static(reactDir));
+
 const AuthController = require("../../controllers/AuthController");
 const AuthModel = require("../../models/AuthModel");
-const publicDir = path.join(__dirname, "../../public");
-viewAdminDriver.use(express.static(publicDir));
 const authController = new AuthController(new AuthModel());
 
-viewReactDriver.get("/", (req, res) => {
+reactDriver.get("/", function(req, res) {
+  const path = require("path");
+  //serve the static files from react
+  const reactDir = path.join(__dirname, '../../react-squealer/build');
+  reactDriver.use(express.static(reactDir));
+  res.sendFile(path.join(reactDir, '/index.html'));
+  
+  /*
   let logged = authController.isAuthLogged(req);
   if (logged) {
-    res.redirect("./userView");
-  } else res.sendFile(publicDir + "/html/loginUser.html");
+    //res.sendFile(path.join(reactDir, "/index.html"));
+
+    //serve the static files from react
+  } 
+  else res.redirect("./userView");
+  */
+  //res.sendFile(publicDir + "/html/loginUser.html");
 });
 
 //TODO:
-viewReactDriver.get("/channels/", async (req, res) => {});
+//reactDriver.get("/channels/", async (req, res) => {});
 
-viewReactDriver.get("/squeals/", async (req, res) => {});
+//reactDriver.get("/squeals/", async (req, res) => {});
 
-viewReactDriver.get("/account", async (req, res) => {});
+//reactDriver.get("/account", async (req, res) => {});
 
-viewDriver.post("/user", )
-module.exports = viewAdminDriver;
+module.exports = reactDriver;
