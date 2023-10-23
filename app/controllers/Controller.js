@@ -109,7 +109,7 @@ module.exports = class Controller {
      *
      */
     async hashCheck(hash, string, saltRound = config._CIPHER_SALT) {
-        return bcrypt
+        return bcryptjs
             .compare(string, hash)
             .then(res => {
                 return res;
