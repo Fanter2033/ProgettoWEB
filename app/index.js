@@ -18,8 +18,9 @@ global.autoload = autoload;
 const oneDay = 1000 * 60 * 60 * 24;
 
 /*
-* save and crypt sessions
-* */
+*   Express middleware
+*   saves and crypts sessions
+*/
 backEndRouter.use(session({
     secret: autoload.config._SESSION_SECRET,
     store: MongoStore.create({

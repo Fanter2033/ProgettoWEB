@@ -27,6 +27,9 @@
               :class="isOverButton ? 'bg-info' : 'bg-secondary' ">Sign In</button>
     </div>
   </form>
+  <div class = 'container'>
+    <router-link to="/login">Login</router-link>
+  </div>
 
 </template>
 

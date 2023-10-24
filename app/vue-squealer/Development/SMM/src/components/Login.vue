@@ -1,6 +1,6 @@
 <template>
   <div class = 'container-fluid-sm m-4'>
-    <form>
+    <form @submit.prevent = 'loginForm'>
       <div class="form-group mt-2">
         <label for="username">Username</label>
         <input type="text" class="form-control" id="username" v-model = "formLoginValues.username">
@@ -14,6 +14,10 @@
               v-on:mouseleave="isOverButton = false"
               :class="isOverButton ? 'bg-info' : 'bg-secondary'">
     </form>
+    <div class = 'container'>
+      <router-link to="/signIn">Sign In</router-link>
+    </div>
+
   </div>
 
 
@@ -37,6 +41,10 @@ import {func} from "joi";
         },
         methods:{
           loginForm: function LoginForm() {
+            if(this.formLoginValues.password.length === 0 || this.formLoginValues.username.length === 0){
+              alert("Tutti i campi sono obbligatori", "Attenzione");
+              return;
+            }
             const passData = { password:this.formLoginValues.password };
 
             let uri = `${VueConfig.base_url_requests}/auth/${this.formLoginValues.username}/1`;
@@ -51,7 +59,7 @@ import {func} from "joi";
                }
             ).then( (res) => {
                  if(res.ok)
-                   console.log("evviva");
+                   console.log(res);
                  else
                    console.error("Authentication failed", res.statusText);
                }
