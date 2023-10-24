@@ -14,7 +14,7 @@ module.exports = class UserController extends Controller {
     /**
      *
      * @param username {String}
-     * @returns {Promise<*|UserDto|{}>}
+     * @returns {Promise<{msg: string, code: number, sub_code: number,content: {}}>}
      *
      * Given a username, this functions returns the user, if found. Error 404 otherwise.
      */

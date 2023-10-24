@@ -5,6 +5,7 @@ const ChannelRolesModel = require("../models/ChannelRolesModel");
 const ChannelRoleDto = require("../entities/dtos/ChannelRoleDto");
 const UserController = require("./UserController");
 const UserModel = require("../models/UserModel");
+const UserDto = require("../entities/dtos/UserDto");
 let userController = new UserController(new UserModel());
 
 module.exports = class ChannelController extends Controller {
@@ -207,9 +208,35 @@ module.exports = class ChannelController extends Controller {
             return output;
         }
 
+        let user = await userController.getUser(username);
+        if(user['code'] !== 200){
+            //User not found
+            output['code'] = 404;
+            output['msg'] = 'Not found. (3)';
+            return output;
+        }
+        user = new UserDto(user.content);
+
         //Note: the Type hashtag channels exists in everytime by definition. Escape useless controls.
-        if(channelDto.channel_name === autoload.config._CHANNEL_TYPE_HASHTAG){
-            output['content'] = autoload.config._CHANNEL_ROLE_WRITE; //All users for channel type hashtag are writers!
+        if(channelDto.type === autoload.config._CHANNEL_TYPE_HASHTAG){
+            let response = new ChannelRoleDto();
+            response.role = autoload.config._CHANNEL_ROLE_WRITE;
+            response.type = channelDto.type;
+            response.channel_name = channelDto.channel_name;
+            response.role_since = 0;
+            response.username = username;
+            output['content'] = response.getDocument();
+            return output;
+        }
+
+        if(channelDto.type === autoload.config._CHANNEL_TYPE_OFFICIAL && user.isAdmin){
+            let response = new ChannelRoleDto();
+            response.role = autoload.config._CHANNEL_ROLE_ADMIN;
+            response.type = channelDto.type;
+            response.channel_name = channelDto.channel_name;
+            response.role_since = 0;
+            response.username = username;
+            output['content'] = response.getDocument();
             return output;
         }
 
@@ -217,6 +244,7 @@ module.exports = class ChannelController extends Controller {
         if(channelExists !== true){
             output['code'] = 404;
             output['msg'] = 'Not found. (1)';
+            return output;
         }
 
         //Channel exists! So... use sub-controller to get the user role, if exists!
@@ -228,6 +256,7 @@ module.exports = class ChannelController extends Controller {
         if(ctrlOut['code'] !== 200){
             output['code'] = 404;
             output['msg'] = 'Not found. (2)';
+            return output;
         }
         output['content'] = ctrlOut['content'];
         return output;
