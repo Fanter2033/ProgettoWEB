@@ -185,10 +185,14 @@ module.exports = class ChannelRolesController extends Controller {
         let output = this.getDefaultOutput();
 
         let modelResult = await this.#_model.getUserRole(channelRoleDto);
-        if(modelResult === null){ //TODO CONTINUE HERE
-            //not found
+        if(modelResult === null){
+            output['code'] = 404;
+            output['msg'] = 'User role not found'
+            output['sub_code'] = 1;
+            return output;
         }
 
+        output['content'] = modelResult.getDocument();
         return output;
     }
 

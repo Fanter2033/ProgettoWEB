@@ -185,7 +185,7 @@ module.exports = class ChannelRolesModel extends Model {
 
     /**
      * @param {ChannelRoleDto} roleDto
-     * @return {Promise<{ChannelRoleDto | null}>}
+     * @return {Promise<ChannelRoleDto|null>}
      * returns the ChannelRoleDto in the database, null if not found.
      */
     async getUserRole(roleDto) {

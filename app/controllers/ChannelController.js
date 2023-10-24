@@ -224,8 +224,12 @@ module.exports = class ChannelController extends Controller {
         roleDto.channel_name = channelDto.channel_name;
         roleDto.type = channelDto.type;
         roleDto.username = username;
-        let ctrlOur = await this.#channelRolesController.getChannelRoleOfUser(roleDto);
-
+        let ctrlOut = await this.#channelRolesController.getChannelRoleOfUser(roleDto);
+        if(ctrlOut['code'] !== 200){
+            output['code'] = 404;
+            output['msg'] = 'Not found. (2)';
+        }
+        output['content'] = ctrlOut['content'];
         return output;
     }
 
