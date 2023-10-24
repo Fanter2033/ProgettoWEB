@@ -184,7 +184,10 @@ module.exports = class ChannelRolesController extends Controller {
     async getChannelRoleOfUser(channelRoleDto){
         let output = this.getDefaultOutput();
 
-        //TODO CONTINUE HERE 
+        let modelResult = await this.#_model.getUserRole(channelRoleDto);
+        if(modelResult === null){ //TODO CONTINUE HERE
+            //not found
+        }
 
         return output;
     }

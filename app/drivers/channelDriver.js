@@ -68,7 +68,7 @@ channelDriver.get('/:type/:channel', async function (req, res) {
         res.status(ctrlOut.code).send(ctrlOut);
 });
 
-channelDriver.get('/channel/:type/:channel/users/:username', async function(req, res){
+channelDriver.get('/:type/:channel/users/:username', async function(req, res){
     let channelDto = new ChannelDto();
     channelDto.type = (typeof req.params['type'] !== 'undefined' ? req.params['type']: null);
     channelDto.channel_name = (typeof req.params['channel'] !== 'undefined' ? req.params['channel']: null);

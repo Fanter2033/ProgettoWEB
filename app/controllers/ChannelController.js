@@ -224,7 +224,7 @@ module.exports = class ChannelController extends Controller {
         roleDto.channel_name = channelDto.channel_name;
         roleDto.type = channelDto.type;
         roleDto.username = username;
-        this.#channelRolesController.getChannelRoleOfUser();
+        let ctrlOur = await this.#channelRolesController.getChannelRoleOfUser(roleDto);
 
         return output;
     }

@@ -183,5 +183,27 @@ module.exports = class ChannelRolesModel extends Model {
         return true;
     }
 
+    /**
+     * @param {ChannelRoleDto} roleDto
+     * @return {Promise<{ChannelRoleDto | null}>}
+     * returns the ChannelRoleDto in the database, null if not found.
+     */
+    async getUserRole(roleDto) {
+        await this.checkMongoose("ChannelRole", ChannelRoleSchema);
+
+        let filter = {};
+        if(roleDto.username !== null) filter['username'] = this.mongo_escape(roleDto.username);
+        if(roleDto.type !== null) filter['type'] = this.mongo_escape(roleDto.type);
+        if(roleDto.channel_name !== null) filter['channel_name'] = this.mongo_escape(roleDto.channel_name);
+
+        try {
+            let result = await this.entityMongooseModel.findOne(filter);
+            return new ChannelRoleDto(result._doc);
+        } catch (ignored) {
+            return null;
+        }
+        return null;
+    }
+
 
 }
