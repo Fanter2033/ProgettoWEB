@@ -25,7 +25,7 @@
 
 <script>
 import VueConfig from "../config/VueConfig";
-import {func} from "joi";
+import router from "@/router";
 
     export default {
         name : 'Login',
@@ -42,7 +42,7 @@ import {func} from "joi";
         methods:{
           loginForm: function LoginForm() {
             if(this.formLoginValues.password.length === 0 || this.formLoginValues.username.length === 0){
-              alert("Tutti i campi sono obbligatori", "Attenzione");
+              alert("Tutti i campi sono obbligatori");
               return;
             }
             const passData = { password:this.formLoginValues.password };
@@ -58,8 +58,10 @@ import {func} from "joi";
                  body: JSON.stringify(passData),
                }
             ).then( (res) => {
-                 if(res.ok)
+                 if(res.ok){
                    console.log(res);
+                   router.push('/dashboard')
+                 }
                  else
                    console.error("Authentication failed", res.statusText);
                }

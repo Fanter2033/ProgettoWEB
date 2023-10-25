@@ -13,6 +13,19 @@ module.exports = class AuthController extends Controller {
         this.invokerIp = "";
     }
 
+    /**
+     *
+     * @param requestObject
+     * @param responseObject
+     * @param username
+     * @param password_attempt
+     * @param requested_role
+     * @returns {Promise<{msg: string, code: number, content: {}}>}
+     *
+     * verifies user credentials, tracks login attempts,
+     * and returns a success or failure result along with authentication details.
+     *
+     */
     async authenticateUser(requestObject, responseObject, username, password_attempt, requested_role = 0) {
         let output = this.getDefaultOutput();
         requested_role = parseInt(requested_role);
