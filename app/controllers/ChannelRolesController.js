@@ -112,6 +112,31 @@ module.exports = class ChannelRolesController extends Controller {
         return output;
     }
 
+    /**
+     *
+     * @param {ChannelDto} channelDto
+     * @return {Promise<{msg: string, code: number, sub_code: number,content: {}}>}
+     * PRECONDITION: REQUEST IS VALID. THE USER IS AUTHENTICATED AND HAS AUTHORIZATION TO DO THE CHANNEL DELETE.
+     * BE CAREFUL!
+     *
+     * Returns code 500 in case of errors. Code 200 otherwise.
+     *
+     */
+    async deleteChannelRoles(channelDto){
+        let output = this.getDefaultOutput();
+        //Controls already executed.
+        let channelRoleDto = new ChannelRoleDto();
+        channelRoleDto.channel_name = channelDto.channel_name;
+        channelRoleDto.type = channelDto.type;
+        let result = await this.#_model.deleteAllChannelRoles(channelRoleDto);
+        if(result === false){
+            output['code'] = 500;
+            output['msg'] = 'Internal server error.'
+            return output;
+        }
+        return output;
+    }
+
 
     /**
      *

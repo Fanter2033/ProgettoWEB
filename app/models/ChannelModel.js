@@ -39,6 +39,24 @@ module.exports = class ChannelModel extends Model {
         return true;
     }
 
+    /**
+     * @param {ChannelDto} channelDto
+     * @return Promise<boolean>
+     */
+    async deleteChannel(channelDto) {
+        await this.checkMongoose("Channel", Channel);
+        let filter = {
+            "type": `${this.mongo_escape(channelDto.type)}`,
+            "channel_name": `${this.mongo_escape(channelDto.channel_name)}`
+        };
+        try {
+            await this.entityMongooseModel.deleteOne(filter);
+        } catch (ignored){
+            return false;
+        }
+        return true;
+
+    }
 
 }
 

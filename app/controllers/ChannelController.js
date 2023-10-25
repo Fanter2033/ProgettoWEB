@@ -187,8 +187,51 @@ module.exports = class ChannelController extends Controller {
             return output;
         }
 
-        //TODO CONTINUE HERE GETTING THE USER ROLE.
+        let channelExists = await this.channelExists(channelDto);
+        if(channelExists === false){
+            output['code'] = 404;
+            output['msg'] = 'Channel not found';
+            return output;
+        }
 
+        if(authenticatedUser.isAdmin() === false){
+            //Ok if is not an admin let's check if the role is valid to delete.
+            //In particular let's check if there is only one role.
+            let roleCtrl = await this.#channelRolesController.getChannelUserRole(channelDto, authenticatedUser.username);
+            if(roleCtrl.code !== 200){
+                output['code'] = 401;
+                output['msg'] = 'Operation not allowed (1)';
+                return output;
+            }
+
+            //Role found. Let's check if is creator's channel
+            let role = new ChannelRoleDto(output['content'].getDocument())
+            if(role.role !== autoload.config._CHANNEL_ROLE_OWNER){
+                output['code'] = 403;
+                output['msg'] = 'Operation not allowed (2)';
+                return output;
+            }
+        }
+
+        //If we are here we can delete the channel.
+        //Before delete the channel from the collection of the channel we should delete the associated roles.
+        //We'll use sub-controller.
+        let subCtrlResult = this.#channelRolesController.deleteChannelRoles(channelDto);
+        if(subCtrlResult['code'] !== 200){
+            output['code'] = 500;
+            output['msg'] = 'Internal server error (1)';
+            return output;
+        }
+
+        //We can safely delete the channel from the channel collection
+        let modelResult = await this.#_model.deleteChannel(channelDto);
+        if(modelResult === false){
+            output['code'] = 500;
+            output['msg'] = 'Internal server error (2)';
+            return output;
+        }
+
+        //TODO THIS FUNCTIONS MUST BE TESTED
 
         return output;
     }
