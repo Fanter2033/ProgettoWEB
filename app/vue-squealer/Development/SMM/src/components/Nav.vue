@@ -33,4 +33,8 @@ a{
   text-decoration: none;
 }
 
+.navbar{
+  background-color: #528b57;
+}
+
 </style>
