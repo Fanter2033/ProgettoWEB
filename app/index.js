@@ -22,10 +22,11 @@ const UserController = require("./controllers/UserController");
 const UserModel = require("./models/UserModel");
 let userTestQuote = new UserController(new UserModel());
 
-cronDaemon.schedule("*/15 * * * * *", async function () {
+cronDaemon.schedule("0 0 * * *", async function () {
+    //It's midnight!
   try {
     let userList = await userTestQuote.getUserList({}, 0, 100, "", "", "");
-    let start = await controller.resetQuote(userList.content.users);
+    await controller.resetQuote(userList.content.users);
   } catch (error) {
     console.error("Errore duranate l'aggiornamento quote");
   }

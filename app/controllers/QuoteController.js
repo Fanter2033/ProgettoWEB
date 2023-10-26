@@ -8,6 +8,11 @@ module.exports = class QuoteController extends Controller {
     this._model = model;
   }
 
+  /**
+   * @param {string} username
+   * @return {Promise<{msg: string, code: number, content: {}}>}
+   * Given an username returns the quota in standard controller output.
+   */
   async getQuote(username) {
     let out = this.getDefaultOutput();
     let quote = await this._model.getQuote(username);
@@ -138,8 +143,8 @@ module.exports = class QuoteController extends Controller {
     return output;
   }
 
-  //TODO: usare Promise.all
-  //TOUNDERTAND: patchQuote come si integra?
+
+
 
   //There are no controls because it's a system function
   async resetQuote(userList) {
@@ -148,26 +153,22 @@ module.exports = class QuoteController extends Controller {
     //modifica il campo desiderato in ciascund username
     for (let userDto of userList) {
       let username = userDto.username;
-      let quote = this.getQuote(username);
-
-      if (userQuote["code"] !== 200) {
+      let quote = await this.getQuote(username);
+      if (quote["code"] !== 200) {
         continue;
       }
 
-      quote["remaining_daily"] = quote["limit_daily"];
-
+      let quoteDto = new QuoteDto(quote['content']);
+      quoteDto.remaining_daily = quoteDto.limit_daily;
       //primo giorno della settimana
       if (today.getDay() === 1) {
-        quote["remaining_weekly"] = quote["limit_weekly"];
+        quoteDto.remaining_weekly = quoteDto.limit_weekly;
       }
-
       //primo giorno del mese
       if (today.getDate() === 1) {
-        quote["remaining_monthly"] = quote["limit_monthly"];
+        quoteDto.remaining_monthly = quoteDto.limit_monthly;
       }
-
       //usiamo il model
-      let quoteDto = new QuoteDto(quote);
       await this._model.patchQuote(quoteDto);
     }
   }
