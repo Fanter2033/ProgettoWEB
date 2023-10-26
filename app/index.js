@@ -18,21 +18,18 @@ const QuoteController = require("./controllers/QuoteController");
 const QuoteModel = require("./models/QuoteModel");
 let controller = new QuoteController(new QuoteModel());
 
-const UserController = require("./controllers/QuoteController");
+const UserController = require("./controllers/UserController");
 const UserModel = require("./models/UserModel");
 let userTestQuote = new UserController(new UserModel());
-let test = await userTestQuote.getUserList({}, 0, 100, "", "", "");
 
-cronDaemon.schedule("0 0 * * *", async function () {
-    try{
-        let start = await controller.resetQuote(userTestQuote);
-    }catch(error){
-        console.error("Errore duranate l'aggiornamento quote");
-        throw error;
-    }
-
+cronDaemon.schedule("*/15 * * * * *", async function () {
+  try {
+    let userList = await userTestQuote.getUserList({}, 0, 100, "", "", "");
+    let start = await controller.resetQuote(userList.content.users);
+  } catch (error) {
+    console.error("Errore duranate l'aggiornamento quote");
+  }
 });
-
 
 global.rootDir = __dirname;
 global.startDate = null;

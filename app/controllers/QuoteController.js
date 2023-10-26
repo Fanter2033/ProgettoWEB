@@ -143,24 +143,32 @@ module.exports = class QuoteController extends Controller {
 
   //There are no controls because it's a system function
   async resetQuote(userList) {
-    var today = new Date();
-    quote = this._model.getQuote();
+    let today = new Date();
 
     //modifica il campo desiderato in ciascund username
-    userList.forEach((username) => {
-      let quota = this.getQuote(username);
+    for (let userDto of userList) {
+      let username = userDto.username;
+      let quote = this.getQuote(username);
 
-      username["remaining_daily"] = quota["limit_daily"];
+      if (userQuote["code"] !== 200) {
+        continue;
+      }
+
+      quote["remaining_daily"] = quote["limit_daily"];
 
       //primo giorno della settimana
       if (today.getDay() === 1) {
-        username["remaining_weekly"] = quota["limit_weekly"];
+        quote["remaining_weekly"] = quote["limit_weekly"];
       }
 
       //primo giorno del mese
       if (today.getDate() === 1) {
-        username["remaining_monthly"] = quota["limit_monthly"];
+        quote["remaining_monthly"] = quote["limit_monthly"];
       }
-    });
+
+      //usiamo il model
+      let quoteDto = new QuoteDto(quote);
+      await this._model.patchQuote(quoteDto);
+    }
   }
 };
