@@ -73,7 +73,29 @@ channelDriver.get('/:type', async function (req, res) {
 });
 
 channelDriver.put('/:type/:channel', async function (req, res) {
-    res.send('3');
+    let channelDto = new ChannelDto();
+    let authUserPromise = authController.getAuthenticatedUser(req);
+    let newChannel = new ChannelDto();
+
+    if (typeof req.body === 'undefined' || typeof req.body.channel === 'undefined') {
+        req.body = {};
+        req.body.channel = {};
+        req.body.channel.name = '';
+        req.body.channel.type = '';
+        req.body.channel.private = true;
+    }
+
+    channelDto.type = (typeof req.params['type'] !== 'undefined' ? req.params['type']: null);
+    channelDto.channel_name = (typeof req.params['channel'] !== 'undefined' ? req.params['channel']: null);
+    newChannel.type = (typeof req.body.channel['type'] !== 'undefined' ? req.body.channel['type']: null);
+    newChannel.channel_name = (typeof req.body.channel['name'] !== 'undefined' ? req.body.channel['name']: null);
+    newChannel.private = (typeof req.body.channel['private'] !== 'undefined' ? req.body.channel['private']: null);
+
+    let ctrlOut = await controller.updateChannel(channelDto, newChannel, await authUserPromise);
+    if (ctrlOut.code === 200)
+        res.status(ctrlOut.code).send(ctrlOut.content);
+    else
+        res.status(ctrlOut.code).send(ctrlOut);
 });
 
 channelDriver.delete('/:type/:channel', async function (req, res) {

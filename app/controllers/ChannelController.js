@@ -54,7 +54,7 @@ module.exports = class ChannelController extends Controller {
             output['code'] = 409;
             output['msg'] = 'Already exists.';
             return output;
-        } else if(channelExists === null){
+        } else if (channelExists === null) {
             output['code'] = 500;
             output['msg'] = 'Internal server error. The Existing channel control has an error. This message should never be send';
             return output;
@@ -92,11 +92,11 @@ module.exports = class ChannelController extends Controller {
 
         // noinspection JSIncompatibleTypesComparison
         if (channelDto.type !== 'CHANNEL_OFFICIAL') {
-            //unofficial channel. Insert the creator as Admin.
+            //unofficial channel. Insert the creator as Owner.
             let channelRoleDto = new ChannelRoleDto();
             channelRoleDto.channel_name = channelDto.channel_name;
             channelRoleDto.type = channelDto.type;
-            channelRoleDto.role = autoload.config._CHANNEL_ROLE_ADMIN;
+            channelRoleDto.role = autoload.config._CHANNEL_ROLE_OWNER;
             channelRoleDto.username = authenticatedUser.username;
             let roleOut = await this.#channelRolesController.createRole(channelRoleDto);
             if (roleOut['code'] !== 200) {
@@ -152,16 +152,39 @@ module.exports = class ChannelController extends Controller {
         return output;
     }
 
+    /**
+     * @param {ChannelDto} oldChannel
+     * @param {ChannelDto} newChannel
+     * @param {UserDto} authUserPromise
+     * @return {Promise<void>}
+     */
+    async updateChannel(oldChannel, newChannel, authUserPromise) {
+        let output = this.getDefaultOutput();
+        let exists = this.channelExists(channelDto);
+        if(exists === false){
+            output['code'] = 404;
+            output['msg'] = 'Channel not found.';
+            return output;
+        }
+
+        //TODO CONTINUE HERE
+
+        
+
+
+        return output;
+    }
+
 
     /**
      * @param {ChannelDto} channelDto
      * @return {Promise<boolean | null>}
      * Given a ChannelDto returns true if the channel exists, false otherwise, null in case of error.
      */
-    async channelExists(channelDto){
+    async channelExists(channelDto) {
         let getChannelOutput = await this.getChannel(channelDto);
-        if(getChannelOutput['code'] === 200) return true;
-        if(getChannelOutput['code'] === 404) return false;
+        if (getChannelOutput['code'] === 200) return true;
+        if (getChannelOutput['code'] === 404) return false;
         return null;
     }
 
@@ -223,24 +246,24 @@ module.exports = class ChannelController extends Controller {
     async deleteChannel(channelDto, authenticatedUser) {
         let output = this.getDefaultOutput();
 
-        if(this.isObjectVoid(authenticatedUser) === true){
+        if (this.isObjectVoid(authenticatedUser) === true) {
             output['code'] = 403;
             output['msg'] = 'User not authenticated';
             return output;
         }
 
         let channelExists = await this.channelExists(channelDto);
-        if(channelExists === false){
+        if (channelExists === false) {
             output['code'] = 404;
             output['msg'] = 'Channel not found';
             return output;
         }
 
-        if(authenticatedUser.isAdmin === false){
+        if (authenticatedUser.isAdmin === false) {
             //Ok if is not an admin let's check if the role is valid to delete.
             //In particular let's check if there is only one role.
             let roleCtrl = await this.getChannelUserRole(channelDto, authenticatedUser.username);
-            if(roleCtrl.code !== 200){
+            if (roleCtrl.code !== 200) {
                 output['code'] = 401;
                 output['msg'] = 'Operation not allowed (1)';
                 return output;
@@ -248,7 +271,7 @@ module.exports = class ChannelController extends Controller {
 
             //Role found. Let's check if is creator's channel
             let role = new ChannelRoleDto(roleCtrl['content'])
-            if(role.role !== autoload.config._CHANNEL_ROLE_OWNER){
+            if (role.role !== autoload.config._CHANNEL_ROLE_OWNER) {
                 output['code'] = 403;
                 output['msg'] = 'Operation not allowed (2)';
                 return output;
@@ -259,7 +282,7 @@ module.exports = class ChannelController extends Controller {
         //Before delete the channel from the collection of the channel we should delete the associated roles.
         //We'll use sub-controller.
         let subCtrlResult = await this.#channelRolesController.deleteChannelRoles(channelDto);
-        if(subCtrlResult['code'] !== 200){
+        if (subCtrlResult['code'] !== 200) {
             output['code'] = 500;
             output['msg'] = 'Internal server error (1)';
             return output;
@@ -267,7 +290,7 @@ module.exports = class ChannelController extends Controller {
 
         //We can safely delete the channel from the channel collection
         let modelResult = await this.#_model.deleteChannel(channelDto);
-        if(modelResult === false){
+        if (modelResult === false) {
             output['code'] = 500;
             output['msg'] = 'Internal server error (2)';
             return output;
@@ -285,14 +308,14 @@ module.exports = class ChannelController extends Controller {
         let output = this.getDefaultOutput();
 
         username = username.trim();
-        if(username.length === 0){
+        if (username.length === 0) {
             output['code'] = 400;
             output['msg'] = 'Not valid username';
             return output;
         }
 
         let user = await userController.getUser(username);
-        if(user['code'] !== 200){
+        if (user['code'] !== 200) {
             //User not found
             output['code'] = 404;
             output['msg'] = 'Not found. (3)';
@@ -301,7 +324,7 @@ module.exports = class ChannelController extends Controller {
         user = new UserDto(user.content);
 
         //Note: the Type hashtag channels exists in everytime by definition. Escape useless controls.
-        if(channelDto.type === autoload.config._CHANNEL_TYPE_HASHTAG){
+        if (channelDto.type === autoload.config._CHANNEL_TYPE_HASHTAG) {
             let response = new ChannelRoleDto();
             response.role = autoload.config._CHANNEL_ROLE_WRITE;
             response.type = channelDto.type;
@@ -312,7 +335,7 @@ module.exports = class ChannelController extends Controller {
             return output;
         }
 
-        if(channelDto.type === autoload.config._CHANNEL_TYPE_OFFICIAL && user.isAdmin){
+        if (channelDto.type === autoload.config._CHANNEL_TYPE_OFFICIAL && user.isAdmin) {
             let response = new ChannelRoleDto();
             response.role = autoload.config._CHANNEL_ROLE_ADMIN;
             response.type = channelDto.type;
@@ -324,7 +347,7 @@ module.exports = class ChannelController extends Controller {
         }
 
         let channelExists = await this.channelExists(channelDto);
-        if(channelExists !== true){
+        if (channelExists !== true) {
             output['code'] = 404;
             output['msg'] = 'Not found. (1)';
             return output;
@@ -336,7 +359,7 @@ module.exports = class ChannelController extends Controller {
         roleDto.type = channelDto.type;
         roleDto.username = username;
         let ctrlOut = await this.#channelRolesController.getChannelRoleOfUser(roleDto);
-        if(ctrlOut['code'] !== 200){
+        if (ctrlOut['code'] !== 200) {
             output['code'] = 404;
             output['msg'] = 'Not found. (2)';
             return output;
