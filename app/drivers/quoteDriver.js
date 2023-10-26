@@ -19,11 +19,7 @@ quoteDriver.patch("/", async function (req, res) {
   let userAuth = await authController.getAuthenticatedUser(req);
   let username = typeof req.params["username"] !== "undefined" ? req.params["username"] : "";
   let percentage = typeof req.body["percentage"] !== "undefined" ? req.body["percentage"] : "";
-  let ctrlOut = await controller.applyPercentageQuote(
-    userAuth,
-    username,
-    percentage
-  );
+  let ctrlOut = await controller.applyPercentageQuote(userAuth, username, percentage);
   if (ctrlOut.code === 200) res.status(ctrlOut.code).send(ctrlOut.content);
   else res.status(ctrlOut.code).send(ctrlOut);
 });
