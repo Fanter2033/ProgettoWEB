@@ -138,11 +138,29 @@ module.exports = class QuoteController extends Controller {
     return output;
   }
 
-  //no controlli
-  //quotaRemaining=quoteLimit
-  async dialyResetQuote() {}
+  //TODO: usare Promise.all
+  //TOUNDERTAND: patchQuote come si integra?
 
-  async weeklyResetQuote() {}
+  //There are no controls because it's a system function
+  async resetQuote(userList) {
+    var today = new Date();
+    quote = this._model.getQuote();
 
-  async monthlyResetQuote() {}
+    //modifica il campo desiderato in ciascund username
+    userList.forEach((username) => {
+      let quota = this.getQuote(username);
+
+      username["remaining_daily"] = quota["limit_daily"];
+
+      //primo giorno della settimana
+      if (today.getDay() === 1) {
+        username["remaining_weekly"] = quota["limit_weekly"];
+      }
+
+      //primo giorno del mese
+      if (today.getDate() === 1) {
+        username["remaining_monthly"] = quota["limit_monthly"];
+      }
+    });
+  }
 };

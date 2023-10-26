@@ -1,11 +1,13 @@
 const express = require("express");
 const autoload = require("./autoload/autoload");
 const backEndRouter = express();
+
 const databaseDriver = require("./drivers/databaseDriver");
 const authDriver = require("./drivers/authDriver.js");
 const userDriver = require("./drivers/userDriver");
 const channelDriver = require("./drivers/channelDriver");
 const viewDriver = require("./drivers/views/viewDriver");
+
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const cookieParser = require("cookie-parser");
@@ -16,6 +18,22 @@ const QuoteController = require("./controllers/QuoteController");
 const QuoteModel = require("./models/QuoteModel");
 let controller = new QuoteController(new QuoteModel());
 
+const UserController = require("./controllers/QuoteController");
+const UserModel = require("./models/UserModel");
+let userTestQuote = new UserController(new UserModel());
+let test = await userTestQuote.getUserList({}, 0, 100, "", "", "");
+
+cronDaemon.schedule("0 0 * * *", async function () {
+    try{
+        let start = await controller.resetQuote(userTestQuote);
+    }catch(error){
+        console.error("Errore duranate l'aggiornamento quote");
+        throw error;
+    }
+
+});
+
+
 global.rootDir = __dirname;
 global.startDate = null;
 global.autoload = autoload;
@@ -24,7 +42,7 @@ const oneDay = 1000 * 60 * 60 * 24;
 
 /*
  * save and crypt sessions
- * */
+ */
 backEndRouter.use(
   session({
     secret: autoload.config._SESSION_SECRET,
@@ -85,48 +103,13 @@ backEndRouter.use("/user", userDriver);
 backEndRouter.use("/channel", channelDriver);
 backEndRouter.use("/", viewDriver);
 
-cronDaemon.schedule("0 0 * * *", async function () {
-  let start = await controller.dialyResetQuote();
-});
-
-cronDaemon.schedule("0 0 * * 1", async function () {
-  let start = await controller.weeklyResetQuote();
-});
-
-cronDaemon.schedule("0 0 1 * *", async function () {
-  let start = await controller.monthlyResetQuote();
-});
-
-
-
-
-//Cron handler: (sec) min  h  d_m  m  d_w
-
-//ogni 10 sec
-cronDaemon.schedule("*/10 * * * * *", function () {
-  console.log("10 sec!");
-});
-
-//ogni minuto
-cronDaemon.schedule("* * * * *", function () {
-  console.log("1 min!");
-});
-
-//Every day at 00:00 execute this code
-cronDaemon.schedule("0 0 * * *", function () {
-  console.log("Hey. It's midnight!");
-});
-
-//tutti i lunedì:
-cronDaemon.schedule("0 0 * * 1", function () {
-  console.log("Hey. It's Monday!");
-});
-
-//il primo di ogni mese:
-cronDaemon.schedule("0 0 1 * *", function () {
-  console.log("Hey. It's the first of the month!");
-});
-
 backEndRouter.listen(autoload.config._WEBSERVER_PORT, () => {
   console.log(`Server started on port ${autoload.config._WEBSERVER_PORT}`);
 });
+
+//Cron handler: (sec) min  h  d_m  m  d_w
+//ogni 10 sec: */10 * * * * *
+//ogni minuto: * * * * *
+//tutti i giorni a mezzanotte: 0 0 * * *
+//tutti i lunedì: 0 0 * * 1
+//il primo di ogni mese: 0 0 1 * *
