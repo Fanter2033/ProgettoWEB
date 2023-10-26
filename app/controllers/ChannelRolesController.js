@@ -137,6 +137,43 @@ module.exports = class ChannelRolesController extends Controller {
         return output;
     }
 
+    /**
+     * @param {ChannelDto} oldChannel
+     * @param {ChannelDto} newChannel
+     * @return {Promise<{msg: string, code: number, sub_code: number,content: {}}>}
+     */
+    async substituteChannels(oldChannel, newChannel){
+        let output = this.getDefaultOutput();
+
+        //no controls to do here
+        let result = await this.#_model.substituteChannels(oldChannel, newChannel);
+        if(!result){
+            output['code'] = 500;
+            output['msg'] = 'Internal server error.'
+            return output;
+        }
+        return output;
+    }
+
+    /**
+     * @param {ChannelDto} channelDto
+     * @return {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     * Given a channelDto returns all users that are subscribers of the channel. In content, saves an array of usernames.
+     * NOT A UserDto!!!
+     */
+    async getChannelSubscribers(channelDto){
+        let output = this.getDefaultOutput();
+
+        let result = await this.#_model.getAllChannelRoles(channelDto);
+        let usernames = [];
+        for (const roles of result) {
+            usernames.push(roles.username);
+        }
+
+        output["content"] = usernames;
+        return output;
+    }
+
 
     /**
      *

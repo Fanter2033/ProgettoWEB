@@ -72,7 +72,7 @@ channelDriver.get('/:type', async function (req, res) {
         res.status(ctrl.code).send(ctrl);
 });
 
-channelDriver.put('/:type/:channel', async function (req, res) {
+channelDriver.put('/:type/:channel', async function (req, res) { //TODO: TEST
     let channelDto = new ChannelDto();
     let authUserPromise = authController.getAuthenticatedUser(req);
     let newChannel = new ChannelDto();
@@ -111,7 +111,7 @@ channelDriver.delete('/:type/:channel', async function (req, res) {
         res.status(ctrlOut.code).send(ctrlOut);
 });
 
-channelDriver.get('/:type/:channel', async function (req, res) { //TODO TEST
+channelDriver.get('/:type/:channel', async function (req, res) {
     let channelDto = new ChannelDto();
     channelDto.type = (typeof req.params['type'] !== 'undefined' ? req.params['type']: null);
     channelDto.channel_name = (typeof req.params['channel'] !== 'undefined' ? req.params['channel']: null);
@@ -127,8 +127,16 @@ channelDriver.patch('/:type/:channel/:username', async function(req, res){ //TOD
     res.send('6');
 });
 
-channelDriver.get('/:type/:channel/users', async function(req, res){ //TODO IMPLEMENT
-    res.send('7');
+channelDriver.get('/:type/:channel/users', async function(req, res){
+    let channelDto = new ChannelDto();
+    channelDto.type = (typeof req.params['type'] !== 'undefined' ? req.params['type']: null);
+    channelDto.channel_name = (typeof req.params['channel'] !== 'undefined' ? req.params['channel']: null);
+
+    let ctrlOut = await controller.getChannelSubscribers(channelDto);
+    if (ctrlOut.code === 200)
+        res.status(ctrlOut.code).send(ctrlOut.content);
+    else
+        res.status(ctrlOut.code).send(ctrlOut);
 });
 
 channelDriver.get('/:type/:channel/users/:username', async function(req, res){

@@ -3,6 +3,7 @@ const ChannelRoleSchema = require("../entities/schemas/ChannelRoleSchema");
 const UserDto = require("../entities/dtos/UserDto");
 const ChannelDto = require("../entities/dtos/ChannelDto");
 const ChannelRoleDto = require("../entities/dtos/ChannelRoleDto");
+const Channel = require("../entities/schemas/ChannelSchema");
 module.exports = class ChannelRolesModel extends Model {
     constructor(collectionName) {
         super(collectionName);
@@ -140,7 +141,6 @@ module.exports = class ChannelRolesModel extends Model {
 
     /**
      * @param {ChannelRoleDto} roleDto
-     * @param {number} newRole
      * @return {ChannelRoleDto | null}
      */
     async updateRoleGrade(roleDto) {
@@ -202,7 +202,52 @@ module.exports = class ChannelRolesModel extends Model {
         } catch (ignored) {
             return null;
         }
-        return null;
+    }
+
+    /**
+     * @param {ChannelDto} oldChannel
+     * @param {ChannelDto} newChannel
+     * @return {Promise<boolean>}
+     */
+    async substituteChannels(oldChannel, newChannel){
+        await this.checkMongoose("Channel", Channel);
+        let filter = {"channel_name": `${oldChannel.channel_name}`, "type": oldChannel.type};
+        filter = this.mongo_escape(filter);
+        let update = {"channel_name": newChannel.channel_name, "type": newChannel.type};
+        update = this.mongo_escape(update);
+        try {
+            await this.entityMongooseModel.updateMany(filter, update);
+        } catch (ignored) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @param {ChannelDto} channelDto
+     * @return {Promise<ChannelRoleDto[]>}
+     */
+    async getAllChannelRoles(channelDto){
+        await this.checkMongoose("ChannelRole", ChannelRoleSchema);
+        let output = [];
+        let type = channelDto.type;
+        let channel_name = channelDto.channel_name;
+
+        let filter = {};
+        if(type !== null) filter['type'] = this.mongo_escape(type);
+        if(channel_name !== null) filter['channel_name'] = this.mongo_escape(channel_name);
+
+        try {
+            let results = await this.entityMongooseModel.find(filter);
+            for (let i = 0; i < results.length; i++){
+                let res = new ChannelRoleDto(results[i]._doc);
+                output.push(res);
+            }
+        } catch (ignored) {
+            return [];
+        }
+
+        return output;
     }
 
 

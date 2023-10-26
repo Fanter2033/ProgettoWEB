@@ -155,22 +155,87 @@ module.exports = class ChannelController extends Controller {
     /**
      * @param {ChannelDto} oldChannel
      * @param {ChannelDto} newChannel
-     * @param {UserDto} authUserPromise
-     * @return {Promise<void>}
+     * @param {UserDto} authUser
+     * @return {Promise<{msg: string, code: number, sub_code: number,content: {}}>}
      */
-    async updateChannel(oldChannel, newChannel, authUserPromise) {
+    async updateChannel(oldChannel, newChannel, authUser) {
         let output = this.getDefaultOutput();
-        let exists = this.channelExists(channelDto);
-        if(exists === false){
+        let exists = await this.channelExists(oldChannel);
+
+        if(oldChannel.type === autoload.config._CHANNEL_TYPE_HASHTAG || newChannel.type === autoload.config._CHANNEL_TYPE_HASHTAG){
+            output['code'] = 400;
+            output['msg'] = 'Operation not allowed for hashtags!!!.';
+            return output;
+        }
+
+        if (exists !== true) {
             output['code'] = 404;
             output['msg'] = 'Channel not found.';
             return output;
         }
 
-        //TODO CONTINUE HERE
+        //check the user authentication
+        if (this.isObjectVoid(authUser)) {
+            output['code'] = 403;
+            output['msg'] = 'Not authenticated.';
+            return output;
+        }
 
-        
+        //Check if the user is an admin or has sufficient privileges to do operation.
+        if (!authUser.isAdmin) {
+            if (newChannel.type === autoload.config._CHANNEL_TYPE_OFFICIAL){
+                output['code'] = 403;
+                output['msg'] = 'Not allowed for non-moderators.';
+                return output;
+            }
 
+            let userRole = await this.getChannelUserRole(oldChannel, authUser.username);
+            if (this.isObjectVoid(userRole.content)) {
+                output['code'] = 401;
+                output['msg'] = 'Not a subscriber of the channel.';
+                return output;
+            }
+            let roleDto = new ChannelRoleDto(userRole.content);
+            if (roleDto.role !== autoload.config._CHANNEL_ROLE_OWNER) {
+                output['code'] = 401;
+                output['msg'] = 'Not the owner of the channel.';
+                return output;
+            }
+        }
+
+        if (newChannel.type === autoload.config._CHANNEL_TYPE_OFFICIAL)
+            newChannel.channel_name = newChannel.channel_name.toUpperCase();
+        else  //unofficial
+            newChannel.channel_name = newChannel.channel_name.toLowerCase();
+
+        if(newChannel.type !== oldChannel.type || oldChannel.type !== newChannel.type){
+            //Now, let's check if the new channel do not exists.
+            let newChannelExists = await this.channelExists(newChannel);
+            if(newChannelExists !== false){
+                output['code'] = 400;
+                output['msg'] = 'The new channel name invalid.';
+                return output;
+            }
+        }
+
+
+        //Now if is OK! Let's change
+        let result = this.#_model.updateChannel(oldChannel, newChannel);
+        if(result === false){
+            output['code'] = 500;
+            output['msg'] = 'Internal server error (1).';
+            return output;
+        }
+
+        if(newChannel.type !== oldChannel.type || oldChannel.type !== newChannel.type){
+            //Change references in sub relations.
+            let ctrlOut = await this.#channelRolesController.substituteChannels(oldChannel, newChannel);
+            if(ctrlOut['code'] !== 200){
+                output['code'] = 500;
+                output['msg'] = 'Internal server error (2).';
+                return output;
+            }
+        }
 
         return output;
     }
@@ -296,6 +361,25 @@ module.exports = class ChannelController extends Controller {
             return output;
         }
 
+        return output;
+    }
+
+    /**
+     * @param {ChannelDto} channelDto
+     * @return {Promise<{msg: string, code: number, sub_code: number,content: {}}>}
+     */
+    async getChannelSubscribers(channelDto){
+        let output = this.getDefaultOutput();
+
+        let channelExists = await this.channelExists(channelDto);
+        if (channelExists === false) {
+            output['code'] = 404;
+            output['msg'] = 'Channel not found';
+            return output;
+        }
+
+        let subscribers = await this.#channelRolesController.getChannelSubscribers(channelDto);
+        output['content'] = subscribers;
         return output;
     }
 

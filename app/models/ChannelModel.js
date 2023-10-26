@@ -103,6 +103,24 @@ module.exports = class ChannelModel extends Model {
     }
 
     /**
+     * @param {ChannelDto} oldChannel
+     * @param {ChannelDto} newChannel
+     * @return {Promise<boolean>}
+     */
+    async updateChannel(oldChannel, newChannel){
+        await this.checkMongoose("Channel", Channel);
+        let filter = {"channel_name": `${oldChannel.channel_name}`, "type": oldChannel.type};
+        filter = this.mongo_escape(filter);
+        newChannel = this.mongo_escape(newChannel.getDocument());
+        try {
+            await this.entityMongooseModel.replaceOne(filter, newChannel);
+        } catch (ignored) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * @param {ChannelDto} channelDto
      * @return Promise<boolean>
      */
