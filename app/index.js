@@ -21,7 +21,7 @@ let controller = new QuoteController(new QuoteModel());
 const UserController = require("./controllers/UserController");
 const UserModel = require("./models/UserModel");
 let userTestQuote = new UserController(new UserModel());
-
+//TODO: RISOLVERE LIMIT. SE SI METTE -1 PRENDE TUTTI GLI UTENTI
 cronDaemon.schedule("0 0 * * *", async function () {
     //It's midnight!
   try {
