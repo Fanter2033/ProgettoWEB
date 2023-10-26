@@ -110,6 +110,48 @@ module.exports = class ChannelController extends Controller {
         return output;
     }
 
+    /**
+     * @param {UserDto | {}} requestingUser
+     * @param {number} offset
+     * @param {number} limit
+     * @param {string} search
+     * @param {string} orderBy
+     * @param {string} orderDir
+     * @param {null | string} type
+     * @return {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async getChannelList(requestingUser, offset, limit, search, orderBy, orderDir, type) {
+        let output = this.getDefaultOutput();
+
+        let isAdmin = false;
+        if (this.isObjectVoid(requestingUser) === false)
+            isAdmin = requestingUser.isAdmin;
+
+        offset = parseInt(offset);
+        limit = parseInt(limit);
+        search = search.trim();
+        orderBy = orderBy.trim();
+        orderDir = orderDir.trim();
+
+        offset = (isNaN(offset) ? 0 : offset);
+        limit = (isNaN(limit) ? 10 : limit);
+        if (limit > 100) limit = 100;
+
+        orderDir = ((orderDir === 'ORDER_ASC') ? 'ORDER_ASC' : 'ORDER_DESC');
+
+        output.content = {}
+        output.content['channels'] = await this.#_model.getChannelList(offset, limit, search, orderBy, orderDir, type);
+        output.content['totalCount'] = await this.#_model.getChannelCount(search, type);
+
+        for (let i = 0; i < output.content['channels'].length; i++) {
+            if (isAdmin === false)
+                output.content['channels'][i] = this.clearSensitiveInformation(output.content['channels'][i]);
+            output.content['channels'][i] = output.content['channels'][i].getDocument();
+        }
+
+        return output;
+    }
+
 
     /**
      * @param {ChannelDto} channelDto
@@ -194,10 +236,10 @@ module.exports = class ChannelController extends Controller {
             return output;
         }
 
-        if(authenticatedUser.isAdmin() === false){
+        if(authenticatedUser.isAdmin === false){
             //Ok if is not an admin let's check if the role is valid to delete.
             //In particular let's check if there is only one role.
-            let roleCtrl = await this.#channelRolesController.getChannelUserRole(channelDto, authenticatedUser.username);
+            let roleCtrl = await this.getChannelUserRole(channelDto, authenticatedUser.username);
             if(roleCtrl.code !== 200){
                 output['code'] = 401;
                 output['msg'] = 'Operation not allowed (1)';
@@ -205,7 +247,7 @@ module.exports = class ChannelController extends Controller {
             }
 
             //Role found. Let's check if is creator's channel
-            let role = new ChannelRoleDto(output['content'].getDocument())
+            let role = new ChannelRoleDto(roleCtrl['content'])
             if(role.role !== autoload.config._CHANNEL_ROLE_OWNER){
                 output['code'] = 403;
                 output['msg'] = 'Operation not allowed (2)';
@@ -216,7 +258,7 @@ module.exports = class ChannelController extends Controller {
         //If we are here we can delete the channel.
         //Before delete the channel from the collection of the channel we should delete the associated roles.
         //We'll use sub-controller.
-        let subCtrlResult = this.#channelRolesController.deleteChannelRoles(channelDto);
+        let subCtrlResult = await this.#channelRolesController.deleteChannelRoles(channelDto);
         if(subCtrlResult['code'] !== 200){
             output['code'] = 500;
             output['msg'] = 'Internal server error (1)';
@@ -230,8 +272,6 @@ module.exports = class ChannelController extends Controller {
             output['msg'] = 'Internal server error (2)';
             return output;
         }
-
-        //TODO THIS FUNCTIONS MUST BE TESTED
 
         return output;
     }
