@@ -2,7 +2,7 @@ import React from "react";
 import { Outlet, NavLink } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 import "../Home.css";
-import squeaql_logo from "./Nav_logo.png";
+import squeal_logo from "./Nav_logo.png";
 
 //TODO:navbar sm felx elementi
 
@@ -36,7 +36,7 @@ function Navbar() {
       <nav className="d-none d-sm-block navbar-expand-md nav-pc p-3">
         <ul className="navbar-nav d-flex justify-content-evenly">
           <li calssName="navbar-brand">
-            <img src={squeaql_logo} alt="logo_squeal" width="30" height="30" />
+            <img src={squeal_logo} alt="logo_squeal" width="30" height="30" />
           </li>
           <li>
             <button type="button" class="btn icon-nav me-2">
@@ -56,7 +56,7 @@ function Navbar() {
                 return isActive ? { color: "#072f38" } : {};
               }}
               className="navbar-brand cool-font-small"
-              to={ReactConfig.pathFunction("/home/post")}
+              to={ReactConfig.pathFunction("/post")}
             >
               Post
             </NavLink>
@@ -81,7 +81,7 @@ function Navbar() {
                 return isActive ? { color: "#072f38" } : {};
               }}
               className="navbar-brand cool-font-small"
-              to={ReactConfig.pathFunction("/home/channels")}
+              to={ReactConfig.pathFunction("/channels")}
             >
               Channels
             </NavLink>
@@ -105,7 +105,7 @@ function Navbar() {
                 return isActive ? { color: "#072f38" } : {};
               }}
               className="navbar-brand cool-font-small"
-              to={ReactConfig.pathFunction("/home/account")}
+              to={ReactConfig.pathFunction("/account")}
             >
               Account
             </NavLink>
@@ -122,7 +122,7 @@ function Navbar() {
                 return isActive ? { color: "#072f38" } : {};
               }}
               className="navbar-brand"
-              to={ReactConfig.pathFunction("/home/post")}
+              to={ReactConfig.pathFunction("/post")}
             >
               <button type="button" class="btn icon-nav me-2">
                 <svg
@@ -147,7 +147,7 @@ function Navbar() {
                 return isActive ? { color: "#072f38" } : {};
               }}
               className="navbar-brand"
-              to={ReactConfig.pathFunction("/home/channels")}
+              to={ReactConfig.pathFunction("/channels")}
             >
               <button type="button" className="btn icon-nav me-2">
                 <svg
@@ -171,7 +171,7 @@ function Navbar() {
                 return isActive ? { color: "#072f38" } : {};
               }}
               className="navbar-brand"
-              to={ReactConfig.pathFunction("/home/account")}
+              to={ReactConfig.pathFunction("/account")}
             >
               <button type="button" class="btn icon-nav me-2">
                 <svg
@@ -198,7 +198,7 @@ function Navbar() {
                 return isActive ? { color: "#072f38" } : {};
               }}
               className="navbar-brand"
-              to={ReactConfig.pathFunction("/home/chat")}
+              to={ReactConfig.pathFunction("/chat")}
             >
               <button type="button" class="btn icon-nav me-2">
                 <svg

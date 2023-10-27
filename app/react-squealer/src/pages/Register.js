@@ -45,7 +45,7 @@ function Register() {
     })
       .then((response) => {
         if (response.ok) {
-          navigate(`home`);
+          navigate(`channles`);
         } else {
           console.error("Authentication failed", response.statusText);
         }
@@ -136,49 +136,7 @@ function Register() {
               </div>
             </div>
 
-            <div className="form-group row p-2">
-              <p className="cool-font-small">Type of account:</p>
-              <div className="col-4 offset-4 mb-5 d-flex justify-content-center">
-                <div className="form-check">
-                  <input
-                    id="user"
-                    name="typeAccount"
-                    type="radio"
-                    className="form-check-input"
-                    required=""
-                    wfd-id="id10"
-                  />
-                  <label className="form-check-label" for="user">
-                    User
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    id="pro"
-                    name="typeAccount"
-                    type="radio"
-                    className="form-check-input"
-                    required=""
-                  />
-                  <label className="form-check-label" for="pro">
-                    PRO
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    id="mod"
-                    name="typeAccount"
-                    type="radio"
-                    className="form-check-input"
-                    required=""
-                  />
-                  <label className="form-check-label" for="mod">
-                    Mod
-                  </label>
-                </div>
-              </div>
-            </div>
-
+        
             <div className="form-group row p-2">
               <button
                 className="col-12 col-md-4 offset-md-4 mb-5 custom-button"

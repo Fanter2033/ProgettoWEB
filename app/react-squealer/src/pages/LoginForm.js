@@ -43,7 +43,7 @@ function LoginForm() {
     })
       .then((response) => {
         if (response.ok) {
-          navigate(`home`);
+          navigate(`channles`);
         } else {
           console.error("Authentication failed", response.statusText);
         }
@@ -109,7 +109,7 @@ function LoginForm() {
                 <NavLink
                   style={{ color: "#072f38" }}
                   className="cool-font-small"
-                  to={ReactConfig.pathFunction("/home/registration")}
+                  to={ReactConfig.pathFunction("/registration")}
                 >
                   New Here
                 </NavLink>

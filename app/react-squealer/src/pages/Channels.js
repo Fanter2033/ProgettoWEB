@@ -1,6 +1,8 @@
 import React from "react";
 import Post from "./Post";
 import Search from "./Search";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
 
 /* 
 TODO: let the chat disapper when on sm screen
@@ -8,6 +10,7 @@ TODO: let the chat disapper when on sm screen
 function Channels() {
   return (
     <div>
+      <Navbar/>
       <div className="container-flex">
         <div className="row">
           <div className="col-md-9">
@@ -32,6 +35,7 @@ function Channels() {
           </div>
         </div>
       </div>
+      <Footer/>
     </div>
   );
 }
