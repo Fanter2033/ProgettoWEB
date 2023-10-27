@@ -11,8 +11,8 @@
                 </a>
             </div>
             <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link"><router-link to="/login">Login</router-link></a></li>
-                <li class="nav-item"><a class="nav-link"><router-link to="/signIn">Sign In</router-link></a></li>
+                <li class="nav-item"><a class="nav-link"><router-link to="/login">Linked Accounts</router-link></a></li>
+                <li class="nav-item"><a class="nav-link"><router-link to="/dashboard">Settings</router-link></a></li>
             </ul>
         </div>
     </nav>

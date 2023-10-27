@@ -1,4 +1,5 @@
 <template>
+
   <div class = 'container-fluid-sm m-4'>
     <form @submit.prevent = 'loginForm'>
       <div class="form-group mt-2">
@@ -9,26 +10,22 @@
         <label for="password">Password</label>
         <input type="password" class="form-control" id="password" v-model = "formLoginValues.password">
       </div>
-      <input type="submit" class="btn btn-default mt-2" v-on:click="loginForm()"
+      <input type="submit" class="btn btn-default mt-2" @:click.prevent="loginForm()"
               v-on:mouseover="isOverButton = true"
               v-on:mouseleave="isOverButton = false"
               :class="isOverButton ? 'bg-info' : 'bg-secondary'">
     </form>
-    <div class = 'container'>
-      <router-link to="/signIn">Sign In</router-link>
-    </div>
-
   </div>
-
 
 </template>
 
 <script>
-import VueConfig from "../config/VueConfig";
-import router from "@/router";
+  import VueConfig from "../config/VueConfig";
+  import router from "../router";
 
     export default {
         name : 'Login',
+
         data(){
             return{
                 isOverButton : false,
@@ -39,9 +36,19 @@ import router from "@/router";
                 },
             }
         },
+
+        computed:{
+          userZero(){
+            return this.$store.state.getUserZero;
+          }
+        },
+
         methods:{
           loginForm: function LoginForm() {
+
+
             if(this.formLoginValues.password.length === 0 || this.formLoginValues.username.length === 0){
+
               alert("Tutti i campi sono obbligatori");
               return;
             }
@@ -59,8 +66,9 @@ import router from "@/router";
                }
             ).then( (res) => {
                  if(res.ok){
-                   console.log(res);
-                   router.push('/dashboard')
+
+                   this.$store.state.userZero.push(this.formLoginValues.username);
+                   router.push('/dashboard');
                  }
                  else
                    console.error("Authentication failed", res.statusText);
