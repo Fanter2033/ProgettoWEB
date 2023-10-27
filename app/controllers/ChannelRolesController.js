@@ -87,7 +87,7 @@ module.exports = class ChannelRolesController extends Controller {
         //Update substitutes!
         for (const key in channelRolesSubstitutes) {
             //Eseguiamo tutte le operazioni in parallelo e le aspettiamo tutte
-            promises.push(this.updateUserRole(channelRolesSubstitutes[key], authenticatedUser));
+            promises.push(this.updateUserRole(channelRolesSubstitutes[key], authenticatedUser, true));
         }
 
         for (let i = 0; i < promises.length; i++) {
@@ -157,14 +157,15 @@ module.exports = class ChannelRolesController extends Controller {
 
     /**
      * @param {ChannelDto} channelDto
+     * @param {number} role
      * @return {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      * Given a channelDto returns all users that are subscribers of the channel. In content, saves an array of usernames.
      * NOT A UserDto!!!
      */
-    async getChannelSubscribers(channelDto){
+    async getChannelSubscribers(channelDto, role){
         let output = this.getDefaultOutput();
 
-        let result = await this.#_model.getAllChannelRoles(channelDto);
+        let result = await this.#_model.getAllChannelRoles(channelDto, role);
         let usernames = [];
         for (const roles of result) {
             usernames.push(roles.username);
@@ -179,6 +180,7 @@ module.exports = class ChannelRolesController extends Controller {
      *
      * @param {ChannelRoleDto} channelRole
      * @param {UserDto} authenticatedUser
+     * @param {boolean} escape_control
      * @returns {Promise<{msg: string, code: number, sub_code: number,content: {}}>}
      *
      * Given a channelRole update the role field with the indicated one.
@@ -186,7 +188,7 @@ module.exports = class ChannelRolesController extends Controller {
      * role_since is ignored.
      *
      */
-    async updateUserRole(channelRole, authenticatedUser) {
+    async updateUserRole(channelRole, authenticatedUser, escape_control = false) {
         let output = this.getDefaultOutput();
 
         if (channelRole.role < autoload.config._CHANNEL_ROLE_WAITING_ACCEPT || channelRole.role > autoload.config._CHANNEL_ROLE_OWNER) {
@@ -202,6 +204,11 @@ module.exports = class ChannelRolesController extends Controller {
         requestingUserRole.username = authenticatedUser.username;
 
         let userResults = await this.#_model.getRolesByDto(requestingUserRole);
+        if(userResults === null && authenticatedUser.isAdmin === false){
+            output['code'] = 403;
+            output['msg'] = 'No role for requesting user';
+            return output;
+        }
 
         if ((
             authenticatedUser.isAdmin ||
@@ -209,25 +216,34 @@ module.exports = class ChannelRolesController extends Controller {
                 (userResults.role === autoload.config._CHANNEL_ROLE_OWNER || userResults.role === autoload.config._CHANNEL_ROLE_ADMIN))
         ) === false) {
             output['code'] = 401;
+            output['sub_code'] = 1;
             output['msg'] = 'Unauthorized (1)';
             return output;
         }
 
         if(channelRole.role === autoload.config._CHANNEL_ROLE_OWNER && userResults.role !== autoload.config._CHANNEL_ROLE_OWNER && !authenticatedUser.isAdmin){
             output['code'] = 401;
+            output['sub_code'] = 2;
             output['msg'] = 'Unauthorized (2)';
             return output;
         }
 
         if(channelRole.role === autoload.config._CHANNEL_ROLE_ADMIN && userResults.role !== autoload.config._CHANNEL_ROLE_OWNER && !authenticatedUser.isAdmin){
             output['code'] = 401;
+            output['sub_code'] = 3;
             output['msg'] = 'Unauthorized (3)';
             return output;
         }
 
         if(channelRole.role === autoload.config._CHANNEL_ROLE_OWNER){
             //TODO FARE CONTROLLO NEL CASO CI SIA UN ALTRO OWNER
+        } else if(!escape_control && userResults !== null && userResults.role <= channelRole.role){
+            output['code'] = 401;
+            output['sub_code'] = 4;
+            output['msg'] = 'Unauthorized (4)';
+            return output;
         }
+
 
         let result = await this.#_model.updateRoleGrade(channelRole);
         if(result === false) {

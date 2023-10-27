@@ -162,7 +162,7 @@ module.exports = class ChannelController extends Controller {
         let output = this.getDefaultOutput();
         let exists = await this.channelExists(oldChannel);
 
-        if(oldChannel.type === autoload.config._CHANNEL_TYPE_HASHTAG || newChannel.type === autoload.config._CHANNEL_TYPE_HASHTAG){
+        if (oldChannel.type === autoload.config._CHANNEL_TYPE_HASHTAG || newChannel.type === autoload.config._CHANNEL_TYPE_HASHTAG) {
             output['code'] = 400;
             output['msg'] = 'Operation not allowed for hashtags!!!.';
             return output;
@@ -183,7 +183,7 @@ module.exports = class ChannelController extends Controller {
 
         //Check if the user is an admin or has sufficient privileges to do operation.
         if (!authUser.isAdmin) {
-            if (newChannel.type === autoload.config._CHANNEL_TYPE_OFFICIAL){
+            if (newChannel.type === autoload.config._CHANNEL_TYPE_OFFICIAL) {
                 output['code'] = 403;
                 output['msg'] = 'Not allowed for non-moderators.';
                 return output;
@@ -208,10 +208,10 @@ module.exports = class ChannelController extends Controller {
         else  //unofficial
             newChannel.channel_name = newChannel.channel_name.toLowerCase();
 
-        if(newChannel.type !== oldChannel.type || oldChannel.type !== newChannel.type){
+        if (newChannel.type !== oldChannel.type || oldChannel.type !== newChannel.type) {
             //Now, let's check if the new channel do not exists.
             let newChannelExists = await this.channelExists(newChannel);
-            if(newChannelExists !== false){
+            if (newChannelExists !== false) {
                 output['code'] = 400;
                 output['msg'] = 'The new channel name invalid.';
                 return output;
@@ -221,16 +221,16 @@ module.exports = class ChannelController extends Controller {
 
         //Now if is OK! Let's change
         let result = this.#_model.updateChannel(oldChannel, newChannel);
-        if(result === false){
+        if (result === false) {
             output['code'] = 500;
             output['msg'] = 'Internal server error (1).';
             return output;
         }
 
-        if(newChannel.type !== oldChannel.type || oldChannel.type !== newChannel.type){
+        if (newChannel.type !== oldChannel.type || oldChannel.type !== newChannel.type) {
             //Change references in sub relations.
             let ctrlOut = await this.#channelRolesController.substituteChannels(oldChannel, newChannel);
-            if(ctrlOut['code'] !== 200){
+            if (ctrlOut['code'] !== 200) {
                 output['code'] = 500;
                 output['msg'] = 'Internal server error (2).';
                 return output;
@@ -303,6 +303,40 @@ module.exports = class ChannelController extends Controller {
         return output;
     };
 
+
+    /**
+     * @param {ChannelDto} channelDto
+     * @param {string} username
+     * @param {number|null} newRole
+     * @param {UserDto} authenticatedUser
+     * @return {Promise<{msg: string, code: number, sub_code: number,content: {}}>}
+     *
+     */
+    async changeChannelRole(channelDto, username, newRole, authenticatedUser) {
+        let output = this.getDefaultOutput();
+
+        if (newRole === null || newRole === -1) {
+            output['code'] = 400;
+            output['msg'] = 'Bad request.';
+            return output;
+        }
+
+        let channelExists = await this.channelExists(channelDto);
+        if (channelExists !== true) {
+            output['code'] = 404;
+            output['msg'] = 'Not found.';
+            return output;
+        }
+
+        let channelRoleDto = new ChannelRoleDto();
+        channelRoleDto.role = newRole;
+        channelRoleDto.role_since = this.getCurrentTimestampSeconds();
+        channelRoleDto.username = username;
+        channelRoleDto.type = channelDto.type;
+        channelRoleDto.channel_name = channelDto.channel_name;
+        return await this.#channelRolesController.updateUserRole(channelRoleDto, authenticatedUser);
+    }
+
     /**
      * @param {ChannelDto} channelDto
      * @param {UserDto} authenticatedUser
@@ -366,9 +400,10 @@ module.exports = class ChannelController extends Controller {
 
     /**
      * @param {ChannelDto} channelDto
+     * @param {number} role
      * @return {Promise<{msg: string, code: number, sub_code: number,content: {}}>}
      */
-    async getChannelSubscribers(channelDto){
+    async getChannelSubscribers(channelDto, role = -1) {
         let output = this.getDefaultOutput();
 
         let channelExists = await this.channelExists(channelDto);
@@ -378,8 +413,10 @@ module.exports = class ChannelController extends Controller {
             return output;
         }
 
-        let subscribers = await this.#channelRolesController.getChannelSubscribers(channelDto);
-        output['content'] = subscribers;
+        if (isNaN(role))
+            role = -1;
+
+        output['content'] = await this.#channelRolesController.getChannelSubscribers(channelDto, role);
         return output;
     }
 

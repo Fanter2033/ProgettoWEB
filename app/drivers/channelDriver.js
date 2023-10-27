@@ -98,7 +98,7 @@ channelDriver.put('/:type/:channel', async function (req, res) { //TODO: TEST
         res.status(ctrlOut.code).send(ctrlOut);
 });
 
-channelDriver.delete('/:type/:channel', async function (req, res) {
+channelDriver.delete('/:type/:channel', async function (req, res) { //TODO TEST
     let channelDto = new ChannelDto();
     channelDto.type = (typeof req.params['type'] !== 'undefined' ? req.params['type']: null);
     channelDto.channel_name = (typeof req.params['channel'] !== 'undefined' ? req.params['channel']: null);
@@ -123,8 +123,26 @@ channelDriver.get('/:type/:channel', async function (req, res) {
         res.status(ctrlOut.code).send(ctrlOut);
 });
 
-channelDriver.patch('/:type/:channel/:username', async function(req, res){ //TODO IMPLEMENT
-    res.send('6');
+channelDriver.patch('/:type/:channel/:username', async function(req, res){ //TODO TEST
+    let channelDto = new ChannelDto();
+    let authUserPromise = authController.getAuthenticatedUser(req);
+
+    if (typeof req.body === 'undefined' || typeof req.body.new_role === 'undefined') {
+        req.body = {};
+        req.body.new_role = -1;
+    }
+
+    channelDto.type = (typeof req.params['type'] !== 'undefined' ? req.params['type']: null);
+    channelDto.channel_name = (typeof req.params['channel'] !== 'undefined' ? req.params['channel']: null);
+    let username = (typeof req.params['username'] !== 'undefined' ? req.params['username']: null);
+    let new_role = (typeof req.body.new_role !== 'undefined' ? req.body.new_role: null);
+    new_role = parseInt(new_role);
+
+    let ctrlOut = await controller.changeChannelRole(channelDto, username, new_role, await authUserPromise);
+    if (ctrlOut.code === 200)
+        res.status(ctrlOut.code).send(ctrlOut.content);
+    else
+        res.status(ctrlOut.code).send(ctrlOut);
 });
 
 channelDriver.get('/:type/:channel/users', async function(req, res){
@@ -146,6 +164,20 @@ channelDriver.get('/:type/:channel/users/:username', async function(req, res){
     let username = (typeof req.params['username'] !== 'undefined' ? req.params['username']: null);
 
     let ctrlOut = await controller.getChannelUserRole(channelDto, username);
+    if (ctrlOut.code === 200)
+        res.status(ctrlOut.code).send(ctrlOut.content);
+    else
+        res.status(ctrlOut.code).send(ctrlOut);
+});
+
+channelDriver.get('/:type/:channel/roles/:role', async function(req, res){
+    let channelDto = new ChannelDto();
+    channelDto.type = (typeof req.params['type'] !== 'undefined' ? req.params['type']: null);
+    channelDto.channel_name = (typeof req.params['channel'] !== 'undefined' ? req.params['channel']: null);
+    let role = (typeof req.params['role'] !== 'undefined' ? req.params['role']: null);
+    role = parseInt(role);
+
+    let ctrlOut = await controller.getChannelSubscribers(channelDto, role);
     if (ctrlOut.code === 200)
         res.status(ctrlOut.code).send(ctrlOut.content);
     else

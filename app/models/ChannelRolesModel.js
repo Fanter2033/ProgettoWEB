@@ -225,9 +225,10 @@ module.exports = class ChannelRolesModel extends Model {
 
     /**
      * @param {ChannelDto} channelDto
+     * @param {number} role
      * @return {Promise<ChannelRoleDto[]>}
      */
-    async getAllChannelRoles(channelDto){
+    async getAllChannelRoles(channelDto, role = -1){
         await this.checkMongoose("ChannelRole", ChannelRoleSchema);
         let output = [];
         let type = channelDto.type;
@@ -236,6 +237,8 @@ module.exports = class ChannelRolesModel extends Model {
         let filter = {};
         if(type !== null) filter['type'] = this.mongo_escape(type);
         if(channel_name !== null) filter['channel_name'] = this.mongo_escape(channel_name);
+        if(role !== -1)
+            filter['role'] = this.mongo_escape(role);
 
         try {
             let results = await this.entityMongooseModel.find(filter);
