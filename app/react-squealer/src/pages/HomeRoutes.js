@@ -10,7 +10,9 @@ function HomeRoutes() {
   const propToChild = null;
   return (
     <>
+    
       <Navbar />
+
       <Routes>
         <Route element={<Navbar />} />
         <Route path="/registration" element={<Register propToChild={propToChild}/>} />
@@ -19,6 +21,7 @@ function HomeRoutes() {
         <Route path="/post" element={<Post />} />
         <Route path="/about" element={<About />} />
       </Routes>
+
     </>
   );
 }
