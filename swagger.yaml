@@ -545,7 +545,7 @@ definitions:
     type: object
     properties:
       importance:
-        type: string
+        type: integer
         enum:
           - LIKE_A_LOT
           - LIKE
@@ -562,21 +562,35 @@ definitions:
     properties:
       identifier:
         type: integer
+      date:
+        type: object
       destinations:
         type: array
         items:
           $ref: '#/definitions/Destination'
         minItems: 1
+      sender:
+        type: string
+        description: username of the squealer's sender
       message_type:
         type: string
         enum:
-          - MESSAGE
+          - MESSAGE_TEXT
           - IMAGE_URL
           - VIDEO_URL
           - POSITION
       message_value:
         type: string
         description: Message value, how this field is used depends on message_type value.
+      critical_mass:
+        type: integer
+        description: used to identify a squeal as; popular, unpopular or controversial
+      positive_value:
+        type: number
+        description: R+, positive reaction increment this number
+      negative_value:
+        type: number
+        description: R-, negative reaction decrement this number
       reactions:
         type: array
         items:
