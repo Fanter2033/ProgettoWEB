@@ -9,8 +9,8 @@ module.exports = class Model {
     constructor(collection_name) {
         this.mongo_escape = mongo_escape;
         this.collection_name = collection_name;
-        this.connectedMongoose = null;
-        this.entityMongooseModel = null;
+        this.connectedMongoose = null;      //for the connection
+        this.entityMongooseModel = null;    //for the specific model
     }
 
     /**
