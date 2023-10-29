@@ -1,5 +1,4 @@
-class ServerTablesUsers {
-
+class ServerTablesUC {
     #containerId;
     #page;
     #limit;
@@ -54,7 +53,7 @@ class ServerTablesUsers {
     }
 
     async askData2Server() {
-        const response = await fetch(`../../user/?orderBy=${this.#orderBy}&orderDir=${this.#orderDir}&search=${this.#search}&offset=${this.getOffset()}&limit=${this.#limit}`, {
+        const response = await fetch(`../../channel/CHANNEL_USERS/?orderBy=${this.#orderBy}&orderDir=${this.#orderDir}&search=${this.#search}&offset=${this.getOffset()}&limit=${this.#limit}`, {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -62,7 +61,7 @@ class ServerTablesUsers {
         });
         if (response.ok) {
             let temp = await response.json();
-            this.#data = temp.users;
+            this.#data = temp.channels;
             this.#userCount = temp.totalCount;
         }
     }
@@ -77,12 +76,12 @@ class ServerTablesUsers {
         let html = `
         <div class="row w-100">
             <div class="col-md-2">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAggiungiUtente" onclick="cleanModalAddUser()">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAggiungiCanale" onclick="cleanModalAddChannel('CHANNEL_USERS')">
                 Aggiungi</button>
             </div>
             <div class="col-md-4 offset-md-6 col-sm-12">
                 <div class="row">
-                    <input type="email" name="serverTableSearch" class="form-control" onkeyup="${this.#variableName}.executeSearch(this);" value="${this.#search}" placeholder="Cerca fra gli utenti..." maxlength="32">
+                    <input type="input" name="serverTableSearch" class="form-control" onkeyup="${this.#variableName}.executeSearch(this);" value="${this.#search}" placeholder="Cerca tra i canali..." maxlength="32">
                 </div>
             </div>
         </div>
@@ -204,23 +203,28 @@ class ServerTablesUsers {
     }
 
     /**
-     * @param userRow
+     * @param channelRow
      * @return {string}
      */
-    getUserRow(userRow) {
+    getChannelRole(channelRow) {
         let html = '';
-        let objKeys = Object.keys(userRow);
+        let objKeys = Object.keys(channelRow);
         for (const assocJsonKey in this.#assoc_json)
-            if (assocJsonKey === 'null') {
-                html = html + `<td>${this.getAuthList(userRow)}</td>`;
+            if (assocJsonKey === 'private') {
+                let isPrivate = 'Privato';
+                if(channelRow.private !== true)
+                    isPrivate = 'Pubblico';
+                html = html + `<td>${isPrivate}</td>`;
             } else if (objKeys.includes(assocJsonKey))
-                html = html + `<td>${userRow[assocJsonKey]}</td>`;
+                html = html + `<td>${channelRow[assocJsonKey]}</td>`;
 
         if (Object.keys(this.#assoc_json).includes('actions')) {
             html = html + `<td>
-                <button type="button" class="btn btn-warning" onclick="${this.#variableName}.updateUser('${userRow.username}')" data-bs-toggle="modal" data-bs-target="#modalAggiungiUtente">Modifica</button>
+                <button type="button" class="btn btn-warning" onclick="${this.#variableName}.updateChannel('${channelRow.username}')" data-bs-toggle="modal" data-bs-target="#modalAggiungiUtente">Modifica</button>
                 &nbsp;
-                <button type="button" class="btn btn-danger" onclick="${this.#variableName}.deleteUser('${userRow.username}')" data-bs-toggle="modal" data-bs-target="#modalEliminaUtente">Elimina</button>
+                <button type="button" class="btn btn-danger" onclick="${this.#variableName}.deleteChannel('${channelRow.username}')" data-bs-toggle="modal" data-bs-target="#modalEliminaUtente">Elimina</button>
+                &nbsp;
+                <button type="button" class="btn btn-success" onclick="${this.#variableName}.deleteChannel('${channelRow.username}')" data-bs-toggle="modal" data-bs-target="#modalEliminaUtente">Cambia ruoli</button>
                 </td>`;
         }
 
@@ -228,12 +232,12 @@ class ServerTablesUsers {
     }
 
     /**
-     * @param {string} username
-     * @return {UserDto|null}
+     * @param {string} channel_name
+     * @return {ChannelDto|null}
      */
-    extractUserByUsername(username) {
+    extractChannelByName(channel_name) {
         for (const userKey in this.#data)
-            if (this.#data[userKey].username === username)
+            if (this.#data[userKey].username === channel_name)
                 return this.#data[userKey];
         return null;
     }
@@ -243,7 +247,7 @@ class ServerTablesUsers {
      * This function shows modal to edit user.
      */
     updateUser(username) {
-        let userDto = this.extractUserByUsername(username);
+        let userDto = this.extractChannelByName(username);
         if (userDto === null)
             return userDto;
 
@@ -281,29 +285,11 @@ class ServerTablesUsers {
         let html = '<tbody>';
         for (let i = 0; i < this.#data.length; i++) {
             html = html + `<tr>`
-            html = html + this.getUserRow(this.#data[i]);
+            html = html + this.getChannelRole(this.#data[i]);
             html = html + `</tr>`
         }
 
         html = html + '</tbody>';
-        return html;
-    }
-
-    /**
-     * @param {UserDto} userRowElement
-     * @return {string}
-     */
-    getAuthList(userRowElement) {
-        if (!userRowElement.isUser && !userRowElement.isSmm && !userRowElement.isAdmin)
-            return ' - ';
-        let html = `<ul>`;
-        if (userRowElement.isUser)
-            html = html + `<li>User</li>`;
-        if (userRowElement.isSmm)
-            html = html + `<li>Social Media Manager</li>`;
-        if (userRowElement.isAdmin)
-            html = html + `<li>Moderator</li>`;
-        html = html + `</ul>`;
         return html;
     }
 

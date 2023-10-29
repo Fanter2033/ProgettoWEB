@@ -1,5 +1,6 @@
 const Controller = require("./Controller");
 const ChannelRoleDto = require("../entities/dtos/ChannelRoleDto");
+const ChannelDto = require("../entities/dtos/ChannelDto");
 /**
  * HUGELY IMPORTANT
  * TO AVOID CIRCULAR DEPENDENCIES DO NOT IMPORT HERE CHANNEL CONTROLLER AND USER CONTROLLER.
@@ -237,6 +238,30 @@ module.exports = class ChannelRolesController extends Controller {
 
         if(channelRole.role === autoload.config._CHANNEL_ROLE_OWNER){
             //TODO FARE CONTROLLO NEL CASO CI SIA UN ALTRO OWNER
+            let channelDto = new ChannelDto();
+            channelDto.type = channelRole.type;
+            channelDto.channel_name = channelRole.channel_name;
+            let ctrlOut = await this.getChannelSubscribers(channelDto, autoload.config._CHANNEL_ROLE_OWNER);
+            if(ctrlOut.code !== 200){
+                output['code'] = 500;
+                output['msg'] = 'Internal server error (2)';
+                return output;
+            }
+            let owners = ctrlOut.content;
+            for (let username in owners){
+                //Downgrade old owners.
+                let newRole = new ChannelRoleDto();
+                newRole.channel_name = channelRole.channel_name;
+                newRole.type = channelRole.type;
+                newRole.role = autoload.config._CHANNEL_ROLE_ADMIN;
+                newRole.username = username;
+                let result = await this.#_model.updateRoleGrade(newRole)
+                if(result === false) {
+                    output['code'] = 500;
+                    output['msg'] = 'Internal server error (2)';
+                    return output;
+                }
+            }
         } else if(!escape_control && userResults !== null && userResults.role <= channelRole.role){
             output['code'] = 401;
             output['sub_code'] = 4;

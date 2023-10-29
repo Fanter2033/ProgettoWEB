@@ -3,13 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <title>Squealer - Moderator Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+            crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../../css/squealer.css">
+    <script src="../../libraries/jquery/jquery.js"></script>
     <!-- Page defined scripts -->
     <script src="../../js/dashboardAdmin.js"></script>
+    <script src="../../js/classes/ServerTablesUC.js"></script>
 </head>
 <body>
+<!-- Inizio modali -->
+<!-- Inizio modale registrazione-->
+<div class="modal fade" id="modalAggiungiCanale" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="exampleModalLongTitle">Aggiungi canale</h6>
+            </div>
+            <div class="modal-body">
+                <div class="card-text text-left">
+                    <div class="mb-3">
+                        <label for="registerChannel" class="form-label">Nome canale</label>
+                        <input type="text" class="form-control" id="registerChannel" placeholder="nome canale">
+                    </div>
+                </div>
+                <div>
+                    Privacy del canale
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="flexRadioPrivacy" value="private" id="privacyChannelPrivate">
+                    <label class="form-check-label" for="privacyChannelPrivate">
+                        Privato
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="flexRadioPrivacy" value="public" id="privacyChannelPublic" checked>
+                    <label class="form-check-label" for="privacyChannelPublic">
+                        Pubblico
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                <button type="button" class="btn btn-primary" id="executeOperation"
+                        onclick="applicaCambiamentiCanale('CHANNEL_USERS')">
+                    Aggiungi canale
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fine modale registrazione -->
+<!-- Fine modali -->
 <div class="d-flex flex-nowrap" style="height: 100vh;">
     <div class="d-flex flex-column flex-shrink-0 p-3" style="width: 280px;">
         <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-theme-adaptive text-decoration-none">
@@ -82,11 +131,99 @@
                 </ul>
             </header>
             <div>
-                Canali degli utenti
+                <div id="tableContainer">
+
+                </div>
             </div>
         </div>
     </div>
 </div>
+<div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-delay="10000" id="toastFail"
+     style="z-index: 1200; position: fixed; top: 0; right: 0;">
+    <div class="toast-header">
+        <strong class="mr-auto">Attenzione</strong>
+    </div>
+    <div class="toast-body">
+        <p class="text-danger">Operazione fallita</p>
+    </div>
+</div>
+<div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-delay="10000" id="toastFailGeneric"
+     style="z-index: 1200; position: fixed; top: 0; right: 0;">
+    <div class="toast-header">
+        <strong class="mr-auto">Attenzione</strong>
+    </div>
+    <div class="toast-body">
+        <p class="text-danger" id="toasFailProblem">Operazione fallita</p>
+    </div>
+</div>
+<div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-delay="10000" id="toastSuccess"
+     style="z-index: 1200; position: fixed; top: 0; right: 0;">
+    <div class="toast-header">
+        <strong class="mr-auto">Ok</strong>
+    </div>
+    <div class="toast-body">
+        <p class="text-success">Operazione effettuata con successo</p>
+    </div>
+</div>
+<script>
+    let st = new ServerTablesUC('tableContainer', {
+        "channel_name": "Nome",
+        "private": "Privacy",
+        "actions": "Azioni"
+    }, 'st');
 
+    loadTable();
+
+    async function loadTable() {
+        await st.askData2Server();
+        st.draw();
+    }
+
+    function notifyError(msg) {
+        document.getElementById('toasFailProblem').innerHTML = msg;
+        $('#toastFailGeneric').toast('show');
+    }
+
+    function applicaCambiamentiCanale(channel_type){
+        let inputName = $('#registerChannel');
+        let channelName = $(inputName).val();
+        let isPrivate = $('input[name="flexRadioPrivacy"]:checked').val();
+        if(isPrivate === 'public') isPrivate = false;
+        else isPrivate = true;
+        channelName = channelName.trim();
+        if(channelName === ''){
+            notifyError('Il nome del canale non può essere vuoto');
+        }
+
+
+        let data = JSON.stringify({
+            channel : {
+                name : channelName,
+                type: channel_type,
+                private: isPrivate
+            }
+        });
+
+        const response = fetch(`../../channel/`, {
+            method: 'POST',
+            body: data,
+            headers: {
+                "Content-Type": "application/json",
+            }
+        }).then((response) => {
+            if(response.ok){
+                //tutto ok
+                $('#toastSuccess').toast('show');
+                loadTable();
+            } else {
+                notifyError('Errore con la richiesta. Riprovare');
+            }
+        });
+        $('#modalAggiungiCanale').modal('hide');
+        $(inputName).val('');
+    }
+
+
+</script>
 </body>
 </html>
