@@ -210,17 +210,17 @@ module.exports = class ChannelRolesModel extends Model {
      * @return {Promise<boolean>}
      */
     async substituteChannels(oldChannel, newChannel){
-        await this.checkMongoose("Channel", Channel);
+        await this.checkMongoose("ChannelRole", ChannelRoleSchema);
         let filter = {"channel_name": `${oldChannel.channel_name}`, "type": oldChannel.type};
         filter = this.mongo_escape(filter);
         let update = {"channel_name": newChannel.channel_name, "type": newChannel.type};
         update = this.mongo_escape(update);
         try {
-            await this.entityMongooseModel.updateMany(filter, update);
+            let result = await this.entityMongooseModel.updateMany(filter, update);
+            return true;
         } catch (ignored) {
             return false;
         }
-        return true;
     }
 
     /**

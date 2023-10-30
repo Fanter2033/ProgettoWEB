@@ -220,11 +220,11 @@ class ServerTablesUC {
 
         if (Object.keys(this.#assoc_json).includes('actions')) {
             html = html + `<td>
-                <button type="button" class="btn btn-warning" onclick="${this.#variableName}.updateChannel('${channelRow.username}')" data-bs-toggle="modal" data-bs-target="#modalAggiungiUtente">Modifica</button>
+                <button type="button" class="btn btn-warning" onclick="${this.#variableName}.updateChannel('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#modalAggiungiCanale">Modifica</button>
                 &nbsp;
-                <button type="button" class="btn btn-danger" onclick="${this.#variableName}.deleteChannel('${channelRow.username}')" data-bs-toggle="modal" data-bs-target="#modalEliminaUtente">Elimina</button>
+                <button type="button" class="btn btn-danger" onclick="${this.#variableName}.deleteChannel('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#modalEliminaUtente">Elimina</button>
                 &nbsp;
-                <button type="button" class="btn btn-success" onclick="${this.#variableName}.deleteChannel('${channelRow.username}')" data-bs-toggle="modal" data-bs-target="#modalEliminaUtente">Cambia ruoli</button>
+                <button type="button" class="btn btn-success" onclick="${this.#variableName}.deleteChannel('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#modalEliminaUtente">Cambia ruoli</button>
                 </td>`;
         }
 
@@ -237,32 +237,30 @@ class ServerTablesUC {
      */
     extractChannelByName(channel_name) {
         for (const userKey in this.#data)
-            if (this.#data[userKey].username === channel_name)
+            if (this.#data[userKey].channel_name === channel_name)
                 return this.#data[userKey];
         return null;
     }
 
     /**
-     * @param {string} username
+     * @param {string} channel_name
      * This function shows modal to edit user.
      */
-    updateUser(username) {
-        let userDto = this.extractChannelByName(username);
-        if (userDto === null)
-            return userDto;
+    updateChannel(channel_name) {
+        let channelDto = this.extractChannelByName(channel_name);
+        console.log(channelDto);
+        if (channelDto === null)
+            return channelDto;
 
-        document.getElementById('exampleModalLongTitle').innerHTML = 'Modifica utente';
-        document.getElementById('registerUsername').value = userDto.username;
-        document.getElementById('registerEmail').value = userDto.email;
-        document.getElementById('registerFirstName').value = userDto.first_name;
-        document.getElementById('registerLastName').value = userDto.last_name;
-        document.getElementById('registerPassword').value = '';
-        document.getElementById('confirmPassword').value = '';
-        document.getElementById('isUser').checked = userDto.isUser;
-        document.getElementById('isMod').checked = userDto.isAdmin;
-        document.getElementById('isSmm').checked = userDto.isSmm;
-        document.getElementById('executeOperation').setAttribute('onclick', `applicaCambiamentiUtente('${username}')`);
-        document.getElementById('executeOperation').innerHTML = 'Modifica utente';
+        document.getElementById('registerChannel').value = channelDto.channel_name;
+        document.getElementById('privacyChannelPublic').checked = false;
+        document.getElementById('privacyChannelPrivate').checked = false;
+        if(channelDto.private) document.getElementById('privacyChannelPrivate').checked = true;
+        else document.getElementById('privacyChannelPublic').checked = true;
+
+
+        document.getElementById('executeOperation').setAttribute('onclick', `applicaCambiamentiCanale('CHANNEL_USERS', '${channel_name}')`);
+        document.getElementById('executeOperation').innerHTML = 'Modifica canale';
     }
 
     /**

@@ -184,7 +184,7 @@
         $('#toastFailGeneric').toast('show');
     }
 
-    function applicaCambiamentiCanale(channel_type){
+    function applicaCambiamentiCanale(channel_type, editingChannel = ''){
         let inputName = $('#registerChannel');
         let channelName = $(inputName).val();
         let isPrivate = $('input[name="flexRadioPrivacy"]:checked').val();
@@ -204,8 +204,15 @@
             }
         });
 
-        const response = fetch(`../../channel/`, {
-            method: 'POST',
+        let method = 'POST';
+        let addingUri = '';
+        if(editingChannel !== '') {
+            method = 'PUT';
+            addingUri = `${channel_type}/${editingChannel}/`;
+        }
+
+        const response = fetch(`../../channel/${addingUri}`, {
+            method: method,
             body: data,
             headers: {
                 "Content-Type": "application/json",
@@ -220,7 +227,12 @@
             }
         });
         $('#modalAggiungiCanale').modal('hide');
-        $(inputName).val('');
+    }
+
+    function cleanModalAddChannel() {
+        document.getElementById('executeOperation').setAttribute('onclick', `applicaCambiamentiCanale('CHANNEL_USERS')`);
+        document.getElementById('executeOperation').innerHTML = 'Aggiungi canale';
+        $('#registerChannel').val('');
     }
 
 

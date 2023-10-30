@@ -161,6 +161,7 @@ module.exports = class ChannelController extends Controller {
     async updateChannel(oldChannel, newChannel, authUser) {
         let output = this.getDefaultOutput();
         let exists = await this.channelExists(oldChannel);
+        let new_exists = await this.channelExists(newChannel);
 
         if (oldChannel.type === autoload.config._CHANNEL_TYPE_HASHTAG || newChannel.type === autoload.config._CHANNEL_TYPE_HASHTAG) {
             output['code'] = 400;
@@ -171,6 +172,12 @@ module.exports = class ChannelController extends Controller {
         if (exists !== true) {
             output['code'] = 404;
             output['msg'] = 'Channel not found.';
+            return output;
+        }
+
+        if(new_exists !== false) {
+            output['code'] = 409;
+            output['msg'] = 'Channel already exists.';
             return output;
         }
 
@@ -220,14 +227,14 @@ module.exports = class ChannelController extends Controller {
 
 
         //Now if is OK! Let's change
-        let result = this.#_model.updateChannel(oldChannel, newChannel);
+        let result = await this.#_model.updateChannel(oldChannel, newChannel);
         if (result === false) {
             output['code'] = 500;
             output['msg'] = 'Internal server error (1).';
             return output;
         }
 
-        if (newChannel.type !== oldChannel.type || oldChannel.type !== newChannel.type) {
+        if (newChannel.channel_name !== oldChannel.channel_name || oldChannel.type !== newChannel.type) {
             //Change references in sub relations.
             let ctrlOut = await this.#channelRolesController.substituteChannels(oldChannel, newChannel);
             if (ctrlOut['code'] !== 200) {
