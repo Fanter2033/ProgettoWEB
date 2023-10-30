@@ -222,9 +222,9 @@ class ServerTablesUC {
             html = html + `<td>
                 <button type="button" class="btn btn-warning" onclick="${this.#variableName}.updateChannel('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#modalAggiungiCanale">Modifica</button>
                 &nbsp;
-                <button type="button" class="btn btn-danger" onclick="${this.#variableName}.deleteChannel('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#modalEliminaUtente">Elimina</button>
+                <button type="button" class="btn btn-danger" onclick="${this.#variableName}.deleteChannel('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#modalEliminaCanale">Elimina</button>
                 &nbsp;
-                <button type="button" class="btn btn-success" onclick="${this.#variableName}.deleteChannel('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#modalEliminaUtente">Cambia ruoli</button>
+                <button type="button" class="btn btn-success" onclick="${this.#variableName}.deleteChannel('${channelRow.channel_name}')" data-bs-toggle="modal">Cambia ruoli</button>
                 </td>`;
         }
 
@@ -244,11 +244,10 @@ class ServerTablesUC {
 
     /**
      * @param {string} channel_name
-     * This function shows modal to edit user.
+     * This function shows modal to edit channel.
      */
     updateChannel(channel_name) {
         let channelDto = this.extractChannelByName(channel_name);
-        console.log(channelDto);
         if (channelDto === null)
             return channelDto;
 
@@ -261,6 +260,18 @@ class ServerTablesUC {
 
         document.getElementById('executeOperation').setAttribute('onclick', `applicaCambiamentiCanale('CHANNEL_USERS', '${channel_name}')`);
         document.getElementById('executeOperation').innerHTML = 'Modifica canale';
+    }
+
+    /**
+     * @param {string} channel_name
+     * This function show delete channel modal
+     */
+    deleteChannel(channel_name) {
+        let channelDto = this.extractChannelByName(channel_name);
+        if (channelDto === null)
+            return channelDto;
+        document.getElementById('eliminaUtenteCanale').innerHTML = `Volete eliminare il canale "§${channelDto.channel_name}"?`;
+        document.getElementById('executeDeleteButton').setAttribute('onclick', `executeDeleteOnServer('CHANNEL_USERS', "${channelDto.channel_name}")`);
     }
 
     /**

@@ -58,6 +58,28 @@
     </div>
 </div>
 <!-- Fine modale registrazione -->
+<!-- Inizio modale eliminazione-->
+<div class="modal fade" id="modalEliminaCanale" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="modalEliminaUtenteTitle">Elimina utente</h6>
+            </div>
+            <div class="modal-body">
+                <div class="card-text text-left">
+                    <p id="eliminaUtenteCanale"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                <button type="button" id="executeDeleteButton" class="btn btn-danger" data-bs-dismiss="modal">Elimina
+                    canale
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fine modale eliminazione -->
 <!-- Fine modali -->
 <div class="d-flex flex-nowrap" style="height: 100vh;">
     <div class="d-flex flex-column flex-shrink-0 p-3" style="width: 280px;">
@@ -233,6 +255,27 @@
         document.getElementById('executeOperation').setAttribute('onclick', `applicaCambiamentiCanale('CHANNEL_USERS')`);
         document.getElementById('executeOperation').innerHTML = 'Aggiungi canale';
         $('#registerChannel').val('');
+    }
+
+    /**
+     * @param {string} channel_type
+     * @param {string} deletingChannel
+     */
+    function executeDeleteOnServer(channel_type, deletingChannel){
+        fetch(`../../channel/${channel_type}/${deletingChannel}`, {
+            method: 'DELETE',
+            headers: {
+                "Content-Type": "application/json",
+            }
+        }).then((response) => {
+            if (response.status === 200) {
+                $('#toastSuccess').toast('show');
+                loadTable();
+            } else {
+                notifyError('Errore nella richiesta riprovare');
+            }
+        });
+        $("#modalEliminaCanale button[data-bs-dismiss='modal']").get(0).click()
     }
 
 
