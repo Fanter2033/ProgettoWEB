@@ -1,13 +1,15 @@
 <template>
-  <Nav />
-  <Home />
-  <SideBar />
+  <div>
+    <Nav />
+    <SideBar />
+  </div>
+  <div>
 
+  </div>
 </template>
 
 <script>
 import Nav from "../Nav.vue";
-import Home from "./Home.vue";
 import SideBar from "@/components/dashboard/SideBar.vue";
 
 export default {
@@ -17,7 +19,7 @@ export default {
       userZero() { return this.$store.state.userZero }
     },
 
-    components : {SideBar, Home, Nav},
+    components : {SideBar, Nav},
 
   }
 </script>
