@@ -197,6 +197,12 @@ module.exports = class ChannelRolesController extends Controller {
             output['msg'] = 'Invalid role';
         }
 
+        if(this.isObjectVoid(authenticatedUser)){
+            output['code'] = 403;
+            output['msg'] = 'Not authenticated';
+            return output;
+        }
+
         //Check the user permissions!
         //But first we should know requesting user role.
         let requestingUserRole = new ChannelRoleDto();
@@ -237,7 +243,6 @@ module.exports = class ChannelRolesController extends Controller {
         }
 
         if(channelRole.role === autoload.config._CHANNEL_ROLE_OWNER){
-            //TODO FARE CONTROLLO NEL CASO CI SIA UN ALTRO OWNER
             let channelDto = new ChannelDto();
             channelDto.type = channelRole.type;
             channelDto.channel_name = channelRole.channel_name;
@@ -262,13 +267,17 @@ module.exports = class ChannelRolesController extends Controller {
                     return output;
                 }
             }
-        } else if(!escape_control && userResults !== null && userResults.role <= channelRole.role){
+        } else if(!escape_control && userResults !== null && userResults.role < channelRole.role && authenticatedUser.isAdmin === false){
             output['code'] = 401;
             output['sub_code'] = 4;
             output['msg'] = 'Unauthorized (4)';
             return output;
         }
 
+        let current_role = await this.getChannelRoleOfUser(channelRole);
+        if(current_role['code'] === 404){
+            return this.createRole(channelRole);
+        }
 
         let result = await this.#_model.updateRoleGrade(channelRole);
         if(result === false) {

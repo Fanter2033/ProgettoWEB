@@ -224,7 +224,7 @@ class ServerTablesUC {
                 &nbsp;
                 <button type="button" class="btn btn-danger" onclick="${this.#variableName}.deleteChannel('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#modalEliminaCanale">Elimina</button>
                 &nbsp;
-                <button type="button" class="btn btn-success" onclick="${this.#variableName}.deleteChannel('${channelRow.channel_name}')" data-bs-toggle="modal">Cambia ruoli</button>
+                <button type="button" class="btn btn-success" onclick="changeRolesChannel('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#modificaRuoliCanale">Cambia ruoli</button>
                 </td>`;
         }
 

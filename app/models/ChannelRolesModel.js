@@ -141,7 +141,7 @@ module.exports = class ChannelRolesModel extends Model {
 
     /**
      * @param {ChannelRoleDto} roleDto
-     * @return {ChannelRoleDto | null}
+     * @return {Promise<boolean>}
      */
     async updateRoleGrade(roleDto) {
         await this.checkMongoose("ChannelRole", ChannelRoleSchema);

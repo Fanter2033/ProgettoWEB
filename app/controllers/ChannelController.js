@@ -175,7 +175,7 @@ module.exports = class ChannelController extends Controller {
             return output;
         }
 
-        if(new_exists !== false) {
+        if(new_exists !== false && oldChannel.channel_name !== newChannel.channel_name) {
             output['code'] = 409;
             output['msg'] = 'Channel already exists.';
             return output;
@@ -333,6 +333,20 @@ module.exports = class ChannelController extends Controller {
             output['code'] = 404;
             output['msg'] = 'Not found.';
             return output;
+        }
+
+        let userObj = await userController.getUser(username);
+        if(userObj['code'] !== 200){
+            output['code'] = 404;
+            output['msg'] = 'User not found.';
+            return output;
+        }
+
+        let doc = await this.getChannel(channelDto);
+        channelDto = new ChannelDto(doc.content);
+
+        if(channelDto.private === false && newRole < autoload.config._CHANNEL_ROLE_WRITE){
+            newRole = autoload.config._CHANNEL_ROLE_WRITE;
         }
 
         let channelRoleDto = new ChannelRoleDto();
