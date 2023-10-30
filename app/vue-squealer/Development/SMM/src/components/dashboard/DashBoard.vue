@@ -1,13 +1,14 @@
 <template>
   <Nav />
-  <h1> {{ userZero[0] }} </h1>
   <Home />
+  <SideBar />
 
 </template>
 
 <script>
 import Nav from "../Nav.vue";
 import Home from "./Home.vue";
+import SideBar from "@/components/dashboard/SideBar.vue";
 
 export default {
     name:'DashBoard',
@@ -16,7 +17,7 @@ export default {
       userZero() { return this.$store.state.userZero }
     },
 
-    components : {Home, Nav},
+    components : {SideBar, Home, Nav},
 
   }
 </script>

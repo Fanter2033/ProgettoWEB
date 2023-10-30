@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="navbar-header">
                 <a class="navbar-brand" href="#">
-                    <img src="http://localhost:8000/media/logo_negative.jpeg"
+                    <img src=""
                         height="40 px"
                         loading="lazy">
                 </a>
