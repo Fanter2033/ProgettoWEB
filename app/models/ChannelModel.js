@@ -1,8 +1,7 @@
 const Model = require("./Model");
 const Channel = require("../entities/schemas/ChannelSchema");
 const ChannelDto = require("../entities/dtos/ChannelDto");
-const User = require("../entities/schemas/UserSchema");
-const UserDto = require("../entities/dtos/UserDto");
+const ExtendedChannelDto = require("../entities/dtos/ExtendedChannelDto");
 
 module.exports = class ChannelModel extends Model {
     constructor(collectionName) {
@@ -29,7 +28,7 @@ module.exports = class ChannelModel extends Model {
      * @param {ChannelDto} channelDto
      * @return {Promise<boolean>}
      */
-    async createChannel(channelDto){
+    async createChannel(channelDto) {
         await this.checkMongoose("Channel", Channel);
         channelDto = this.mongo_escape(channelDto.getDocument());
         let channelInserting = new this.entityMongooseModel(channelDto);
@@ -55,10 +54,14 @@ module.exports = class ChannelModel extends Model {
         await this.checkMongoose("Channel", Channel);
         orderDir = (orderDir === 'ORDER_ASC' ? 'asc' : 'desc');
         let filter = {
-            channel_name: {$regex: this.mongo_escape(search)}
+            $or: [
+                {channel_name: {$regex: this.mongo_escape(search)}},
+                {owner: {$in: [{username: this.mongo_escape(search)}]}},
+                {posts: {$regex: this.mongo_escape(search)}}
+            ],
         };
 
-        if(type !== null)
+        if (type !== null)
             filter['type'] = this.mongo_escape(type);
 
         let sorting = {};
@@ -68,16 +71,113 @@ module.exports = class ChannelModel extends Model {
             sorting = {};
         offset = this.mongo_escape(offset);
         limit = this.mongo_escape(limit);
+        let aggregate = [
+            {
+                $lookup:
+                    {
+                        from: "channelroles",
+                        let: {
+                            channelName1: "$channel_name",
+                            channelType1: "$type"
+                        },
+                        pipeline: [{
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        {
+                                            $eq: [
+                                                "$channel_name",
+                                                "$$channelName1"
+                                            ]
+                                        },
+                                        {
+                                            $eq: [
+                                                "$type",
+                                                "$$channelType1"
+                                            ]
+                                        },
+                                        {
+                                            $eq: [
+                                                "$role",
+                                                4
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                            {
+                                $project: {"username": 1, "_id": 0},
+                            }, {
+                                $limit: 1
+                            }],
+                        as: "owner"
+                    },
+            },
+            {
+                $lookup:
+                    {
+                        from: "channelroles",
+                        let: {
+                            channelName1: "$channel_name",
+                            channelType1: "$type"
+                        },
+                        pipeline: [{
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        {
+                                            $eq: [
+                                                "$channel_name",
+                                                "$$channelName1"
+                                            ]
+                                        },
+                                        {
+                                            $eq: [
+                                                "$type",
+                                                "$$channelType1"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                            {
+                                $project: {"username": 1, "_id": 0},
+                            },
+                            {
+                                $count: "username"
+                            }],
+                        as: "subscribers"
+                    },
+            },
+            {
+                $match: filter
+            }];
         try {
+            /*
             let results = await this.entityMongooseModel
                 .find(filter)
                 .sort(sorting)
                 .skip(offset)
                 .limit(limit);
+            */
+            let results = await this.entityMongooseModel
+                .aggregate(aggregate)
+                .sort(sorting)
+                .skip(offset)
+                .limit(limit);
 
             let output = [];
-            for (let i = 0; i < results.length; i++)
-                output.push(new ChannelDto(results[i]._doc));
+            for (let i = 0; i < results.length; i++) {
+                //output.push(new ChannelDto(results[i]._doc));
+                let tmp = new ExtendedChannelDto(results[i]);
+                tmp.owner = results[i].owner[0]['username'];
+                tmp.subscribers = results[i].subscribers[0]['username'];
+                tmp.posts = 0; //TODO GESTIRE POST
+                output.push(tmp);
+            }
+
             return output;
         } catch (ignored) {
             return {}
@@ -96,7 +196,7 @@ module.exports = class ChannelModel extends Model {
             channel_name: {$regex: this.mongo_escape(search)}
         };
 
-        if(type !== null)
+        if (type !== null)
             filter['type'] = this.mongo_escape(type);
 
         return await this.entityMongooseModel.count(filter);
@@ -107,7 +207,7 @@ module.exports = class ChannelModel extends Model {
      * @param {ChannelDto} newChannel
      * @return {Promise<boolean>}
      */
-    async updateChannel(oldChannel, newChannel){
+    async updateChannel(oldChannel, newChannel) {
         await this.checkMongoose("Channel", Channel);
         let filter = {"channel_name": `${oldChannel.channel_name}`, "type": oldChannel.type};
         filter = this.mongo_escape(filter);
@@ -132,7 +232,7 @@ module.exports = class ChannelModel extends Model {
         };
         try {
             await this.entityMongooseModel.deleteOne(filter);
-        } catch (ignored){
+        } catch (ignored) {
             return false;
         }
         return true;

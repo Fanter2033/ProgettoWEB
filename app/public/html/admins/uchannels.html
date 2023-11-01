@@ -236,6 +236,9 @@
     let st = new ServerTablesUC('tableContainer', {
         "channel_name": "Nome",
         "private": "Privacy",
+        "owner": "Titolare",
+        "subscribers": "Iscritti",
+        "posts": "Post",
         "actions": "Azioni"
     }, 'st');
 
@@ -278,7 +281,7 @@
             addingUri = `${channel_type}/${editingChannel}/`;
         }
 
-        const response = fetch(`../../channel/${addingUri}`, {
+        fetch(`../../channel/${addingUri}`, {
             method: method,
             body: data,
             headers: {
