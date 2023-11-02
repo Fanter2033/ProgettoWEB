@@ -26,7 +26,7 @@ paths:
           required: true
           description: Required role authenticating
         - name: password
-          in: body
+          in: formData
           type: string
           required: true
           description: User password
@@ -199,15 +199,19 @@ paths:
         '201':
           description: 'Created channel'
         '400':
-          description: 'Invalid channel name or object'
+          description: 'Invalid channel name, object or invalid type'
           schema:
             type: string
             description: 'More info about the error'
+        '401':
+          description: 'User authenticated but tried to create an official channel.'
         '403':
-          description: 'Unable to create channel due low privileges or created a TAG channel'
+          description: 'Unable to create channel due low privileges'
           schema:
             type: string
             description: 'More information about the error'
+        '409':
+          description: 'Channel already exists. Cannot create'
     get:
       tags:
         - channel
@@ -244,7 +248,54 @@ paths:
           schema:
             type: object
             properties:
-              users:
+              channels:
+                type: array
+                items:
+                  $ref: '#/definitions/Channel'
+              totalCount:
+                type: integer
+  /channel/{type}/:
+    get:
+      tags:
+        - channel
+      summary: Get a list of channels
+      description: Returns an array of Channels.
+      parameters:
+        - name: type
+          in: path
+          required: true
+          type: string
+        - name: offset
+          in: query
+          required: false
+          type: integer
+        - name: limit
+          in: query
+          required: false
+          type: integer
+        - name: search
+          in: query
+          required: false
+          type: string
+        - name: orderBy
+          in: query
+          required: false
+          description: The order by value should be a key of Channel.
+          type: string
+        - name: orderDir
+          in: query
+          required: false
+          type: string
+          enum:
+            - ORDER_ASC
+            - ORDER_DESC
+      responses:
+        '200':
+          description: 'Successful operation'
+          schema:
+            type: object
+            properties:
+              channels:
                 type: array
                 items:
                   $ref: '#/definitions/Channel'
@@ -340,6 +391,144 @@ paths:
             description: 'More information about the error'
         '404':
           description: 'The specified channel in URL path is not found'
+  /channel/{type}/{channel_name}/{username}/:
+    patch:
+      tags:
+        - channel
+      summary: Change the role of the user.
+      parameters:
+        - name: channel_name
+          in: path
+          required: true
+          type: string
+        - name: type
+          in: path
+          required: true
+          type: string
+          enum:
+            - CHANNEL_OFFICIAL
+            - CHANNEL_USERS
+            - CHANNEL_HASHTAG
+        - name: username
+          in: path
+          type: string
+          required: true
+        - name: new_role
+          in: formData
+          type: number
+          required: true
+      responses:
+        '200':
+          description: 'Everything is ok'
+        '400':
+          description: 'Bad Request.'
+        '401':
+          description: 'User logged but not authorized to execute the operation'
+        '403':
+          description: 'User not logged'
+        '404':
+          description: 'User not found'
+        '500':
+          description: 'Internal server error'
+  /channel/{type}/{channel_name}/users/:
+    get:
+      tags:
+        - channel
+      summary: Get the users following a channel.
+      parameters:
+        - name: channel_name
+          in: path
+          required: true
+          type: string
+        - name: type
+          in: path
+          required: true
+          type: string
+          enum:
+            - CHANNEL_OFFICIAL
+            - CHANNEL_USERS
+            - CHANNEL_HASHTAG
+      responses:
+        '200':
+          description: 'Everything is ok'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        '400':
+          description: 'Bad Request.'
+        '401':
+          description: 'User logged but not authorized to execute the operation'
+        '403':
+          description: 'User not logged'
+        '500':
+          description: 'Internal server error'
+  /channel/{type}/{channel_name}/users/{username}/:
+    get:
+      tags:
+        - channel
+      summary: Get the role of the user in the channel.
+      parameters:
+        - name: channel_name
+          in: path
+          required: true
+          type: string
+        - name: type
+          in: path
+          required: true
+          type: string
+          enum:
+            - CHANNEL_OFFICIAL
+            - CHANNEL_USERS
+            - CHANNEL_HASHTAG
+        - name: username
+          type: string
+          required: true
+          in: path
+      responses:
+        '200':
+          description: 'Everything is ok'
+        '400':
+          description: 'Bad Request.'
+        '401':
+          description: 'User logged but not authorized to execute the operation'
+        '403':
+          description: 'User not logged'
+        '500':
+          description: 'Internal server error'
+  /channel/{type}/{channel_name}/roles/{role}:
+    get:
+      tags:
+        - channel
+      summary: Get the users following a channel.
+      parameters:
+        - name: channel_name
+          in: path
+          required: true
+          type: string
+        - name: type
+          in: path
+          required: true
+          type: string
+          enum:
+            - CHANNEL_OFFICIAL
+            - CHANNEL_USERS
+            - CHANNEL_HASHTAG
+        - name: role
+          in: path
+          required: true
+          type: number
+      responses:
+        '200':
+          description: 'Everything is ok'
+        '400':
+          description: 'Bad Request.'
+        '401':
+          description: 'User logged but not authorized to execute the operation'
+        '403':
+          description: 'User not logged'
+        '500':
+          description: 'Internal server error'
   /squeal/:
     get:
       tags:

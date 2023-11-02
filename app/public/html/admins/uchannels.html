@@ -3,17 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <title>Squealer - Moderator Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+            crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../../css/squealer.css">
+    <script src="../../libraries/jquery/jquery.js"></script>
     <!-- Page defined scripts -->
     <script src="../../js/dashboardAdmin.js"></script>
+    <script src="../../js/classes/ServerTablesUC.js"></script>
 </head>
 <body>
+<!-- Inizio modali -->
+<!-- Inizio modale registrazione-->
+<div class="modal fade" id="modalAggiungiCanale" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="exampleModalLongTitle">Aggiungi canale</h6>
+            </div>
+            <div class="modal-body">
+                <div class="card-text text-left">
+                    <div class="mb-3">
+                        <label for="registerChannel" class="form-label">Nome canale</label>
+                        <input type="text" class="form-control" id="registerChannel" placeholder="nome canale">
+                    </div>
+                </div>
+                <div>
+                    Privacy del canale
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="flexRadioPrivacy" value="private"
+                           id="privacyChannelPrivate">
+                    <label class="form-check-label" for="privacyChannelPrivate">
+                        Privato
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="flexRadioPrivacy" value="public"
+                           id="privacyChannelPublic" checked>
+                    <label class="form-check-label" for="privacyChannelPublic">
+                        Pubblico
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                <button type="button" class="btn btn-primary" id="executeOperation"
+                        onclick="applicaCambiamentiCanale('CHANNEL_USERS')">
+                    Aggiungi canale
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fine modale registrazione -->
+<!-- Inizio modale eliminazione-->
+<div class="modal fade" id="modalEliminaCanale" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="modalEliminaCanaleTitle">Elimina canale</h6>
+            </div>
+            <div class="modal-body">
+                <div class="card-text text-left">
+                    <p id="eliminaUtenteCanale"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                <button type="button" id="executeDeleteButton" class="btn btn-danger" data-bs-dismiss="modal">Elimina
+                    canale
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fine modale eliminazione -->
+<!-- Inizio modale cambia ruolo-->
+<div class="modal fade" id="modificaRuoliCanale" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="modalEliminaUtenteTitle">Cambia ruolo utente</h6>
+            </div>
+            <div class="modal-body">
+                <div class="card-text text-left">
+                    <div class="mb-3">
+                        <label for="newRoleUsername" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="newRoleUsername" placeholder="Username">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="selectRole">Nuovo ruolo</label>
+                    <select class="form-control" id="selectRole">
+                        <option value="4">Proprietario</option>
+                        <option value="3">Amministratore</option>
+                        <option value="2">Lettore/Scrittore</option>
+                        <option value="1">Solo lettore</option>
+                        <option value="0">In attesa di approvazione</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                <button type="button" id="executeChangeRole" class="btn btn-success" data-bs-dismiss="modal">Cambia
+                    ruolo
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fine modale cambia ruolo -->
+<!-- Fine modali -->
 <div class="d-flex flex-nowrap" style="height: 100vh;">
     <div class="d-flex flex-column flex-shrink-0 p-3" style="width: 280px;">
         <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-theme-adaptive text-decoration-none">
-            <svg class="bi pe-none me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+            <svg class="bi pe-none me-2" width="40" height="32">
+                <use xlink:href="#bootstrap"></use>
+            </svg>
             <span class="fs-4">Squealer</span>
         </a>
         <hr>
@@ -51,7 +161,8 @@
         </ul>
         <hr>
         <div class="dropdown">
-            <a href="#" class="d-flex align-items-center text-theme-adaptive text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <a href="#" class="d-flex align-items-center text-theme-adaptive text-decoration-none dropdown-toggle"
+               data-bs-toggle="dropdown" aria-expanded="false">
                 Passa a...
             </a>
             <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
@@ -64,8 +175,11 @@
     <div class="d-flex flex-column w-100">
         <div class="container">
             <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-                <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-                    <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+                <a href="/"
+                   class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+                    <svg class="bi me-2" width="40" height="32">
+                        <use xlink:href="#bootstrap"></use>
+                    </svg>
                     <span class="header-title">Squealer - Moderator Dashboard</span>
                 </a>
 
@@ -78,15 +192,182 @@
                 </span>
                     </li>
                     &nbsp;
-                    <li class="nav-item"><button type="button" class="btn btn-light" onclick="executeLogout();">Logout</button></li>
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-light" onclick="executeLogout();">Logout</button>
+                    </li>
                 </ul>
             </header>
             <div>
-                Canali degli utenti
+                <div id="tableContainer">
+
+                </div>
             </div>
         </div>
     </div>
 </div>
+<div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-delay="10000" id="toastFail"
+     style="z-index: 1200; position: fixed; top: 0; right: 0;">
+    <div class="toast-header">
+        <strong class="mr-auto">Attenzione</strong>
+    </div>
+    <div class="toast-body">
+        <p class="text-danger">Operazione fallita</p>
+    </div>
+</div>
+<div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-delay="10000" id="toastFailGeneric"
+     style="z-index: 1200; position: fixed; top: 0; right: 0;">
+    <div class="toast-header">
+        <strong class="mr-auto">Attenzione</strong>
+    </div>
+    <div class="toast-body">
+        <p class="text-danger" id="toasFailProblem">Operazione fallita</p>
+    </div>
+</div>
+<div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-delay="10000" id="toastSuccess"
+     style="z-index: 1200; position: fixed; top: 0; right: 0;">
+    <div class="toast-header">
+        <strong class="mr-auto">Ok</strong>
+    </div>
+    <div class="toast-body">
+        <p class="text-success">Operazione effettuata con successo</p>
+    </div>
+</div>
+<script>
+    let st = new ServerTablesUC('tableContainer', {
+        "channel_name": "Nome",
+        "private": "Privacy",
+        "owner": "Titolare",
+        "subscribers": "Iscritti",
+        "posts": "Post",
+        "actions": "Azioni"
+    }, 'st');
 
+    loadTable();
+
+    async function loadTable() {
+        await st.askData2Server();
+        st.draw();
+    }
+
+    function notifyError(msg) {
+        document.getElementById('toasFailProblem').innerHTML = msg;
+        $('#toastFailGeneric').toast('show');
+    }
+
+    function applicaCambiamentiCanale(channel_type, editingChannel = '') {
+        let inputName = $('#registerChannel');
+        let channelName = $(inputName).val();
+        let isPrivate = $('input[name="flexRadioPrivacy"]:checked').val();
+        if (isPrivate === 'public') isPrivate = false;
+        else isPrivate = true;
+        channelName = channelName.trim();
+        if (channelName === '') {
+            notifyError('Il nome del canale non può essere vuoto');
+        }
+
+
+        let data = JSON.stringify({
+            channel: {
+                name: channelName,
+                type: channel_type,
+                private: isPrivate
+            }
+        });
+
+        let method = 'POST';
+        let addingUri = '';
+        if (editingChannel !== '') {
+            method = 'PUT';
+            addingUri = `${channel_type}/${editingChannel}/`;
+        }
+
+        fetch(`../../channel/${addingUri}`, {
+            method: method,
+            body: data,
+            headers: {
+                "Content-Type": "application/json",
+            }
+        }).then((response) => {
+            if (response.ok) {
+                //tutto ok
+                $('#toastSuccess').toast('show');
+                loadTable();
+            } else {
+                notifyError('Errore con la richiesta. Riprovare');
+            }
+        });
+        $('#modalAggiungiCanale').modal('hide');
+    }
+
+    function cleanModalAddChannel() {
+        document.getElementById('executeOperation').setAttribute('onclick', `applicaCambiamentiCanale('CHANNEL_USERS')`);
+        document.getElementById('executeOperation').innerHTML = 'Aggiungi canale';
+        $('#registerChannel').val('');
+    }
+
+    /**
+     * @param {string} channel_type
+     * @param {string} deletingChannel
+     */
+    function executeDeleteOnServer(channel_type, deletingChannel) {
+        fetch(`../../channel/${channel_type}/${deletingChannel}`, {
+            method: 'DELETE',
+            headers: {
+                "Content-Type": "application/json",
+            }
+        }).then((response) => {
+            if (response.status === 200) {
+                $('#toastSuccess').toast('show');
+                loadTable();
+            } else {
+                notifyError('Errore nella richiesta riprovare');
+            }
+        });
+        $("#modalEliminaCanale button[data-bs-dismiss='modal']").get(0).click();
+    }
+
+    function changeRolesChannel(channel_name) {
+        $('#selectRole').val("4");
+        $('#newRoleUsername').val('');
+        $('#executeChangeRole').attr('onclick', `executeChangeRole('CHANNEL_USERS', '${channel_name}')`);
+    }
+
+    /**
+     * @param {string} channel_type
+     * @param {string} channel_name
+     */
+    function executeChangeRole(channel_type, channel_name) {
+        let username = $('#newRoleUsername').val().trim();
+        let new_role = $('#selectRole').val().trim();
+        if(username.length === 0){
+            notifyError('Username non valido.');
+        }
+
+        let body = JSON.stringify({
+            new_role: new_role
+        });
+
+        fetch(`../../channel/${channel_type}/${channel_name}/${username}`, {
+            method: 'PATCH',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body:body
+        }).then((response) => {
+            if (response.status === 200) {
+                $('#toastSuccess').toast('show');
+                loadTable();
+            } else if (response.status === 401) {
+                notifyError('Non autorizzato.');
+            } else if (response.status === 404) {
+                notifyError('Utente o canale non trovato.');
+            } else {
+                notifyError('Errore nella richiesta riprovare.');
+            }
+        });
+    }
+
+
+</script>
 </body>
 </html>

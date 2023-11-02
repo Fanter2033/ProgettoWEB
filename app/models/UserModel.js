@@ -86,7 +86,7 @@ module.exports = class UserModel extends Model {
      */
     async createUser(userObj) {
         await this.checkMongoose("User", User);
-        userObj = this.mongo_escape(userObj.getDocument()); //
+        userObj = this.mongo_escape(userObj.getDocument());
         let userInserting = new this.entityMongooseModel(userObj);
         try {
             await userInserting.save();
