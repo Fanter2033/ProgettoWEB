@@ -1,6 +1,7 @@
 const Controller = require("./Controller");
 const SquealDto = require("../entities/dtos/QuoteDto");
 const QuoteController = require("./QuoteController");
+const UserController = require("./UserController");
 
 module.exports = class SquealController extends Controller {
     constructor(model) {
@@ -19,5 +20,10 @@ module.exports = class SquealController extends Controller {
         }
         output['content'] = squeal.getDocument();
         return output;
+    }
+
+    async postSqueal(squealDto, authenticatedUser){
+        let output = this.getDefaultOutput();
+
     }
 }

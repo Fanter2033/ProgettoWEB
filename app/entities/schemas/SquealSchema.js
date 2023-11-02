@@ -1,6 +1,6 @@
 const {Schema} = require("mongoose");
 
-const reaction_type = ['LIKE_A_LOT', 'LIKE', 'MEH', 'DO_NOT_LIKE', 'DISGUSTED'];
+const reaction_type = ['LIKE_A_LOT', 'LIKE', 'DO_NOT_LIKE', 'DISGUSTED'];
 const message_type = ['MESSAGE_TEXT', 'IMAGE_URL', 'VIDEO_URL', 'POSITION'];
 
 module.exports = new Schema({
