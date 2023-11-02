@@ -155,13 +155,7 @@ module.exports = class ChannelModel extends Model {
                 $match: filter
             }];
         try {
-            /*
-            let results = await this.entityMongooseModel
-                .find(filter)
-                .sort(sorting)
-                .skip(offset)
-                .limit(limit);
-            */
+
             let results = await this.entityMongooseModel
                 .aggregate(aggregate)
                 .sort(sorting)
@@ -334,4 +328,3 @@ module.exports = class ChannelModel extends Model {
     }
 
 }
-
