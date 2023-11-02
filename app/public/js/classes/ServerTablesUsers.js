@@ -219,7 +219,7 @@ class ServerTablesUsers {
                 &nbsp;
                 <button type="button" class="btn btn-danger" onclick="${this.#variableName}.deleteUser('${userRow.username}')" data-bs-toggle="modal" data-bs-target="#modalEliminaUtente">Elimina</button>
                 &nbsp;
-                <button type="button" class="btn btn-success" onclick="${this.#variableName}.changeQuotaUser('${userRow.username}')" data-bs-toggle="modal" data-bs-target="#modalCambiaQuota">Cambia quota utente</button>
+                <button type="button" class="btn btn-success" onclick="${this.#variableName}.changeQuotaUser('${userRow.username}')" data-bs-toggle="modal" data-bs-target="#modalCambiaQuota">Cambia quota</button>
                 </td>`;
         }
 
