@@ -24,6 +24,39 @@ module.exports = class SquealController extends Controller {
 
     async postSqueal(squealDto, authenticatedUser){
         let output = this.getDefaultOutput();
+        if(!this.checkSquealType(squealDto.message_type)){
+            output['code'] = 400;
+            output['msg'] = 'Invalid type of Squeal. Bad request'
+            return output;
+        }
 
+        if(this.isObjectVoid(authenticatedUser)){
+            output['code'] = 403;
+            output['msg'] = 'Please Login, cugliun'
+            return output;
+        }
+
+        if(squealDto.sender !== authenticatedUser.username){
+            output['code'] = 401;
+            output['msg'] = 'Unauthorized'
+            return output;
+        }
+
+        if(true){
+            //TODO: controllare che i destinatori
+        }
+
+        if(){
+
+        }
+
+
+    }
+
+    checkSquealType(type){
+        return  type === 'MESSAGE_TEXT' ||
+                type === 'IMAGE_URL'    ||
+                type === 'VIDEO_URL'    ||
+                type === 'POSITION';
     }
 }
