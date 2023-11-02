@@ -23,7 +23,6 @@ module.exports = class SquealModel extends Model {
     }
 
     /**
-     *
      * @param squealObj {SquealDto}
      * @returns {Promise<boolean>}
      */
@@ -36,7 +35,7 @@ module.exports = class SquealModel extends Model {
         } catch (ignored){
             return false;
         }
-        return  true;
+        return true;
     }
 
 }

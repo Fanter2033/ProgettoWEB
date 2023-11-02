@@ -41,6 +41,7 @@ exports._QUOTE_DEFAULT_DAILY = 1000;
 exports._QUOTE_DEFAULT_WEEKLY = 1000 * 6;
 exports._QUOTE_DEFAULT_MONTHLY = 1000 * 20;
 exports._QUOTE_EXTRA_CHARS_TO_END = 15;
+exports._IMG_TO_QUOTE = 125;
 
 //Channels roles
 exports._CHANNEL_ROLE_OWNER = 4;

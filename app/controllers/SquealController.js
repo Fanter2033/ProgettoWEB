@@ -1,7 +1,10 @@
 const Controller = require("./Controller");
 const SquealDto = require("../entities/dtos/QuoteDto");
 const QuoteController = require("./QuoteController");
+const QuoteModel = require("../models/QuoteModel");
 const UserController = require("./UserController");
+const {model} = require("mongoose");
+
 
 module.exports = class SquealController extends Controller {
     constructor(model) {
@@ -9,6 +12,11 @@ module.exports = class SquealController extends Controller {
         this._model = model;
     }
 
+    /**
+     *
+     * @param identifier {Number}
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
     async getSqueal(identifier){
         let output = this.getDefaultOutput();
 
@@ -22,17 +30,22 @@ module.exports = class SquealController extends Controller {
         return output;
     }
 
+    /**
+     * @param squealDto {SquealDto}
+     * @param authenticatedUser {UserDto}
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
     async postSqueal(squealDto, authenticatedUser){
         let output = this.getDefaultOutput();
-        if(!this.checkSquealType(squealDto.message_type)){
-            output['code'] = 400;
-            output['msg'] = 'Invalid type of Squeal. Bad request'
-            return output;
-        }
-
         if(this.isObjectVoid(authenticatedUser)){
             output['code'] = 403;
             output['msg'] = 'Please Login, cugliun'
+            return output;
+        }
+
+        if(!this.checkSquealType(squealDto.message_type)){
+            output['code'] = 400;
+            output['msg'] = 'Invalid type of Squeal. Bad request'
             return output;
         }
 
@@ -43,13 +56,26 @@ module.exports = class SquealController extends Controller {
         }
 
         if(true){
-            //TODO: controllare che i destinatori
+            //TODO: controllare che i destinatari
         }
 
-        if(){
-
+        let quoteCtrl = new QuoteController(new QuoteModel());
+        let quoteRes = await quoteCtrl.getQuote(authenticatedUser.username)
+        if(quoteRes >= squealDto.quote_cost){
+            output['code'] = 412;
+            output['msg'] = 'quote not available'
+            return output;
         }
 
+        let modelOutput = await this._model.postSqueal(squealDto);
+
+        if(modelOutput === false){
+            output['code'] = 500;
+            output['msg'] = 'Internal server error';
+            return output;
+        }
+
+        output['content'] = squealDto.getDocument();
 
     }
 

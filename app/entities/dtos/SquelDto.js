@@ -9,6 +9,7 @@ module.exports = class SquealDto {
     #positive_value;
     #negative_value;
     #critical_mass;
+    #quote_cost;
 
     constructor(documentFromMongoose = null) {
         if (documentFromMongoose === null) {
@@ -21,6 +22,7 @@ module.exports = class SquealDto {
             this.#positive_value = null;
             this.#negative_value = null;
             this.#critical_mass = null;
+            this.#quote_cost = null;
         } else {
             this.#id = documentFromMongoose._id;
             this.#date = documentFromMongoose.date;
@@ -31,6 +33,7 @@ module.exports = class SquealDto {
             this.#positive_value = documentFromMongoose.positive_value;
             this.#negative_value = documentFromMongoose.negative_value;
             this.#critical_mass = documentFromMongoose.critical_mass;
+            this.#quote_cost = documentFromMongoose.quote_cost;
         }
     }
 
@@ -45,6 +48,7 @@ module.exports = class SquealDto {
             positive_value: this.#positive_value,
             negative_value: this.#negative_value,
             critical_mass: this.#critical_mass,
+            quote_cost: this.#quote_cost,
         }
     }
 
@@ -118,6 +122,14 @@ module.exports = class SquealDto {
 
     set critical_mass(value) {
         this.#critical_mass = value;
+    }
+
+    get quote_cost() {
+        return this.#quote_cost;
+    }
+
+    set quote_cost(value) {
+        return this.#quote_cost = value;
     }
 }
 

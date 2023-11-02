@@ -8,9 +8,10 @@ module.exports = new Schema({
     date: {type: Date},
     destinations: { linkedUsers: [String]  },
     sender: {type: String},
-    reactions: {type: Array, enum: reaction_type},
+    reactions: {type: String, enum: reaction_type},
     message_type: {type: String, enum: message_type},
     positive_value: {type: Number},
     negative_value: {type: Number},
-    critical_mass: {type: Number}
+    critical_mass: {type: Number},
+    quote_cost: {type: Number}
 })
