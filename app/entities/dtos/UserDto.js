@@ -9,6 +9,8 @@ module.exports = class UserDto {
     #isAdmin;
     #isSmm;
     #isUser;
+    #pro;
+    #locked;
 
     constructor(documentFromMongoose = null) {
         if(documentFromMongoose === null) {
@@ -21,6 +23,8 @@ module.exports = class UserDto {
             this.#isAdmin = null;
             this.#isSmm = null;
             this.#isUser = null;
+            this.#pro = null;
+            this.#locked = null;
         } else {
             this.#username = documentFromMongoose.username;
             this.#email = documentFromMongoose.email;
@@ -31,6 +35,8 @@ module.exports = class UserDto {
             this.#isAdmin = documentFromMongoose.isAdmin;
             this.#isSmm = documentFromMongoose.isSmm;
             this.#isUser = documentFromMongoose.isUser;
+            this.#pro = documentFromMongoose.pro;
+            this.#locked = documentFromMongoose.locked;
         }
 
     }
@@ -111,6 +117,22 @@ module.exports = class UserDto {
         this.#isUser = value;
     }
 
+    get pro() {
+        return this.#pro;
+    }
+
+    set pro(value) {
+        this.#pro = value;
+    }
+
+    get locked() {
+        return this.#locked;
+    }
+
+    set locked(value) {
+        this.#locked = value;
+    }
+
     getDocument() {
         return {
             username: this.#username,
@@ -121,7 +143,9 @@ module.exports = class UserDto {
             psw_shadow: this.#psw_shadow,
             isAdmin: this.#isAdmin,
             isSmm: this.#isSmm,
-            isUser: this.#isUser
+            isUser: this.#isUser,
+            pro: this.#pro,
+            locked: this.#locked
         }
     }
 

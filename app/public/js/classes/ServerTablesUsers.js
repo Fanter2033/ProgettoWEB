@@ -74,7 +74,7 @@ class ServerTablesUsers {
         let containerNode = document.getElementById(this.#containerId);
         if (containerNode === null)
             return;
-        let html = `
+        containerNode.innerHTML = `
         <div class="row w-100">
             <div class="col-md-2">
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAggiungiUtente" onclick="cleanModalAddUser()">
@@ -95,7 +95,6 @@ class ServerTablesUsers {
             ${this.drawNavigationButtons()}        
         </div>
         `;
-        containerNode.innerHTML = html;
     }
 
     drawData() {
@@ -165,7 +164,6 @@ class ServerTablesUsers {
                             </div>    
                         </div>`;
                 }
-                break;
             case 5:
                 return `
                 <div class="row w-100">
@@ -184,7 +182,6 @@ class ServerTablesUsers {
                     </div>    
                 </div>
                 `
-                break;
         }
     }
 
@@ -213,6 +210,11 @@ class ServerTablesUsers {
         for (const assocJsonKey in this.#assoc_json)
             if (assocJsonKey === 'null') {
                 html = html + `<td>${this.getAuthList(userRow)}</td>`;
+            } else if (assocJsonKey === 'locked') {
+                let isLocked = 'Sì';
+                if(userRow.locked !== true)
+                    isLocked = 'No';
+                html = html + `<td>${isLocked}</td>`;
             } else if (objKeys.includes(assocJsonKey))
                 html = html + `<td>${userRow[assocJsonKey]}</td>`;
 
@@ -221,6 +223,12 @@ class ServerTablesUsers {
                 <button type="button" class="btn btn-warning" onclick="${this.#variableName}.updateUser('${userRow.username}')" data-bs-toggle="modal" data-bs-target="#modalAggiungiUtente">Modifica</button>
                 &nbsp;
                 <button type="button" class="btn btn-danger" onclick="${this.#variableName}.deleteUser('${userRow.username}')" data-bs-toggle="modal" data-bs-target="#modalEliminaUtente">Elimina</button>
+                &nbsp;
+                <button type="button" class="btn btn-success" onclick="${this.#variableName}.changeQuotaUser('${userRow.username}')" data-bs-toggle="modal" data-bs-target="#modalCambiaQuota">Cambia quota</button>
+                &nbsp;
+                <button type="button" class="btn btn-light" onclick="lockUser('${userRow.username}', ${userRow.locked})" data-bs-toggle="modal" data-bs-target="#modalToggleLock">
+                    ${userRow.locked ? 'Sblocca' : 'Blocca'}
+                </button>
                 </td>`;
         }
 
@@ -294,11 +302,13 @@ class ServerTablesUsers {
      * @return {string}
      */
     getAuthList(userRowElement) {
-        if (!userRowElement.isUser && !userRowElement.isSmm && !userRowElement.isAdmin)
+        if (!userRowElement.isUser && !userRowElement.isSmm && !userRowElement.isAdmin && !userRowElement.pro)
             return ' - ';
         let html = `<ul>`;
         if (userRowElement.isUser)
             html = html + `<li>User</li>`;
+        if(userRowElement.pro)
+            html = html + `<li>VIP</li>`;
         if (userRowElement.isSmm)
             html = html + `<li>Social Media Manager</li>`;
         if (userRowElement.isAdmin)
@@ -326,7 +336,81 @@ class ServerTablesUsers {
         return 5; //Between the pages
     }
 
+    /**
+     * @param {string} username
+     *
+     */
+    changeQuotaUser(username){
+        let userDto = this.extractUserByUsername(username);
+        if (userDto === null)
+            return userDto;
 
+        fetch(`../../user/${username}/quote`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+            }
+        }).then((response) => {return response.json()})
+            .then((json) => {
+                $("#modalCambiaQuota [name='container']").html(this.crateLayoutChangeQuota(
+                    json.remaining_daily,
+                    json.remaining_weekly,
+                    json.remaining_monthly,
+                    json.limit_daily,
+                    json.limit_weekly,
+                    json.limit_monthly,
+                ) + 'Nuovi valori <div name="new_values_container"></div>');
+                $('#newPercentage').val(100).trigger('onkeyup');
+            });
 
+        $(`#modalCambiaQuota [name="perform_operation"]`).attr('onclick', `executeChangeQuota('${username}')`)
+
+    }
+
+    /**
+     * @param {number} old_quota_rd
+     * @param {number} old_quota_rw
+     * @param {number} old_quota_rm
+     * @param {number} old_quota_ld
+     * @param {number} old_quota_lw
+     * @param {number} old_quota_lm
+     * @return {string}
+     */
+    crateLayoutChangeQuota(old_quota_rd, old_quota_rw, old_quota_rm, old_quota_ld, old_quota_lw, old_quota_lm) {
+        return `<ul id="layout_old_quota">
+        <li>Rimanente giornaliera <span name="rd">${old_quota_rd}</span></li>
+        <li>Rimanente settimanale <span name="rw">${old_quota_rw}</span></li>
+        <li>Rimanente mensile <span name="rm">${old_quota_rm}</span></li>
+        <li>Limite giornaliera <span name="ld">${old_quota_ld}</span></li>
+        <li>Limite settimanale <span name="lw">${old_quota_lw}</span></li>
+        <li>Limite mensile <span name="lm">${old_quota_lm}</span></li>
+        </ul>`;
+    }
+
+    createLayoutNewQuota(element){
+        let percentage = parseInt($(element).val());
+        let rd = parseInt($('#layout_old_quota [name="rd"]').html());
+        let rw = parseInt($('#layout_old_quota [name="rw"]').html());
+        let rm = parseInt($('#layout_old_quota [name="rm"]').html());
+        let ld = parseInt($('#layout_old_quota [name="ld"]').html());
+        let lw = parseInt($('#layout_old_quota [name="lw"]').html());
+        let lm = parseInt($('#layout_old_quota [name="lm"]').html());
+        $('#modalCambiaQuota [name="new_values_container"]').html(
+            `<ul id="layout_new_quota">
+            <li>NUOVA Rimanente giornaliera <span name="rd">${this.calculatePercentage(rd, percentage)}</span></li>
+            <li>NUOVA Rimanente settimanale <span name="rw">${this.calculatePercentage(rw, percentage)}</span></li>
+            <li>NUOVA Rimanente mensile <span name="rm">${this.calculatePercentage(rm, percentage)}</span></li>
+            <li>NUOVA Limite giornaliera <span name="ld">${this.calculatePercentage(ld, percentage)}</span></li>
+            <li>NUOVA Limite settimanale <span name="lw">${this.calculatePercentage(lw, percentage)}</span></li>
+            <li>NUOVA Limite mensile <span name="lm">${this.calculatePercentage(lm, percentage)}</span></li>
+            </ul>`
+        );
+    }
+
+    calculatePercentage(value, percentage){
+        let res = Math.floor(value * percentage / 100);
+        if(isNaN(res)) return 0;
+        return res
+    }
 
 }
