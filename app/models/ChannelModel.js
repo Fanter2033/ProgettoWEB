@@ -185,13 +185,107 @@ module.exports = class ChannelModel extends Model {
      */
     async getChannelCount(search, type) {
         let filter = {
-            channel_name: {$regex: this.mongo_escape(search)}
+            $or: [
+                {channel_name: {$regex: this.mongo_escape(search)}},
+                {owner: {$in: [{username: this.mongo_escape(search)}]}},
+                {posts: {$regex: this.mongo_escape(search)}}
+            ],
         };
 
         if (type !== null)
             filter['type'] = this.mongo_escape(type);
+        let aggregate = [
+            {
+                $lookup:
+                    {
+                        from: "channelroles",
+                        let: {
+                            channelName1: "$channel_name",
+                            channelType1: "$type"
+                        },
+                        pipeline: [{
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        {
+                                            $eq: [
+                                                "$channel_name",
+                                                "$$channelName1"
+                                            ]
+                                        },
+                                        {
+                                            $eq: [
+                                                "$type",
+                                                "$$channelType1"
+                                            ]
+                                        },
+                                        {
+                                            $eq: [
+                                                "$role",
+                                                4
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                            {
+                                $project: {"username": 1, "_id": 0},
+                            }, {
+                                $limit: 1
+                            }],
+                        as: "owner"
+                    },
+            },
+            {
+                $lookup:
+                    {
+                        from: "channelroles",
+                        let: {
+                            channelName1: "$channel_name",
+                            channelType1: "$type"
+                        },
+                        pipeline: [{
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        {
+                                            $eq: [
+                                                "$channel_name",
+                                                "$$channelName1"
+                                            ]
+                                        },
+                                        {
+                                            $eq: [
+                                                "$type",
+                                                "$$channelType1"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                            {
+                                $project: {"username": 1, "_id": 0},
+                            },
+                            {
+                                $count: "username"
+                            }],
+                        as: "subscribers"
+                    },
+            },
+            {
+                $match: filter
+            },
+            {
+                $count: "channel_name"
+            }
+        ];
 
-        return await this.entityMongooseModel.count(filter);
+        let result_tmp =await this.entityMongooseModel.aggregate(aggregate);
+        if(result_tmp.length === 0) return 0;
+        result_tmp = result_tmp[0];
+        return result_tmp['channel_name'];
     }
 
     /**
@@ -253,4 +347,3 @@ module.exports = class ChannelModel extends Model {
     }
 
 }
-

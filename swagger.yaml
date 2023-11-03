@@ -726,6 +726,8 @@ paths:
       responses:
         '200':
           description: 'Successful operation'
+        '401':
+          description: 'Unauthorized'
         '403':
           description: 'Requesting user is not an admin'
         '404':

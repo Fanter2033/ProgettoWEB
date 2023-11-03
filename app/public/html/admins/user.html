@@ -102,6 +102,35 @@
     </div>
 </div>
 <!-- Fine modale eliminazione -->
+<!-- Inizio modale modifica quota-->
+<div class="modal fade" id="modalCambiaQuota" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">Modifica quota utente</h6>
+            </div>
+            <div class="modal-body">
+                <div class="card-text text-left">
+                    <div class="mb-3">
+                        <div name="container">
+                            Caricamento...
+                        </div>
+                        <label for="newPercentage" class="form-label">Percentuale (50 = 50%)</label>
+                        <input type="text" onkeyup="st.createLayoutNewQuota(this)" class="form-control" id="newPercentage" placeholder="100">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                <button type="button" name="perform_operation" class="btn btn-success" data-bs-dismiss="modal">
+                    Modifica quota
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fine modale modifica quota -->
 <!-- Inizio modale lock-->
 <div class="modal fade" id="modalToggleLock" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -371,6 +400,32 @@
             }
 
         });
+    }
+
+    function executeChangeQuota(username){
+        let percentage = $('#newPercentage').val();
+        percentage = parseInt(percentage);
+        if(isNaN(percentage)){
+            notifyError('Errore. La percentuale inserita non è valida.');
+        }
+        if(percentage < 0 || percentage > 10000){
+            notifyError('Errore. La percentuale inserita non è valida.');
+        }
+
+        let data = JSON.stringify({
+            "percentage": percentage
+        });
+
+        fetch(`../../user/${username}/quote`, {
+            method: 'PATCH',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: data
+        }).then((response) => {
+            console.log(response);
+        });
+
     }
 
     function executeDeleteOnServer(username) {
