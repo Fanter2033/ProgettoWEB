@@ -147,6 +147,8 @@ module.exports = class UserController extends Controller {
 
         //Salt! - A lot of SALT!!!
         userObj.psw_shadow = await this.crypt(userObj.psw_shadow);
+        userObj.pro = false;
+        userObj.locked = false;
 
         let databaseResponse = await this._model.createUser(userObj);
         if (databaseResponse)
@@ -230,6 +232,9 @@ module.exports = class UserController extends Controller {
 
 
         newUser.registration_timestamp = oldUserObj.registration_timestamp;
+        newUser.pro = oldUserObj.pro;
+        newUser.locked = oldUserObj.locked;
+
         if(newUser.psw_shadow !== '') //if password isn't set, save the old password
             newUser.psw_shadow = await this.crypt(newUser.psw_shadow);
         else //Password set, save new in the database.
@@ -336,6 +341,47 @@ module.exports = class UserController extends Controller {
         user.isSmm = null;
         user.isUser = null;
         return user;
+    }
+
+
+    /**
+     * @param {string} username
+     * @param {UserDto} authUser
+     * @return {Promise<{msg: string, code: number, sub_code: number,content: {}}>}
+     */
+    async toggleLock(username, authUser){
+        let output = this.getDefaultOutput();
+
+        let userExists = await this._model.userExists(username);
+        if (userExists !== true) {
+            output['code'] = 404;
+            output['msg'] = 'Not found.';
+            return output;
+        }
+
+        let userDto = await this._model.getUser(username);
+
+        if (this.isObjectVoid(authUser) === true) {
+            output['code'] = 403;
+            output['msg'] = 'User not authenticated';
+            return output;
+        }
+
+        if (!authUser.isAdmin) {
+            output['code'] = 401;
+            output['msg'] = 'Not allowed for non-moderators.';
+            return output;
+        }
+
+        let newLock = userDto.locked;
+        newLock = !newLock;
+        let result = await this._model.changeUserLock(userDto, newLock);
+        if (result === false) {
+            output['code'] = 500;
+            output['msg'] = 'Internal server error.';
+            return output;
+        }
+        return output;
     }
 
 

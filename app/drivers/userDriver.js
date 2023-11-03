@@ -122,6 +122,15 @@ userDriver.get('/', async function (req, res) {
         res.status(ctrl.code).send(ctrl);
 });
 
+userDriver.patch('/:username/toggle/lock', async function (req, res) {
+    let username = req.params['username'];
+    let ctrl = await controller.toggleLock(username, await authController.getAuthenticatedUser(req));
+    if (ctrl.code === 200)
+        res.status(ctrl.code).send(ctrl.content);
+    else
+        res.status(ctrl.code).send(ctrl);
+});
+
 userDriver.use(`/:username/quote`, quoteDriver);
 
 

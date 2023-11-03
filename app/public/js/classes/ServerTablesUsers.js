@@ -213,6 +213,11 @@ class ServerTablesUsers {
         for (const assocJsonKey in this.#assoc_json)
             if (assocJsonKey === 'null') {
                 html = html + `<td>${this.getAuthList(userRow)}</td>`;
+            } else if (assocJsonKey === 'locked') {
+                let isLocked = 'Sì';
+                if(userRow.locked !== true)
+                    isLocked = 'No';
+                html = html + `<td>${isLocked}</td>`;
             } else if (objKeys.includes(assocJsonKey))
                 html = html + `<td>${userRow[assocJsonKey]}</td>`;
 
@@ -221,6 +226,10 @@ class ServerTablesUsers {
                 <button type="button" class="btn btn-warning" onclick="${this.#variableName}.updateUser('${userRow.username}')" data-bs-toggle="modal" data-bs-target="#modalAggiungiUtente">Modifica</button>
                 &nbsp;
                 <button type="button" class="btn btn-danger" onclick="${this.#variableName}.deleteUser('${userRow.username}')" data-bs-toggle="modal" data-bs-target="#modalEliminaUtente">Elimina</button>
+                &nbsp;
+                <button type="button" class="btn btn-light" onclick="lockUser('${userRow.username}', ${userRow.locked})" data-bs-toggle="modal" data-bs-target="#modalToggleLock">
+                    ${userRow.locked ? 'Sblocca' : 'Blocca'}
+                </button>
                 </td>`;
         }
 
@@ -294,11 +303,13 @@ class ServerTablesUsers {
      * @return {string}
      */
     getAuthList(userRowElement) {
-        if (!userRowElement.isUser && !userRowElement.isSmm && !userRowElement.isAdmin)
+        if (!userRowElement.isUser && !userRowElement.isSmm && !userRowElement.isAdmin && !userRowElement.pro)
             return ' - ';
         let html = `<ul>`;
         if (userRowElement.isUser)
             html = html + `<li>User</li>`;
+        if(userRowElement.pro)
+            html = html + `<li>VIP</li>`;
         if (userRowElement.isSmm)
             html = html + `<li>Social Media Manager</li>`;
         if (userRowElement.isAdmin)

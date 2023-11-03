@@ -81,6 +81,27 @@
         </div>
     </div>
 </div>
+<!-- Inizio modale lock-->
+<div class="modal fade" id="modalToggleLock" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">Blocca canale</h6>
+            </div>
+            <div class="modal-body">
+                <div class="card-text text-left">
+                    <p name="confirmLock"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                <button type="button" name="executeToggleLock" onclick="lockChannelExecute('', '')" class="btn btn-light" data-bs-dismiss="modal">
+                    Blocca canale
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- Fine modale eliminazione -->
 <!-- Inizio modale cambia ruolo-->
 <div class="modal fade" id="modificaRuoliCanale" tabindex="-1" role="dialog" aria-hidden="true">
@@ -239,6 +260,7 @@
         "owner": "Titolare",
         "subscribers": "Iscritti",
         "posts": "Post",
+        'locked': 'Bloccato',
         "actions": "Azioni"
     }, 'st');
 
@@ -361,6 +383,38 @@
                 notifyError('Non autorizzato.');
             } else if (response.status === 404) {
                 notifyError('Utente o canale non trovato.');
+            } else {
+                notifyError('Errore nella richiesta riprovare.');
+            }
+        });
+    }
+
+    function lockChannel(channel_type, channel_name, locked) {
+        if(locked){
+            $('#modalToggleLock [name="confirmLock"]').html(`Siete sicuri di voler sbloccare il canale §${channel_name}?`);
+            $('#modalToggleLock [name="executeToggleLock"]').attr('onclick', `lockChannelExecute('CHANNEL_USERS', '${channel_name}')`).html('Sblocca canale');
+            $('#modalToggleLock .modal-title').html('Sblocca canale');
+        } else {
+            $('#modalToggleLock [name="confirmLock"]').html(`Siete sicuri di voler bloccare il canale §${channel_name}?`);
+            $('#modalToggleLock [name="executeToggleLock"]').attr('onclick', `lockChannelExecute('CHANNEL_USERS', '${channel_name}')`).html('Blocca canale');
+            $('#modalToggleLock .modal-title').html('Blocca canale');
+        }
+    }
+
+    function lockChannelExecute(channel_type, channel_name) {
+        fetch(`../../channel/${channel_type}/${channel_name}/toggle/lock`, {
+            method: 'PATCH',
+            headers: {
+                "Content-Type": "application/json",
+            }
+        }).then((response) => {
+            if (response.status === 200) {
+                $('#toastSuccess').toast('show');
+                loadTable();
+            } else if (response.status === 401) {
+                notifyError('Non autorizzato.');
+            } else if (response.status === 404) {
+                notifyError('Canale non trovato.');
             } else {
                 notifyError('Errore nella richiesta riprovare.');
             }

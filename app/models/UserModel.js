@@ -1,6 +1,7 @@
 const User = require("../entities/schemas/UserSchema");
 const Model = require("./Model");
 const UserDto = require("../entities/dtos/UserDto");
+const Channel = require("../entities/schemas/ChannelSchema");
 module.exports = class UserModel extends Model {
     constructor(userCollectionName) {
         super(userCollectionName);
@@ -176,6 +177,25 @@ module.exports = class UserModel extends Model {
             ]
         };
         return await this.entityMongooseModel.count(filter);
+    }
+
+    /**
+     * @param userObj {UserDto}
+     * @param newLock {number}
+     * @returns {Promise<boolean>}
+     */
+    async changeUserLock(userObj, newLock) {
+        await this.checkMongoose("User", User);
+        let filter = {"username": `${userObj.username}`};
+        filter = this.mongo_escape(filter);
+        userObj.locked = newLock;
+        userObj = this.mongo_escape(userObj.getDocument());
+        try {
+            await this.entityMongooseModel.updateOne(filter, userObj);
+        } catch (ignored) {
+            return false;
+        }
+        return true;
     }
 
 }

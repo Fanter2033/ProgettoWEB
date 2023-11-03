@@ -77,6 +77,8 @@ module.exports = class ChannelController extends Controller {
             return output;
         }
 
+        channelDto.locked = false;
+
         //if we are here al checks is OK!
         //Let's create channel into database.
         let modelOutput = await this.#_model.createChannel(channelDto);
@@ -175,7 +177,10 @@ module.exports = class ChannelController extends Controller {
             return output;
         }
 
-        if(new_exists !== false && oldChannel.channel_name !== newChannel.channel_name) {
+        let tmp = await this.getChannel(oldChannel);
+        oldChannel = new ChannelDto(tmp);
+
+        if (new_exists !== false && oldChannel.channel_name !== newChannel.channel_name) {
             output['code'] = 409;
             output['msg'] = 'Channel already exists.';
             return output;
@@ -227,6 +232,7 @@ module.exports = class ChannelController extends Controller {
 
 
         //Now if is OK! Let's change
+        newChannel.locked = oldChannel.locked;
         let result = await this.#_model.updateChannel(oldChannel, newChannel);
         if (result === false) {
             output['code'] = 500;
@@ -336,7 +342,7 @@ module.exports = class ChannelController extends Controller {
         }
 
         let userObj = await userController.getUser(username);
-        if(userObj['code'] !== 200){
+        if (userObj['code'] !== 200) {
             output['code'] = 404;
             output['msg'] = 'User not found.';
             return output;
@@ -345,7 +351,7 @@ module.exports = class ChannelController extends Controller {
         let doc = await this.getChannel(channelDto);
         channelDto = new ChannelDto(doc.content);
 
-        if(channelDto.private === false && newRole < autoload.config._CHANNEL_ROLE_WRITE){
+        if (channelDto.private === false && newRole < autoload.config._CHANNEL_ROLE_WRITE) {
             newRole = autoload.config._CHANNEL_ROLE_WRITE;
         }
 
@@ -356,6 +362,46 @@ module.exports = class ChannelController extends Controller {
         channelRoleDto.type = channelDto.type;
         channelRoleDto.channel_name = channelDto.channel_name;
         return await this.#channelRolesController.updateUserRole(channelRoleDto, authenticatedUser);
+    }
+
+    /**
+     * @param {ChannelDto} channelDto
+     * @param {UserDto} authUser
+     * @return {Promise<{msg: string, code: number, sub_code: number,content: {}}>}
+     */
+    async toggleChannelLock(channelDto, authUser) {
+        let output = this.getDefaultOutput();
+
+        let channelExists = await this.channelExists(channelDto);
+        if (channelExists !== true) {
+            output['code'] = 404;
+            output['msg'] = 'Not found.';
+            return output;
+        }
+
+        channelDto = await this.#_model.getChannel(channelDto);
+
+        if (this.isObjectVoid(authUser) === true) {
+            output['code'] = 403;
+            output['msg'] = 'User not authenticated';
+            return output;
+        }
+
+        if (!authUser.isAdmin) {
+            output['code'] = 401;
+            output['msg'] = 'Not allowed for non-moderators.';
+            return output;
+        }
+
+        let newLock = channelDto.locked;
+        newLock = !newLock;
+        let result = await this.#_model.changeChannelLock(channelDto, newLock);
+        if (result === false) {
+            output['code'] = 500;
+            output['msg'] = 'Internal server error.';
+            return output;
+        }
+        return output;
     }
 
     /**

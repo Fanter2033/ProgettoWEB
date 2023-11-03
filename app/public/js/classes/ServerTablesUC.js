@@ -215,6 +215,11 @@ class ServerTablesUC {
                 if(channelRow.private !== true)
                     isPrivate = 'Pubblico';
                 html = html + `<td>${isPrivate}</td>`;
+            } else if (assocJsonKey === 'locked') {
+                let isLocked = 'Sì';
+                if(channelRow.locked !== true)
+                    isLocked = 'No';
+                html = html + `<td>${isLocked}</td>`;
             } else if (objKeys.includes(assocJsonKey))
                 html = html + `<td>${channelRow[assocJsonKey]}</td>`;
 
@@ -225,6 +230,10 @@ class ServerTablesUC {
                 <button type="button" class="btn btn-danger" onclick="${this.#variableName}.deleteChannel('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#modalEliminaCanale">Elimina</button>
                 &nbsp;
                 <button type="button" class="btn btn-success" onclick="changeRolesChannel('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#modificaRuoliCanale">Cambia ruoli</button>
+                &nbsp;
+                <button type="button" class="btn btn-light" onclick="lockChannel('CHANNEL_USERS', '${channelRow.channel_name}', ${channelRow.locked})" data-bs-toggle="modal" data-bs-target="#modalToggleLock">
+                    ${channelRow.locked ? 'Sblocca' : 'Blocca'}
+                </button>
                 </td>`;
         }
 

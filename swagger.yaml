@@ -182,6 +182,30 @@ paths:
                   $ref: '#/definitions/User'
               totalCount:
                 type: integer
+  /user/{username}/toggle/locked:
+    patch:
+      tags:
+        - user
+      summary: Toggle the lock of a user.
+      description: Toggle the lock of a user. If the user is locked unlock them, if is user lock them.
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Everything is ok'
+        '400':
+          description: 'Bad Request.'
+        '401':
+          description: 'User logged but not authorized to execute the operation'
+        '403':
+          description: 'User not logged'
+        '404':
+          description: 'User not found'
+        '500':
+          description: 'Internal server error'
   /channel:
     post:
       tags:
@@ -428,6 +452,38 @@ paths:
           description: 'User not logged'
         '404':
           description: 'User not found'
+        '500':
+          description: 'Internal server error'
+  /channel/{type}/{channel_name}/toggle/lock:
+    patch:
+      tags:
+        - channel
+      summary: Toggle the lock of a channel.
+      description: Toggle the lock of a channel. If the channel is locked unlock it, if is unlocked lock it.
+      parameters:
+        - name: channel_name
+          in: path
+          required: true
+          type: string
+        - name: type
+          in: path
+          required: true
+          type: string
+          enum:
+            - CHANNEL_OFFICIAL
+            - CHANNEL_USERS
+            - CHANNEL_HASHTAG
+      responses:
+        '200':
+          description: 'Everything is ok'
+        '400':
+          description: 'Bad Request.'
+        '401':
+          description: 'User logged but not authorized to execute the operation'
+        '403':
+          description: 'User not logged'
+        '404':
+          description: 'Channel not found'
         '500':
           description: 'Internal server error'
   /channel/{type}/{channel_name}/users/:

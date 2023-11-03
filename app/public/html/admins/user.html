@@ -102,6 +102,28 @@
     </div>
 </div>
 <!-- Fine modale eliminazione -->
+<!-- Inizio modale lock-->
+<div class="modal fade" id="modalToggleLock" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">Blocca utente</h6>
+            </div>
+            <div class="modal-body">
+                <div class="card-text text-left">
+                    <p name="confirmLock"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                <button type="button" name="executeToggleLock" onclick="lockUserExecute('')" class="btn btn-light" data-bs-dismiss="modal">
+                    Blocca canale
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fine modale lock -->
 <!-- Fine modali -->
 <div class="d-flex flex-nowrap" style="height: 100vh;">
     <div class="d-flex flex-column flex-shrink-0 p-3" style="width: 280px;">
@@ -223,6 +245,7 @@
         "email": "Email",
         "first_name": "Nome",
         "last_name": "Cognome",
+        "locked": "Bloccato",
         "null": "Autorizzazioni",
         "actions": "Azioni"
     }, 'st');
@@ -348,8 +371,6 @@
             }
 
         });
-
-
     }
 
     function executeDeleteOnServer(username) {
@@ -366,7 +387,38 @@
                 $('#toastFail').toast('show');
             }
         });
+    }
 
+    function lockUser(username, locked) {
+        if(locked){
+            $('#modalToggleLock [name="confirmLock"]').html(`Siete sicuri di voler sbloccare l'utente "${username}"?`);
+            $('#modalToggleLock [name="executeToggleLock"]').attr('onclick', `lockUserExecute('${username}')`).html('Sblocca utente');
+            $('#modalToggleLock .modal-title').html('Sblocca utente');
+        } else {
+            $('#modalToggleLock [name="confirmLock"]').html(`Siete sicuri di voler bloccare l'utente "${username}"?`);
+            $('#modalToggleLock [name="executeToggleLock"]').attr('onclick', `lockUserExecute('${username}')`).html('Blocca utente');
+            $('#modalToggleLock .modal-title').html('Blocca utente');
+        }
+    }
+
+    function lockUserExecute(username) {
+        fetch(`../../user/${username}/toggle/lock`, {
+            method: 'PATCH',
+            headers: {
+                "Content-Type": "application/json",
+            }
+        }).then((response) => {
+            if (response.status === 200) {
+                $('#toastSuccess').toast('show');
+                loadTable();
+            } else if (response.status === 401) {
+                notifyError('Non autorizzato.');
+            } else if (response.status === 404) {
+                notifyError('Utente non trovato.');
+            } else {
+                notifyError('Errore nella richiesta riprovare.');
+            }
+        });
     }
 
 

@@ -155,13 +155,6 @@ module.exports = class ChannelModel extends Model {
                 $match: filter
             }];
         try {
-            /*
-            let results = await this.entityMongooseModel
-                .find(filter)
-                .sort(sorting)
-                .skip(offset)
-                .limit(limit);
-            */
             let results = await this.entityMongooseModel
                 .aggregate(aggregate)
                 .sort(sorting)
@@ -170,7 +163,6 @@ module.exports = class ChannelModel extends Model {
 
             let output = [];
             for (let i = 0; i < results.length; i++) {
-                //output.push(new ChannelDto(results[i]._doc));
                 let tmp = new ExtendedChannelDto(results[i]);
                 tmp.owner = results[i].owner[0]['username'];
                 tmp.subscribers = results[i].subscribers[0]['username'];
@@ -237,6 +229,27 @@ module.exports = class ChannelModel extends Model {
         }
         return true;
 
+    }
+
+    /**
+     * @param {ChannelDto} channelDto
+     * @param {boolean} newLock
+     * @return Promise<boolean>
+     */
+    async changeChannelLock(channelDto, newLock){
+        await this.checkMongoose("Channel", Channel);
+        let filter = {
+            "type": `${this.mongo_escape(channelDto.type)}`,
+            "channel_name": `${this.mongo_escape(channelDto.channel_name)}`
+        };
+        channelDto.locked = newLock;
+        try {
+            channelDto = this.mongo_escape(channelDto.getDocument());
+            await this.entityMongooseModel.updateOne(filter, channelDto);
+        } catch (ignored) {
+            return false;
+        }
+        return true;
     }
 
 }

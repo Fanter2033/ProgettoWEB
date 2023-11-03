@@ -14,7 +14,7 @@ channelDriver.use(express.json());
 channelDriver.use(express.urlencoded({extended: true}));
 
 
-channelDriver.post('/', async function (req, res) { //TODO TEST
+channelDriver.post('/', async function (req, res) {
     let authUserPromise = authController.getAuthenticatedUser(req);
     if (typeof req.body === 'undefined' || typeof req.body.channel === 'undefined') {
         req.body = {};
@@ -72,7 +72,7 @@ channelDriver.get('/:type', async function (req, res) {
         res.status(ctrl.code).send(ctrl);
 });
 
-channelDriver.put('/:type/:channel', async function (req, res) { //TODO: TEST
+channelDriver.put('/:type/:channel', async function (req, res) {
     let channelDto = new ChannelDto();
     let authUserPromise = authController.getAuthenticatedUser(req);
     let newChannel = new ChannelDto();
@@ -98,7 +98,7 @@ channelDriver.put('/:type/:channel', async function (req, res) { //TODO: TEST
         res.status(ctrlOut.code).send(ctrlOut);
 });
 
-channelDriver.delete('/:type/:channel', async function (req, res) { //TODO TEST
+channelDriver.delete('/:type/:channel', async function (req, res) {
     let channelDto = new ChannelDto();
     channelDto.type = (typeof req.params['type'] !== 'undefined' ? req.params['type']: null);
     channelDto.channel_name = (typeof req.params['channel'] !== 'undefined' ? req.params['channel']: null);
@@ -123,7 +123,7 @@ channelDriver.get('/:type/:channel', async function (req, res) {
         res.status(ctrlOut.code).send(ctrlOut);
 });
 
-channelDriver.patch('/:type/:channel/:username', async function(req, res){ //TODO TEST
+channelDriver.patch('/:type/:channel/:username', async function(req, res){
     let channelDto = new ChannelDto();
     let authUserPromise = authController.getAuthenticatedUser(req);
 
@@ -139,6 +139,20 @@ channelDriver.patch('/:type/:channel/:username', async function(req, res){ //TOD
     new_role = parseInt(new_role);
 
     let ctrlOut = await controller.changeChannelRole(channelDto, username, new_role, await authUserPromise);
+    if (ctrlOut.code === 200)
+        res.status(ctrlOut.code).send(ctrlOut.content);
+    else
+        res.status(ctrlOut.code).send(ctrlOut);
+});
+
+channelDriver.patch('/:type/:channel/toggle/lock', async function(req, res){
+    let channelDto = new ChannelDto();
+    let authUserPromise = authController.getAuthenticatedUser(req);
+
+    channelDto.type = (typeof req.params['type'] !== 'undefined' ? req.params['type']: null);
+    channelDto.channel_name = (typeof req.params['channel'] !== 'undefined' ? req.params['channel']: null);
+
+    let ctrlOut = await controller.toggleChannelLock(channelDto, await authUserPromise);
     if (ctrlOut.code === 200)
         res.status(ctrlOut.code).send(ctrlOut.content);
     else
