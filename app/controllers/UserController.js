@@ -179,7 +179,7 @@ module.exports = class UserController extends Controller {
      *
      * change a user from a given username
      */
-    async updateUser(newUser, oldUsername, authenticatedUser) { //TODO GESTIRE CAMBIO QUOTA AL VARIARE DELL'USERNAME
+    async updateUser(newUser, oldUsername, authenticatedUser) {
         let output = this.getDefaultOutput();
         let ctrl_response = this.controlUser(newUser, true);
         if (ctrl_response !== 0) {
