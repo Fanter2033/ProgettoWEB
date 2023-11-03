@@ -1,4 +1,9 @@
 const Controller = require("./Controller");
+const QuoteController = require ("./QuoteController");
+const QuoteModel = require ("../models/QuoteModel");
+const ChannelRolesController = require("./ChannelRolesController");
+const ChannelRolesModel = require("../models/ChannelRolesModel");
+
 module.exports = class UserController extends Controller {
 
     constructor(model) {
@@ -9,7 +14,7 @@ module.exports = class UserController extends Controller {
     /**
      *
      * @param username {String}
-     * @returns {Promise<*|UserDto|{}>}
+     * @returns {Promise<{msg: string, code: number, sub_code: number,content: {}}>}
      *
      * Given a username, this functions returns the user, if found. Error 404 otherwise.
      */
@@ -38,12 +43,13 @@ module.exports = class UserController extends Controller {
      *
      * @param username {string}
      * @param authenticatedUser {UserDto}
+     * @param escapeControl {boolean}
      * @returns {Promise<{msg: string, code: number, content: {}}>}
      *
-     * Delete a user if it exist, the operation can be made only by the deleting user or a squealer Admin.
+     * Delete a user if it exists, the operation can be made only by the deleting user or a squealer Admin.
      *
      */
-    async deleteUser(username, authenticatedUser) {
+    async deleteUser(username, authenticatedUser, escapeControl = false) {
         let output = this.getDefaultOutput();
 
         username = username.trim();
@@ -53,10 +59,15 @@ module.exports = class UserController extends Controller {
             return output;
         }
 
-        if (this.isObjectVoid(authenticatedUser) || (!authenticatedUser.isAdmin && authenticatedUser.username !== username)) {
-            output['code'] = 403;
-            output['msg'] = 'Forbidden.';
-            return output;
+
+        let channelRoleController = new ChannelRolesController(new ChannelRolesModel());
+
+        if(escapeControl === false){
+            if (this.isObjectVoid(authenticatedUser) || (!authenticatedUser.isAdmin && authenticatedUser.username !== username)) {
+                output['code'] = 403;
+                output['msg'] = 'Forbidden.';
+                return output;
+            }
         }
 
         if (await this._model.userExists(username) === false) {
@@ -65,6 +76,26 @@ module.exports = class UserController extends Controller {
             output['msg'] = 'User not found.';
             return output;
         }
+
+        //Before deleting quote information we should delete all channel relationship.
+        let roleCtrlOut = await channelRoleController.deleteUserRole(username, authenticatedUser);
+
+        if(roleCtrlOut['code'] !== 200){
+            //Errors!
+            output['code'] = 500;
+            output['sub_code'] = 2;
+            output['msg'] = 'Internal server error.';
+        }
+
+        let quoteController = new QuoteController(new QuoteModel())
+        let deleteQuotaResult = await quoteController.deleteQuote(username);
+        if(deleteQuotaResult['code'] !== 200){
+            //Errors!
+            output['code'] = 500;
+            output['sub_code'] = 1;
+            output['msg'] = 'Internal server error.';
+        }
+
 
         //Let's delete the user!
         if (await this._model.deleteUser(username) === false) {
@@ -85,6 +116,8 @@ module.exports = class UserController extends Controller {
      */
     async createUser(userObj, authenticatedUser) {
         let output = this.getDefaultOutput();
+        let quoteController = new QuoteController(new QuoteModel())
+
         let ctrl_response = this.controlUser(userObj);
         if (ctrl_response !== 0) {
             output['code'] = 400;
@@ -114,6 +147,8 @@ module.exports = class UserController extends Controller {
 
         //Salt! - A lot of SALT!!!
         userObj.psw_shadow = await this.crypt(userObj.psw_shadow);
+        userObj.pro = false;
+        userObj.locked = false;
 
         let databaseResponse = await this._model.createUser(userObj);
         if (databaseResponse)
@@ -121,6 +156,15 @@ module.exports = class UserController extends Controller {
         else {
             output['code'] = 500;
             output['msg'] = 'Error inserting into DB.';
+            return  output;
+        }
+
+        let quoteCtrl = await quoteController.createQuote(userObj.username);
+        if(quoteCtrl.code !== 200){
+            //if we are in this case we should revert all and throw an error
+            output['code'] = 500;
+            output['msg'] = 'Warning! Cannot create associate quota. Operation failed';
+            await this.deleteUser(userObj.username, null, true);
         }
 
         return output;
@@ -188,6 +232,9 @@ module.exports = class UserController extends Controller {
 
 
         newUser.registration_timestamp = oldUserObj.registration_timestamp;
+        newUser.pro = oldUserObj.pro;
+        newUser.locked = oldUserObj.locked;
+
         if(newUser.psw_shadow !== '') //if password isn't set, save the old password
             newUser.psw_shadow = await this.crypt(newUser.psw_shadow);
         else //Password set, save new in the database.
@@ -227,14 +274,9 @@ module.exports = class UserController extends Controller {
         if (this.isEmail(email) === false)
             return -2;
 
-        if(userObj.isUser !== true && userObj.isUser !== false)
-            return -3;
-
-        if(userObj.isSmm !== true && userObj.isSmm !== false)
-            return -3;
-
-        if(userObj.isAdmin !== true && userObj.isAdmin !== false)
-            return -3;
+        if(userObj.isUser !== true && userObj.isUser !== false) return -3;
+        if(userObj.isSmm !== true && userObj.isSmm !== false) return -3;
+        if(userObj.isAdmin !== true && userObj.isAdmin !== false) return -3;
 
         userObj.username = username;
         userObj.psw_shadow = password;
@@ -299,6 +341,47 @@ module.exports = class UserController extends Controller {
         user.isSmm = null;
         user.isUser = null;
         return user;
+    }
+
+
+    /**
+     * @param {string} username
+     * @param {UserDto} authUser
+     * @return {Promise<{msg: string, code: number, sub_code: number,content: {}}>}
+     */
+    async toggleLock(username, authUser){
+        let output = this.getDefaultOutput();
+
+        let userExists = await this._model.userExists(username);
+        if (userExists !== true) {
+            output['code'] = 404;
+            output['msg'] = 'Not found.';
+            return output;
+        }
+
+        let userDto = await this._model.getUser(username);
+
+        if (this.isObjectVoid(authUser) === true) {
+            output['code'] = 403;
+            output['msg'] = 'User not authenticated';
+            return output;
+        }
+
+        if (!authUser.isAdmin) {
+            output['code'] = 401;
+            output['msg'] = 'Not allowed for non-moderators.';
+            return output;
+        }
+
+        let newLock = userDto.locked;
+        newLock = !newLock;
+        let result = await this._model.changeUserLock(userDto, newLock);
+        if (result === false) {
+            output['code'] = 500;
+            output['msg'] = 'Internal server error.';
+            return output;
+        }
+        return output;
     }
 
 
