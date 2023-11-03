@@ -5,6 +5,7 @@ import ReactConfig from "./config/ReactConfig";
 import LoginForm from "./pages/LoginForm";
 import Register from "./pages/Register";
 import Channels from "./pages/Channels";
+import Home from "./pages/Home";
 import HomeRoutes from "./pages/HomeRoutes";
 import NotFound from "./pages/NotFound";
 
@@ -22,8 +23,8 @@ function App() {
           path={ReactConfig.pathFunction("/channels")}
           element={<Channels />}
         />
+        <Route path={ReactConfig.pathFunction("/home")} element={<Home />} />
         <Route path={ReactConfig.pathFunction("/*")} element={<HomeRoutes />} />
-
         <Route path={ReactConfig.pathFunction("*")} element={<NotFound />} />
       </Routes>
     </div>

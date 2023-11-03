@@ -4,12 +4,7 @@ import ReactConfig from "../config/ReactConfig";
 import { NavLink } from "react-router-dom";
 import "../LoginForm.css";
 
-//import { response } from "../../../drivers/views/viewAdminDriver";
-//import "../LoginForm.css";
-
 //TODO: implementa il bottone per chi non si vuole autenticare
-//radio button: does one have to be clicked or not?
-//do we want to put some constraints on the password or not?
 
 function LoginForm() {
   const [username, setUsername] = useState("");
@@ -25,14 +20,13 @@ function LoginForm() {
   }
 
   const handleLogin = () => {
-    //navigate('/home'); This code is dangerous cause after using it the browser can stop the execution of the code
-    //send a POST to driver
-    //const data = { nome: username, password: password }; //nope. According to Swagger specifics, the username is sent in path, with the requested role.
-    const data = { password: password }; //nope. According to Swagger specifics, the username is sent in path, with the requested role.
-    //URI: where I want ot send the POST: viewDriver
-    //@romanellas comment. No u should send post to authDriver
+
+    //corrected with love by @romanellas
+    //URI: where I want ot send the POST: authDriver
+    //according to Swagger specifics, the username is sent in path, with the requested role.
+    const data = { password: password }; 
     let uri = `${ReactConfig.base_url_requests}/auth/${username}/0`;
-    console.log(uri);
+
     fetch(uri, {
       method: "POST",
       headers: {
@@ -41,9 +35,9 @@ function LoginForm() {
       },
       body: JSON.stringify(data),
     })
-      .then((response) => {
+    .then((response) => {
         if (response.ok) {
-          navigate(`channles`);
+          navigate(`/channels`);
         } else {
           console.error("Authentication failed", response.statusText);
         }
@@ -63,7 +57,7 @@ function LoginForm() {
               Log in to &#129413;
             </h1>
             <div className="form-group row p-2 mb-3">
-              <label for="inputUsername" className="form-label cool-font-small">
+              <label htmlFor="inputUsername" className="form-label cool-font-small">
                 Username
               </label>
               <input
@@ -78,7 +72,7 @@ function LoginForm() {
 
             <div className="form-group row p-2 mb-4">
               <label
-                for="inputPassword5"
+                htmlFor="inputPassword5"
                 className="form-label cool-font-small"
               >
                 Password
@@ -118,6 +112,7 @@ function LoginForm() {
                 <NavLink
                   style={{ color: "#072f38" }}
                   className="cool-font-small"
+                  to={ReactConfig.pathFunction("/home")}
                 >
                  Skip the log in
                 </NavLink>
