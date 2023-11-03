@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 import { NavLink } from "react-router-dom";
 import "../LoginForm.css";
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 //TODO: implementa il bottone per chi non si vuole autenticare
 
@@ -10,6 +12,16 @@ function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const notify = () => toast.error('Errore di autenticazione. Riprovare', {
+    position: "bottom-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
+  });
 
   function handleUsernameChange(event) {
     setUsername(event.target.value);
@@ -39,6 +51,7 @@ function LoginForm() {
         if (response.ok) {
           navigate(`/channels`);
         } else {
+          notify();
           console.error("Authentication failed", response.statusText);
         }
       })
@@ -93,7 +106,9 @@ function LoginForm() {
                 className="col-12 col-md-4 offset-md-4 mb-5 custom-button"
                 type="button"
                 onClick={handleLogin}
+                //onClick={notify}
               >
+                <ToastContainer />
                 LOGIN
               </button>
             </div>
