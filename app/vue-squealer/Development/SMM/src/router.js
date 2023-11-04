@@ -3,6 +3,7 @@ import Login from "./components/Login.vue";
 import DashBoard from "./components/dashboard/DashBoard.vue";
 import Graphs from "@/components/dashboard/Graphs.vue";
 
+
 const routes = [
   {
     path: "/",
@@ -14,7 +15,11 @@ const routes = [
     path: "/dashboard",
     name: "Smm-DashBoard",
     component: DashBoard,
-    children: [{ path: "graphs", component: Graphs }],
+  },
+  {
+    path: "/dashboard/graphs",
+    name: "Graphs",
+    component: Graphs
   },
 ];
 

@@ -4,7 +4,7 @@
     <!-- Riga principale con flex-nowrap (senza wrap) -->
     <div class="row flex-nowrap">
       <!-- Colonna laterale sinistra (barra laterale) -->
-      <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+      <div class="col-auto px-sm-2 px-0 bg-dark">
         <!-- Contenuto della barra laterale -->
         <div
           class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100"
@@ -30,7 +30,7 @@
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-                <i class="fs-4 bi-person-circle me-1"></i>
+                <i class="fs-4 bi-person-circle mx-sm-auto icon-small"></i>
                 <span class="ms-1 d-none d-sm-inline">romanellas</span>
               </a>
               <!-- Sottomenu di Products -->
@@ -40,10 +40,10 @@
                 data-bs-parent="#menu"
               >
                 <li class="w-100">
-                  <a href="#" class="nav-link px-0">
+                  <router-link to="/dashboard/graphs" class="nav-link px-0">
                     <i class="fs-4 bi-file-bar-graph"></i>
-                    <span class="d-none d-sm-inline">Graphs</span></a
-                  >
+                    <span class="d-none d-sm-inline">Graphs</span>
+                  </router-link>
                 </li>
                 <li>
                   <a href="#" class="nav-link px-0">
@@ -89,3 +89,10 @@ export default {
   name: "SideBar",
 };
 </script>
+
+<style>
+.icon-small {
+  max-width: 100%;
+  height: auto;
+}
+</style>

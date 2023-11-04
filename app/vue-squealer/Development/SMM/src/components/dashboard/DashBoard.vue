@@ -3,9 +3,7 @@
     <Nav />
     <SideBar />
   </div>
-  <div>
 
-  </div>
 </template>
 
 <script>
