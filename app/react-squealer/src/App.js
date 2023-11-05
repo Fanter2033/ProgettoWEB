@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import HomeRoutes from "./pages/HomeRoutes";
 import NotFound from "./pages/NotFound";
 
+//Routes without <Navbar/>
 function App() {
   return (
     <div className="App">

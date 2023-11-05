@@ -12,6 +12,7 @@ function HomeRoutes() {
 
       <Routes>
         <Route element={<Navbar />} />
+
         <Route path="/account" element={<Account />} />
         <Route path="/channels/" element={<Channels />} />
         <Route path="/post" element={<Post />} />

@@ -1,7 +1,7 @@
 import React from "react";
-import pinguini from "./744677.jpg";
-import cat from "./miau.png";
-import "../App.css";
+import "../css/App.css";
+import pinguini from "./media/744677.jpg";
+import cat from "./media/miau.png";
 
 //offset mi tenere centrata la colonna
 

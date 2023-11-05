@@ -1,53 +1,46 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
-import { NavLink } from "react-router-dom";
-import "../LoginForm.css";
-import { toast, ToastContainer } from 'react-toastify';
-import "react-toastify/dist/ReactToastify.css";
 
-//TODO: implementa il bottone per chi non si vuole autenticare
+import { toast, ToastContainer } from "react-toastify";
+
+import "../css/LoginForm.css";
+import "react-toastify/dist/ReactToastify.css";
 
 function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const notify = () => toast.error('Errore di autenticazione. Riprovare', {
-    position: "bottom-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "colored",
-  });
 
-  function handleUsernameChange(event) {
-    setUsername(event.target.value);
-  }
-
-  function handlePasswordChange(event) {
-    setPassword(event.target.value);
-  }
+  const notify = () =>
+    toast.error("Errore di autenticazione. Riprovare", {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
 
   const handleLogin = () => {
-
     //corrected with love by @romanellas
-    //URI: where I want ot send the POST: authDriver
+    //URI: where I want ot send the POST
     //according to Swagger specifics, the username is sent in path, with the requested role.
-    const data = { password: password }; 
-    let uri = `${ReactConfig.base_url_requests}/auth/${username}/0`;
-
-    fetch(uri, {
+    const data = { password: password };
+    const uri = `${ReactConfig.base_url_requests}/auth/${username}/0`;
+    const options = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
       },
       body: JSON.stringify(data),
-    })
-    .then((response) => {
+    };
+
+    fetch(uri, options)
+      .then((response) => {
         if (response.ok) {
           navigate(`/channels`);
         } else {
@@ -70,7 +63,10 @@ function LoginForm() {
               Log in to &#129413;
             </h1>
             <div className="form-group row p-2 mb-3">
-              <label htmlFor="inputUsername" className="form-label cool-font-small">
+              <label
+                htmlFor="inputUsername"
+                className="form-label cool-font-small"
+              >
                 Username
               </label>
               <input
@@ -79,7 +75,7 @@ function LoginForm() {
                 id="inputUsername"
                 value={username}
                 placeholder="username"
-                onChange={handleUsernameChange}
+                onChange={(e) => setUsername(e.target.value)}
               />
             </div>
 
@@ -97,7 +93,7 @@ function LoginForm() {
                 aria-describedby="passwordHelpBlock"
                 placeholder="password"
                 value={password}
-                onChange={handlePasswordChange}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
 
@@ -120,16 +116,17 @@ function LoginForm() {
                   className="cool-font-small"
                   to={ReactConfig.pathFunction("/registration")}
                 >
-                  New Here
+                  New Here ?
                 </NavLink>
               </div>
+
               <div className="col-12 mb-5">
                 <NavLink
                   style={{ color: "#072f38" }}
                   className="cool-font-small"
                   to={ReactConfig.pathFunction("/home")}
                 >
-                 Skip the log in
+                  Skip the log in !
                 </NavLink>
               </div>
             </div>

@@ -15,5 +15,6 @@ const ReactConfig = {
 
 export default ReactConfig;
 
-//IDEA: On debug sessions we can send requests to our express process. If we are in produciont we send the requests (omitting host and port) at same port!
+//IDEA: On debug sessions we can send requests to our express process. 
+//If we are in produciont we send the requests (omitting host and port) at same port!
 //BEFORE COMPILE PROCESS UNCOMMENT BASE URL = '' AND COMMENT THE OTHER ONE!
