@@ -36,7 +36,7 @@ function Navbar() {
       {/*Barra di navigazione in basso per schermi lg*/}
       <nav className="d-none d-sm-block navbar-expand-md nav-pc p-3">
         <ul className="navbar-nav d-flex justify-content-evenly">
-          <li calssName="navbar-brand">
+          <li className="navbar-brand">
             <img src={squeal_logo} alt="logo_squeal" width="30" height="30" />
           </li>
           <li>

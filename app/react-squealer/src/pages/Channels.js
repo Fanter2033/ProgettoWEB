@@ -1,19 +1,37 @@
 import React from "react";
+//import { useLocation } from "react-router-dom";
+
 import Post from "./Post";
 import Search from "./Search";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import { useLocation } from "react-router-dom";
 
 /* 
 TODO: let the chat disapper when on sm screen
 */
 function Channels() {
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const username = searchParams.get('username');
+  //const email = searchParams.get('email');
+  
+  //const username = match.params.username;
+  console.log(username);
+  //console.log(email);
+  
+
+  //const location = useLocation();
+  //console.log(location.state);
+
   return (
     <div>
-      <Navbar/>
+      <Navbar />
       <div className="container-flex">
         <div className="row">
           <div className="col-md-9">
+            <h1>{username}</h1>
             <h1>CHANNELS</h1>
             <div>
               <Search />
@@ -35,7 +53,7 @@ function Channels() {
           </div>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 }
