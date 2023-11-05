@@ -84,10 +84,50 @@ module.exports = class SquealController extends Controller {
         return output;
     }
 
+    /*
+    penso che in questa funzione bisognera' implementare anche
+    un controllo per vedere se uno squeal diventa popolare o meno
+    si puo' fare una funzione esterna "becomePopular" (e becomeUnpopular)
+    che modifica la quota dell'utente e inserisce il post nella sezione opportuna
+     */
+    async reactSquel(identifier, authenticatedUser, reaction){
+        let output = this.getDefaultOutput();
+
+        //check the user
+        if(this.isObjectVoid(authenticatedUser)){
+            output['code'] = 403;
+            output['msg'] = 'Please Login, cugliun'
+            return output;
+        }
+
+        let squealPromise = this.getSqueal(identifier);
+        //check the squeal
+        if(squealPromise['code'] !== 200){
+            output['code'] = 404;
+            output['msg'] = 'Squeal not found';
+            return output;
+        }
+
+        //check the reaction type
+        if(!this.checkReactionType(reaction)){
+            output['code'] = 400;
+            output['msg'] = 'Invalid type of reaction. Bad request'
+            return output;
+        }
+
+    }
+
     checkSquealType(type){
         return  type === 'MESSAGE_TEXT' ||
                 type === 'IMAGE_URL'    ||
                 type === 'VIDEO_URL'    ||
                 type === 'POSITION';
+    }
+
+    checkReactionType(type){
+        return type === 'LIKE_A_LOT'    ||
+            type === 'LIKE'             ||
+            type === 'DO_NOT_LIKE'      ||
+            type === 'DISGUSTED';
     }
 }
