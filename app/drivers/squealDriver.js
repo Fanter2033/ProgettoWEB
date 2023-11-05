@@ -26,9 +26,9 @@ squealDriver.get('/:id', async function (req, res){
 })
 
 squealDriver.post('/', async function(req, res){
-        let authUser = authController.getAuthenticatedUser(req);
+    let authUser = authController.getAuthenticatedUser(req);
 
-    if (typeof req.body === 'undefined' || typeof req.body.user === 'undefined') {
+    if (typeof req.body === 'undefined' || typeof req.body.squeal === 'undefined') {
         req.body = {};
         req.body.squeal = {};
         req.body.squeal._id = '';
@@ -40,6 +40,7 @@ squealDriver.post('/', async function(req, res){
         req.body.squeal.negative_value = '';
         req.body.squeal.critical_mass = '';
         req.body.squeal.quote_cost = '';
+        req.body.squeal.content = '';
     }
 
     let squealDto = new SquealDto();
@@ -52,9 +53,9 @@ squealDriver.post('/', async function(req, res){
     squealDto.negative_value = (typeof req.body.squeal['negative_value'] !== 'undefined' ? req.body.squeal['negative_value']: null);
     squealDto.critical_mass = (typeof req.body.squeal['critical_mass'] !== 'undefined' ? req.body.squeal['critical_mass']: null);
     squealDto.quote_cost = (typeof req.body.squeal['quote_cost'] !== 'undefined' ? req.body.squeal['quote_cost']: null);
+    squealDto.content = (typeof req.body.squeal['content'] !== 'undefined' ? req.body.squeal['content']: null);
 
-
-    let ctrlOut = await squealController.postSqueal(squealDto, authUser);
+    let ctrlOut = await squealController.postSqueal(squealDto, await authUser);
     if (ctrlOut.code === 200)
         res.status(ctrlOut.code).send(ctrlOut.content);
     else

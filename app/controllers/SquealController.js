@@ -39,7 +39,7 @@ module.exports = class SquealController extends Controller {
         let output = this.getDefaultOutput();
         if(this.isObjectVoid(authenticatedUser)){
             output['code'] = 403;
-            output['msg'] = 'Please Login, cugliun'
+            output['msg'] = 'Please Login.'
             return output;
         }
 
@@ -59,12 +59,17 @@ module.exports = class SquealController extends Controller {
             //TODO: controllare che i destinatari
         }
 
+
         let quoteCtrl = new QuoteController(new QuoteModel());
         let quoteRes = await quoteCtrl.getQuote(authenticatedUser.username)
         if(quoteRes >= squealDto.quote_cost){
             output['code'] = 412;
             output['msg'] = 'quote not available'
             return output;
+        }
+
+        if(true){
+            //TODO: controllo coerenza content
         }
 
         let modelOutput = await this._model.postSqueal(squealDto);
@@ -76,7 +81,7 @@ module.exports = class SquealController extends Controller {
         }
 
         output['content'] = squealDto.getDocument();
-
+        return output;
     }
 
     checkSquealType(type){

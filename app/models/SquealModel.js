@@ -23,13 +23,13 @@ module.exports = class SquealModel extends Model {
     }
 
     /**
-     * @param squealObj {SquealDto}
+     * @param squealDto {SquealDto}
      * @returns {Promise<boolean>}
      */
-    async postSqueal(squealObj){
+    async postSqueal(squealDto){
         await  this.checkMongoose("Squeal", Squeal);
-        squealObj = this.mongo_escape(squealObj.getDocument());
-        let newSqueal = new this.entityMongooseModel(squealObj);
+        squealDto = this.mongo_escape(squealDto.getDocument());
+        let newSqueal = new this.entityMongooseModel(squealDto);
         try {
             await newSqueal.save();
         } catch (ignored){
