@@ -33,28 +33,27 @@ interface Props{
 
 function Account() {
   const [users, setUsers] = useState([]);
-  let usersArray = [];
+
+  async function getUsers() {
+    /*
+    fetch(`${ReactConfig.base_url_requests}/user`)
+      .then((res) => res.json())
+      .then((result) => {
+        setUsers(result);
+        usersArray = Object.values(users);
+      });
+      */
+    let result = fetch(`${ReactConfig.base_url_requests}/user`);
+    let response = await result;
+    if(response.ok){
+      let json = await response.json();
+      setUsers(json.users);
+      return json.users;
+    }
+  }
 
   useEffect(() => {
-    async function getUsers() {
-      /*
-      fetch(`${ReactConfig.base_url_requests}/user`)
-        .then((res) => res.json())
-        .then((result) => {
-          setUsers(result);
-          usersArray = Object.values(users);
-        });
-        */
-       let result = fetch(`${ReactConfig.base_url_requests}/user`);
-       let response = await result;
-       if(response.ok){
-        let json = await response.json();
-        return json.users;
-       }
-       
-    }
 
-    getUsers();
   }, []);
   /*
 
@@ -138,7 +137,7 @@ for (let i = 0; i < usersArray.length; i++) {
 
   return (
     <div>
-      <div className="container-flex" id="elemento-espanso">
+      <div className="container-flex" id="elemento-espanso" onLoad={getUsers}>
         <Navbar />
         <div className="row mb-5 mt-4">
           <div className="col-12 col-md-3">
@@ -161,10 +160,9 @@ for (let i = 0; i < usersArray.length; i++) {
               </div>
 
               <div>
-          
-                CIAO: {usersArray.length}
-                {usersArray.map((user, index) => (
-                  <ol key={index}>Username: {user.email}</ol>
+
+                {users.map((user, index) => (
+                  <ol key={index}>Email: {user.email}</ol>
                 ))}
               </div>
 
