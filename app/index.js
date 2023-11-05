@@ -8,6 +8,8 @@ const userDriver = require("./drivers/userDriver");
 const channelDriver = require("./drivers/channelDriver");
 const viewDriver = require("./drivers/views/viewDriver");
 
+const squealDriver = require('./drivers/squealDriver');
+
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const cookieParser = require("cookie-parser");
@@ -99,6 +101,7 @@ backEndRouter.use("/auth", authDriver);
 backEndRouter.use("/database", databaseDriver);
 backEndRouter.use("/user", userDriver);
 backEndRouter.use("/channel", channelDriver);
+backEndRouter.use("/squeal", squealDriver);
 backEndRouter.use("/", viewDriver);
 
 backEndRouter.listen(autoload.config._WEBSERVER_PORT, () => {
