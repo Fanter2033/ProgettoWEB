@@ -47,7 +47,7 @@ module.exports = class SquealModel extends Model {
         await  this.checkMongoose("Squeal", Squeal);
         let result = await this.entityMongooseModel.find({}).sort({'_id': 'desc'}).limit(1);
         if (result.length === 1)
-            return parseInt(result[0] + 1);
+            return parseInt(result[0]) + 1;
         return 1;
     }
 
