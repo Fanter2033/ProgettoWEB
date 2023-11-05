@@ -6,20 +6,23 @@ import Search from "./Search";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 /* 
 TODO: let the chat disapper when on sm screen
 */
 function Channels() {
 
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const username = searchParams.get('username');
-  //const email = searchParams.get('email');
+  const {username} = useParams();
+
+  //NO useParams
+  //const location = useLocation();
+  //const searchParams = new URLSearchParams(location.search);
+  //const username = searchParams.get('username');
   
   //const username = match.params.username;
   console.log(username);
-  //console.log(email);
+  
   
 
   //const location = useLocation();

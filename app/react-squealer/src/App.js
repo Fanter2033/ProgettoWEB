@@ -21,7 +21,7 @@ function App() {
           element={<Register />}
         />
         <Route
-          path={ReactConfig.pathFunction("/channels")}
+          path={ReactConfig.pathFunction("/channels/:username")}
           element={<Channels />}
         />
         <Route path={ReactConfig.pathFunction("/home")} element={<Home />} />

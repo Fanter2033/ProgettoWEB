@@ -11,7 +11,7 @@ import Geo from "./Geo";
 
 //gli utenti non autenticati possono usare la serach?
 
-function Home(props) {
+function Home() {
   //let location= useLocation();
   //console.log(props.location.state);
   return (
