@@ -25,13 +25,14 @@ const UserModel = require("./models/UserModel");
 let userTestQuote = new UserController(new UserModel());
 //TODO: RISOLVERE LIMIT. SE SI METTE -1 PRENDE TUTTI GLI UTENTI
 cronDaemon.schedule("0 0 * * *", async function () {
+    console.log('START');
     //It's midnight!
-  try {
-    let userList = await userTestQuote.getUserList({}, 0, 100, "", "", "");
-    await controller.resetQuote(userList.content.users);
-  } catch (error) {
-    console.error("Errore duranate l'aggiornamento quote");
-  }
+    try {
+        let userList = await userTestQuote.getUserList({}, 0, 100, "", "", "");
+        await controller.resetQuote(userList.content.users);
+    } catch (error) {
+        console.error("Errore duranate l'aggiornamento quote");
+    }
 });
 
 global.rootDir = __dirname;
@@ -44,21 +45,21 @@ const oneDay = 1000 * 60 * 60 * 24;
  * save and crypt sessions
  */
 backEndRouter.use(
-  session({
-    secret: autoload.config._SESSION_SECRET,
-    store: MongoStore.create({
-      mongoUrl: `mongodb://${autoload.config._DATABASE_USER}:${autoload.config._DATABASE_PWD}@${autoload.config._DATABASE_HOST}:${autoload.config._DATABASE_PORT}/${autoload.config._DATABASE_NAME}${autoload.config._DATABASE_EXTRA}`,
-      collection: autoload.config._SESSION_COLLECTION,
-    }),
-    saveUninitialized: true,
-    cookie: { maxAge: oneDay },
-    resave: false,
-  })
+    session({
+        secret: autoload.config._SESSION_SECRET,
+        store: MongoStore.create({
+            mongoUrl: `mongodb://${autoload.config._DATABASE_USER}:${autoload.config._DATABASE_PWD}@${autoload.config._DATABASE_HOST}:${autoload.config._DATABASE_PORT}/${autoload.config._DATABASE_NAME}${autoload.config._DATABASE_EXTRA}`,
+            collection: autoload.config._SESSION_COLLECTION,
+        }),
+        saveUninitialized: true,
+        cookie: {maxAge: oneDay},
+        resave: false,
+    })
 );
 
 // parsing the incoming data
 backEndRouter.use(express.json());
-backEndRouter.use(express.urlencoded({ extended: true }));
+backEndRouter.use(express.urlencoded({extended: true}));
 
 //Allow CORS
 backEndRouter.use(cors());
@@ -68,20 +69,20 @@ backEndRouter.use(cookieParser());
 
 /*log requests*/
 backEndRouter.get("*", (req, res, next) => {
-  autoload.logRequests(req, next);
+    autoload.logRequests(req, next);
 });
 backEndRouter.post("*", (req, res, next) => {
-  autoload.logRequests(req, next);
+    autoload.logRequests(req, next);
 });
 backEndRouter.put("*", (req, res, next) => {
-  autoload.logRequests(req, next);
+    autoload.logRequests(req, next);
 });
 backEndRouter.delete("*", (req, res, next) => {
-  autoload.logRequests(req, next);
+    autoload.logRequests(req, next);
 });
 
 backEndRouter.patch("*", (req, res, next) => {
-  autoload.logRequests(req, next);
+    autoload.logRequests(req, next);
 });
 
 backEndRouter.use("/js", express.static(global.rootDir + "/public/js"));
@@ -105,7 +106,7 @@ backEndRouter.use("/squeal", squealDriver);
 backEndRouter.use("/", viewDriver);
 
 backEndRouter.listen(autoload.config._WEBSERVER_PORT, () => {
-  console.log(`Server started on port ${autoload.config._WEBSERVER_PORT}`);
+    console.log(`Server started on port ${autoload.config._WEBSERVER_PORT}`);
 });
 
 //Cron handler: (sec) min  h  d_m  m  d_w
