@@ -4,7 +4,7 @@ const message_type = ['MESSAGE_TEXT', 'IMAGE_URL', 'VIDEO_URL', 'POSITION'];
 
 module.exports = new Schema({
     _id: {type: Number, unique: true},
-    date: {type: Date},
+    date: {type: Number},
     destinations: { linkedUsers: [String]  },
     sender: {type: String},
     reactions: {type: [String]},

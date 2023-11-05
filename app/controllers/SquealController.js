@@ -37,6 +37,8 @@ module.exports = class SquealController extends Controller {
      */
     async postSqueal(squealDto, authenticatedUser){
         let output = this.getDefaultOutput();
+        squealDto.sender = authenticatedUser.username;
+
         if(this.isObjectVoid(authenticatedUser)){
             output['code'] = 403;
             output['msg'] = 'Please Login.'
@@ -49,12 +51,6 @@ module.exports = class SquealController extends Controller {
             return output;
         }
 
-        if(squealDto.sender !== authenticatedUser.username){
-            output['code'] = 401;
-            output['msg'] = 'Unauthorized'
-            return output;
-        }
-
         if(true){
             //TODO: controllare che i destinatari
         }
@@ -63,9 +59,32 @@ module.exports = class SquealController extends Controller {
         let quoteCtrl = new QuoteController(new QuoteModel());
         let quoteRes = await quoteCtrl.getQuote(authenticatedUser.username)
         quoteRes = new QuoteDto(quoteRes.content);
-        if(quoteRes >= squealDto.quote_cost){
+
+        squealDto.content = squealDto.content.trim();
+        squealDto.quote_cost = squealDto.content.length;
+
+        if(quoteRes.remaining_daily < squealDto.quote_cost){
             output['code'] = 412;
-            output['msg'] = 'Quote not available'
+            output['msg'] = 'Daily quote not available';
+            return output;
+        }
+
+        if(quoteRes.remaining_weekly < squealDto.quote_cost){
+            output['code'] = 412;
+            output['msg'] = 'Weekly quote not available';
+            return output;
+        }
+
+        if(quoteRes.remaining_monthly < squealDto.quote_cost){
+            output['code'] = 412;
+            output['msg'] = 'Monthly quote not available';
+            return output;
+        }
+
+        let ctrlOut = await quoteCtrl.chargeLimitQuota(squealDto.sender, squealDto.quote_cost);
+        if(ctrlOut.code !== 200){
+            output['code'] = 500;
+            output['msg'] = 'Internal server error.';
             return output;
         }
 
@@ -75,6 +94,12 @@ module.exports = class SquealController extends Controller {
 
         //Controls ended. Let's insert
         squealDto.id = await this._model.getNextId();
+        squealDto.date = this.getCurrentTimestampSeconds();
+        squealDto.critical_mass = 0;
+        squealDto.negative_value = 0;
+        squealDto.positive_value = 0;
+        squealDto.reactions = [];
+
         let modelOutput = await this._model.postSqueal(squealDto);
 
         if(modelOutput === false){

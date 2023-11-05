@@ -53,6 +53,10 @@ module.exports = class UserModel extends Model {
     return true;
   }
 
+  /**
+   * @param quoteDto
+   * @return {Promise<boolean>}
+   */
   async patchQuote(quoteDto) {
     await this.checkMongoose("Quote", Quote);
     let filter = { _id: `${quoteDto.id}` };
