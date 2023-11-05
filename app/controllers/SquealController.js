@@ -1,9 +1,9 @@
 const Controller = require("./Controller");
-const SquealDto = require("../entities/dtos/QuoteDto");
+const SquealDto = require("../entities/dtos/SquelDto");
 const QuoteController = require("./QuoteController");
 const QuoteModel = require("../models/QuoteModel");
 const UserController = require("./UserController");
-const {model} = require("mongoose");
+const QuoteDto = require("../entities/dtos/QuoteDto");
 
 
 module.exports = class SquealController extends Controller {
@@ -62,9 +62,10 @@ module.exports = class SquealController extends Controller {
 
         let quoteCtrl = new QuoteController(new QuoteModel());
         let quoteRes = await quoteCtrl.getQuote(authenticatedUser.username)
+        quoteRes = new QuoteDto(quoteRes.content);
         if(quoteRes >= squealDto.quote_cost){
             output['code'] = 412;
-            output['msg'] = 'quote not available'
+            output['msg'] = 'Quote not available'
             return output;
         }
 
@@ -72,6 +73,8 @@ module.exports = class SquealController extends Controller {
             //TODO: controllo coerenza content
         }
 
+        //Controls ended. Let's insert
+        squealDto.id = await this._model.getNextId();
         let modelOutput = await this._model.postSqueal(squealDto);
 
         if(modelOutput === false){

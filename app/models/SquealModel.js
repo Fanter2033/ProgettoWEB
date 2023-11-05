@@ -1,6 +1,7 @@
 const Model = require("./Model");
 const Squeal = require("../entities/schemas/SquealSchema");
 const SquealDto = require("../entities/dtos/SquelDto");
+const UserDto = require("../entities/dtos/UserDto");
 
 module.exports = class SquealModel extends Model {
     constructor(CollectionName) {
@@ -36,6 +37,18 @@ module.exports = class SquealModel extends Model {
             return false;
         }
         return true;
+    }
+
+    /**
+     * @return {Promise<number>}
+     * Returns the next id of the squeal
+     */
+    async getNextId(){
+        await  this.checkMongoose("Squeal", Squeal);
+        let result = await this.entityMongooseModel.find({}).sort({'_id': 'desc'}).limit(1);
+        if (result.length === 1)
+            return parseInt(result[0]);
+        return 1;
     }
 
 }
