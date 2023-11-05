@@ -1,5 +1,5 @@
 import React from "react";
-//import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 
@@ -32,35 +32,39 @@ interface Props{
 */
 
 function Account() {
-  /*
   const [users, setUsers] = useState([]);
+  let usersArray = [];
 
   useEffect(() => {
-    fetch(`${ReactConfig.base_url_requests}/user`)
-      .then((res) => res.json())
-      .then((result) => {
-        setUsers(result);
-      });
+    async function getUsers() {
+      /*
+      fetch(`${ReactConfig.base_url_requests}/user`)
+        .then((res) => res.json())
+        .then((result) => {
+          setUsers(result);
+          usersArray = Object.values(users);
+        });
+        */
+       let result = fetch(`${ReactConfig.base_url_requests}/user`);
+       let response = await result;
+       if(response.ok){
+        let json = await response.json();
+        return json.users;
+       }
+       
+    }
+
+    getUsers();
   }, []);
-
-  const usersArray = Object.values(users);
-
-  <div>
-  {usersArray.map((user, index) => (
-    <ol key={index}>Username: {user}</ol>
-  ))}
-</div>
-
-<div>{userItems}</div>
-
-
-  const userItems = [];
-
-  for(let i=0; i< usersArray.length; i++){
-    const user = usersArray[i];
-    userItems.push(<li key={i}>email: {user.email}</li>)
-  }
   /*
+
+const userItems = [];
+for (let i = 0; i < usersArray.length; i++) {
+  const user = usersArray[i];
+  userItems.push(<li key={i}>email: {user.email}</li>);
+}
+   <div>{userItems}</div>
+
   ! add if you use the following code
   - props to Account 
   - {user ? <div>{user.email}</div> : <div>Loading...</div>} IN THE RETURN
@@ -154,6 +158,14 @@ function Account() {
 
               <div className="row mb-4">
                 <h2>Nome Cognome</h2>
+              </div>
+
+              <div>
+          
+                CIAO: {usersArray.length}
+                {usersArray.map((user, index) => (
+                  <ol key={index}>Username: {user.email}</ol>
+                ))}
               </div>
 
               <div className="row mb-4">
