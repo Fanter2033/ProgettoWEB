@@ -178,7 +178,7 @@ module.exports = class ChannelController extends Controller {
         }
 
         let tmp = await this.getChannel(oldChannel);
-        oldChannel = new ChannelDto(tmp);
+        oldChannel = new ChannelDto(tmp.content);
 
         if (new_exists !== false && oldChannel.channel_name !== newChannel.channel_name) {
             output['code'] = 409;
