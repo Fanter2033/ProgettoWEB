@@ -12,7 +12,9 @@ import cat from "./media/miau.png";
 
 //offset mi tenere centrata la colonna
 
-function Squeal() {
+function Squeal(props) {
+  console.log(props);
+
   //TODO GET SQUEAL /squeal/------------------------------------------------------------------------------------------------------------
 
   //TODO POST SQUEAL /squeal/------------------------------------------------------------------------------------------------------------
@@ -65,11 +67,6 @@ function Squeal() {
 
   const handleInputChange = (e) => {
     setUserInput(e.target.value);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("User input:", userInput);
   };
 
   //--------------------------------------------------------------
@@ -202,12 +199,7 @@ function Squeal() {
 
             <div className="">
               <div className="card-text mb-3">
-                <form onSubmit={handleSubmit}>
-                  {inputElement}
-                  <button className="custom-button" type="submit">
-                    Invia
-                  </button>
-                </form>
+                <form>{inputElement}</form>
               </div>
             </div>
 
@@ -229,12 +221,12 @@ function Squeal() {
                   alt="Immagine Profilo"
                   style={{ width: "40%" }}
                 />
-                <h5 className="mt-0">Big Feet</h5>
+                <h5 className="mt-0">{props.username}</h5>
               </div>
             </div>
           </div>
         </div>
-        <LegendaDest/>
+        <LegendaDest />
       </div>
     </div>
   );

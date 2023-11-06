@@ -46,8 +46,8 @@ function Navbar(props) {
                 <img
                   src={squeal_logo}
                   alt="logo_squeal"
-                  width="30"
-                  height="30"
+                  width="60"
+                  height="60"
                 />
               </li>
             </div>
@@ -58,8 +58,8 @@ function Navbar(props) {
                   <button type="button" className="btn icon-nav me-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
+                      width="30"
+                      height="30"
                       alt="Write Squeal"
                       fill="currentColor"
                       className="bi bi-plus-square"
@@ -84,8 +84,8 @@ function Navbar(props) {
                   <button type="button" className="btn icon-nav me-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
+                      width="30"
+                      height="30"
                       alt="Home"
                       fill="currentColor"
                       className="bi bi-house"
@@ -111,8 +111,8 @@ function Navbar(props) {
                   <button type="button" className="btn icon-nav me-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
+                      width="30"
+                      height="30"
                       alt="Profile"
                       fill="currentColor"
                       className="bi bi-person-circle"

@@ -2,7 +2,7 @@ import React from "react";
 
 function LegendaDest() {
   return (
-    <div className="card">
+    <div className="card mt-3 p-3 box">
       <h4>LEGENDA DEST:</h4>
       <p className="persona">@utente</p>
       <p className="qualcosaltro1">§channel</p>
