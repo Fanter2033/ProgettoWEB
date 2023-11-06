@@ -5,7 +5,8 @@ import ReactConfig from "../config/ReactConfig";
 import Search from "./Search";
 import Post from "./Post";
 import Footer from "./Footer";
-import Geo from "./Geo";
+
+//import { useLocation } from "react-router-dom";
 
 //gli utenti non autenticati possono usare la serach?
 
@@ -37,7 +38,6 @@ function Home() {
                 <li className="list-group-item list">hash</li>
               </ul>
             </div>
-            <Geo />
           </div>
         </div>
       </div>

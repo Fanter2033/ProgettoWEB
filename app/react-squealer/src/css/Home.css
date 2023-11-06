@@ -1,9 +1,15 @@
+:root {
+  --squeal-green: #528b57;
+  --squeal-blue: #072f38;
+  --squeal-yellow: #e0bb76;
+}
+
 /* ------------ ATTENZIONE AGLI ALTRI FILE CSS -------------*/
 
 body {
   text-align: center;
-  background-color: #e0bb76;
-  color: #072f38;
+  background-color: var(--squeal-yellow);
+  color: var(--squeal-blue);
 }
 
 /*---------------- SFONDO SU TUTTA LA PAGE --------------------*/
@@ -13,24 +19,24 @@ body {
   right: 0; /* Finisce a destra della viewport */
   bottom: 0; /* Finisce in basso della viewport */
   left: 0; /* Inizia da sinistra della viewport */
-  background-color: #e0bb76;
+  background-color: var(--squeal-yellow);
 }
 
 /* ------------ TODO STUFF -------------*/
 .list:hover {
-  background-color: #528b57;
+  background-color: var(--squeal-green);
   color: #ffffff;
 }
 
 /* ------------ NAV STUFF -------------*/
 .nav-pc {
-  background-color: #528b57;
-  color: #e0bb76;
+  background-color: var(--squeal-green);
+  color: var(--squeal-yellow);
   font-size: 2em;
 }
 .icon-nav {
-  background-color: #e0bb76;
-  color: #e0bb76;
+  background-color: var(--squeal-yellow);
+  color: var(--squeal-yellow);
 }
 
 /* ------------ FOOTER STUFF -------------*/
@@ -53,20 +59,25 @@ body {
 .rainbow {
   width: 100vw;
   height: 10vh;
-  background: linear-gradient(to right, #e0bb76, #528b57, #072f38);
+  background: linear-gradient(
+    to right,
+    var(--squeal-yellow),
+    var(--squeal-green),
+    var(--squeal-blue)
+  );
   background-size: 1400% 100%;
   animation: rainbow-animation 15s linear infinite;
 }
 
 /* ------------ COLOR STUFF -------------*/
 .my-green {
-  background-color: #528b57;
+  background-color: var(--squeal-green);
 }
 .my-yellow {
-  background-color: #e0bb76;
+  background-color: var(--squeal-yellow);
 }
 .my-blu {
-  background-color: #072f38;
+  background-color: var(--squeal-blue);
 }
 
 /* ------------ FONT STUFF -------------*/

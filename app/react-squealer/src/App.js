@@ -6,6 +6,7 @@ import LoginForm from "./pages/LoginForm";
 import Register from "./pages/Register";
 import Channels from "./pages/Channels";
 import Home from "./pages/Home";
+import About from "./pages/About";
 import HomeRoutes from "./pages/HomeRoutes";
 import NotFound from "./pages/NotFound";
 
@@ -25,6 +26,7 @@ function App() {
           element={<Channels />}
         />
         <Route path={ReactConfig.pathFunction("/home")} element={<Home />} />
+        <Route path={ReactConfig.pathFunction("/about")} element={<About />} />
         <Route path={ReactConfig.pathFunction("/*")} element={<HomeRoutes />} />
         <Route path={ReactConfig.pathFunction("*")} element={<NotFound />} />
       </Routes>

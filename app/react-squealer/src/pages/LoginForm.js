@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+//import { Navigate } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 
 import { toast, ToastContainer } from "react-toastify";
@@ -28,6 +29,7 @@ function LoginForm() {
     //corrected with love by @romanellas
     //URI: where I want ot send the POST
     //according to Swagger specifics, the username is sent in path, with the requested role.
+
     const data = { password: password };
     const uri = `${ReactConfig.base_url_requests}/auth/${username}/0`;
     const options = {
@@ -42,7 +44,12 @@ function LoginForm() {
     fetch(uri, options)
       .then((response) => {
         if (response.ok) {
-          navigate(`/channels`);
+          //let user = response.json();
+          //console.log(user);
+          //navigate(`/channels?username=${username}`);
+          navigate(`/channels`, { state: { username } });
+
+          //<Navigate to="/channels" stauser;
         } else {
           notify();
           console.error("Authentication failed", response.statusText);
@@ -75,6 +82,7 @@ function LoginForm() {
                 id="inputUsername"
                 value={username}
                 placeholder="username"
+                autoComplete="on"
                 onChange={(e) => setUsername(e.target.value)}
               />
             </div>
@@ -93,6 +101,7 @@ function LoginForm() {
                 aria-describedby="passwordHelpBlock"
                 placeholder="password"
                 value={password}
+                autoComplete="on"
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
@@ -102,7 +111,6 @@ function LoginForm() {
                 className="col-12 col-md-4 offset-md-4 mb-5 custom-button"
                 type="button"
                 onClick={handleLogin}
-                //onClick={notify}
               >
                 <ToastContainer />
                 LOGIN
