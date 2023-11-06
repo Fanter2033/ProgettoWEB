@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
- 
+import React, { useState, useEffect } from "react";
+
 function Geo() {
   const [geolocationData, setGeolocationData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -7,13 +7,15 @@ function Geo() {
   useEffect(() => {
     async function getGeolocation() {
       try {
-        const response = await fetch('https://ipinfo.io/json?token=ff2dd590e30594');
+        const response = await fetch(
+          "https://ipinfo.io/json?token=ff2dd590e30594"
+        );
         if (response.ok) {
           const data = await response.json();
           setGeolocationData(data);
         }
       } catch (error) {
-        console.error('Errore:', error);
+        console.error("Errore:", error);
       } finally {
         setLoading(false);
       }
@@ -22,14 +24,15 @@ function Geo() {
     getGeolocation();
   }, []);
 
+  //  <p>Geolocalizzazione:</p>
+
   return (
     <div>
       {loading ? (
         <p>Caricamento...</p>
       ) : geolocationData ? (
         <div>
-          <p>Geolocalizzazione:</p>
-          <ul>
+          <ul className="list-unstyled">
             <li>IP: {geolocationData.ip}</li>
             <li>Città: {geolocationData.city}</li>
             <li>Regione: {geolocationData.region}</li>

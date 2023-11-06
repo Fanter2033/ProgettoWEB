@@ -8,12 +8,10 @@ import { toast, ToastContainer } from "react-toastify";
 import "../css/LoginForm.css";
 import "react-toastify/dist/ReactToastify.css";
 
-function LoginForm(props) {
+function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-
-  //const [data, setData] = useState("");
 
   const notify = () =>
     toast.error("Errore di autenticazione. Riprovare", {
@@ -31,6 +29,7 @@ function LoginForm(props) {
     //corrected with love by @romanellas
     //URI: where I want ot send the POST
     //according to Swagger specifics, the username is sent in path, with the requested role.
+
     const data = { password: password };
     const uri = `${ReactConfig.base_url_requests}/auth/${username}/0`;
     const options = {
@@ -45,9 +44,11 @@ function LoginForm(props) {
     fetch(uri, options)
       .then((response) => {
         if (response.ok) {
-          let user = response.json();
-          console.log(user);
-          navigate(`/channels?username=${username}`);
+          //let user = response.json();
+          //console.log(user);
+          //navigate(`/channels?username=${username}`);
+          navigate(`/channels`, { state: { username } });
+
           //<Navigate to="/channels" stauser;
         } else {
           notify();
@@ -131,10 +132,7 @@ function LoginForm(props) {
                 <NavLink
                   style={{ color: "#072f38" }}
                   className="cool-font-small"
-                  to={{
-                    pathname: ReactConfig.pathFunction("/home"),
-                    state: "hello",
-                  }}
+                  to={ReactConfig.pathFunction("/home")}
                 >
                   Skip the log in !
                 </NavLink>

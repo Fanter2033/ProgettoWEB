@@ -1,36 +1,54 @@
 import React from "react";
-//import { useLocation } from "react-router-dom";
+//import ReactConfig from "../config/ReactConfig";
+//import { useEffect } from "react";
+//import { useState } from "react";
 
-import Post from "./Post";
+//import Post from "./Post";
 import Search from "./Search";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+
 import { useLocation } from "react-router-dom";
-import { useParams } from "react-router-dom";
 
 /* 
 TODO: let the chat disapper when on sm screen
 */
+
 function Channels() {
+  const location = useLocation();
+  const { username } = location.state;
 
-  const {username} = useParams();
-
-  //NO useParams
-  //const location = useLocation();
-  //const searchParams = new URLSearchParams(location.search);
-  //const username = searchParams.get('username');
-  
-  //const username = match.params.username;
   console.log(username);
-  
-  
 
-  //const location = useLocation();
-  //console.log(location.state);
+  /*
+  <div onLoad={getChannels}>
+</div>
+  ------------
+  const [users, setUsers] = useState([]);
+
+
+  async function getChannels() {
+  
+    let result = fetch(`${ReactConfig.base_url_requests}/channels`);
+    let response = await result;
+    if(response.ok){
+      let json = await response.json();
+      setUsers(json.users);
+      return json.users;
+    }
+  }
+
+  useEffect(() => {
+  }, []);
+*/
+
+  //TODO: POST /channel
+  //TODO: GET /channel
+  //TODO: GET /channels/{type}
 
   return (
     <div>
-      <Navbar />
+      <Navbar username={username} />
       <div className="container-flex">
         <div className="row">
           <div className="col-md-9">
@@ -38,7 +56,6 @@ function Channels() {
             <h1>CHANNELS</h1>
             <div>
               <Search />
-              <Post />
             </div>
             <div className="row justify-content-center">
               <h3>TODO:</h3>

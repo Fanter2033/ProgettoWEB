@@ -1,17 +1,40 @@
-/* ------------ ATTENZIONE AGLI ALTRI FILE CSS -------------*/
-html {
-  background-color: #e0bb76;
+/* -------------------- COLOR STUFF ------------------*/
+:root {
+  --squeal-green: #528b57;
+  --squeal-blue: #072f38;
+  --squeal-yellow: #e0bb76;
 }
 
-body {
+.my-green {
+  background-color: var(--squeal-green);
+}
+.my-yellow {
+  background-color: var(--squeal-yellow);
+}
+.my-blu {
+  background-color: var(--squeal-blue);
+}
+.no-bg {
+  background-color: transparent;
+}
+
+/* ------------ ATTENZIONE AGLI ALTRI FILE CSS -------------*/
+html {
   text-align: center;
-  background-color: #e0bb76;
-  color: #08353f;
+  background-color: var(--squeal-yellow);
+  color: var(--squeal-blue);
+
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 .App {
   text-align: center;
-  background-color: #e0bb76;
-  color: #08353f;
+  background-color: var(--squeal-yellow);
+  color: var(--squeal-blue);
 }
 #elemento-espanso {
   position: absolute; /* Posizionamento assoluto rispetto alla view
@@ -19,7 +42,7 @@ body {
   right: 0; /* Finisce a destra della viewport */
   bottom: 0; /* Finisce in basso della viewport */
   left: 0; /* Inizia da sinistra della viewport */
-  background-color: #e0bb76;
+  background-color: var(--squeal-yellow);
 }
 /* -----------------FONT STUFF------------------ */
 .cool-font {
@@ -39,34 +62,23 @@ body {
   src: url("../../public/ArchivoBlack-Regular.ttf");
 }
 .list:hover {
-  background-color: #072f38;
-  color: #ffffff;
+  background-color: var(--squeal-blue);
+  color: #c78181;
 }
 
-/* -------------------- COLOR STUFF ------------------*/
-.my-green {
-  background-color: #528b57;
-}
-.my-yellow {
-  background-color: #e0bb76;
-}
-.my-blu {
-  background-color: #072f38;
-}
-.no-bg {
-  background-color: transparent;
-}
 /* -------------------- BUTTON STUFF: 2 tipi ------------------*/
 .custom-button {
-  background-color: #072f38;
-  color: #e0bb76;
+  background-color: var(--squeal-blue);
+  color: var(--squeal-yellow);
   padding: 10px 20px;
   border: none;
   border-radius: 8px;
   cursor: pointer; /* Cambia il cursore al passaggio del mouse */
 }
 .custom-button:hover {
-  background-color: #528b57; /* Cambia il colore di sfondo quando si passa sopra il bottone */
+  background-color: var(
+    --squeal-green
+  ); /* Cambia il colore di sfondo quando si passa sopra il bottone */
 }
 .bottoni_omologati {
   width: 3em;
@@ -74,7 +86,42 @@ body {
   border-radius: 50%;
 }
 .bottoni_omologati:hover {
-  background-color: #528b57;
+  background-color: var(--squeal-green);
+}
+
+.user_button {
+  background-color: var(--squeal-blue);
+  color: var(--squeal-yellow);
+  width: 40vw;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+.user_button:hover {
+  background-color: var(--squeal-green);
+}
+
+/* -------------------- DESTINATARIO STUFF ------------------*/
+.persona {
+  color: var(--squeal-blue);
+  font-weight: bold;
+}
+
+.qualcosaltro1 {
+  color: var(--squeal-yellow);
+  font-weight: bold;
+}
+
+.qualcosaltro2 {
+  color: var(--squeal-green);
+  font-weight: bold;
+}
+
+.altro {
+  color: red;
+  font-weight: bold;
 }
 
 /* -------------------- IMG STUFF ------------------*/
@@ -96,6 +143,42 @@ img {
   img {
     max-width: 70vw;
     max-height: 30vh; /* Riduci ulteriormente la larghezza dell'immagine al 60% del suo contenitore */
+  }
+}
+/* -------------------- 3D EFFECT ------------------*/
+.box {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.8); /* Ombra rilievo */
+}
+
+/* --------------------VOLTURE ------------------*/
+.vulture-animation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+}
+
+.vulture-animation img {
+  width: 100px;
+  height: auto;
+  animation: fadeIn 0.5s ease-in forwards, fadeOut 0.5s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
   }
 }
 
