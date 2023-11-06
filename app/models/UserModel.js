@@ -144,13 +144,22 @@ module.exports = class UserModel extends Model {
             sorting = {};
 
         offset = this.mongo_escape(offset);
-        limit = this.mongo_escape(limit);
+
         try {
-            let results = await this.entityMongooseModel
-                .find(filter)
-                .sort(sorting)
-                .skip(offset)
-                .limit(limit);
+            let results;
+            if(limit > 0){
+                limit = this.mongo_escape(limit);
+                results = await this.entityMongooseModel
+                    .find(filter)
+                    .sort(sorting)
+                    .skip(offset)
+                    .limit(limit);
+            } else {
+                results = await this.entityMongooseModel
+                    .find(filter)
+                    .sort(sorting)
+                    .skip(offset)
+            }
 
             let output = [];
             for (let i = 0; i < results.length; i++)
