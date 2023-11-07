@@ -155,15 +155,27 @@ module.exports = class ChannelModel extends Model {
                 $match: filter
             }];
         try {
-            let results = await this.entityMongooseModel
-                .aggregate(aggregate)
-                .sort(sorting)
-                .skip(offset)
-                .limit(limit);
+            let results;
+            if(Object.keys(sorting).length !== 0){
+                results = await this.entityMongooseModel
+                    .aggregate(aggregate)
+                    .sort(sorting)
+                    .skip(offset)
+                    .limit(limit);
+            }else{
+                results = await this.entityMongooseModel
+                    .aggregate(aggregate)
+                    .skip(offset)
+                    .limit(limit);
+            }
+
 
             let output = [];
             for (let i = 0; i < results.length; i++) {
                 let tmp = new ExtendedChannelDto(results[i]);
+                if(results[i].owner.length === 0)
+                    continue;
+
                 tmp.owner = results[i].owner[0]['username'];
                 tmp.subscribers = results[i].subscribers[0]['username'];
                 tmp.posts = 0; //TODO GESTIRE POST
