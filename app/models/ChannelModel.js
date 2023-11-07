@@ -177,6 +177,7 @@ module.exports = class ChannelModel extends Model {
                     tmp.owner = "";
                     tmp.subscribers = 0;
                     tmp.posts = 0;
+                    continue;
                 }
 
                 tmp.owner = results[i].owner[0]['username'];
