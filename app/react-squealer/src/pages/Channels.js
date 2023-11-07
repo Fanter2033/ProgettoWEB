@@ -46,7 +46,7 @@ function Channels() {
 
   console.log("obj", channels);
 
-  const ch = channels.channels;
+  const ch = channels.name;
   console.log("campo canali dell'obj", ch);
 
   //const channelsArray = Object.values(channels.channels);
