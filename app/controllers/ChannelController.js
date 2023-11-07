@@ -145,11 +145,8 @@ module.exports = class ChannelController extends Controller {
         output.content['channels'] = await this.#_model.getChannelList(offset, limit, search, orderBy, orderDir, type);
         output.content['totalCount'] = await this.#_model.getChannelCount(search, type);
 
-        for (let i = 0; i < output.content['channels'].length; i++) {
-            if (isAdmin === false)
-                output.content['channels'][i] = this.clearSensitiveInformation(output.content['channels'][i]);
+        for (let i = 0; i < output.content['channels'].length; i++)
             output.content['channels'][i] = output.content['channels'][i].getDocument();
-        }
 
         return output;
     }

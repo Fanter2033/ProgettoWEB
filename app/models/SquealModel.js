@@ -17,7 +17,7 @@ module.exports = class SquealModel extends Model {
         let filter = {_id: `${identifier}`};
         filter = this.mongo_escape(filter);
         let result = await this.entityMongooseModel.find(filter);
-        if(result === 1)
+        if(result.length === 1)
             return new SquealDto(result[0]._doc);
         return {};
     }
