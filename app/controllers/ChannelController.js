@@ -293,6 +293,7 @@ module.exports = class ChannelController extends Controller {
             tmp.channel_name = channelDto.channel_name;
             tmp.type = 'CHANNEL_HASHTAG';
             tmp.private = false;
+            tmp.locked = false;
             output['content'] = tmp.getDocument();
             return output;
         }

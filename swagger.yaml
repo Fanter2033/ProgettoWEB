@@ -10,28 +10,6 @@ schemes:
   - "http"
   - "https"
 paths:
-  /dashboard/:
-    get:
-      summary: Get public posts of the user.
-      description: Are returned all posts that have as receivers a channel where the user is subscribed
-      responses:
-        '200':
-          description: returns an array of Squeals
-          schema:
-            type: array
-            maxLength: 10
-            $ref: '#/definitions/Squeal'
-  /chat/:
-    get:
-      summary: Get private posts of the user.
-      description: Are returned all posts that have as receivers the user
-      responses:
-        '200':
-          description: returns an array of Squeals
-          schema:
-            type: array
-            maxLength: 10
-            $ref: '#/definitions/Squeal'
   /auth/{username}/{auth_field}:
     post:
       summary: Authenticate the user
@@ -70,6 +48,32 @@ paths:
           description: Failed authentication due server error
         '404':
           description: No user to de-authenticate found.
+  /dashboard/:
+    get:
+      tags:
+        - utils
+      summary: Get public posts of the user.
+      description: Are returned all posts that have as receivers a channel where the user is subscribed
+      responses:
+        '200':
+          description: returns an array of Squeals
+          schema:
+            type: array
+            maxLength: 10
+            $ref: '#/definitions/Squeal'
+  /chat/:
+    get:
+      tags:
+        - utils
+      summary: Get private posts of the user.
+      description: Are returned all posts that have as receivers the user
+      responses:
+        '200':
+          description: returns an array of Squeals
+          schema:
+            type: array
+            maxLength: 10
+            $ref: '#/definitions/Squeal'
   /user/{username}:
     put:
       tags:
