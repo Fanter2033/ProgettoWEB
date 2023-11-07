@@ -384,5 +384,9 @@ module.exports = class UserController extends Controller {
         return output;
     }
 
+    async toggleVip(){
+
+    }
+
 
 }
