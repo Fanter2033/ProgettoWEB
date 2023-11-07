@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import ReactConfig from "../config/ReactConfig";
 
+import "../css/App.css"
+
 function ModalForm() {
+    
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
     nome: "",

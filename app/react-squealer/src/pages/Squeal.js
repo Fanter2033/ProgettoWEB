@@ -15,8 +15,6 @@ import cat from "./media/miau.png";
 function Squeal(props) {
   console.log(props);
 
-  //TODO GET SQUEAL /squeal/------------------------------------------------------------------------------------------------------------
-
   //TODO POST SQUEAL /squeal/------------------------------------------------------------------------------------------------------------
   const [fetchDataFlag, setFetchDataFlag] = useState(false);
 

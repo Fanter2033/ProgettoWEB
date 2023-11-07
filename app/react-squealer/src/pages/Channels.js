@@ -22,26 +22,8 @@ function Channels() {
 
   console.log(username);
 
-  /*
-  const [users, setUsers] = useState([]);
-
-
-  async function getChannels() {
-  
-    let result = fetch(`${ReactConfig.base_url_requests}/channels`);
-    let response = await result;
-    if(response.ok){
-      let json = await response.json();
-      setUsers(json.users);
-      return json.users;
-    }
-  }
-
-  useEffect(() => {
-  }, []);
-*/
-  //TODO: GET /channel    list of channels
-  //const [channels, setChannels] = useState("");
+  //TODO: GET /channel    list of channels ------------------------------------------------------------------------------------------------------------
+  const [channels, setChannels] = useState({});
 
   async function getChannels() {
     try {
@@ -49,8 +31,11 @@ function Channels() {
       let result = await fetch(uri);
 
       if (result.ok) {
-        let channels = await result.json();
-        console.log(channels);
+        let json = await result.json();
+        console.log(json);
+        let camp = json.channels;
+        setChannels(camp);
+        return camp;
       } else {
         console.error("Errore nella richiesta:", result.statusText);
       }
@@ -58,26 +43,50 @@ function Channels() {
       console.error("Errore nella fetch:", error);
     }
   }
+
+  console.log("obj", channels);
+
+  const ch = channels.channels;
+  console.log("campo canali dell'obj", ch);
+
+  //const channelsArray = Object.values(channels.channels);
+  //console.log(channelsArray);
+
   useEffect(() => {
-    const intervalId = setInterval(getChannels, 10000);
+    const intervalId = setInterval(getChannels, 5000);
     return () => {
       clearInterval(intervalId);
     };
   });
 
-  //TODO: GET /channels/{type}
+  //TODO: GET /channels/{type} ------------------------------------------------------------------------------------------------------------
   //types: CHANNEL_OFFICIAL, CHANNEL_USERS, CHANNEL_HASHTAG
 
+  //const [ty, seTy] = useState("");
+
   /*
-  async function getOfficialChannel() {
+  const response = {
+    "channels": [
+      {
+        "name": "string",
+        "type": "CHANNEL_OFFICIAL",
+        "private": false
+      }
+    ],
+    "totalCount": 0
+  };
+   */
+
+  /*
+  async function getTypes() {
     try {
-      const uri = `${ReactConfig.base_url_requests}/channels/${type}`;
+      const uri = `${ReactConfig.base_url_requests}/channel/{type}`;
       let result = await fetch(uri);
       if (result.ok) {
-        let quote = await result.json();
-        console.log(quote);
-        setUserQuote(quote);
-        return quote;
+        let channel = await result.json();
+        console.log(channel);
+        seTy(channel);
+        return channel;
       } else {
         console.error("Errore nella richiesta:", result.statusText);
       }
@@ -85,8 +94,49 @@ function Channels() {
       console.error("Errore nella fetch:", error);
     }
   }
+  
+
+  console.log(ty);
+
   useEffect(() => {
-    const intervalId = setInterval(getOfficialChannel, 10000);
+    const intervalId = setInterval(getTypes, 10000);
+    return () => {
+      clearInterval(intervalId);
+    };
+  });
+  */
+
+  //TODO GET SQUEAL /squeal/------------------------------------------------------------------------------------------------------------
+  //! mi serve l'id?
+  /*
+  const [squeal, setSqueal] = useState([]);
+
+  async function getSqueals() {
+    try {
+      const uri = `${ReactConfig.base_url_requests}/squeal/`;
+      let result = await fetch(uri);
+
+      if (result.ok) {
+        let json = await result.json();
+        console.log(json);
+        let camp = json.channels;
+        setSqueal(camp);
+        return camp;
+      } else {
+        console.error("Errore nella richiesta:", result.statusText);
+      }
+    } catch (error) {
+      console.error("Errore nella fetch:", error);
+    }
+  }
+
+  console.log(squeal);
+
+  //const channelsArray = Object.values(channels.channels);
+  //console.log(channelsArray);
+
+  useEffect(() => {
+    const intervalId = setInterval(getSqueals, 5000);
     return () => {
       clearInterval(intervalId);
     };
@@ -105,11 +155,16 @@ function Channels() {
               <Search />
             </div>
 
-            <ModalForm />
-
+            <div>
+              <div></div>
+              <ModalForm />
+            </div>
             <div className="row justify-content-center">
               <h3>TODO:</h3>
               <ul className="list-group col-md-4">
+                <li className="list-group-item list">GET CHANNELS</li>
+                <li className="list-group-item list">GET SQUEALS</li>
+                <li className="list-group-item list">GET CHANNEL TYPE</li>
                 <li className="list-group-item list">pubblici</li>
                 <li className="list-group-item list">privati</li>
                 <li className="list-group-item list">hash</li>
