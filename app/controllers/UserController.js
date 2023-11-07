@@ -343,6 +343,15 @@ module.exports = class UserController extends Controller {
         return user;
     }
 
+    /**
+     * @param {string} username
+     * @return {Promise<boolean>}
+     * Return true if the user exists, false otherwise.
+     */
+    async userExists(username){
+        return await this._model.userExists(username);
+    }
+
 
     /**
      * @param {string} username

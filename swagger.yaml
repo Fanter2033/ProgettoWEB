@@ -12,6 +12,8 @@ schemes:
 paths:
   /auth/{username}/{auth_field}:
     post:
+      tags:
+        - auth
       summary: Authenticate the user
       description: Authenticate the user with his password and start new session for them.
       parameters:
@@ -39,6 +41,8 @@ paths:
           description: Failed authentication due wrong password or username.
   /auth/logout:
     post:
+      tags:
+        - auth
       summary: De-Authenticate user
       description: De-Authenticate the requesting user, if one is logged, the user is got by the server using session id!
       responses:
