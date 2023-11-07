@@ -198,4 +198,17 @@ module.exports = class UserModel extends Model {
         return true;
     }
 
+    async changeVipStatus(userDto, newVipStat){
+        await this.checkMongoose("User", User);
+        let filter = {"username": `${userDto.username}`};
+        filter = this.mongo_escape(filter);
+        userDto.vip = newVipStat;
+        userDto = this.mongo_escape(userDto.getDocument());
+        try {
+            await this.entityMongooseModel.updateOne(filter, userDto);
+        } catch (ignored) {
+            return false;
+        }
+        return true;
+    }
 }

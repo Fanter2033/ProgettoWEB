@@ -9,7 +9,7 @@ module.exports = class UserDto {
     #isAdmin;
     #isSmm;
     #isUser;
-    #pro;
+    #vip;
     #locked;
 
     constructor(documentFromMongoose = null) {
@@ -23,7 +23,7 @@ module.exports = class UserDto {
             this.#isAdmin = null;
             this.#isSmm = null;
             this.#isUser = null;
-            this.#pro = null;
+            this.#vip = null;
             this.#locked = null;
         } else {
             this.#username = documentFromMongoose.username;
@@ -35,7 +35,7 @@ module.exports = class UserDto {
             this.#isAdmin = documentFromMongoose.isAdmin;
             this.#isSmm = documentFromMongoose.isSmm;
             this.#isUser = documentFromMongoose.isUser;
-            this.#pro = documentFromMongoose.pro;
+            this.#vip = documentFromMongoose.vip;
             this.#locked = documentFromMongoose.locked;
         }
 
@@ -117,12 +117,12 @@ module.exports = class UserDto {
         this.#isUser = value;
     }
 
-    get pro() {
-        return this.#pro;
+    get vip() {
+        return this.#vip;
     }
 
-    set pro(value) {
-        this.#pro = value;
+    set vip(value) {
+        this.#vip = value;
     }
 
     get locked() {
@@ -144,7 +144,7 @@ module.exports = class UserDto {
             isAdmin: this.#isAdmin,
             isSmm: this.#isSmm,
             isUser: this.#isUser,
-            pro: this.#pro,
+            vip: this.#vip ,
             locked: this.#locked
         }
     }
