@@ -173,8 +173,11 @@ module.exports = class ChannelModel extends Model {
             let output = [];
             for (let i = 0; i < results.length; i++) {
                 let tmp = new ExtendedChannelDto(results[i]);
-                if(results[i].owner.length === 0)
-                    continue;
+                if(results[i].owner.length === 0){
+                    tmp.owner = "";
+                    tmp.subscribers = 0;
+                    tmp.posts = 0;
+                }
 
                 tmp.owner = results[i].owner[0]['username'];
                 tmp.subscribers = results[i].subscribers[0]['username'];
