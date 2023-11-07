@@ -114,6 +114,7 @@ userDriver.get('/', async function (req, res) {
     let orderBy = (typeof req.query.orderBy !== 'undefined' ? req.query.orderBy : '');
     let orderDir = (typeof req.query.orderDir !== 'undefined' ? req.query.orderDir : '');
     authUser = await authUser;
+    if(limit < 0) limit = 10;
 
     let ctrl = await controller.getUserList(authUser, offset, limit, search, orderBy, orderDir);
     if (ctrl.code === 200)

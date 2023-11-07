@@ -25,7 +25,6 @@ const UserModel = require("./models/UserModel");
 let userTestQuote = new UserController(new UserModel());
 //TODO: RISOLVERE LIMIT. SE SI METTE -1 PRENDE TUTTI GLI UTENTI
 cronDaemon.schedule("0 0 * * *", async function () {
-    console.log('START');
     //It's midnight!
     try {
         let userList = await userTestQuote.getUserList({}, 0, 100, "", "", "");
