@@ -3,22 +3,19 @@ const squealDriver = express();
 const SquealController = require("../controllers/SquealController");
 const SquealModel = require("../models/SquealModel");
 const SquealDto = require("../entities/dtos/SquelDto");
-const UserController = require("../controllers/UserController");
-const UserModel = require("../models/UserModel");
 const AuthController = require("../controllers/AuthController")
 const AuthModel = require("../models/AuthModel")
 
 let squealController = new SquealController(new SquealModel());
-let userController = new UserController(new UserModel());
 let authController = new AuthController(new AuthModel());
 
 squealDriver.use(express.json());
 squealDriver.use(express.urlencoded({extended: true}));
 
 
-
 squealDriver.get('/:id', async function (req, res){
-    let squealCtrl = await squealController.getSqueal(req);
+    let requested_id = req.params['id'];
+    let squealCtrl = await squealController.getSqueal(requested_id);
     if(squealCtrl.code === 200)
         res.status(squealCtrl.code).send(squealCtrl.content)
     else

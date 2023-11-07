@@ -1,10 +1,8 @@
 const Controller = require("./Controller");
-const SquealDto = require("../entities/dtos/SquelDto");
 const QuoteController = require("./QuoteController");
 const QuoteModel = require("../models/QuoteModel");
-const UserController = require("./UserController");
 const QuoteDto = require("../entities/dtos/QuoteDto");
-
+const SquealDto = require("../entities/dtos/SquelDto");
 
 module.exports = class SquealController extends Controller {
     constructor(model) {
@@ -20,12 +18,15 @@ module.exports = class SquealController extends Controller {
     async getSqueal(identifier){
         let output = this.getDefaultOutput();
 
-        let squeal = this._model.getSqueal(identifier);
-        if(this.isObjectVoid(squeal)) {
+        let squeal = await this._model.getSqueal(identifier);
+        if(!(squeal instanceof SquealDto)) {
             output['code'] = 404;
-            output['msg'] = 'Channel not found.';
+            output['msg'] = 'Squeal not found.';
             return output;
         }
+
+        //TODO VERIFICARE CHE IL POST ABBIA DESTINATARI CHE SONO CANALI ALTRIMENTI E' PRIVATO E DOBBIAMO VERIFICARE CHE IL RICHIEDENTE SIA AUTENTICATO E SIA UN DESTINATARIO, O IL MITTENTE
+
         output['content'] = squeal.getDocument();
         return output;
     }

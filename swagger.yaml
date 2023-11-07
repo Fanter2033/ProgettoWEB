@@ -10,6 +10,28 @@ schemes:
   - "http"
   - "https"
 paths:
+  /dashboard/:
+    get:
+      summary: Get public posts of the user.
+      description: Are returned all posts that have as receivers a channel where the user is subscribed
+      responses:
+        '200':
+          description: returns an array of Squeals
+          schema:
+            type: array
+            maxLength: 10
+            $ref: '#/definitions/Squeal'
+  /chat/:
+    get:
+      summary: Get private posts of the user.
+      description: Are returned all posts that have as receivers the user
+      responses:
+        '200':
+          description: returns an array of Squeals
+          schema:
+            type: array
+            maxLength: 10
+            $ref: '#/definitions/Squeal'
   /auth/{username}/{auth_field}:
     post:
       summary: Authenticate the user
@@ -586,30 +608,6 @@ paths:
         '500':
           description: 'Internal server error'
   /squeal/:
-    get:
-      tags:
-        - squeal
-      summary: Get the squeal to see of the user
-      parameters:
-        - name: last
-          description: Last squeal identifier received from client. This parameter is used to get the user logged content to see after the specified identifier. If not present return the first posts to see.
-          required: false
-          in: query
-          type: string
-      responses:
-        '200':
-          description: 'Successful operation'
-          schema:
-            type: array
-            maxLength: 10
-            items:
-              $ref: '#/definitions/Squeal'
-        '400':
-          description: 'Generic error'
-        '403':
-          description: 'User not logged'
-        '404':
-          description: 'Identifier not found'
     post:
       tags:
         - squeal
@@ -636,6 +634,30 @@ paths:
         '403':
           description: 'User not logged'
   /squeal/{identifier_id}:
+    get:
+      tags:
+        - squeal
+      summary: Get squeal
+      parameters:
+        - name: identifier_id
+          description: Squeal ID
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: 'Successful operation'
+          schema:
+            type: object
+            $ref: '#/definitions/Squeal'
+        '400':
+          description: 'Generic error'
+        '401':
+          description: 'Not authorized'
+        '403':
+          description: 'Not authenticated'
+        '404':
+          description: 'Identifier not found'
     put:
       tags:
         - squeal
