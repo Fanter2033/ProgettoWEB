@@ -29,7 +29,8 @@ channelDriver.post('/', async function (req, res) {
     channelDto.channel_name = (typeof req.body.channel['name'] !== 'undefined' ? req.body.channel['name']: null);
     channelDto.private = (typeof req.body.channel['private'] !== 'undefined' ? req.body.channel['private']: null);
 
-    let ctrlOut = await controller.createChannel(channelDto, await authUserPromise);
+    authUserPromise = await authUserPromise;
+    let ctrlOut = await controller.createChannel(channelDto, authUserPromise);
     if (ctrlOut.code === 200)
         res.status(ctrlOut.code).send(ctrlOut.content);
     else

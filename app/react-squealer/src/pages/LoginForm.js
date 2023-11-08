@@ -33,10 +33,11 @@ function LoginForm() {
     const uri = `${ReactConfig.base_url_requests}/auth/${username}/0`;
     const options = {
       method: "POST",
+      mode: 'cors',
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
       },
+      credentials: 'include',
       body: JSON.stringify(data),
     };
 
@@ -47,7 +48,7 @@ function LoginForm() {
           //console.log(user);
           //navigate(`/channels?username=${username}`);
           navigate(`/channels`, { state: { username } });
-        } 
+        }
         else {
           notify();
           console.error("Authentication failed", response.statusText);
