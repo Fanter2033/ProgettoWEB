@@ -421,5 +421,15 @@ module.exports = class UserController extends Controller {
         return output;
     }
 
+    async toggleSmm(authenticatedUser){
+        //TODO
+    }
 
+    async pickSmm(SmmUsername, authenticatedUser) {
+        //TODO
+    }
+
+    async removeSmm(authenticatedUser){
+        //TODO
+    }
 }

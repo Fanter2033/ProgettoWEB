@@ -1,16 +1,16 @@
 module.exports = class VipDto {
 
-    #_id;
+    #id;
     #linkedSmm;
     #linkedUsers;
 
     constructor(documentFromMongoose = null) {
         if(documentFromMongoose === null){
-            this.#_id = null;
+            this.#id = null;
             this.#linkedSmm = null;
             this.#linkedUsers = null;
         } else {
-            this.#_id = documentFromMongoose._id;
+            this.#id = documentFromMongoose._id;
             this.#linkedSmm = documentFromMongoose.linkedSmm;
             this.#linkedUsers = documentFromMongoose.linkedUsers;
         }
@@ -18,7 +18,7 @@ module.exports = class VipDto {
 
     getDocument(){
         return{
-            _id : this.#_id,
+            _id : this.#id,
             linkedUsers: this.#linkedUsers,
             linkedSmm: this.#linkedSmm,
         }
@@ -39,11 +39,11 @@ module.exports = class VipDto {
         this.#linkedSmm = value;
     }
     get _id() {
-        return this.#_id;
+        return this.#id;
     }
 
     set _id(value) {
-        this.#_id = value;
+        this.#id = value;
     }
 
 }

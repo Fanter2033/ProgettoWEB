@@ -10,11 +10,11 @@ module.exports = class VipController extends Controller {
     async createVip(username){
         let output = this.getDefaultOutput();
         let vipObj = new VipDto();
-        vipObj._id = username;
-        vipObj.linkedSmm = null;
-        vipObj.linkedUsers = null;
+        vipObj.id = username;
+        vipObj.linkedSmm = [];
+        vipObj.linkedUsers = [];
 
-        let dbRes = await  this._model.createVip(vipObj);
+        let dbRes = await this._model.createVip(vipObj);
         if (dbRes)
             output['content'] = vipObj;
         else{
@@ -22,6 +22,10 @@ module.exports = class VipController extends Controller {
             output["msg"] = "Error creating Vip in db";
         }
         return output;
+    }
+
+    async deleteVip(username){
+        //TODO
     }
 
 
