@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-//import { Navigate } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 
 import { toast, ToastContainer } from "react-toastify";
@@ -47,7 +46,7 @@ function LoginForm() {
           //let user = response.json();
           //console.log(user);
           //navigate(`/channels?username=${username}`);
-          navigate(`/channels`, { state: { username } });
+          navigate(`${ReactConfig.pathFunction('/channels')}`, { state: { username } });
 
           //<Navigate to="/channels" stauser;
         } else {
