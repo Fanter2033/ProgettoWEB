@@ -75,25 +75,15 @@ function ChannelForm(props) {
     } else {
       try {
         handleClose();
+        const data = {
+            channel: {
+                name: formData.nome,
+                type: formData.tipo,
+                private: formData.privato
+            }
+        };
+
         //campo: private?
-
-                const data = {
-                    channel: {
-                        name: formData.nome,
-                        type: formData.tipo,
-                        private: formData.privato
-                    }
-                };
-
-                const url = `${ReactConfig.base_url_requests}/channel`;
-                const options = {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify(data),
-                };
         const url = `${ReactConfig.base_url_requests}/channel`;
         const options = {
           method: "POST",
