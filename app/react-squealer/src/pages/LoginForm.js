@@ -3,9 +3,9 @@ import { NavLink, useNavigate } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 
 import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import "../css/LoginForm.css";
-import "react-toastify/dist/ReactToastify.css";
 
 function LoginForm() {
   const [username, setUsername] = useState("");
@@ -33,10 +33,11 @@ function LoginForm() {
     const uri = `${ReactConfig.base_url_requests}/auth/${username}/0`;
     const options = {
       method: "POST",
+      mode: 'cors',
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
       },
+      credentials: 'include',
       body: JSON.stringify(data),
     };
 
@@ -47,9 +48,8 @@ function LoginForm() {
           //console.log(user);
           //navigate(`/channels?username=${username}`);
           navigate(`${ReactConfig.pathFunction('/channels')}`, { state: { username } });
-
-          //<Navigate to="/channels" stauser;
-        } else {
+        }
+        else {
           notify();
           console.error("Authentication failed", response.statusText);
         }

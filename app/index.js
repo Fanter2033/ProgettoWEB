@@ -61,7 +61,11 @@ backEndRouter.use(express.json());
 backEndRouter.use(express.urlencoded({extended: true}));
 
 //Allow CORS
-backEndRouter.use(cors());
+backEndRouter.use(cors({
+    /*origin: "http://localhost:3000"*/
+    origin: 'http://localhost:3000',
+    credentials: true
+}));
 
 // cookie parser middleware
 backEndRouter.use(cookieParser());

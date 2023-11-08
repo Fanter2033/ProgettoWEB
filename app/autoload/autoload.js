@@ -13,6 +13,6 @@ exports.mongoConnectionFunctions = mongoConnection;
 const logger = require('npmlog');
 exports.logger = logger;
 exports.logRequests = function (requestObject, next) {
-    exports.logger.info(`[${(new Date).toISOString().split('T')[0]} ${(new Date).toISOString().split('T')[1].split('.')[0]}][${requestObject.method}][${requestObject.socket.remoteAddress}] Has requested the document: ${requestObject.originalUrl}. \n Request body: ${JSON.stringify(requestObject.body)} \n`);
+    exports.logger.info(`[SESSION ID : ${requestObject.session.id}][${(new Date).toISOString().split('T')[0]} ${(new Date).toISOString().split('T')[1].split('.')[0]}][${requestObject.method}][${requestObject.socket.remoteAddress}] Has requested the document: ${requestObject.originalUrl}. \n Request body: ${JSON.stringify(requestObject.body)} \n`);
     next();
 }
