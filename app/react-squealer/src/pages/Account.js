@@ -79,7 +79,17 @@ function Account() {
   async function getUserQuote() {
     try {
       const uri = `${ReactConfig.base_url_requests}/user/${username}/quote`;
-      let result = await fetch(uri);
+
+      const options = {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      };
+
+      let result = await fetch(uri, options);
 
       if (result.ok) {
         let quote = await result.json();
@@ -108,9 +118,17 @@ function Account() {
 
   async function getUserData() {
     try {
-      let result = await fetch(
-        `${ReactConfig.base_url_requests}/user/${username}`
-      );
+      const uri = `${ReactConfig.base_url_requests}/user/${username}`;
+      const options = {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      };
+
+      let result = await fetch(uri, options);
 
       if (result.ok) {
         let data = await result.json();
@@ -149,11 +167,13 @@ function Account() {
     const uri = `${ReactConfig.base_url_requests}/auth/logout`;
     const options = {
       method: "POST",
+      mode: "cors",
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
       },
+      credentials: "include",
     };
+
     fetch(uri, options)
       .then((response) => {
         if (response.ok) {

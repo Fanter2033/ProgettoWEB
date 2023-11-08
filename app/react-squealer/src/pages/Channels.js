@@ -31,7 +31,16 @@ function Channels() {
   async function getChannels() {
     try {
       const uri = `${ReactConfig.base_url_requests}/channel`;
-      let result = await fetch(uri);
+      const options = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        mode: "cors",
+      };
+
+      let result = await fetch(uri, options);
 
       if (result.ok) {
         let json = await result.json();

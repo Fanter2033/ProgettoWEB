@@ -26,8 +26,9 @@ function Squeal(props) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
       },
+      credentials: "include",
+      mode: "cors",
       body: JSON.stringify(data),
     };
 
