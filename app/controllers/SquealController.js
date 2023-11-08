@@ -8,12 +8,18 @@ const UserModel = require("../models/UserModel");
 const ChannelController = require("./ChannelController");
 const ChannelModel = require("../models/ChannelModel");
 const ChannelDto = require("../entities/dtos/ChannelDto");
+const SquealToUserModel = require("../models/SquealToUserModel");
+const SquealToChannelModel = require("../models/SquealToChannelModel");
+const Squeal2UserDto = require("../entities/dtos/Squeal2UserDto");
+const Squeal2ChannelDto = require("../entities/dtos/Squeal2ChannelDto");
 
 module.exports = class SquealController extends Controller {
 
 
     #userController = new UserController(new UserModel());
     #channelController = new ChannelController(new ChannelModel());
+    #squealToUserModel = new SquealToUserModel();
+    #squealToChannelModel = new SquealToChannelModel();
 
     constructor(model) {
         super();
@@ -107,6 +113,9 @@ module.exports = class SquealController extends Controller {
             return output;
         }
 
+        //CONTROLLI OK DEVO SCALARE LA QUOTA ED EFFETTUARE LE RELAZIONI
+
+
         let ctrlOut = await quoteCtrl.chargeLimitQuota(squealDto.sender, squealDto.quote_cost);
         if (ctrlOut.code !== 200) {
             output['code'] = 500;
@@ -134,9 +143,70 @@ module.exports = class SquealController extends Controller {
             return output;
         }
 
+        //Adesso che ho gli id posso inserire l'associazione della quota per ogni utente.
+        for (const dest of squealDto.destinations)
+            if(this.isDestUserFormat(dest)){
+                let dto = new Squeal2UserDto();
+                let searchValue = dest.substring(1);
+                dto.squeal_id = squealDto.id;
+                dto.destination_username = searchValue;
+                let result = await this.#squealToUserModel.createAssocSquealUser(dto);
+                if(result === false) {
+                    output['code'] = 500;
+                    output['msg'] = 'Internal server error (2)';
+                    return output;
+                }
+            } else if(this.isDestChannelFormat(dest)){
+                let dto = new Squeal2ChannelDto();
+                let searchValue = dest.substring(1);
+                dto.squeal_id = squealDto.id;
+                dto.channel_name = searchValue;
+                if(dest.charAt(0) === '#')
+                    dto.channel_type = autoload.config._CHANNEL_TYPE_HASHTAG;
+                else if(dest.charAt(0) === '§' && searchValue === searchValue.toUpperCase())
+                    dto.channel_type = autoload.config._CHANNEL_TYPE_OFFICIAL;
+                else
+                    dto.channel_type = autoload.config._CHANNEL_TYPE_USER;
+                let result = await this.#squealToChannelModel.createAssocSquealChannel(dto);
+                if(result === false) {
+                    output['code'] = 500;
+                    output['msg'] = 'Internal server error (4)';
+                    return output;
+                }
+            } else {
+                output['code'] = 500;
+                output['msg'] = 'Internal server error (3)';
+                return output;
+            }
+
+
         output['content'] = squealDto.getDocument();
         return output;
     }
+
+    /**
+     * @param {string} dest
+     * @return {boolean}
+     */
+    isDestUserFormat(dest){
+        let classChannelChar = dest.charAt(0);
+        if(classChannelChar === '@')
+            return true;
+        return false;
+    }
+
+    /**
+     * @param {string} dest
+     * @return {boolean}
+     */
+    isDestChannelFormat(dest){
+        let classChannelChar = dest.charAt(0);
+        if(classChannelChar === '§' || classChannelChar === '#')
+            return true;
+        return false;
+    }
+
+
 
 
     /**
