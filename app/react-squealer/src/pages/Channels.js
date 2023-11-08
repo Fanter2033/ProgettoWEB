@@ -7,10 +7,11 @@ import { useLocation } from "react-router-dom";
 import Search from "./Search";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import ChannelForm from "./ChannelForm";
 
 import "../css/LoginForm.css";
 import "react-toastify/dist/ReactToastify.css";
-import ModalForm from "./ModalForm";
+//import ModalForm from "./ModalForm";
 
 /* 
 TODO: let the chat disapper when on sm screen
@@ -21,6 +22,8 @@ function Channels() {
   const { username } = location.state;
 
   console.log(username);
+
+  //TODO: aggiungi toast?
 
   //TODO: GET /channel    list of channels ------------------------------------------------------------------------------------------------------------
   const [channels, setChannels] = useState({});
@@ -149,16 +152,16 @@ function Channels() {
       <div className="container-flex" onLoad={getChannels}>
         <div className="row">
           <div className="col-md-9">
-            <h1>{username}</h1>
-            <h1>CHANNELS</h1>
+            <h1>HOME</h1>
+
             <div>
               <Search />
             </div>
 
             <div>
-              <div></div>
-              <ModalForm />
+              <ChannelForm username={username} />
             </div>
+
             <div className="row justify-content-center">
               <h3>TODO:</h3>
               <ul className="list-group col-md-4">

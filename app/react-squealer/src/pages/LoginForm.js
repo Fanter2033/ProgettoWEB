@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-//import { Navigate } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 
 import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import "../css/LoginForm.css";
-import "react-toastify/dist/ReactToastify.css";
 
 function LoginForm() {
   const [username, setUsername] = useState("");
@@ -48,9 +47,8 @@ function LoginForm() {
           //console.log(user);
           //navigate(`/channels?username=${username}`);
           navigate(`/channels`, { state: { username } });
-
-          //<Navigate to="/channels" stauser;
-        } else {
+        } 
+        else {
           notify();
           console.error("Authentication failed", response.statusText);
         }
