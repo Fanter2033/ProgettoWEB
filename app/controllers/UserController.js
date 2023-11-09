@@ -386,6 +386,12 @@ module.exports = class UserController extends Controller {
         return output;
     }
 
+    /**
+     *
+     * @param username {String}
+     * @param authenticatedUser {Promise<{}|UserDto>}
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
     async toggleVip(username, authenticatedUser){
         let output = this.getDefaultOutput();
 
@@ -410,6 +416,7 @@ module.exports = class UserController extends Controller {
             if(res['code'] !== 200)
                 return res;
         } else {
+            //delete the VIP entity
             let res = await vipCtrl.deleteVip(username);
             if(res['code'] !== 200)
                 return res;
@@ -421,15 +428,63 @@ module.exports = class UserController extends Controller {
             output['msg'] = 'Internal server error.';
             return output;
         }
+        //output['content'] =
         return output;
     }
 
     async toggleSmm(authenticatedUser){
-        //TODO
+        let output = this.getDefaultOutput();
+        let username = authenticatedUser.username;
+
+        if(!(await this._model.userExists(username))){
+            output['code'] = 404;
+            output['msg'] = 'User not found.';
+            return output;
+        }
+
+        if (this.isObjectVoid(authenticatedUser) === true) {
+            output['code'] = 403;
+            output['msg'] = 'User not authenticated';
+            return output;
+        }
+
+        let vipCtrl = new VipController(new VipModel());
+        let isVip = await vipCtrl.getVip(username);
+        if(isVip['code'] !== 200){
+            output['code'] = 412
+            output['msg'] = "Precondition Failed, user is not a VIP"
+            return output;
+        }
+
+        let userObj = await this._model.getUser(username);
+        let newSmmStatus = !userObj.isSmm;
+        if(newSmmStatus){
+            //user IS now a SMM, remove actual smm if there is one
+            //TODO
+        } else {
+            //user is NO longer SMM, clear the linked users list
+            let clearLinkedUsers = vipCtrl.disableSmm(isVip['content']);
+            if(clearLinkedUsers['code'] === 500){
+                return clearLinkedUsers;
+            }
+        }
+
+        let res = this._model.changeSmmStatus(userObj,newSmmStatus);
+        if(res === false){
+            output['code'] = 500;
+            output['msg'] = 'Internal server error.';
+        }
+        return output;
     }
 
     async pickSmm(SmmUsername, authenticatedUser) {
-        //TODO
+        let output = this.getDefaultOutput();
+
+        if (this.isObjectVoid(authenticatedUser) === true) {
+            output['code'] = 403;
+            output['msg'] = 'User not authenticated';
+            return output;
+        }
     }
 
     async removeSmm(authenticatedUser){

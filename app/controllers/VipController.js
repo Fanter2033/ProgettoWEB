@@ -7,12 +7,17 @@ module.exports = class VipController extends Controller {
         this._model = model;
     }
 
+    /**
+     *
+     * @param username
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
     async getVip(username){
         let output = this.getDefaultOutput();
         let vip = await this._model.getVip(username);
-        if(vip !== {}){
+        if(!(vip instanceof VipDto)){
             output["code"] = 404;
-            output["msg"] = "Not found";
+            output["msg"] = "Vip not found";
             return output;
         }
         output['content'] = vip.getDocument();
@@ -44,13 +49,27 @@ module.exports = class VipController extends Controller {
         let output = this.getDefaultOutput();
         let vipObj = await this.getVip(username);
         if (vipObj["code"] !== 200) {
-            output["code"] = 404;
-            output["msg"] = "Not found";
+            output["code"] = vipObj['code'];
+            output["msg"] = vipObj['msg'];
             return output;
         }
 
         let res = await this._model.deleteVip(username);
         if (res === false){
+            output['code'] = 500;
+            output['msg'] = 'Server error in deleting vip'
+        }
+        return output;
+    }
+
+    /**
+     * @param vipObj
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async disableSmm(vipObj){
+        let output = this.getDefaultOutput();
+        let res = await this._model.disableSmm(vipObj);
+        if(res === false){
             output['code'] = 500;
             output['msg'] = 'Server error in deleting vip'
         }
