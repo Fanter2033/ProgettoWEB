@@ -410,8 +410,11 @@ module.exports = class UserController extends Controller {
             if(res['code'] !== 200)
                 return res;
         } else {
-            //TODO: deleteVIP
+            let res = await vipCtrl.deleteVip(username);
+            if(res['code'] !== 200)
+                return res;
         }
+        //switch the toggle
         let result = this._model.changeVipStatus(userObj, newVIPStatus);
         if(result === false){
             output['code'] = 500;
