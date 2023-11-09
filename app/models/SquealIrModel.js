@@ -37,4 +37,23 @@ module.exports = class SquealIrModel extends Model {
         }
     }
 
+
+    /**
+     * @param {SquealIrDto} dto
+     * @return {Promise<boolean>}
+     */
+    async insertReactionIntoAssoc(dto){
+        await  this.checkMongoose("squeal_impression_reactions", SquealIrSchema);
+        let filter = this.mongo_escape(dto.getDocument());
+        if(typeof filter.reaction !== 'undefined')
+            delete filter.reaction;
+        let newAssoc = this.mongo_escape(dto.getDocument());
+        try {
+            await this.entityMongooseModel.findOneAndReplace(filter, newAssoc);
+            return true;
+        } catch (ignored){
+            return false;
+        }
+    }
+
 }

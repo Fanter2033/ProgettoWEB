@@ -39,6 +39,26 @@ module.exports = class SquealModel extends Model {
     }
 
     /**
+     * @param squealDto {SquealDto}
+     * @param squeal_id {number}
+     * @returns {Promise<boolean>}
+     */
+    async replaceSqueal(squealDto, squeal_id){
+        await  this.checkMongoose("Squeal", Squeal);
+        let squealDoc = this.mongo_escape(squealDto.getDocument());
+        squeal_id = parseInt(squeal_id);
+        if(isNaN(squeal_id))
+            return false;
+
+        try {
+            await this.entityMongooseModel.findByIdAndUpdate(squealDto.id, squealDoc);
+            return true;
+        } catch (ignored){
+            return false;
+        }
+    }
+
+    /**
      * @return {Promise<number>}
      * Returns the next id of the squeal
      */

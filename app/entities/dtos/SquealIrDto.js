@@ -14,7 +14,7 @@ module.exports = class SquealIrDto {
             this.#squeal_id = documentFromMongoose.squeal_id;
             this.#is_session_id = documentFromMongoose.is_session_id;
             this.#value = documentFromMongoose.value;
-            this.#reactions = documentFromMongoose.reactions;
+            this.#reactions = documentFromMongoose.reaction;
         }
     }
 
@@ -56,7 +56,7 @@ module.exports = class SquealIrDto {
             squeal_id: this.#squeal_id,
             is_session_id: this.#is_session_id,
             value: this.#value,
-            reactions: this.#reactions
+            reaction: this.#reactions
         }
     }
 

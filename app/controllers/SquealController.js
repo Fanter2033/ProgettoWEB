@@ -14,6 +14,7 @@ const SquealIrModel = require("../models/SquealIrModel");
 const Squeal2UserDto = require("../entities/dtos/Squeal2UserDto");
 const Squeal2ChannelDto = require("../entities/dtos/Squeal2ChannelDto");
 const SquealIrDto = require("../entities/dtos/SquealIrDto");
+const UserDto = require("../entities/dtos/UserDto");
 
 module.exports = class SquealController extends Controller {
 
@@ -34,9 +35,10 @@ module.exports = class SquealController extends Controller {
      * @param identifier {Number}
      * @param authenticatedUser {UserDto}
      * @param session_id {string}
+     * @param escapeAddImpression {boolean}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
-    async getSqueal(identifier, authenticatedUser, session_id) {
+    async getSqueal(identifier, authenticatedUser, session_id, escapeAddImpression = false) {
         let output = this.getDefaultOutput();
 
         let squeal = await this._model.getSqueal(identifier);
@@ -47,7 +49,7 @@ module.exports = class SquealController extends Controller {
         }
 
         let isPublic = await this.isSquealPublic(identifier);
-        if(isPublic === false){
+        if(isPublic === false && escapeAddImpression === false){
             if(this.isAuthenticatedUser(authenticatedUser) === false){
                 output['code'] = 403;
                 output['msg'] = 'Login to see this content.';
@@ -60,6 +62,11 @@ module.exports = class SquealController extends Controller {
                 output['msg'] = 'Not authorized to see this content.';
                 return output;
             }
+        }
+
+        if(escapeAddImpression){
+            output['content'] = squeal.getDocument();
+            return output;
         }
 
         let irDto = new SquealIrDto();
@@ -240,6 +247,75 @@ module.exports = class SquealController extends Controller {
 
         if(getCtrlOut.code !== 200){
             return getCtrlOut;
+        }
+
+        if(this.checkReactionType(reaction) === false){
+            output['code'] = 400;
+            output['msg'] = 'Invalid reaction';
+            return output;
+        }
+
+        let irDto = new SquealIrDto();
+        irDto.squeal_id = squeal_id;
+        if(this.isAuthenticatedUser(authenticatedUser) === false){
+            irDto.is_session_id = true;
+            irDto.value = sessionId;
+        } else {
+            irDto.is_session_id = false;
+            irDto.value = authenticatedUser.username;
+        }
+        irDto.reactions = reaction;
+
+        let modelResult = await this.#squealImpressionReactions.insertReactionIntoAssoc(irDto);
+        if (modelResult === false){
+            output['code'] = 500;
+            output['msg'] = 'Internal server error';
+            return output;
+        }
+
+        let finalOut;
+        if(reaction === autoload.config._REACTION_LIKE || reaction === autoload.config._REACTION_LIKE_A_LOT){
+            finalOut = await this.incrementValue(squeal_id, 1);
+        } else{
+            finalOut = await this.incrementValue(squeal_id, 1, false);
+        }
+
+        if(finalOut['code'] !== 200){
+            output['code'] = 500;
+            output['msg'] = 'Internal server error (2)';
+            return output;
+        }
+
+
+        return output;
+    }
+
+    /**
+     * @param squeal_id {number}
+     * @param amount {number}
+     * @param positiveValue {boolean}
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     * THIS DO NOT EXECUTE CONTROLS. SHOULD BE IMPLEMENTED VIA ANTOHER CONTROLLER OR WITH A VARIABLE
+     */
+    async incrementValue(squeal_id, amount, positiveValue = true){
+        let output = this.getDefaultOutput();
+
+        let squeal = await this.getSqueal(squeal_id, new UserDto(), "", true);
+        if(squeal.code !== 200){
+            output['code'] = 404;
+            output['msg'] = 'Not found';
+            return output;
+        }
+        squeal = new SquealDto(squeal.content);
+        if(positiveValue)
+            squeal.positive_value = squeal.positive_value + amount;
+        else
+            squeal.negative_value = squeal.negative_value + amount;
+        let result = await this._model.replaceSqueal(squeal, squeal_id);
+        if(result === false){
+            output['code'] = 500;
+            output['msg'] = 'Internal server error in SquealController::incrementPositiveValue';
+            return output;
         }
 
         return output;

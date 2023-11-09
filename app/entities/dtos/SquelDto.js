@@ -28,7 +28,6 @@ module.exports = class SquealDto {
         } else {
             this.#id = documentFromMongoose._id;
             this.#date = documentFromMongoose.date;
-            this.#destinations = documentFromMongoose.destination;
             this.#sender = documentFromMongoose.sender;
             this.#reactions = documentFromMongoose.reactions;
             this.#message_type = documentFromMongoose.message_type;
@@ -44,7 +43,6 @@ module.exports = class SquealDto {
         return{
             _id: this.#id,
             date: this.#date,
-            destinations: this.#destinations,
             sender: this.#sender,
             reactions: this.#reactions,
             message_type: this.#message_type,
