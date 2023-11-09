@@ -8,6 +8,7 @@ import Search from "./Search";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import ChannelForm from "./ChannelForm";
+import Chat from "./Chat";
 
 import "../css/LoginForm.css";
 import "react-toastify/dist/ReactToastify.css";
@@ -187,6 +188,7 @@ function Channels() {
           </div>
           <div className="col-md-3">
             <h1>CHAT</h1>
+            <Chat/>
           </div>
         </div>
       </div>

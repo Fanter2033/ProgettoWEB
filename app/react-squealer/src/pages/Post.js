@@ -1,6 +1,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 
+
 import Squeal from "./Squeal";
 import Reactions from "./Reactions";
 import Comment from "./Comment";
@@ -13,12 +14,15 @@ function Post() {
 
   console.log(username);
   return (
+<>
 
-    <div className="mt-5 ">
+<div className="mt-5 ">
       <Squeal username={username}/>
       <Reactions />
       <Comment />
     </div>
+</>
+   
   );
 }
 

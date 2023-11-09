@@ -5,6 +5,7 @@ import ReactConfig from "../config/ReactConfig";
 import CurrentDateTime from "./CurrentDateTime";
 import Dest from "./Dest";
 import LegendaDest from "./LegendaDest";
+import MapComponent from "./MapComponent";
 
 import "../css/App.css";
 //import pinguini from "./media/744677.jpg";
@@ -127,6 +128,7 @@ function Squeal(props) {
       <div className="mb-3">
         <p>Geolocalizzazione: Aggiungi la geolocalizzazione dell'utente qui.</p>
         <p>API:Mapbox o Leaflet</p>
+        <MapComponent/>
       </div>
     );
   }

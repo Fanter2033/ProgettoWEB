@@ -6,14 +6,14 @@ import { useNavigate } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 
 import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "../css/LoginForm.css";
 
-import Navbar from "./Navbar";
 import Geo from "./Geo";
 import VultureAnimation from "./VoltureAnimation";
 
 import "../css/App.css";
 import cattyy from "./media/splash.jpeg";
-import "react-toastify/dist/ReactToastify.css";
 
 /*
 col-12 col-md-6
@@ -73,7 +73,6 @@ function Account() {
  </div>
 */
   //GET USER QUOTE-----------------------------------------------------------------------------------------------
-
   const [userQuote, setUserQuote] = useState("");
 
   async function getUserQuote() {
@@ -105,15 +104,15 @@ function Account() {
   }
 
   useEffect(() => {
-    const intervalId = setInterval(getUserQuote, 10000);
+    const intervalId = setInterval(getUserQuote, 3000);
     return () => {
       clearInterval(intervalId);
     };
   });
+
   //TODO: PATCH USER QUOTE /user/${username}/quote-----------------------------------------------------------------------------------------------
 
   //GET USER DATA-----------------------------------------------------------------------------------------------
-
   const [userData, setUserData] = useState("");
 
   async function getUserData() {
@@ -188,8 +187,33 @@ function Account() {
         console.error("Network error", error);
       });
   }
-  //TODO: DELETE USER con toast /user/${username}-----------------------------------------------------------------------------------------------------
-  async function deleteUser() {}
+
+  //DELETE USER con toast /user/${username}-----------------------------------------------------------------------------------------------------
+  async function deleteUser() {
+    notify();
+    const uri = `${ReactConfig.base_url_requests}/user/${username}`;
+    const options = {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      mode: "cors",
+    };
+
+    fetch(uri, options)
+      .then((response) => {
+        if (response.ok) {
+          console.log("Cancellazione riuscita con successo");
+          navigate(`/registration`);
+        } else {
+          console.error("Delete failed", response.statusText);
+        }
+      })
+      .catch((error) => {
+        console.error("Network error", error);
+      });
+  }
 
   //TODO: PUT: ADD SMM /user/${username}----------------------------------------------------------------------------------------------------------
   async function addSmm() {}
@@ -198,10 +222,95 @@ function Account() {
   async function removeSmm() {}
 
   //TODO: PUT: CHANGE USERNAME /user/${username}-----------------------------------------------------------------------------------------------------
-  async function changeUsername() {}
+
+  async function changeUsername() {
+    /*
+    const data = {
+      user: {
+        username: username,
+        email: userData.email,
+        firstname: userData.first_name,
+        lastname: userData.last_name,
+        password: userData.password,
+        isMod: false,
+        isSmm: false,
+        isUser: true,
+      },
+    };
+
+    const url = `${ReactConfig.base_url_requests}/user/${username}`;
+    const options = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      mode: "cors",
+      body: JSON.stringify(data),
+    };
+
+    fetch(url, options)
+      .then((res) => {
+        console.log(res);
+        if (res.ok) {
+          //registration ok
+          return res.json();
+        }
+      })
+      .then((data) => {
+        console.log("Registrazione went good", data);
+      })
+      .catch((error) => {
+        console.error("Registration failed, error:", error);
+      });
+      */
+  }
 
   //TODO: PUT: CHANGE PSW /user/${username}-----------------------------------------------------------------------------------------------------
-  async function changePassword() {}
+  async function changePassword() {
+    /*
+  async function changeUsername() {
+    const data = {
+      user: {
+        username: username,
+        email: userData.email,
+        firstname: userData.first_name,
+        lastname: userData.last_name,
+        password: userData.password,
+        isMod: false,
+        isSmm: false,
+        isUser: true,
+      },
+    };
+
+    const url = `${ReactConfig.base_url_requests}/user/${username}`;
+    const options = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      mode: "cors",
+      body: JSON.stringify(data),
+    };
+
+    fetch(url, options)
+      .then((res) => {
+        console.log(res);
+        if (res.ok) {
+          //registration ok
+          return res.json();
+        }
+      })
+      .then((data) => {
+        console.log("Registrazione went good", data);
+      })
+      .catch((error) => {
+        console.error("Registration failed, error:", error);
+      });
+  }
+  */
+  }
 
   //TODO: PUT: RESET PSW /user/${username}-----------------------------------------------------------------------------------------------------
   async function resetPassword() {}
@@ -225,19 +334,14 @@ function Account() {
   };
   //----------------------------------------------------------------------------------------------------------------
   return (
-    <div>
-      <div
-        className="container-flex"
-        id="elemento-espanso"
-        onLoad={getUserData}
-      >
-        <Navbar username={username} />
+    <div className="container-flex">
+      <div className="row" onLoad={getUserData}>
         <div className="row mb-5 mt-4">
           <div className="col-12 col-md-3">
             <img
               src={cattyy}
               alt="Foto Profilo"
-              className="rounded-circle ms-5"
+              className="rounded-circle"
               onMouseOver={showVulture}
               onMouseLeave={hideVulture}
             />
@@ -246,91 +350,119 @@ function Account() {
 
           <div className="col-12 col-md-9">
             <div className="row">
-              <div className="col-12 d-flex align-items-center justify-content-evenly mb-4">
-                <h1 className="cool-font-small ">{username}</h1>
-                <button className="custom-button" onClick={logoutUser}>
-                  <ToastContainer />
-                  LOGOUT
-                </button>
-              </div>
-              <div>
-                <h2>
-                  {userData.first_name} {userData.last_name}
-                </h2>
-                <button className="custom-button" style={{ width: "50%" }}>
-                  NUM of SQUEALS
-                </button>
+              <div className="col-12 col-md d-flex align-items-center justify-content-center ">
+                <div className="d-md-flex flex-md-row flex-column">
+                  <div className="col-8">
+                    <h1 className="cool-font-medium mt-2 mb-2">{username}</h1>
+                    <h2>
+                      {userData.first_name} {userData.last_name}
+                    </h2>
+                  </div>
+
+                  <div className="col-4">
+                    <button
+                      className="user_button box"
+                      style={{ width: "100%" }}
+                    >
+                      N SQUEALS
+                    </button>
+                    <button
+                      id="upgrade-button"
+                      className="box"
+                      onClick={buyQuote}
+                    >
+                      UPGRADE
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         <div className="row mb-4 ">
-          <div className="col-6">
+          <div className="col-md-6">
             <div className="row">
-              <h3 className="mb-4">Quota rimanente msg pubblici</h3>
+              <h3 className="mb-4">Quota rimanente</h3>
             </div>
-            <div className="row">
-              <div className="col-4 col-sm-4">
+
+            <div className="row d-flex align-items-center justify-content-evenly">
+              <div className="col-sm-6">
                 <h4>Daily</h4>
-                <button className="custom-button m-2">
+                <button className="custom-button m-2 box">
                   {userQuote.remaining_daily}
                 </button>
               </div>
-              <div className="col-4 col-sm-4">
+              <div className="col-sm-6">
                 <h4>Weekly</h4>
-                <button className="custom-button m-2">
+                <button className="custom-button m-2 box">
                   {userQuote.remaining_weekly}
                 </button>
               </div>
-              <div className="col-4 col-sm-4">
+              <div className="col-sm-6">
                 <h4>Monthly</h4>
-                <button className="custom-button m-2">
+                <button className="custom-button m-2 box">
                   {userQuote.remaining_monthly}
                 </button>
               </div>
             </div>
-            <button className="user_button" onClick={buyQuote}>
+
+            <button id="buy-button" className="box" onClick={buyQuote}>
               BUY
             </button>
           </div>
-          <div className="col-6">
-            <h4 className="mt-">Email: {userData.email}</h4>
-            <h4 className="mt-5">Dove sono nel mondo:</h4>
+
+          <div className="col-md-6">
+            <h4 className="mt-4 mb-5">Email: {userData.email}</h4>
+            <h4 className="mt-4">Dove sono nel mondo:</h4>
             <Geo />
           </div>
         </div>
 
         <div className="row mb-5">
-          <div className="col-6 d-flex flex-column justify-content-center align-items-center">
-            <button className="user_button mb-2" onClick={deleteUser}>
-              DELETE ACCOUNT, con toast
-            </button>
-            <button className="user_button mb-2" onClick={addSmm}>
-              ADD SMM?
-            </button>
-            <button className="user_button mb-2" onClick={removeSmm}>
-              NO MORE SMM!
-            </button>
-            <button className="user_button mb-2" onClick={changeUsername}>
-              CAMBIO USERNAME
-            </button>
-          </div>
-
-          <div className="col-6 d-flex flex-column justify-content-center align-items-center">
-            <button className="user_button mb-2" onClick={changePassword}>
+          <div className=" d-flex flex-column justify-content-center align-items-center ">
+            <button className="user_button mb-2 box" onClick={changePassword}>
               CAMBIO PASSWORD
             </button>
-            <button className="user_button mb-2" onClick={resetPassword}>
+            <button className="user_button mb-2 box" onClick={resetPassword}>
               RESET PASSWORD??
             </button>
-            <button className="user_button mb-2" onClick={followedChannels}>
+            <button className="user_button mb-2 box" onClick={followedChannels}>
               CANALI SEGUITI
             </button>
-            <button className="user_button mb-2">
+
+            <button
+              id="logout-button"
+              className=" mb-2 box"
+              onClick={logoutUser}
+            >
+              <ToastContainer />
+              LOGOUT
+            </button>
+            <button
+              id="delete-button"
+              className=" mb-2box"
+              onClick={deleteUser}
+            >
+              DELETE ACCOUNT
+              <ToastContainer />
+            </button>
+            <button className="user_button mb-2 box">
               <Link to={ReactConfig.pathFunction("/about")}>About us:</Link>
             </button>
           </div>
+        </div>
+
+        <div id="vip_buttons">
+          <button className="user_button mb-2 box" onClick={addSmm}>
+            ADD SMM?
+          </button>
+          <button className="user_button mb-2 box" onClick={removeSmm}>
+            NO MORE SMM!
+          </button>
+          <button className="user_button mb-2 box" onClick={changeUsername}>
+            CAMBIO USERNAME
+          </button>
         </div>
       </div>
     </div>

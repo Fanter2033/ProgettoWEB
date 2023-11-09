@@ -2,6 +2,7 @@
   --squeal-green: #528b57;
   --squeal-blue: #072f38;
   --squeal-yellow: #e0bb76;
+  --squeal-red: rgb(180, 86, 86);
 }
 
 /* ------------ ATTENZIONE AGLI ALTRI FILE CSS -------------*/
@@ -48,6 +49,7 @@ body {
   width: 100vw;
   text-align: center;
 }
+
 @keyframes rainbow-animation {
   0% {
     background-position: 100% 0;

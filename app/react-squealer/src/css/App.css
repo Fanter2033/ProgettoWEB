@@ -3,6 +3,7 @@
   --squeal-green: #528b57;
   --squeal-blue: #072f38;
   --squeal-yellow: #e0bb76;
+  --squeal-red: rgb(180, 86, 86);
 }
 
 .my-green {
@@ -30,6 +31,8 @@ html {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+
+  overflow-x: hidden;
 }
 .App {
   text-align: center;
@@ -37,11 +40,12 @@ html {
   color: var(--squeal-blue);
 }
 #elemento-espanso {
-  position: absolute; /* Posizionamento assoluto rispetto alla view
+  position: absolute; /* Posizionamento assoluto rispetto alla view*/
   top: 0; /* Inizia dall'alto della viewport */
   right: 0; /* Finisce a destra della viewport */
   bottom: 0; /* Finisce in basso della viewport */
   left: 0; /* Inizia da sinistra della viewport */
+  width: 100vw;
   background-color: var(--squeal-yellow);
 }
 /* -----------------FONT STUFF------------------ */
@@ -92,15 +96,75 @@ html {
 .user_button {
   background-color: var(--squeal-blue);
   color: var(--squeal-yellow);
-  width: 40vw;
+  width: 60vw;
+  margin: 1em;
   border: none;
-  padding: 10px 20px;
+  padding: 1em;
   border-radius: 8px;
   transition: background-color 0.3s, box-shadow 0.3s;
   cursor: pointer;
 }
 .user_button:hover {
   background-color: var(--squeal-green);
+}
+
+#logout-button {
+  background-color: var(--squeal-red);
+  color: var(--squeal-yellow);
+
+  width: 60vw;
+  margin: 1em;
+  padding: 1em;
+
+  border: none;
+  border-radius: 0.5rem;
+
+  transition: background-color 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+#buy-button {
+  background-color: var(--squeal-green);
+  color: var(--squeal-yellow);
+
+  width: 20vw;
+  margin: 1em;
+  padding: 1em;
+
+  border: none;
+  border-radius: 0.5rem;
+
+  transition: background-color 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+#upgrade-button {
+  background-color: rgb(184, 121, 184);
+  color: var(--squeal-yellow);
+
+  width: 20vw;
+  padding: 1em;
+  margin: 1em;
+  border: none;
+  border-radius: 0.5rem;
+
+  transition: background-color 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+#delete-button {
+  background-color: var(--squeal-red);
+  color: var(--squeal-yellow);
+
+  width: 60vw;
+  margin: 1em;
+  padding: 1em;
+
+  border: none;
+  border-radius: 0.5rem;
+
+  transition: background-color 0.3s, box-shadow 0.3s;
+  cursor: pointer;
 }
 
 /* -------------------- DESTINATARIO STUFF ------------------*/
@@ -123,6 +187,9 @@ html {
   color: red;
   font-weight: bold;
 }
+/* -------------------- IMG STUFF ------------------*/
+#mapid { height: 40vh; }
+
 
 /* -------------------- IMG STUFF ------------------*/
 /* Stile predefinito per l'immagine */
