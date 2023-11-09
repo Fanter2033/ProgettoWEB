@@ -10,6 +10,7 @@ const ChannelModel = require("../models/ChannelModel");
 const ChannelDto = require("../entities/dtos/ChannelDto");
 const SquealToUserModel = require("../models/SquealToUserModel");
 const SquealToChannelModel = require("../models/SquealToChannelModel");
+const SquealIrModel = require("../models/SquealIrModel");
 const Squeal2UserDto = require("../entities/dtos/Squeal2UserDto");
 const Squeal2ChannelDto = require("../entities/dtos/Squeal2ChannelDto");
 
@@ -20,6 +21,7 @@ module.exports = class SquealController extends Controller {
     #channelController = new ChannelController(new ChannelModel());
     #squealToUserModel = new SquealToUserModel();
     #squealToChannelModel = new SquealToChannelModel();
+    #squealImpressionReactions = new SquealIrModel();
 
     constructor(model) {
         super();
@@ -29,9 +31,11 @@ module.exports = class SquealController extends Controller {
     /**
      *
      * @param identifier {Number}
+     * @param authenticatedUser {UserDto}
+     * @param session_id {string}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
-    async getSqueal(identifier) {
+    async getSqueal(identifier, authenticatedUser, session_id) {
         let output = this.getDefaultOutput();
 
         let squeal = await this._model.getSqueal(identifier);
@@ -41,10 +45,34 @@ module.exports = class SquealController extends Controller {
             return output;
         }
 
+        let isPublic = await this.isSquealPublic(identifier);
+        if(isPublic === false){
+            if(this.isAuthenticatedUser(authenticatedUser) === false){
+                output['code'] = 403;
+                output['msg'] = 'Login to see this content.';
+                return output;
+            }
+            //TODO
+            let isDest = await this.#squealToUserModel.isUserDest(squeal_id, user.username);
+            if(isDest){
+
+            }
+        }
         //TODO VERIFICARE CHE IL POST ABBIA DESTINATARI CHE SONO CANALI ALTRIMENTI E' PRIVATO E DOBBIAMO VERIFICARE CHE IL RICHIEDENTE SIA AUTENTICATO E SIA UN DESTINATARIO, O IL MITTENTE
 
         output['content'] = squeal.getDocument();
         return output;
+    }
+
+    /**
+     *
+     * @param {number} squeal_id
+     * @return {Promise<boolean>}
+     */
+    async isSquealPublic(squeal_id){
+        let channelLinked = await this.#squealToChannelModel.countChannelLinked(squeal_id);
+        if(channelLinked > 0) return true;
+        return false;
     }
 
     /**
@@ -67,11 +95,6 @@ module.exports = class SquealController extends Controller {
             output['msg'] = 'Invalid type of Squeal. Bad request'
             return output;
         }
-
-        if (true) {
-            //TODO: controllare che i destinatari
-        }
-
 
         let quoteCtrl = new QuoteController(new QuoteModel());
         let quoteRes = await quoteCtrl.getQuote(authenticatedUser.username)
@@ -123,9 +146,7 @@ module.exports = class SquealController extends Controller {
             return output;
         }
 
-        if (true) {
-            //TODO: controllo coerenza content
-        }
+        //TODO: controllo coerenza content
 
         //Controls ended. Let's insert
         squealDto.id = await this._model.getNextId();
@@ -300,9 +321,9 @@ module.exports = class SquealController extends Controller {
     }
 
     checkReactionType(type) {
-        return type === 'LIKE_A_LOT' ||
-            type === 'LIKE' ||
-            type === 'DO_NOT_LIKE' ||
-            type === 'DISGUSTED';
+        return type === autoload.config._REACTION_LIKE_A_LOT ||
+            type === autoload.config._REACTION_LIKE ||
+            type === autoload.config._REACTION_DO_NOT_LIKE ||
+            type === autoload.config._REACTION_DISGUSTED;
     }
 }

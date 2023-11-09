@@ -1,6 +1,7 @@
 const Model = require("./Model");
 const SquealChannel = require("../entities/schemas/SquealChannel");
 const Squeal2ChannelDto = require("../entities/dtos/Squeal2ChannelDto");
+const ChannelDto = require("../entities/dtos/ChannelDto");
 
 module.exports = class SquealToChannelModel extends Model {
     constructor() {
@@ -21,6 +22,20 @@ module.exports = class SquealToChannelModel extends Model {
             return false;
         }
         return true;
+    }
+
+    /**
+     * @param {number} id
+     * @return {Promise<number>}
+     */
+    async countChannelLinked(id){
+        await  this.checkMongoose("squeal_to_channels", SquealChannel);
+        id = this.mongo_escape(id);
+        let filter = {
+            "squeal_id": `${id}`
+        }
+        let results = await this.entityMongooseModel.find(filter);
+        return results.length;
     }
 
 

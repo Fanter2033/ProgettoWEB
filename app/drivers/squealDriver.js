@@ -15,7 +15,9 @@ squealDriver.use(express.urlencoded({extended: true}));
 
 squealDriver.get('/:id', async function (req, res){
     let requested_id = req.params['id'];
-    let squealCtrl = await squealController.getSqueal(requested_id);
+    let authenticatedUser = await authController.getAuthenticatedUser(req);
+    let session_id = req.session.id;
+    let squealCtrl = await squealController.getSqueal(requested_id, authenticatedUser, session_id);
     if(squealCtrl.code === 200)
         res.status(squealCtrl.code).send(squealCtrl.content)
     else
