@@ -2,6 +2,8 @@ import React from "react";
 import { useState } from "react";
 import ReactConfig from "../config/ReactConfig";
 
+import { useUserContext } from "../config/UserContext";
+
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -14,13 +16,13 @@ import "react-toastify/dist/ReactToastify.css";
 import "../css/LoginForm.css";
 
 //PUT: CHANGE USERNAME /user/${username}-----------------------------------------------------------------------------------------------------
-function ChangeUsername(props) {
-  const [show, setShow] = useState(false);
+function ChangeUsername() {
+  const { userGlobal, setUserGlobal } = useUserContext();
+  const [newUsername, setNewUsername] = useState();
 
+  const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
-  const [newUsername, setNewUsername] = useState();
 
   const notify = () =>
     toast.success("🦄 Completato con successo!", {
@@ -39,23 +41,28 @@ function ChangeUsername(props) {
 
     //TODO: se il campo è vuoti apri toast
     //TODO: se utente gia esiste error
+    setUserGlobal({
+      ...userGlobal,
+      username: newUsername,
+    });
+    console.log("mimmooooooooooooooooooooooooooooooooo" + userGlobal.username);
 
     try {
       handleClose();
       const data = {
         user: {
-          username: newUsername,
-          email: props.userData.email,
-          firstname: props.userData.first_name,
-          lastname: props.userData.last_name,
-          password: props.userData.password,
+          username: userGlobal.username,
+          email: userGlobal.email,
+          firstname: userGlobal.first_name,
+          lastname: userGlobal.last_name,
+          password: userGlobal.password,
           isMod: false,
           isSmm: false,
           isUser: true,
         },
       };
 
-      const url = `${ReactConfig.base_url_requests}/user/${props.userData.username}`;
+      const url = `${ReactConfig.base_url_requests}/user/${userGlobal.username}`;
       const options = {
         method: "PUT",
         headers: {
@@ -69,8 +76,6 @@ function ChangeUsername(props) {
       fetch(url, options)
         .then((res) => {
           console.log(res);
-          props.userData.username = newUsername;
-          console.log("mimmooooooooooooooooooooooooooooooooo"+props.userData.username);
           if (res.ok) {
             //creation ok
             return res.json();

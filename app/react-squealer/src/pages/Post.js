@@ -1,23 +1,25 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+//userGlobal.usernameimport { useLocation } from "react-router-dom";
 
 
 import Squeal from "./Squeal";
 import Reactions from "./Reactions";
 import Comment from "./Comment";
 
+import { useUserContext } from "../config/UserContext";
+
+
 import "../css/App.css";
 
 function Post() {
-  const location = useLocation();
-  const { username } = location.state;
+  const { userGlobal, setUserGlobal } = useUserContext();
 
-  console.log(username);
+  console.log(userGlobal.username);
   return (
 <>
 
 <div className="mt-5 ">
-      <Squeal username={username}/>
+      <Squeal username={userGlobal.username}/>
       <Reactions />
       <Comment />
     </div>

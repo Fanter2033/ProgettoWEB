@@ -122,7 +122,7 @@ function Register() {
                 }
               })
               .then((dataAuth) => {
-                navigate(`/channels`, { state: { username } });
+                navigate(`/channels`);
                 setUsername("");
                 setPassword("");
                 console.log("Authentication successful", dataAuth);

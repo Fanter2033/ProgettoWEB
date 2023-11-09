@@ -25,9 +25,7 @@ block: visibile, interattivo, influenza layout
 none: opposto
 */
 
-function Navbar(props) {
-  console.log(props);
-
+function Navbar() {
   return (
     <>
       {/*SCHERMI LARGE-----------------------------------------------------------------------------*/}
@@ -54,7 +52,6 @@ function Navbar(props) {
                     }}
                     className="navbar-brand cool-font-small"
                     to={ReactConfig.pathFunction("/post")}
-                    state={props}
                   >
                     <button type="button" className="btn icon-nav me-2">
                       <svg
@@ -80,7 +77,6 @@ function Navbar(props) {
                     }}
                     className="navbar-brand cool-font-small"
                     to={ReactConfig.pathFunction("/channels")}
-                    state={props}
                   >
                     <button type="button" className="btn icon-nav me-2">
                       <svg
@@ -106,7 +102,6 @@ function Navbar(props) {
                     }}
                     className="navbar-brand cool-font-small"
                     to={ReactConfig.pathFunction("/account")}
-                    state={props}
                   >
                     <button type="button" className="btn icon-nav me-2">
                       <svg
@@ -157,7 +152,6 @@ function Navbar(props) {
                     }}
                     className="navbar-brand cool-font-small"
                     to={ReactConfig.pathFunction("/post")}
-                    state={props}
                   >
                     <button type="button" className="btn icon-nav me-2">
                       <svg
@@ -182,7 +176,6 @@ function Navbar(props) {
                     }}
                     className="navbar-brand cool-font-small"
                     to={ReactConfig.pathFunction("/channels")}
-                    state={props}
                   >
                     <button type="button" className="btn icon-nav me-2">
                       <svg
@@ -207,7 +200,6 @@ function Navbar(props) {
                     }}
                     className="navbar-brand cool-font-small"
                     to={ReactConfig.pathFunction("/account")}
-                    state={props}
                   >
                     <button type="button" className="btn icon-nav me-2">
                       <svg
@@ -235,7 +227,6 @@ function Navbar(props) {
                     }}
                     className="navbar-brand"
                     to={ReactConfig.pathFunction("/chat")}
-                    state={props}
                   >
                     <button type="button" className="btn icon-nav me-2">
                       <svg
@@ -269,7 +260,6 @@ function Navbar(props) {
               }}
               className="navbar-brand"
               to={ReactConfig.pathFunction("/post")}
-              state={props}
             >
               <button type="button" className="btn icon-nav me-2">
                 <svg
@@ -295,7 +285,6 @@ function Navbar(props) {
               }}
               className="navbar-brand"
               to={ReactConfig.pathFunction("/channels")}
-              state={props}
             >
               <button type="button" className="btn icon-nav me-2">
                 <svg
@@ -320,7 +309,6 @@ function Navbar(props) {
               }}
               className="navbar-brand"
               to={ReactConfig.pathFunction("/account")}
-              state={props}
             >
               <button type="button" className="btn icon-nav me-2">
                 <svg
@@ -348,7 +336,6 @@ function Navbar(props) {
               }}
               className="navbar-brand"
               to={ReactConfig.pathFunction("/chat")}
-              state={props}
             >
               <button type="button" className="btn icon-nav me-2">
                 <svg

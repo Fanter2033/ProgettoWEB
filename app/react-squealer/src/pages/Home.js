@@ -6,8 +6,6 @@ import ReactConfig from "../config/ReactConfig";
 //import Post from "./Post";
 import Footer from "./Footer";
 
-//import { useLocation } from "react-router-dom";
-
 function Home() {
   return (
     <div>

@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+//import { useLocation } from "react-router-dom";
 
 import Channels from "./Channels";
 import Navbar from "./Navbar";
@@ -8,12 +8,12 @@ import Post from "./Post";
 import Chat from "./Chat";
 
 function HomeRoutes() {
-  const location = useLocation();
-  const { username } = location.state;
+  //const location = useLocation();
+  //const { username } = location.state;
 
   return (
     <>
-      <Navbar username={username} />
+      <Navbar />
       <Routes>
         <Route path="/post" element={<Post />} />
         <Route path="/channels" element={<Channels />} />

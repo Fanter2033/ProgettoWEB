@@ -1,13 +1,15 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+//import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../css/LoginForm.css";
+
+import { useUserContext } from "../config/UserContext";
 
 import Geo from "./Geo";
 import VultureAnimation from "./VoltureAnimation";
@@ -30,8 +32,10 @@ const { firstname, lastname, username, email, password } = userData;
 
 function Account() {
   //username from <Navbar/>
-  const location = useLocation();
-  const { username } = location.state;
+  //const location = useLocation();
+  //const { username } = location.state;
+
+  const { userGlobal, setUserGlobal } = useUserContext();
 
   //per il logout
   const navigate = useNavigate();
@@ -79,7 +83,7 @@ function Account() {
 
   async function getUserQuote() {
     try {
-      const uri = `${ReactConfig.base_url_requests}/user/${username}/quote`;
+      const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}/quote`;
 
       const options = {
         method: "GET",
@@ -117,7 +121,7 @@ function Account() {
 
   async function getUserData() {
     try {
-      const uri = `${ReactConfig.base_url_requests}/user/${username}`;
+      const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}`;
       const options = {
         method: "GET",
         mode: "cors",
@@ -177,7 +181,7 @@ function Account() {
       .then((response) => {
         if (response.ok) {
           console.log("logout riuscito con successo");
-          navigate(`/`, { state: { username } });
+          navigate(`/`);
         } else {
           notify();
           console.error("Logout failed", response.statusText);
@@ -191,7 +195,7 @@ function Account() {
   //DELETE USER con toast /user/${username}-----------------------------------------------------------------------------------------------------
   async function deleteUser() {
     notify();
-    const uri = `${ReactConfig.base_url_requests}/user/${username}`;
+    const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}`;
     const options = {
       method: "DELETE",
       headers: {
@@ -263,7 +267,7 @@ function Account() {
               <div className="col-12 col-md d-flex align-items-center justify-content-center ">
                 <div className="d-md-flex flex-md-row flex-column">
                   <div className="col-8">
-                    <h1 className="cool-font-medium mt-2 mb-2">{username}</h1>
+                    <h1 className="cool-font-medium mt-2 mb-2">{userGlobal.username}</h1>
                     <h2>
                       {userData.first_name} {userData.last_name}
                     </h2>

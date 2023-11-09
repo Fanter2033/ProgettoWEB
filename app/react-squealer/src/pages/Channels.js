@@ -1,7 +1,7 @@
 import React from "react";
 import ReactConfig from "../config/ReactConfig";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+//import { useLocation } from "react-router-dom";
 
 //import Post from "./Post";
 import Search from "./Search";
@@ -14,15 +14,20 @@ import "../css/LoginForm.css";
 import "react-toastify/dist/ReactToastify.css";
 //import ModalForm from "./ModalForm";
 
+import { useUserContext } from "../config/UserContext";
+
 /* 
 TODO: let the chat disapper when on sm screen
 */
 
 function Channels() {
-  const location = useLocation();
-  const { username } = location.state;
+  //const location = useLocation();
+  //const { username } = location.state;
 
-  console.log(username);
+  const { userGlobal, setUserGlobal } = useUserContext();
+
+
+  console.log(userGlobal.username);
 
   //GET /channel    list of channels ------------------------------------------------------------------------------------------------------------
   const [channels, setChannels] = useState({});
@@ -156,7 +161,7 @@ function Channels() {
 
   return (
     <div>
-      <Navbar username={username} />
+      <Navbar />
       <div className="container-flex" onLoad={getChannels}>
         <div className="row">
           <div className="col-12 col-md-9">
@@ -167,7 +172,7 @@ function Channels() {
             </div>
 
             <div>
-              <ChannelForm username={username} />
+              <ChannelForm username={userGlobal.username} />
             </div>
 
             <div className="row justify-content-center">
