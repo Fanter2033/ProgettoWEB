@@ -21,7 +21,30 @@ function Squeal(props) {
 
   async function postSqueal() {
     //TODO: manca body fetch
-    const data = {};
+    const data = {
+      squeal: {
+        identifier: 0,
+        date: {},
+        destinations: [
+          {
+            dest_type: "CHANNEL",
+            identifier: "string",
+          },
+        ],
+        sender: props.username,
+        message_type: "MESSAGE_TEXT",
+        message_value: "string",
+        critical_mass: 0,
+        positive_value: 0,
+        negative_value: 0,
+        reactions: [
+          {
+            importance: "LIKE_A_LOT",
+            squeal_identifier: "string",
+          },
+        ],
+      },
+    };
     const uri = `${ReactConfig.base_url_requests}/squeal/`;
     const options = {
       method: "POST",
@@ -57,8 +80,8 @@ function Squeal(props) {
     setFetchDataFlag(true); // Attiva useEffect quando clicchi sul pulsante
   };
 
+  //!squeal
   //TODO PUT SQUEAL /squeal/{identifier_id} ------------------------------------------------------------------------------------------------------------
-
   //TODO DELETE SQUEAL /squeal/{identifier_id} ------------------------------------------------------------------------------------------------------------
 
   //USER INPUT-----------------------------------------------------------------------------------
@@ -115,9 +138,9 @@ function Squeal(props) {
         </label>
         <input
           type="file"
-          id="imageInput"
-          name="imageInput"
-          accept="image/*"
+          id="videoInput"
+          name="videoInput"
+          accept="video/*"
           onChange={handleInputChange}
           className="form-control"
         />
@@ -128,7 +151,7 @@ function Squeal(props) {
       <div className="mb-3">
         <p>Geolocalizzazione: Aggiungi la geolocalizzazione dell'utente qui.</p>
         <p>API:Mapbox o Leaflet</p>
-        <MapComponent/>
+        <MapComponent />
       </div>
     );
   }

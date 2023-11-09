@@ -135,13 +135,13 @@ function Navbar(props) {
       </nav>
 
       {/*SCHERMI MEDI-----------------------------------------------------------------------------*/}
-      <nav className="d-md-block d-none d-sm-block d-md-none navbar-expand-md nav-pc p-3 ">
+      <nav className="d-md-block d-none d-sm-block d-md-none navbar-expand-md nav-pc p-3 fixed">
         <div className="container-fluid">
           <div className="row">
             <div className=""></div>
 
             <div className="col-12">
-              <ul className="navbar-nav d-flex flex-row justify-content-evenly list-unstyled">
+              <ul className="navbar-nav d-flex flex-row justify-content-evenly list-unstyled ">
                 <li className="navbar-item list-unstyled">
                   <img
                     src={squeal_logo}
@@ -224,6 +224,31 @@ function Navbar(props) {
                           fillRule="evenodd"
                           d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"
                         />
+                      </svg>
+                    </button>
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink
+                    style={({ isActive }) => {
+                      return isActive ? { color: "#072f38" } : {};
+                    }}
+                    className="navbar-brand"
+                    to={ReactConfig.pathFunction("/chat")}
+                    state={props}
+                  >
+                    <button type="button" className="btn icon-nav me-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="28"
+                        height="28"
+                        alt="Chat"
+                        fill="currentColor"
+                        className="bi bi-chat-right-text"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M2 1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h9.586a2 2 0 0 1 1.414.586l2 2V2a1 1 0 0 0-1-1H2zm12-1a2 2 0 0 1 2 2v12.793a.5.5 0 0 1-.854.353l-2.853-2.853a1 1 0 0 0-.707-.293H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12z" />
+                        <path d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z" />
                       </svg>
                     </button>
                   </NavLink>

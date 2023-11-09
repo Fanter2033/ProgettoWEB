@@ -1,8 +1,10 @@
 /* ------------ ATTENZIONE AGLI ALTRI FILE CSS -------------*/
 
-body {
+html {
+  text-align: center;
   background-color: var(--squeal-yellow);
   color: var(--squeal-blue);
+  min-height: 100vh;
 }
 
 /* ------------ COLOR STUFF -------------*/

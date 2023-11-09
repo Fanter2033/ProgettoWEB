@@ -20,6 +20,7 @@ function Reactions() {
   function hate() {
     setHate(hateMe + 1);
   }
+  //!da togliere
   function reset() {
     setLove(0);
     setLike(0);

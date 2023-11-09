@@ -24,9 +24,7 @@ function Channels() {
 
   console.log(username);
 
-  //TODO: aggiungi toast?
-
-  //TODO: GET /channel    list of channels ------------------------------------------------------------------------------------------------------------
+  //GET /channel    list of channels ------------------------------------------------------------------------------------------------------------
   const [channels, setChannels] = useState({});
 
   async function getChannels() {
@@ -161,7 +159,7 @@ function Channels() {
       <Navbar username={username} />
       <div className="container-flex" onLoad={getChannels}>
         <div className="row">
-          <div className="col-md-9">
+          <div className="col-12 col-md-9">
             <h1>HOME</h1>
 
             <div>
@@ -186,9 +184,9 @@ function Channels() {
               </ul>
             </div>
           </div>
-          <div className="col-md-3">
+          <div className="col-md-3 d-none d-md-block">
             <h1>CHAT</h1>
-            <Chat/>
+            <Chat />
           </div>
         </div>
       </div>

@@ -187,9 +187,17 @@ html {
   color: red;
   font-weight: bold;
 }
-/* -------------------- IMG STUFF ------------------*/
-#mapid { height: 40vh; }
 
+/* -------------------- A STUFF ------------------*/
+#about-us{
+
+  color: var(--squeal-red);
+  
+  }
+/* -------------------- MAP STUFF ------------------*/
+#mapid {
+  height: 40vh;
+}
 
 /* -------------------- IMG STUFF ------------------*/
 /* Stile predefinito per l'immagine */

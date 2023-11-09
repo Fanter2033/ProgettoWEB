@@ -2,6 +2,8 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import ReactConfig from "./config/ReactConfig";
 
+import  { MyProvider } from "./config/context";
+
 import LoginForm from "./pages/LoginForm";
 import Register from "./pages/Register";
 import Channels from "./pages/Channels";
@@ -14,6 +16,7 @@ import NotFound from "./pages/NotFound";
 function App() {
   return (
     <div className="App">
+      <MyProvider>
       <Routes>
         <Route path={ReactConfig.pathFunction("/")} element={<LoginForm />} />
 
@@ -30,6 +33,7 @@ function App() {
         <Route path={ReactConfig.pathFunction("/*")} element={<HomeRoutes />} />
         <Route path={ReactConfig.pathFunction("*")} element={<NotFound />} />
       </Routes>
+      </MyProvider>
     </div>
   );
 }

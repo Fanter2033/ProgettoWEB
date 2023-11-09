@@ -11,6 +11,8 @@ import "../css/LoginForm.css";
 
 import Geo from "./Geo";
 import VultureAnimation from "./VoltureAnimation";
+import ChangeUsername from "./ChangeUsername";
+import ChangePassword from "./ChanegePassword";
 
 import "../css/App.css";
 import cattyy from "./media/splash.jpeg";
@@ -110,8 +112,6 @@ function Account() {
     };
   });
 
-  //TODO: PATCH USER QUOTE /user/${username}/quote-----------------------------------------------------------------------------------------------
-
   //GET USER DATA-----------------------------------------------------------------------------------------------
   const [userData, setUserData] = useState("");
 
@@ -166,11 +166,11 @@ function Account() {
     const uri = `${ReactConfig.base_url_requests}/auth/logout`;
     const options = {
       method: "POST",
-      mode: "cors",
       headers: {
         "Content-Type": "application/json",
       },
       credentials: "include",
+      mode: "cors",
     };
 
     fetch(uri, options)
@@ -215,112 +215,22 @@ function Account() {
       });
   }
 
+  //!channels
+  //TODO: PUT: CANALI SEGUITI /user/${username}-----------------------------------------------------------------------------------------------------
+  async function followedChannels() {}
+
+  //!quote
+  //TODO: PUT: BUY QUOTE /user/${username}-----------------------------------------------------------------------------------------------------
+  async function buyQuote() {}
+
+  //TODO: PATCH USER QUOTE /user/${username}/quote-----------------------------------------------------------------------------------------------
+
+  //!vip
   //TODO: PUT: ADD SMM /user/${username}----------------------------------------------------------------------------------------------------------
   async function addSmm() {}
 
   //TODO: PUT: REMOVE SMM /user/${username}-----------------------------------------------------------------------------------------------------
   async function removeSmm() {}
-
-  //TODO: PUT: CHANGE USERNAME /user/${username}-----------------------------------------------------------------------------------------------------
-
-  async function changeUsername() {
-    /*
-    const data = {
-      user: {
-        username: username,
-        email: userData.email,
-        firstname: userData.first_name,
-        lastname: userData.last_name,
-        password: userData.password,
-        isMod: false,
-        isSmm: false,
-        isUser: true,
-      },
-    };
-
-    const url = `${ReactConfig.base_url_requests}/user/${username}`;
-    const options = {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      mode: "cors",
-      body: JSON.stringify(data),
-    };
-
-    fetch(url, options)
-      .then((res) => {
-        console.log(res);
-        if (res.ok) {
-          //registration ok
-          return res.json();
-        }
-      })
-      .then((data) => {
-        console.log("Registrazione went good", data);
-      })
-      .catch((error) => {
-        console.error("Registration failed, error:", error);
-      });
-      */
-  }
-
-  //TODO: PUT: CHANGE PSW /user/${username}-----------------------------------------------------------------------------------------------------
-  async function changePassword() {
-    /*
-  async function changeUsername() {
-    const data = {
-      user: {
-        username: username,
-        email: userData.email,
-        firstname: userData.first_name,
-        lastname: userData.last_name,
-        password: userData.password,
-        isMod: false,
-        isSmm: false,
-        isUser: true,
-      },
-    };
-
-    const url = `${ReactConfig.base_url_requests}/user/${username}`;
-    const options = {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      mode: "cors",
-      body: JSON.stringify(data),
-    };
-
-    fetch(url, options)
-      .then((res) => {
-        console.log(res);
-        if (res.ok) {
-          //registration ok
-          return res.json();
-        }
-      })
-      .then((data) => {
-        console.log("Registrazione went good", data);
-      })
-      .catch((error) => {
-        console.error("Registration failed, error:", error);
-      });
-  }
-  */
-  }
-
-  //TODO: PUT: RESET PSW /user/${username}-----------------------------------------------------------------------------------------------------
-  async function resetPassword() {}
-
-  //TODO: PUT: CANALI SEGUITI /user/${username}-----------------------------------------------------------------------------------------------------
-  async function followedChannels() {}
-
-  //-----------------------------------------------------------------------------------------------------------------
-  //TODO: PUT: BUY QUOTE /user/${username}-----------------------------------------------------------------------------------------------------
-  async function buyQuote() {}
 
   //----------------------------------------------------------------------------------------------------------------
   const [showVultureAnimation, setShowVultureAnimation] = useState(false);
@@ -419,18 +329,14 @@ function Account() {
           </div>
         </div>
 
-        <div className="row mb-5">
+        <div className=" mb-5">
           <div className=" d-flex flex-column justify-content-center align-items-center ">
-            <button className="user_button mb-2 box" onClick={changePassword}>
-              CAMBIO PASSWORD
-            </button>
-            <button className="user_button mb-2 box" onClick={resetPassword}>
-              RESET PASSWORD??
-            </button>
+            <ChangeUsername userData={userData} />
+            <ChangePassword userData={userData} />
+            
             <button className="user_button mb-2 box" onClick={followedChannels}>
               CANALI SEGUITI
             </button>
-
             <button
               id="logout-button"
               className=" mb-2 box"
@@ -441,14 +347,16 @@ function Account() {
             </button>
             <button
               id="delete-button"
-              className=" mb-2box"
+              className=" mb-2 box"
               onClick={deleteUser}
             >
               DELETE ACCOUNT
               <ToastContainer />
             </button>
             <button className="user_button mb-2 box">
-              <Link to={ReactConfig.pathFunction("/about")}>About us:</Link>
+              <Link to={ReactConfig.pathFunction("/about")} id="about-us">
+                ABOUT US:
+              </Link>
             </button>
           </div>
         </div>
@@ -459,9 +367,6 @@ function Account() {
           </button>
           <button className="user_button mb-2 box" onClick={removeSmm}>
             NO MORE SMM!
-          </button>
-          <button className="user_button mb-2 box" onClick={changeUsername}>
-            CAMBIO USERNAME
           </button>
         </div>
       </div>

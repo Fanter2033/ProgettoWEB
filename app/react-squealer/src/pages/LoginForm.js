@@ -7,6 +7,9 @@ import "react-toastify/dist/ReactToastify.css";
 
 import "../css/LoginForm.css";
 
+//TODO: PUT: RESET PSW /user/${username}-----------------------------------------------------------------------------------------------------
+//async function resetPassword() {}
+
 function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -33,11 +36,11 @@ function LoginForm() {
     const uri = `${ReactConfig.base_url_requests}/auth/${username}/0`;
     const options = {
       method: "POST",
-      mode: 'cors',
+      mode: "cors",
       headers: {
         "Content-Type": "application/json",
       },
-      credentials: 'include',
+      credentials: "include",
       body: JSON.stringify(data),
     };
 
@@ -48,8 +51,7 @@ function LoginForm() {
           //console.log(user);
           //navigate(`/channels?username=${username}`);
           navigate(`/channels`, { state: { username } });
-        }
-        else {
+        } else {
           notify();
           console.error("Authentication failed", response.statusText);
         }

@@ -2,18 +2,16 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 
-import Search from "./Search";
-import Post from "./Post";
+//import Search from "./Search";
+//import Post from "./Post";
 import Footer from "./Footer";
 
 //import { useLocation } from "react-router-dom";
 
-//gli utenti non autenticati possono usare la serach?
-
 function Home() {
   return (
     <div>
-      <div className="col-12 mb-5 mt-5">
+      <div className="col-12 ">
         <NavLink
           style={{ color: "#072f38" }}
           className="cool-font-small"
@@ -27,15 +25,13 @@ function Home() {
         <div className="row">
           <div className="col-12">
             <h1>CHANNELS</h1>
-            <div className="mb-5">
-              <Search />
-              <Post />
-            </div>
+            <div className=""></div>
             <div className="row justify-content-center">
               <h3>TODO:</h3>
               <ul className="list-group col-md-4">
-                <li className="list-group-item list">pubblici</li>
-                <li className="list-group-item list">hash</li>
+                <li className="list-group-item list">GET CHANNELS</li>
+                <li className="list-group-item list">GET HASH</li>
+                <li className="list-group-item list">SEARCH</li>
               </ul>
             </div>
           </div>
