@@ -46,8 +46,20 @@ squealDriver.post('/', async function(req, res){
         res.status(ctrlOut.code).send(ctrlOut.content);
     else
         res.status(ctrlOut.code).send(ctrlOut);
-    }
-)
+});
+
+squealDriver.patch('/:id/reaction/:reactions', async function(req, res) {
+    let authUser = authController.getAuthenticatedUser(req);
+    let session_id = req.session.id;
+    let requested_id = req.params['id'];
+    let reaction = req.params['reactions'];
+
+    let ctrlOut = await squealController.addSquealerReaction(requested_id, session_id, await authUser, reaction);
+    if (ctrlOut.code === 200)
+        res.status(ctrlOut.code).send(ctrlOut.content);
+    else
+        res.status(ctrlOut.code).send(ctrlOut);
+})
 
 module.exports = squealDriver;
 

@@ -721,6 +721,31 @@ paths:
             description: 'More information about the error'
         '404':
           description: 'The specified squeal in URL path is not found'
+  /squeal/{identifier_id}/reactions/{reaction}:
+    patch:
+      tags:
+        - squeal
+      summary: Set squeal reaction
+      parameters:
+        - name: identifier_id
+          description: Squeal ID
+          required: true
+          in: path
+          type: string
+        - name: reaction
+          description: Reaction
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: 'Successful operation'
+        '400':
+          description: 'Generic error'
+        '401':
+          description: 'Not authorized'
+        '404':
+          description: 'Identifier not found'
   /user/{username}/quote:
     get:
       tags:

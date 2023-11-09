@@ -230,6 +230,8 @@ module.exports = class UserController extends Controller {
             return output;
         }
 
+        //TODO: AGGIORNARE ANCHE LE RELAZIONI
+
 
         newUser.registration_timestamp = oldUserObj.registration_timestamp;
         newUser.pro = oldUserObj.pro;

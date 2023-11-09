@@ -13,6 +13,7 @@ const SquealToChannelModel = require("../models/SquealToChannelModel");
 const SquealIrModel = require("../models/SquealIrModel");
 const Squeal2UserDto = require("../entities/dtos/Squeal2UserDto");
 const Squeal2ChannelDto = require("../entities/dtos/Squeal2ChannelDto");
+const SquealIrDto = require("../entities/dtos/SquealIrDto");
 
 module.exports = class SquealController extends Controller {
 
@@ -52,13 +53,34 @@ module.exports = class SquealController extends Controller {
                 output['msg'] = 'Login to see this content.';
                 return output;
             }
-            //TODO
-            let isDest = await this.#squealToUserModel.isUserDest(squeal_id, user.username);
-            if(isDest){
 
+            let isDest = await this.#squealToUserModel.isUserDest(squeal_id, user.username);
+            if(isDest === false && authenticatedUser.username.trim() !== squeal.sender.trim() && authenticatedUser.isAdmin === false){
+                output['code'] = 401;
+                output['msg'] = 'Not authorized to see this content.';
+                return output;
             }
         }
-        //TODO VERIFICARE CHE IL POST ABBIA DESTINATARI CHE SONO CANALI ALTRIMENTI E' PRIVATO E DOBBIAMO VERIFICARE CHE IL RICHIEDENTE SIA AUTENTICATO E SIA UN DESTINATARIO, O IL MITTENTE
+
+        let irDto = new SquealIrDto();
+        irDto.squeal_id = identifier;
+        if(this.isAuthenticatedUser(authenticatedUser) === false){
+            irDto.is_session_id = true;
+            irDto.value = session_id;
+        } else {
+            irDto.is_session_id = false;
+            irDto.value = authenticatedUser.username;
+        }
+
+        let result = await this.#squealImpressionReactions.assocExists(irDto);
+        if(result === false){
+            result = await this.#squealImpressionReactions.createAssocSquealUser(irDto);
+            if(result === false){
+                output['code'] = 500;
+                output['msg'] = 'Internal server error (1).';
+                return output;
+            }
+        }
 
         output['content'] = squeal.getDocument();
         return output;
@@ -202,6 +224,24 @@ module.exports = class SquealController extends Controller {
 
 
         output['content'] = squealDto.getDocument();
+        return output;
+    }
+
+    /**
+     * @param squeal_id {number}
+     * @param sessionId {string}
+     * @param authenticatedUser {UserDto}
+     * @param reaction {string}
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async addSquealerReaction(squeal_id, sessionId, authenticatedUser, reaction){
+        let output = this.getDefaultOutput();
+        let getCtrlOut = await this.getSqueal(squeal_id, authenticatedUser, sessionId);
+
+        if(getCtrlOut.code !== 200){
+            return getCtrlOut;
+        }
+
         return output;
     }
 

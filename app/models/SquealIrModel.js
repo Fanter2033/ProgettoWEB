@@ -21,4 +21,20 @@ module.exports = class SquealIrModel extends Model {
         return true;
     }
 
+    /**
+     * @param {SquealIrDto} dto
+     * @return {Promise<boolean>}
+     */
+    async assocExists(dto){
+        await  this.checkMongoose("squeal_impression_reactions", SquealIrSchema);
+        let filter = this.mongo_escape(dto.getDocument());
+
+        try {
+            let result = await this.entityMongooseModel.find(filter);
+            return result.length !== 0;
+        } catch (ignored){
+            return false;
+        }
+    }
+
 }
