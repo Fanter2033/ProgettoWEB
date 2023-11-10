@@ -70,4 +70,22 @@ module.exports = class SquealModel extends Model {
         return 1;
     }
 
+    /**
+     * @param oldUsername {string}
+     * @param newUsername {string}
+     * @return {Promise<boolean>}
+     */
+    async replaceUser(oldUsername, newUsername){
+        await this.checkMongoose("Squeal", Squeal);
+        let filter = {sender: `${oldUsername}`};
+        filter = this.mongo_escape(filter);
+        let update = {sender: `${newUsername}`}
+        try {
+            let result = await this.entityMongooseModel.updateMany(filter, update);
+            return true;
+        } catch (ignored) {
+            return false;
+        }
+    }
+
 }

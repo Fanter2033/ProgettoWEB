@@ -3,6 +3,9 @@ const QuoteController = require ("./QuoteController");
 const QuoteModel = require ("../models/QuoteModel");
 const ChannelRolesController = require("./ChannelRolesController");
 const ChannelRolesModel = require("../models/ChannelRolesModel");
+const SquealToUserModel = require("../models/SquealToUserModel");
+const SquealIrModel = require("../models/SquealIrModel");
+const SquealModel = require("../models/SquealModel");
 
 module.exports = class UserController extends Controller {
 
@@ -104,6 +107,8 @@ module.exports = class UserController extends Controller {
             output['msg'] = 'Delete executed but no user were deleted.';
         }
 
+        //TODO AGGIORNARE ANCHE LE ELIMINAZIONI CON LE RELAZIONI
+
         return output;
     }
 
@@ -189,6 +194,7 @@ module.exports = class UserController extends Controller {
             return output;
         }
 
+
         if (this.isObjectVoid(authenticatedUser) || (!authenticatedUser.isAdmin && authenticatedUser.username !== oldUsername)) {
             output['code'] = 403;
             output['req_error'] = -4;
@@ -230,9 +236,6 @@ module.exports = class UserController extends Controller {
             return output;
         }
 
-        //TODO: AGGIORNARE ANCHE LE RELAZIONI
-
-
         newUser.registration_timestamp = oldUserObj.registration_timestamp;
         newUser.pro = oldUserObj.pro;
         newUser.locked = oldUserObj.locked;
@@ -249,6 +252,57 @@ module.exports = class UserController extends Controller {
             output['code'] = 500;
             output['req_error'] = -5;
             output['msg'] = 'Error updating into DB.';
+        }
+
+        if(newUser.username !== oldUsername){
+            //Updating references entities. Let's start by quote
+            let quoteController = new QuoteController(new QuoteModel())
+            let result = await quoteController.changeUsernameQuota(oldUsername, newUser.username);
+            if(result['code'] !== 200){
+                result['code'] = 500;
+                result['msg'] = 'Internal server error UserController::updateUser - 1';
+                return result;
+            }
+
+            //Now channel
+            let channelRoleController = new ChannelRolesController(new ChannelRolesModel());
+            result = await channelRoleController.substituteUser(oldUsername, newUser.username);
+            if(result['code'] !== 200){
+                result['code'] = 500;
+                result['msg'] = 'Internal server error UserController::updateUser - 2';
+                return result;
+            }
+
+            let squealModel = new SquealModel();
+            let squealImpressionReactions = new SquealIrModel();
+            let squealToUserModel = new SquealToUserModel();
+
+            //Now squeals
+            result = await squealModel.replaceUser(oldUsername, newUser.username);
+            if(result === false){
+                result['code'] = 500;
+                result['msg'] = 'Internal server error UserController::updateUser - 3';
+                return result;
+            }
+
+            //Now impression and reactions
+            result = await squealImpressionReactions.replaceUser(oldUsername, newUser.username);
+            if(result === false){
+                result['code'] = 500;
+                result['msg'] = 'Internal server error UserController::updateUser - 4';
+                return result;
+            }
+
+            //Now squeals to user
+            result = await squealToUserModel.replaceUser(oldUsername, newUser.username);
+            if(result === false){
+                result['code'] = 500;
+                result['msg'] = 'Internal server error UserController::updateUser - 5';
+                return result;
+            }
+
+            //Now vip users
+            //TODO CHIEDERE A SAMI
         }
 
         return output;

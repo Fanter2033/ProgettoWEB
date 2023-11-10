@@ -56,4 +56,23 @@ module.exports = class SquealIrModel extends Model {
         }
     }
 
+    /**
+     * @param oldUsername {string}
+     * @param newUsername {string}
+     * @return {Promise<boolean>}
+     */
+    async replaceUser(oldUsername, newUsername){
+        await  this.checkMongoose("squeal_impression_reactions", SquealIrSchema);
+        let filter = {value: `${oldUsername}`, is_session_id: false};
+        filter = this.mongo_escape(filter);
+        let update = {value: `${newUsername}`, is_session_id: false};
+        try {
+            let result = await this.entityMongooseModel.updateMany(filter, update);
+            return true;
+        } catch (ignored) {
+            return false;
+        }
+
+    }
+
 }

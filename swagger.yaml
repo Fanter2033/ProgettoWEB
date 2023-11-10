@@ -702,25 +702,6 @@ paths:
             description: 'More information about the error'
         '404':
           description: 'The specified squeal in URL path is not found'
-    delete:
-      tags:
-        - squeal
-      summary: Delete the squeal
-      parameters:
-        - name: identifier_id
-          in: path
-          required: true
-          type: integer
-      responses:
-        '200':
-          description: 'Deleted squeal'
-        '403':
-          description: 'Unable to delete channel due low privileges'
-          schema:
-            type: string
-            description: 'More information about the error'
-        '404':
-          description: 'The specified squeal in URL path is not found'
   /squeal/{identifier_id}/reactions/{reaction}:
     patch:
       tags:

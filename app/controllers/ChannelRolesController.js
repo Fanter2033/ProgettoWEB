@@ -157,6 +157,24 @@ module.exports = class ChannelRolesController extends Controller {
     }
 
     /**
+     * @param oldUsername {string}
+     * @param newUsername {string}
+     * @return {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async substituteUser(oldUsername, newUsername){
+        let output = this.getDefaultOutput();
+
+        //no controls to do here
+        let result = await this.#_model.substituteUsers(oldUsername, newUsername);
+        if(!result){
+            output['code'] = 500;
+            output['msg'] = 'Internal server error.'
+            return output;
+        }
+        return output;
+    }
+
+    /**
      * @param {ChannelDto} channelDto
      * @param {number} role
      * @return {Promise<{msg: string, code: number, sub_code: number, content: {}}>}

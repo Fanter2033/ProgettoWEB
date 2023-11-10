@@ -43,4 +43,27 @@ module.exports = class SquealToUserModel extends Model {
         return true;
     }
 
+    /**
+     * @param oldUsername {string}
+     * @param newUsername {string}
+     * @return {Promise<boolean>}
+     */
+    async replaceUser(oldUsername, newUsername){
+        await  this.checkMongoose("squeal_to_users", SquealUser);
+        let filter = {
+            "destination_username": `${oldUsername}`
+        }
+        filter = this.mongo_escape(filter);
+        let update = {
+            "destination_username": `${newUsername}`
+        }
+        update = this.mongo_escape(update);
+        try {
+            let result = await this.entityMongooseModel.updateMany(filter, update);
+            return true;
+        } catch (ignored) {
+            return false;
+        }
+    }
+
 }

@@ -286,6 +286,8 @@ module.exports = class SquealController extends Controller {
             return output;
         }
 
+        //TODO FARE RICALCOLO E OPERAZIONI DI VARIAZIONE QUOTA.
+
 
         return output;
     }

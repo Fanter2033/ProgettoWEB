@@ -173,6 +173,40 @@ module.exports = class QuoteController extends Controller {
     }
   }
 
+
+    /**
+     * @param {string} oldUsername
+     * @param {string} newUsername
+     * @return {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async changeUsernameQuota(oldUsername, newUsername) {
+        let output = this.getDefaultOutput();
+        //no controls to do here.
+        let quota = await this._model.getQuote(oldUsername);
+
+        if (!(quota instanceof QuoteDto)) {
+            output["code"] = 404;
+            output["msg"] = "Not found";
+            return output;
+        }
+
+        let result = await this.deleteQuote(oldUsername);
+        if(result['code'] !== 200){
+            output["code"] = 500;
+            output["msg"] = "Internal server error. QuoteController::changeUsernameQuota - 1";
+            return output;
+        }
+
+        quota.id = newUsername;
+        result = await this._model.createQuote(quota);
+        if(result === false){
+            output['code'] = 500;
+            output['msg'] = 'Internal server error QuoteController::changeUsernameQuota - 2';
+        }
+
+        return output;
+    }
+
     /**
      *
      * @param {string} username

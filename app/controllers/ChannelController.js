@@ -247,6 +247,8 @@ module.exports = class ChannelController extends Controller {
             }
         }
 
+        //TODO FARLO PER GLI SQUEAL DIRETTI AL CANALE
+
         return output;
     }
 
@@ -359,6 +361,16 @@ module.exports = class ChannelController extends Controller {
         channelRoleDto.username = username;
         channelRoleDto.type = channelDto.type;
         channelRoleDto.channel_name = channelDto.channel_name;
+        let result = await this.getChannelUserRole(channelDto, username);
+        if (result['code'] === 404) {
+            if (channelDto.private === true && newRole === 0)
+                return await this.#channelRolesController.createRole(channelRoleDto);
+            else if (channelDto.private === false && newRole === 2)
+                return await this.#channelRolesController.createRole(channelRoleDto);
+            else
+                return await this.#channelRolesController.updateUserRole(channelRoleDto, authenticatedUser);
+        }
+
         return await this.#channelRolesController.updateUserRole(channelRoleDto, authenticatedUser);
     }
 
@@ -460,6 +472,8 @@ module.exports = class ChannelController extends Controller {
             return output;
         }
 
+        //TODO DELETE RELATIONSHIP SQUEAL TO CHANNELS
+
         return output;
     }
 
@@ -488,7 +502,7 @@ module.exports = class ChannelController extends Controller {
     /**
      * @param {ChannelDto} channelDto
      * @param {string} username
-     * @return {Promise<{msg: string, code: number, content: {object}}>}
+     * @return {Promise<{msg: string, code: number, content: {}}>}
      */
     async getChannelUserRole(channelDto, username) {
         let output = this.getDefaultOutput();

@@ -224,6 +224,25 @@ module.exports = class ChannelRolesModel extends Model {
     }
 
     /**
+     * @param {string} oldUsername
+     * @param {string} newUsername
+     * @return {Promise<boolean>}
+     */
+    async substituteUsers(oldUsername, newUsername){
+        await this.checkMongoose("ChannelRole", ChannelRoleSchema);
+        let filter = {"username": `${oldUsername}`};
+        filter = this.mongo_escape(filter);
+        let update = {"username": `${newUsername}`};
+        update = this.mongo_escape(update);
+        try {
+            let result = await this.entityMongooseModel.updateMany(filter, update);
+            return true;
+        } catch (ignored) {
+            return false;
+        }
+    }
+
+    /**
      * @param {ChannelDto} channelDto
      * @param {number} role
      * @return {Promise<ChannelRoleDto[]>}
