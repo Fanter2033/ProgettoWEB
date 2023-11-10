@@ -1,7 +1,6 @@
 import React from "react";
 import ReactConfig from "../config/ReactConfig";
 import { useEffect, useState } from "react";
-//import { useLocation } from "react-router-dom";
 
 //import Post from "./Post";
 import Search from "./Search";
@@ -12,22 +11,43 @@ import Chat from "./Chat";
 
 import "../css/LoginForm.css";
 import "react-toastify/dist/ReactToastify.css";
-//import ModalForm from "./ModalForm";
 
 import { useUserContext } from "../config/UserContext";
 
-/* 
-TODO: let the chat disapper when on sm screen
-*/
-
 function Channels() {
-  //const location = useLocation();
-  //const { username } = location.state;
-
   const { userGlobal, setUserGlobal } = useUserContext();
+  console.log("cercatooooooooooooo", userGlobal.username);
 
+  //TODO: GET /dashboard/ ------------------------------------------------------------------------------------------------------------
 
-  console.log(userGlobal.username);
+  //GET USER INFO ------------------------------------------------------
+  async function getUserData() {
+    try {
+      const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}`;
+      const options = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        mode: "cors",
+      };
+      let result = await fetch(uri, options);
+
+      if (result.ok) {
+        let data = await result.json();
+
+        console.log("INFO UTENTE", data);
+        //console.log("cercataaaaaaaaaaaaaaaaaaa", userGlobal.username);
+
+        setUserGlobal(data);
+      } else {
+        console.error("Errore nella richiesta:", result.statusText);
+      }
+    } catch (error) {
+      console.error("Errore nella fetch:", error);
+    }
+  }
 
   //GET /channel    list of channels ------------------------------------------------------------------------------------------------------------
   const [channels, setChannels] = useState({});
@@ -44,14 +64,15 @@ function Channels() {
         mode: "cors",
       };
 
+      console.log("MMMMMMMMMMMMMMMMMMMMMMMH");
+
       let result = await fetch(uri, options);
 
       if (result.ok) {
         let json = await result.json();
-        console.log(json);
+        console.log("MMMMMMMMMMMMMMMMMMMMMMMH", json);
         let camp = json.channels;
         setChannels(camp);
-        return camp;
       } else {
         console.error("Errore nella richiesta:", result.statusText);
       }
@@ -60,22 +81,19 @@ function Channels() {
     }
   }
 
-  console.log("obj", channels);
+  console.log("LISTA CANALI", channels);
 
-  const ch = channels.name;
-  console.log("campo canali dell'obj", ch);
-
-  //const channelsArray = Object.values(channels.channels);
-  //console.log(channelsArray);
+  const [functionsCalled, setFunctionsCalled] = useState(false);
 
   useEffect(() => {
-    const intervalId = setInterval(getChannels, 5000);
-    return () => {
-      clearInterval(intervalId);
-    };
-  });
+    if (!functionsCalled) {
+      getChannels();
+      getUserData();
+      setFunctionsCalled(true);
+    }
+  }, []);
 
-  //TODO: GET /channels/{type} ------------------------------------------------------------------------------------------------------------
+  //TODO: GET /channel/{type} list of channel------------------------------------------------------------------------------------------------------------
   //types: CHANNEL_OFFICIAL, CHANNEL_USERS, CHANNEL_HASHTAG
 
   //const [ty, seTy] = useState("");
@@ -122,48 +140,11 @@ function Channels() {
   });
   */
 
-  //TODO GET SQUEAL /squeal/------------------------------------------------------------------------------------------------------------
-  //! mi serve l'id?
-  /*
-  const [squeal, setSqueal] = useState([]);
-
-  async function getSqueals() {
-    try {
-      const uri = `${ReactConfig.base_url_requests}/squeal/`;
-      let result = await fetch(uri);
-
-      if (result.ok) {
-        let json = await result.json();
-        console.log(json);
-        let camp = json.channels;
-        setSqueal(camp);
-        return camp;
-      } else {
-        console.error("Errore nella richiesta:", result.statusText);
-      }
-    } catch (error) {
-      console.error("Errore nella fetch:", error);
-    }
-  }
-
-  console.log(squeal);
-
-  //const channelsArray = Object.values(channels.channels);
-  //console.log(channelsArray);
-
-  useEffect(() => {
-    const intervalId = setInterval(getSqueals, 5000);
-    return () => {
-      clearInterval(intervalId);
-    };
-  });
-*/
-
   return (
     <div>
       <Navbar />
-      <div className="container-flex" onLoad={getChannels}>
-        <div className="row">
+      <div className="container-flex">
+        <div className="row" onLoad={getUserData}>
           <div className="col-12 col-md-9">
             <h1>HOME</h1>
 
@@ -172,7 +153,7 @@ function Channels() {
             </div>
 
             <div>
-              <ChannelForm username={userGlobal.username} />
+              <ChannelForm />
             </div>
 
             <div className="row justify-content-center">

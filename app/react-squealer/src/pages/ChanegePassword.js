@@ -1,28 +1,24 @@
-import React from "react";
-import { useState } from "react";
-import ReactConfig from "../config/ReactConfig";
-
+import React, { useState } from "react";
 import { useUserContext } from "../config/UserContext";
-
-
+import { useNavigate } from "react-router-dom";
+import ReactConfig from "../config/ReactConfig";
 
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 
-import "../css/App.css";
-
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "../css/LoginForm.css";
+
+import "../css/App.css";
 
 //PUT: CHANGE PSW /user/${username}-----------------------------------------------------------------------------------------------------
 function ChangePassword() {
-  
-
   const { userGlobal, setUserGlobal } = useUserContext();
   const [newPassword, setNewPassword] = useState();
+
+  const navigate = useNavigate();
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -30,6 +26,18 @@ function ChangePassword() {
 
   const notify = () =>
     toast.success("🦄 Completato con successo!", {
+      position: "top-right",
+      autoClose: 4000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
+
+  const nofity_error = () =>
+    toast.error("⚠️ Manca la password!", {
       position: "top-right",
       autoClose: 4000,
       hideProgressBar: false,
@@ -48,59 +56,65 @@ function ChangePassword() {
       ...userGlobal,
       password: newPassword,
     });
-    console.log("mimmooooooooooooooooooooooooooooooooo" + userGlobal.password);
 
-    try {
-      handleClose();
-      const data = {
-        user: {
-          username: userGlobal.username,
-          email: userGlobal.email,
-          firstname: userGlobal.first_name,
-          lastname: userGlobal.last_name,
-          password: userGlobal.password,
-          isMod: false,
-          isSmm: false,
-          isUser: true,
-        },
-      };
+    //console.log("mimmooooooooooooooooooooooooooooooooo" + userGlobal.password);
 
-      const url = `${ReactConfig.base_url_requests}/user/${userGlobal.username}`;
-      const options = {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        mode: "cors",
-        body: JSON.stringify(data),
-      };
+    if (newPassword.trim() === "") {
+      //TODO: se il campo è vuoto apri toast, non funge
+      nofity_error();
+    } else {
+      try {
+        handleClose();
+        const data = {
+          user: {
+            username: userGlobal.username,
+            email: userGlobal.email,
+            firstname: userGlobal.first_name,
+            lastname: userGlobal.last_name,
+            password: newPassword,
+            isMod: false,
+            isSmm: false,
+            isUser: true,
+          },
+        };
 
-      fetch(url, options)
-        .then((res) => {
-          console.log(res);
-          if (res.ok) {
-            //post ok
-            return res.json();
-          }
-        })
-        .then((data) => {
-          notify();
-          console.log("Cambio password went good", data);
-        })
-        .catch((error) => {
-          console.error("Cambio password failed, error:", error);
-        });
-    } catch (error) {
-      console.error(error);
+        const url = `${ReactConfig.base_url_requests}/user/${userGlobal.username}`;
+        const options = {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          mode: "cors",
+          body: JSON.stringify(data),
+        };
+
+        fetch(url, options)
+          .then((res) => {
+            console.log(res);
+            if (res.ok) {
+              return res.json();
+            }
+          })
+          .then((data) => {
+            notify();
+            console.log("Cambio password went good", data);
+            navigate("/");
+          })
+          .catch((error) => {
+            console.error("Cambio password failed, error:", error);
+          });
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
   return (
     <div>
-      <Button className="user_button mb-2 box" onClick={handleShow}>
+      <button className="user_button mb-2 box" onClick={handleShow}>
         CAMBIO PASSWORD
-      </Button>
+      </button>
 
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
@@ -119,7 +133,7 @@ function ChangePassword() {
               <Form.Label>Nuova password</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="new password"
+                placeholder="inserisci qui"
                 name="nuovaPassword"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
@@ -129,7 +143,11 @@ function ChangePassword() {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button id="change-password" classname="custom-button" onClick={changeP}>
+          <Button
+            id="change-password"
+            classname="custom-button"
+            onClick={changeP}
+          >
             CAMBIA
           </Button>
           <ToastContainer />

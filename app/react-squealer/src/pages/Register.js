@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 
+import { useUserContext } from "../config/UserContext";
+
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -25,14 +27,13 @@ accessibilità:
 
 function Register() {
   const navigate = useNavigate();
+  const { userGlobal, setUserGlobal } = useUserContext();
 
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const [showToast, setShowToast] = useState(false);
 
   const notify = () =>
     toast.error("Errore. Compila tutti i campi.", {
@@ -50,6 +51,18 @@ function Register() {
     //prevent a browser reload/refresh.
     e.preventDefault();
 
+    setUserGlobal({
+      ...userGlobal,
+      username: username,
+      firstname: name,
+      surname: surname,
+      email: email,
+      password: password
+    });
+
+    console.log("GLOBALEEEEEEEEEEEEEEE"+userGlobal);
+
+
     //se i campi sono vuoti apri modale
     if (
       name.trim() === "" ||
@@ -58,7 +71,6 @@ function Register() {
       email.trim() === "" ||
       password.trim() === ""
     ) {
-      setShowToast(true);
       notify();
     } else {
       try {

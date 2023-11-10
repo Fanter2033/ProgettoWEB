@@ -48,6 +48,7 @@ html {
   width: 100vw;
   background-color: var(--squeal-yellow);
 }
+
 /* -----------------FONT STUFF------------------ */
 .cool-font {
   font-family: "Cool-Font", sans-serif;
@@ -77,12 +78,10 @@ html {
   padding: 10px 20px;
   border: none;
   border-radius: 8px;
-  cursor: pointer; /* Cambia il cursore al passaggio del mouse */
+  cursor: pointer;
 }
 .custom-button:hover {
-  background-color: var(
-    --squeal-green
-  ); /* Cambia il colore di sfondo quando si passa sopra il bottone */
+  background-color: var(--squeal-green);
 }
 .bottoni_omologati {
   width: 3em;
@@ -108,22 +107,9 @@ html {
   background-color: var(--squeal-green);
 }
 
-#logout-button {
-  background-color: var(--squeal-red);
-  color: var(--squeal-yellow);
-
-  width: 60vw;
-  margin: 1em;
-  padding: 1em;
-
-  border: none;
-  border-radius: 0.5rem;
-
-  transition: background-color 0.3s, box-shadow 0.3s;
-  cursor: pointer;
-}
-
-#buy-button {
+#buy-button,
+#change-password,
+#change-username {
   background-color: var(--squeal-green);
   color: var(--squeal-yellow);
 
@@ -152,7 +138,8 @@ html {
   cursor: pointer;
 }
 
-#delete-button {
+#delete-button,
+#logout-button {
   background-color: var(--squeal-red);
   color: var(--squeal-yellow);
 
@@ -165,6 +152,11 @@ html {
 
   transition: background-color 0.3s, box-shadow 0.3s;
   cursor: pointer;
+}
+
+#delete-button:hover,
+#logout-button:hover {
+  background-color: var(--squeal-blue);
 }
 
 /* -------------------- DESTINATARIO STUFF ------------------*/
@@ -184,45 +176,45 @@ html {
 }
 
 .altro {
-  color: red;
+  color: var(--squeal-red);
   font-weight: bold;
 }
 
-/* -------------------- A STUFF ------------------*/
-#about-us{
-
+/* -------------------- ANCHOR STUFF ------------------*/
+#about-us {
   color: var(--squeal-red);
-  
-  }
+}
+
 /* -------------------- MAP STUFF ------------------*/
 #mapid {
   height: 40vh;
 }
 
 /* -------------------- IMG STUFF ------------------*/
-/* Stile predefinito per l'immagine */
+/* Stile predefinito*/
 img {
   max-width: 100%; /* L'immagine si adatta alla larghezza del suo contenitore */
   height: auto; /* Altezza automatica per evitare distorsioni */
 }
 
-/* Stile per schermi di dimensioni medie (ad esempio, tablet) */
+/* Stile per schermi md */
 @media (max-width: 768px) {
   img {
     max-width: 30%; /* Riduci la larghezza dell'immagine al 80% del suo contenitore */
   }
 }
 
-/* Stile per schermi di dimensioni piccole (ad esempio, smartphone) */
+/* Stile per schermi sm */
 @media (max-width: 300px) {
   img {
     max-width: 70vw;
     max-height: 30vh; /* Riduci ulteriormente la larghezza dell'immagine al 60% del suo contenitore */
   }
 }
+
 /* -------------------- 3D EFFECT ------------------*/
 .box {
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.8); /* Ombra rilievo */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
 }
 
 /* --------------------VOLTURE ------------------*/

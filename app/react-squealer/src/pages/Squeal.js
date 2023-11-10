@@ -84,6 +84,44 @@ function Squeal(props) {
   //TODO PUT SQUEAL /squeal/{identifier_id} ------------------------------------------------------------------------------------------------------------
   //TODO DELETE SQUEAL /squeal/{identifier_id} ------------------------------------------------------------------------------------------------------------
 
+
+  //TODO GET SQUEAL /squeal/   -------------logger dei vecchi squeal------------------------------------------------------------------------------------------------------------
+  //! mi serve l'id?
+  /*
+  const [squeal, setSqueal] = useState([]);
+
+  async function getSqueals() {
+    try {
+      const uri = `${ReactConfig.base_url_requests}/squeal/`;
+      let result = await fetch(uri);
+
+      if (result.ok) {
+        let json = await result.json();
+        console.log(json);
+        let camp = json.channels;
+        setSqueal(camp);
+        return camp;
+      } else {
+        console.error("Errore nella richiesta:", result.statusText);
+      }
+    } catch (error) {
+      console.error("Errore nella fetch:", error);
+    }
+  }
+
+  console.log(squeal);
+
+  //const channelsArray = Object.values(channels.channels);
+  //console.log(channelsArray);
+
+  useEffect(() => {
+    const intervalId = setInterval(getSqueals, 5000);
+    return () => {
+      clearInterval(intervalId);
+    };
+  });
+*/
+
   //USER INPUT-----------------------------------------------------------------------------------
 
   const [userInput, setUserInput] = useState("");

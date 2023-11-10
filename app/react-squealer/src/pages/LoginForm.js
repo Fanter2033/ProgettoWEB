@@ -16,6 +16,9 @@ function LoginForm() {
   const navigate = useNavigate();
   const { userGlobal, setUserGlobal } = useUserContext();
 
+  const [usernameForm, setUsernameForm] = useState("");
+  const [passwordForm, setPasswordForm] = useState("");
+
   const notify = () =>
     toast.error("Errore di autenticazione. Riprovare", {
       position: "bottom-right",
@@ -28,12 +31,11 @@ function LoginForm() {
       theme: "colored",
     });
 
-  const [usernameForm, setUsernameForm] = useState("");
-  const [passwordForm, setPasswordForm] = useState("");
-
-
+  
   const handleLogin = (e) => {
     e.preventDefault();
+
+    
     setUserGlobal({
       ...userGlobal,
       username: usernameForm,
@@ -93,8 +95,10 @@ function LoginForm() {
                 type="text"
                 className="form-control"
                 id="inputUsername"
-                value={usernameForm}
+                aria-describedby="username"
                 placeholder="username"
+                autoComplete="on"
+                value={usernameForm}
                 onChange={(e) => setUsernameForm(e.target.value)}
               />
             </div>
@@ -110,8 +114,9 @@ function LoginForm() {
                 type="password"
                 id="inputPassword"
                 className="form-control"
-                aria-describedby="passwordHelpBlock"
+                aria-describedby="password"
                 placeholder="password"
+                autoComplete="on"
                 value={passwordForm}
                 onChange={(e) => setPasswordForm(e.target.value)}
               />

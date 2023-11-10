@@ -40,44 +40,6 @@ function Account() {
   //per il logout
   const navigate = useNavigate();
 
-  /*
-  ---------------------------------------------------------
- fetch(`${ReactConfig.base_url_requests}/user`)
-   .then((res) => res.json())
-   .then((result) => {
-     setUsers(result);
-     usersArray = Object.values(users);
-   });
-------------------------------------------------------------
-  const userItems = [];
-  for (let i = 0; i < usersArray.length; i++) {
-    const user = usersArray[i];
-    userItems.push(<li key={i}>email: {user.email}</li>);
-  }
-  <div>{userItems}</div>
-  ---------------------------------------------------------
-*/
-
-  /*-------------------------------------------------------------------getUsers + div
-  const [users, setUsers] = useState([]);
-  async function getUsers() {
-    let result = fetch(`${ReactConfig.base_url_requests}/user`);
-    let response = await result;
-    if(response.ok){
-      let json = await response.json();
-      setUsers(json.users);
-      return json.users;
-    }
-  }
-
-  useEffect(() => {}, []);
-
-   <div>
-   {users.map((user, index) => (
-     <ol key={index}>Email: {user.email}</ol>
-   ))}
- </div>
-*/
   //GET USER QUOTE-----------------------------------------------------------------------------------------------
   const [userQuote, setUserQuote] = useState("");
 
@@ -124,10 +86,10 @@ function Account() {
       const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}`;
       const options = {
         method: "GET",
-        mode: "cors",
         headers: {
           "Content-Type": "application/json",
         },
+        mode: "cors",
         credentials: "include",
       };
 
@@ -226,13 +188,11 @@ function Account() {
   //!quote
   //TODO: PUT: BUY QUOTE /user/${username}-----------------------------------------------------------------------------------------------------
   async function buyQuote() {}
-
-  //TODO: PATCH USER QUOTE /user/${username}/quote-----------------------------------------------------------------------------------------------
+  //TODO: PATCH USER QUOTE /user/${username}/quote     when BUY is clicked percentageeeee-----------------------------------------------------------------------------------------------
 
   //!vip
   //TODO: PUT: ADD SMM /user/${username}----------------------------------------------------------------------------------------------------------
   async function addSmm() {}
-
   //TODO: PUT: REMOVE SMM /user/${username}-----------------------------------------------------------------------------------------------------
   async function removeSmm() {}
 
@@ -335,8 +295,8 @@ function Account() {
 
         <div className=" mb-5">
           <div className=" d-flex flex-column justify-content-center align-items-center ">
-            <ChangeUsername userData={userData} />
-            <ChangePassword userData={userData} />
+            <ChangeUsername />
+            <ChangePassword />
             
             <button className="user_button mb-2 box" onClick={followedChannels}>
               CANALI SEGUITI

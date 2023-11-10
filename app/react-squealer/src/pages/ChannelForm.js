@@ -3,53 +3,28 @@ import React from "react";
 import ReactConfig from "../config/ReactConfig";
 import { useState } from "react";
 
+import { useUserContext } from "../config/UserContext";
+
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 import "../css/LoginForm.css";
 
-function ChannelForm(props) {
-  console.log(props);
-  const [show, setShow] = useState(false);
+function ChannelForm() {
+  const { userGlobal, setUserGlobal } = useUserContext();
+  const [nameForm, setNameForm] = useState("");
+  const [privateForm, setPrivateForm] = useState(false);
 
+  const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const [formData, setFormData] = useState({
-    nome: "",
-    tipo: "",
-    privato: false,
-  });
-
-  //const [selectedOption, setSelectedOption] = useState("");
-  const handleInputChange = (e) => {
-    const { name, value, checked } = e.target;
-
-    if (name === "privato") {
-      // Inverti il valore di formData.privato quando il checkbox viene cliccato
-      setFormData({
-        ...formData,
-        [name]: !checked,
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: checked,
-      });
-
-      if (name === "nome" || name === "tipo") {
-        setFormData({
-          ...formData,
-          [name]: value,
-        });
-      }
-    }
-
-    //setSelectedOption(value);
+  const handleCheckboxChange = () => {
+    setPrivateForm(!privateForm);
   };
 
   const notify = () =>
@@ -65,22 +40,20 @@ function ChannelForm(props) {
     });
 
   const createChannel = (e) => {
-    //prevent a browser reload/refresh.
     e.preventDefault();
 
     //se i campi sono vuoti apri toast
-    if (formData.nome === "" || formData.tipo === "") {
+    if (nameForm === "") {
       notify();
-      //alert("completa");
     } else {
       try {
         handleClose();
         const data = {
-            channel: {
-                name: formData.nome,
-                type: formData.tipo,
-                private: formData.privato
-            }
+          channel: {
+            name: nameForm,
+            type: "CHANNEL_USERS",
+            private: privateForm,
+          },
         };
 
         //campo: private?
@@ -124,40 +97,23 @@ function ChannelForm(props) {
 
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
-          <Modal.Title style={{ textAlign: "center" }}>
-            Crea il tuo canale
-          </Modal.Title>
+          <Modal.Title className="text-center">Crea il tuo canale</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group
-              as={Row}
-              className="mb-4"
+              className="mb-4 d-flex flex-row "
               controlId="exampleForm.ControlInput1"
             >
-              <Form.Label>Nome</Form.Label>
+              <Form.Label className="ms-4 me-4">Nome</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Name of Channel :)"
                 name="nome"
-                value={formData.nome}
-                onChange={handleInputChange}
+                value={nameForm}
+                className="w-form-control"
+                onChange={(e) => setNameForm(e.target.value)}
               />
-            </Form.Group>
-
-            <Form.Group as={Row} className="mb-4">
-              <Form.Label>Tipo</Form.Label>
-              <Form.Control
-                as="select"
-                name="tipo"
-                value={formData.tipo}
-                onChange={handleInputChange}
-              >
-                <option value="">{formData.tipo}</option>
-                <option value="CHANNEL_OFFICIAL">CHANNEL_OFFICIAL</option>
-                <option value="CHANNEL_USERS">CHANNEL_USERS</option>
-                <option value="CHANNEL_HASHTAG">CHANNEL_HASHTAG</option>
-              </Form.Control>
             </Form.Group>
 
             <Form.Check
@@ -165,14 +121,20 @@ function ChannelForm(props) {
               type="checkbox"
               name="privato"
               label="Privato?"
-              checked={formData.privato}
-              onChange={handleInputChange}
+              checked={privateForm}
+              onChange={handleCheckboxChange}
+              id="custom-checkbox"
+              className="custom-control-input d-flex flex-row align-items-center"
             />
           </Form>
         </Modal.Body>
 
         <Modal.Footer>
-          <Button id="create-channel" onClick={createChannel}>
+          <Button
+            id="create-channel"
+            className="d-flex flex-row align-items-center justify-content-center"
+            onClick={createChannel}
+          >
             CREA
           </Button>
           <ToastContainer />
