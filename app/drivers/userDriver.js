@@ -134,6 +134,15 @@ userDriver.patch('/:username/toggle/lock', async function (req, res) {
 
 userDriver.use(`/:username/quote`, quoteDriver);
 
+userDriver.patch("/:username/toggle/vip", async function(req, res){
+    let username = req.params['username'];
+    let ctrl = await controller.toggleVip(username, await authController.getAuthenticatedUser(req));
+    if(ctrl['code'] === 200)
+        res.status(ctrl['code']).send(ctrl['content']);
+    else
+        res.status(ctrl['code']).send(ctrl);
+});
+
 
 
 module.exports = userDriver;

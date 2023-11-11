@@ -513,7 +513,7 @@ module.exports = class ChannelController extends Controller {
             output['msg'] = 'Not valid username';
             return output;
         }
-
+z
         let user = await userController.getUser(username);
         if (user['code'] !== 200) {
             //User not found

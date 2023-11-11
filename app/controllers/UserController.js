@@ -6,6 +6,8 @@ const ChannelRolesModel = require("../models/ChannelRolesModel");
 const SquealToUserModel = require("../models/SquealToUserModel");
 const SquealIrModel = require("../models/SquealIrModel");
 const SquealModel = require("../models/SquealModel");
+const VipController = require("./VipController");
+const VipModel = require("../models/VipModel");
 
 module.exports = class UserController extends Controller {
 
@@ -183,7 +185,7 @@ module.exports = class UserController extends Controller {
 
         //Salt! - A lot of SALT!!!
         userObj.psw_shadow = await this.crypt(userObj.psw_shadow);
-        userObj.pro = false;
+        userObj.vip = false;
         userObj.locked = false;
 
         let databaseResponse = await this._model.createUser(userObj);
@@ -268,7 +270,7 @@ module.exports = class UserController extends Controller {
         }
 
         newUser.registration_timestamp = oldUserObj.registration_timestamp;
-        newUser.pro = oldUserObj.pro;
+        newUser.vip = oldUserObj.vip
         newUser.locked = oldUserObj.locked;
 
         if(newUser.psw_shadow !== '') //if password isn't set, save the old password
@@ -480,5 +482,53 @@ module.exports = class UserController extends Controller {
         return output;
     }
 
+    async toggleVip(username, authenticatedUser){
+        let output = this.getDefaultOutput();
 
+        if(!(await this._model.userExists(username))){
+            output['code'] = 404;
+            output['msg'] = 'User not found.';
+            return output;
+        }
+
+        if (this.isObjectVoid(authenticatedUser) === true) {
+            output['code'] = 403;
+            output['msg'] = 'User not authenticated';
+            return output;
+        }
+
+        let userObj = await this._model.getUser(username);
+        let vipCtrl = new VipController(new VipModel())
+        let newVIPStatus = !userObj.vip;
+        //create the VIP entity
+        if(newVIPStatus === true){
+            let res = await vipCtrl.createVip(username);
+            if(res['code'] !== 200)
+                return res;
+        } else {
+            let res = await vipCtrl.deleteVip(username);
+            if(res['code'] !== 200)
+                return res;
+        }
+        //switch the toggle
+        let result = this._model.changeVipStatus(userObj, newVIPStatus);
+        if(result === false){
+            output['code'] = 500;
+            output['msg'] = 'Internal server error.';
+            return output;
+        }
+        return output;
+    }
+
+    async toggleSmm(authenticatedUser){
+        //TODO
+    }
+
+    async pickSmm(SmmUsername, authenticatedUser) {
+        //TODO
+    }
+
+    async removeSmm(authenticatedUser){
+        //TODO
+    }
 }

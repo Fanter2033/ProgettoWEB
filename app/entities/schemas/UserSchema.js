@@ -12,6 +12,6 @@ module.exports = new Schema({
     isUser: Boolean,
     isSmm: Boolean,
     isAdmin: Boolean,
-    pro: {type: Boolean, required: true},
+    vip: {type: Boolean, required: true},
     locked: {type: Boolean, required: true}
 });
