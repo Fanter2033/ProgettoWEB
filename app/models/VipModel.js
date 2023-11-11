@@ -16,7 +16,7 @@ module.exports = class VipModel extends Model {
         let filter = { user: `${username}`};
         let vipFound = await this.entityMongooseModel.find(filter);
         if(vipFound.length === 1)
-            return new VipDto(vipFound[0]);
+            return new VipDto(vipFound[0]._doc);
         return {};
     }
 
@@ -54,15 +54,46 @@ module.exports = class VipModel extends Model {
         return true;
     }
 
+    /**
+     *
+     * @param vipObj {VipDto}
+     * @returns {Promise<boolean>}
+     */
     async disableSmm(vipObj){
         await this.checkMongoose("VipUser", VipUser);
-        let filter = { user: `${vipObj.username}`};
+        let filter = { user: `${vipObj.user}`};
         filter = this.mongo_escape(filter);
         vipObj.linkedUsers = [];
-        vipObj = this.mongo_escape(vipObj);
+        vipObj = this.mongo_escape(vipObj.getDocument());
         try{
             await this.entityMongooseModel.updateOne(filter, vipObj);
         } catch (ignored){
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     *
+     * @param vipDto {VipDto}
+     * @param SmmDto {VipDto}
+     * @returns {Promise<boolean>}
+     */
+    async pickSmm(vipDto, SmmDto){
+        vipDto['linkedSmm'] = SmmDto.user;
+        let filter = {"user": `${vipDto.user}`};
+        filter = this.mongo_escape(filter);
+        vipDto = this.mongo_escape(vipDto.getDocument());
+
+        let SmmFilter = {"user": `${SmmDto.user}`};
+        SmmFilter = this.mongo_escape(SmmFilter);
+
+        try{
+            await this.entityMongooseModel.updateOne(filter, vipDto);
+            await this.entityMongooseModel.updateOne (SmmFilter,
+                { $push: {linkedUsers: `${vipDto.user}`}},
+        )
+        } catch (ignored) {
             return false;
         }
         return true;

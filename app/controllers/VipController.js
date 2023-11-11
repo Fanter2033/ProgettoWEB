@@ -9,7 +9,7 @@ module.exports = class VipController extends Controller {
 
     /**
      *
-     * @param username
+     * @param username {String}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
     async getVip(username){
@@ -25,7 +25,7 @@ module.exports = class VipController extends Controller {
     }
 
     /**
-     * @param username
+     * @param username {String}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
     async createVip(username){
@@ -45,6 +45,11 @@ module.exports = class VipController extends Controller {
         return output;
     }
 
+    /**
+     *
+     * @param username {String}
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
     async deleteVip(username){
         let output = this.getDefaultOutput();
         let vipObj = await this.getVip(username);
@@ -63,17 +68,35 @@ module.exports = class VipController extends Controller {
     }
 
     /**
-     * @param vipObj
+     * @param username {String}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
-    async disableSmm(vipObj){
+    async disableSmm(username){
         let output = this.getDefaultOutput();
+        let vipObj = await this. getVip(username);
         let res = await this._model.disableSmm(vipObj);
         if(res === false){
             output['code'] = 500;
             output['msg'] = 'Server error in deleting vip'
         }
         return output;
+    }
+
+    /**
+     *
+     * @param vipDto {VipDto}
+     * @param smmDto {VipDto}
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async pickSmm(vipDto, smmDto){
+        let output = this.getDefaultOutput();
+        let res = await this._model.pickSmm(vipDto, smmDto);
+        if(res === false){
+            output['code'] = 500
+            output['msg'] = 'Server error in pickSmm';
+            return output;
+        }
+        return output
     }
 
 

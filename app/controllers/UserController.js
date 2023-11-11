@@ -5,6 +5,7 @@ const ChannelRolesController = require("./ChannelRolesController");
 const ChannelRolesModel = require("../models/ChannelRolesModel");
 const VipController = require("./VipController");
 const VipModel = require("../models/VipModel");
+const VipDto = require("../entities/dtos/VipDto");
 
 module.exports = class UserController extends Controller {
 
@@ -448,9 +449,8 @@ module.exports = class UserController extends Controller {
             return output;
         }
 
-        let vipCtrl = new VipController(new VipModel());
-        let isVip = await vipCtrl.getVip(username);
-        if(isVip['code'] !== 200){
+        let isVip = authenticatedUser.vip;
+        if(isVip === false){
             output['code'] = 412
             output['msg'] = "Precondition Failed, user is not a VIP"
             return output;
@@ -458,12 +458,13 @@ module.exports = class UserController extends Controller {
 
         let userObj = await this._model.getUser(username);
         let newSmmStatus = !userObj.isSmm;
+        let vipCtrl = new VipController(new VipModel());
         if(newSmmStatus){
             //user IS now a SMM, remove actual smm if there is one
             //TODO
         } else {
             //user is NO longer SMM, clear the linked users list
-            let clearLinkedUsers = vipCtrl.disableSmm(isVip['content']);
+            let clearLinkedUsers = vipCtrl.disableSmm(username);
             if(clearLinkedUsers['code'] === 500){
                 return clearLinkedUsers;
             }
@@ -477,14 +478,59 @@ module.exports = class UserController extends Controller {
         return output;
     }
 
+    /**
+     *
+     * @param SmmUsername {String}
+     * @param authenticatedUser
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
     async pickSmm(SmmUsername, authenticatedUser) {
         let output = this.getDefaultOutput();
 
+        //check authentication
         if (this.isObjectVoid(authenticatedUser) === true) {
             output['code'] = 403;
             output['msg'] = 'User not authenticated';
             return output;
         }
+
+        //check if vip exists
+        let username = authenticatedUser['username'];
+        let vipCtrl = new VipController(new VipModel());
+        let vipObj = await vipCtrl.getVip(username);
+        if(vipObj['code'] !== 200){
+            output['code'] = 412
+            output['msg'] = "Precondition Failed, user is not a VIP"
+            return output;
+        }
+
+        //check the user is not a smm
+        if(vipObj['content'].isSmm === true){
+            output['code'] = 412
+            output['msg'] = "Precondition Failed, user is a Smm"
+            return output;
+        }
+
+        //check the Smm is a Vip
+        let SmmObj = await vipCtrl.getVip(SmmUsername);
+        if(SmmObj['code'] !== 200){
+            output['code'] = 412
+            output['msg'] = "Precondition Failed, Smm is not a VIP"
+            return output;
+        }
+
+        //check if the Smm has more than five linked users
+        let vipDto = new VipDto(vipObj.content);
+        let smmDto = new VipDto(SmmObj.content);
+
+        let res = vipCtrl.pickSmm(vipDto, smmDto);
+
+        if(res['code'] !== 200){
+            output['code'] = 500;
+            output['msg'] = 'Error updating in DB.';
+            return output;
+        }
+        return output;
     }
 
     async removeSmm(authenticatedUser){
