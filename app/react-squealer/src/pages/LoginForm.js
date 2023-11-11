@@ -51,8 +51,6 @@ function LoginForm() {
       body: JSON.stringify(data),
     };
 
-    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa" + data);
-
     await fetch(uri, options)
       .then((response) => {
         if (response.ok) {
@@ -67,16 +65,16 @@ function LoginForm() {
       });
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    setUserGlobal({
-      ...userGlobal,
-      username: usernameForm,
-      password: passwordForm,
-    });
+    let tmp = userGlobal;
+    tmp.username = usernameForm;
+    tmp.password = passwordForm;
 
-    login();
+    setUserGlobal(tmp);
+
+    await login();
   };
 
   //reminder: input tag in React <input/>
@@ -86,7 +84,7 @@ function LoginForm() {
         <div className="row  ">
           <div className="col-12 d-flex flex-col justify-content-center align-items-center">
             <h1 className=" animated-title cool-font-medium">Log in to</h1>
-            <h1 className="animated-squeal cool-font" alt="eagle-emoji">
+            <h1 className="animated-squeal cool-font" aria-label="Squealer">
               &#129413;
             </h1>
           </div>
