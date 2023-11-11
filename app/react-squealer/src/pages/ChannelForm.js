@@ -1,13 +1,7 @@
-import React from "react";
-
+import React, { useState } from "react";
 import ReactConfig from "../config/ReactConfig";
-import { useState } from "react";
 
-import { useUserContext } from "../config/UserContext";
-
-import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
+import { Button, Form, Modal } from "react-bootstrap";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -15,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "../css/LoginForm.css";
 
 function ChannelForm() {
-  const { userGlobal, setUserGlobal } = useUserContext();
+
   const [nameForm, setNameForm] = useState("");
   const [privateForm, setPrivateForm] = useState(false);
 

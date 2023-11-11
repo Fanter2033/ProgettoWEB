@@ -128,11 +128,15 @@ html {
   background-color: rgb(184, 121, 184);
   color: var(--squeal-yellow);
 
-  width: 20vw;
+  width: 100%;
   padding: 1em;
   margin: 1em;
   border: none;
   border-radius: 0.5rem;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   transition: background-color 0.3s, box-shadow 0.3s;
   cursor: pointer;
@@ -148,6 +152,7 @@ html {
   padding: 1em;
 
   border: none;
+  border-color: var(--squeal-yellow);
   border-radius: 0.5rem;
 
   transition: background-color 0.3s, box-shadow 0.3s;
@@ -157,6 +162,34 @@ html {
 #delete-button:hover,
 #logout-button:hover {
   background-color: var(--squeal-blue);
+}
+
+.red-button {
+  background-color: var(--squeal-red);
+}
+.blue-button {
+  background-color: var(--squeal-blue);
+}
+.yellow-button {
+  background-color: var(--squeal-yellow);
+}
+.green-button {
+  background-color: var(--squeal-green);
+  border-radius: 0.5em;
+  border: none;
+}
+
+.red-button:active {
+  background-color: var(--squeal-red);
+}
+.blue-button:active {
+  background-color: var(--squeal-blue);
+}
+.yellow-button:active {
+  background-color: var(--squeal-yellow);
+}
+.green-button:active {
+  background-color: var(--squeal-green);
 }
 
 /* -------------------- DESTINATARIO STUFF ------------------*/

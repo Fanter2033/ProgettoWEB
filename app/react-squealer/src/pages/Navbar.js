@@ -5,9 +5,6 @@ import ReactConfig from "../config/ReactConfig";
 import "../css/Home.css";
 import squeal_logo from "./media/icone/Nav_logo.png";
 
-//TODO:navbar sm flex elementi
-//TODO: passaggio {username} anche per sm
-
 /*
 per aggiungere altro elemento alla navbar
 <li className="nav-item">
@@ -337,7 +334,7 @@ function Navbar() {
               className="navbar-brand"
               to={ReactConfig.pathFunction("/chat")}
             >
-              <button type="button" className="btn icon-nav me-2">
+              <button type="button" className="btn icon-nav me-2" >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"

@@ -1,24 +1,56 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+//import { useCallback } from "react";
 import ReactConfig from "../config/ReactConfig";
-import { useEffect, useState } from "react";
+import { useUserContext } from "../config/UserContext";
 
-//import Post from "./Post";
 import Search from "./Search";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import ChannelForm from "./ChannelForm";
 import Chat from "./Chat";
 
+//import { Button, Card, Col, Row } from "react-bootstrap";
+
 import "../css/LoginForm.css";
 import "react-toastify/dist/ReactToastify.css";
 
-import { useUserContext } from "../config/UserContext";
+import "../css/App.css";
 
 function Channels() {
   const { userGlobal, setUserGlobal } = useUserContext();
   console.log("cercatooooooooooooo", userGlobal.username);
 
   //TODO: GET /dashboard/ ------------------------------------------------------------------------------------------------------------
+  /*
+  const [dash, setDash] = useState({});
+
+  async function getDashboard() {
+    try {
+      const uri = `${ReactConfig.base_url_requests}/dashboard/`;
+      const options = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        mode: "cors",
+      };
+
+      let result = await fetch(uri, options);
+
+      if (result.ok) {
+        let json = await result.json();
+        console.log("MMMMMMMMMMMMMMMMMMMMMMMH", json);
+        setDash(json);
+      } else {
+        console.error("Errore nella richiesta:", result.statusText);
+      }
+    } catch (error) {
+      console.error("Errore nella fetch:", error);
+    }
+  }
+  */
 
   //GET USER INFO ------------------------------------------------------
   async function getUserData() {
@@ -49,8 +81,10 @@ function Channels() {
     }
   }
 
+  //!uso in Search e in Home la GET /channels
   //GET /channel    list of channels ------------------------------------------------------------------------------------------------------------
-  const [channels, setChannels] = useState({});
+  /*
+  const [channels, setChannels] = useState([]);
 
   async function getChannels() {
     try {
@@ -64,16 +98,14 @@ function Channels() {
         mode: "cors",
       };
 
-      console.log("MMMMMMMMMMMMMMMMMMMMMMMH");
-
       let result = await fetch(uri, options);
 
       if (result.ok) {
         let json = await result.json();
-        console.log("MMMMMMMMMMMMMMMMMMMMMMMH", json);
         let camp = json.channels;
         setChannels(camp);
-      } else {
+      } 
+      else {
         console.error("Errore nella richiesta:", result.statusText);
       }
     } catch (error) {
@@ -83,15 +115,34 @@ function Channels() {
 
   console.log("LISTA CANALI", channels);
 
-  const [functionsCalled, setFunctionsCalled] = useState(false);
+  -----------------------------------------------------
 
-  useEffect(() => {
-    if (!functionsCalled) {
-      getChannels();
-      getUserData();
-      setFunctionsCalled(true);
-    }
-  }, []);
+  <h2>Lista TUTTI i Canali:</h2>
+            <Row className="ms-4 me-4">
+              {channels.map((channel) => (
+                <Col key={channel.id} lg={6} className="mb-4 ">
+                  <Card>
+                    <Card.Body className="mb-4 d-flex flex-row">
+                     
+                      <Card.Title className="ms-4 me-4">
+                        {channel.channel_name}
+                      </Card.Title>
+
+                      <Link to="/infoc" >
+                        <Button variant="primary" className="ms-4 me-4">
+                          Info
+                        </Button>
+                      </Link>
+
+                      <Button variant="primary">Segui</Button>
+                    
+                    </Card.Body>
+                  </Card>
+                </Col>
+              ))}
+            </Row>
+            
+*/
 
   //TODO: GET /channel/{type} list of channel------------------------------------------------------------------------------------------------------------
   //types: CHANNEL_OFFICIAL, CHANNEL_USERS, CHANNEL_HASHTAG
@@ -140,6 +191,17 @@ function Channels() {
   });
   */
 
+  const [functionsCalled, setFunctionsCalled] = useState(false);
+
+  useEffect(() => {
+    if (!functionsCalled) {
+      //getChannels();
+      getUserData();
+      //getDashboard();
+      setFunctionsCalled(true);
+    }
+  }, [functionsCalled]);
+
   return (
     <div>
       <Navbar />
@@ -149,21 +211,19 @@ function Channels() {
             <h1>HOME</h1>
 
             <div>
-              <Search />
-            </div>
-
-            <div>
               <ChannelForm />
             </div>
 
-            <div className="row justify-content-center">
+            <div>
+              <Search />
+            </div>
+
+            <div className="row d-flex justify-content-center ms-1 me-1">
               <h3>TODO:</h3>
               <ul className="list-group col-md-4">
-                <li className="list-group-item list">GET CHANNELS</li>
-                <li className="list-group-item list">GET SQUEALS</li>
-                <li className="list-group-item list">GET CHANNEL TYPE</li>
-                <li className="list-group-item list">pubblici</li>
-                <li className="list-group-item list">privati</li>
+                <li className="list-group-item list">GET /channel/type</li>
+                <li className="list-group-item list">GET /dashboard/ </li>
+                <li className="list-group-item list">GET /chat/ </li>
                 <li className="list-group-item list">hash</li>
                 <li className="list-group-item list">silenziabili</li>
                 <li className="list-group-item list">popolarità</li>

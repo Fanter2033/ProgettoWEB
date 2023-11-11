@@ -211,29 +211,28 @@ function Account() {
     <div className="container-flex">
       <div className="row" onLoad={getUserData}>
         <div className="row mb-5 mt-4">
-          <div className="col-12 col-md-3">
+          <div className="col-12 col-md-4">
             <img
               src={cattyy}
               alt="Foto Profilo"
-              className="rounded-circle"
+              className="rounded-circle ms-4"
               onMouseOver={showVulture}
               onMouseLeave={hideVulture}
             />
             {showVultureAnimation && <VultureAnimation />}
           </div>
 
-          <div className="col-12 col-md-9">
+          <div className="col-12 col-md-8">
             <div className="row">
               <div className="col-12 col-md d-flex align-items-center justify-content-center ">
                 <div className="d-md-flex flex-md-row flex-column">
-                  <div className="col-8">
-                    <h1 className="cool-font-medium mt-2 mb-2">{userGlobal.username}</h1>
+                  <div className="col-12">
+                    <h1 className="cool-font-medium mt-2 mb-2">
+                      {userGlobal.username}
+                    </h1>
                     <h2>
                       {userData.first_name} {userData.last_name}
                     </h2>
-                  </div>
-
-                  <div className="col-4">
                     <button
                       className="user_button box"
                       style={{ width: "100%" }}
@@ -243,6 +242,7 @@ function Account() {
                     <button
                       id="upgrade-button"
                       className="box"
+                    
                       onClick={buyQuote}
                     >
                       UPGRADE
@@ -295,12 +295,16 @@ function Account() {
 
         <div className=" mb-5">
           <div className=" d-flex flex-column justify-content-center align-items-center ">
-            <ChangeUsername />
-            <ChangePassword />
-            
+            <button className="user_button mb-2 box" onClick={followedChannels}>
+              CANALI CREATI
+            </button>
             <button className="user_button mb-2 box" onClick={followedChannels}>
               CANALI SEGUITI
             </button>
+
+            <ChangeUsername />
+            <ChangePassword />
+
             <button
               id="logout-button"
               className=" mb-2 box"

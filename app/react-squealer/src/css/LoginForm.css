@@ -101,3 +101,36 @@ input[type="radio"] {
   border-color: var(--squeal-green);
 }
 */
+
+/* ------------ CHECKBOX STUFF -------------*/
+.animated-title-container {
+  overflow: hidden;
+}
+
+.animated-title {
+  animation: slideLeft 1s ease-in-out;
+  white-space: nowrap;
+}
+
+.animated-squeal {
+  animation: slideRight 1s ease-in-out;
+  white-space: nowrap;
+}
+
+@keyframes slideLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideRight {
+  from {
+    transform: translateX(+100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}

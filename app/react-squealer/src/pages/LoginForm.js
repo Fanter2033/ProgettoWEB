@@ -31,20 +31,13 @@ function LoginForm() {
       theme: "colored",
     });
 
-  
-  const handleLogin = (e) => {
-    e.preventDefault();
-
-    
-    setUserGlobal({
-      ...userGlobal,
-      username: usernameForm,
-      password: passwordForm,
-    });
-
+  const login = async () => {
     //corrected with love by @romanellas
     //URI: where I want ot send the POST
     //according to Swagger specifics, the username is sent in path, with the requested role.
+
+    //console.log(userGlobal.password );
+    //console.log(userGlobal.username );
 
     const data = { password: userGlobal.password };
     const uri = `${ReactConfig.base_url_requests}/auth/${userGlobal.username}/0`;
@@ -60,7 +53,7 @@ function LoginForm() {
 
     console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa" + data);
 
-    fetch(uri, options)
+    await fetch(uri, options)
       .then((response) => {
         if (response.ok) {
           navigate(`/channels`);
@@ -74,15 +67,34 @@ function LoginForm() {
       });
   };
 
+  const handleLogin = (e) => {
+    e.preventDefault();
+
+    setUserGlobal({
+      ...userGlobal,
+      username: usernameForm,
+      password: passwordForm,
+    });
+
+    login();
+  };
+
   //reminder: input tag in React <input/>
   return (
     <div className="container">
-      <div className="row justify-content-center">
-        <h1 className="text-center mb-5 mt-5 cool-font-medium">
-          Log in to &#129413;
-        </h1>
+      <div className="col-12 text-center pt-5 animated-title-container">
+        <div className="row  ">
+          <div className="col-12 d-flex flex-col justify-content-center align-items-center">
+            <h1 className=" animated-title cool-font-medium">Log in to</h1>
+            <h1 className="animated-squeal cool-font" alt="eagle-emoji">
+              &#129413;
+            </h1>
+          </div>
+        </div>
+      </div>
 
-        <div className="col-6 ">
+      <div className="row justify-content-center ">
+        <div className="col-6">
           <form onSubmit={handleLogin}>
             <div className="form-group row p-2 mb-3">
               <label
@@ -132,7 +144,9 @@ function LoginForm() {
               </button>
             </div>
           </form>
-
+          <button className="custom-button mb-4" type="submit">
+            Forgor password?
+          </button>
           <div className="row p-2 mb-5">
             <div className="col-12 mb-5">
               <NavLink

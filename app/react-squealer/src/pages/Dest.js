@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import "../css/App.css";
 
-const Dest = () => {
+const Dest = ({ onDestinatariSubmit }) => {
   const [destinatari, setDestinatari] = useState("");
   const [destinatariArray, setDestinatariArray] = useState([]);
 
@@ -18,24 +18,34 @@ const Dest = () => {
     const destinatariSeparati = destinatari
       .split(",")
       .map((destinatario) => destinatario.trim());
-    setDestinatariArray(destinatariSeparati);
+
+    const destinatariObjects = destinatariSeparati.map((destinatario) => {
+      let destType = "";
+      let identifier = "";
+
+      if (destinatario.startsWith("@")) {
+        destType = "USER";
+        identifier = destinatario.slice(1); // Rimuove il carattere "@"
+      } else if (destinatario.startsWith("§")) {
+        destType = "CHANNEL";
+        identifier = destinatario.slice(1); // Rimuove il carattere "§"
+      } else if (destinatario.startsWith("#")) {
+        destType = "CHANNEL_TAG";
+        identifier = destinatario.slice(1); // Rimuove il carattere "#"
+      }
+
+      return { dest_type: destType, identifier };
+    });
+
+    setDestinatariArray(destinatariObjects);
+
+    // Passa l'array alla componente padre
+    onDestinatariSubmit(destinatariObjects);
   };
 
   const handleResetDestinatari = () => {
     setDestinatari("");
     setDestinatariArray([]);
-  };
-
-  const getDestinatarioClass = (destinatario) => {
-    if (destinatario.startsWith("@")) {
-      return "persona";
-    } else if (destinatario.startsWith("§")) {
-      return "qualcosaltro1";
-    } else if (destinatario.startsWith("#")) {
-      return "qualcosaltro2";
-    } else {
-      return "qualcosaltro2";
-    }
   };
 
   return (
@@ -62,13 +72,13 @@ const Dest = () => {
         <div>
           <ul className="list-unstyled">
             {destinatariArray.map((destinatario, index) => (
-              <li key={index} className={getDestinatarioClass(destinatario)}>
-                {destinatario}
+              <li key={index}>
+                {`dest_type: ${destinatario.dest_type}, identifier: ${destinatario.identifier}`}
               </li>
             ))}
           </ul>
           <button
-            className="btn btn-danger mb-5"
+            className="btn btn-danger"
             onClick={handleResetDestinatari}
           >
             Resetta

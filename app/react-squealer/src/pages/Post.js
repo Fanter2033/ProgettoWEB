@@ -12,14 +12,14 @@ import { useUserContext } from "../config/UserContext";
 import "../css/App.css";
 
 function Post() {
-  const { userGlobal, setUserGlobal } = useUserContext();
+  const { userGlobal } = useUserContext();
 
   console.log(userGlobal.username);
   return (
 <>
 
 <div className="mt-5 ">
-      <Squeal username={userGlobal.username}/>
+      <Squeal/>
       <Reactions />
       <Comment />
     </div>

@@ -6,6 +6,8 @@ import Navbar from "./Navbar";
 import Account from "./Account";
 import Post from "./Post";
 import Chat from "./Chat";
+import InfoChannel from "./InfoChannel";
+import InfoUser from "./InfoUser";
 
 function HomeRoutes() {
   //const location = useLocation();
@@ -19,6 +21,8 @@ function HomeRoutes() {
         <Route path="/channels" element={<Channels />} />
         <Route path="/account" element={<Account />} />
         <Route path="/chat" element={<Chat />} />
+        <Route path="/infoc" element={<InfoChannel />} />
+        <Route path="/infou" element={<InfoUser />} />
       </Routes>
     </>
   );
