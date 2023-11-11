@@ -1,17 +1,23 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-//import { Navigate } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 
-import { toast, ToastContainer } from "react-toastify";
+import { useUserContext } from "../config/UserContext";
 
-import "../css/LoginForm.css";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import "../css/LoginForm.css";
+
+//TODO: PUT: RESET PSW /user/${username}-----------------------------------------------------------------------------------------------------
+//async function resetPassword() {}
+
 function LoginForm() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { userGlobal, setUserGlobal } = useUserContext();
+
+  const [usernameForm, setUsernameForm] = useState("");
+  const [passwordForm, setPasswordForm] = useState("");
 
   const notify = () =>
     toast.error("Errore di autenticazione. Riprovare", {
@@ -25,31 +31,32 @@ function LoginForm() {
       theme: "colored",
     });
 
-  const handleLogin = () => {
+  const login = async () => {
     //corrected with love by @romanellas
     //URI: where I want ot send the POST
     //according to Swagger specifics, the username is sent in path, with the requested role.
 
-    const data = { password: password };
-    const uri = `${ReactConfig.base_url_requests}/auth/${username}/0`;
+    //console.log(userGlobal.password );
+    //console.log(userGlobal.username );
+
+    const data = { password: userGlobal.password };
+    const uri = `${ReactConfig.base_url_requests}/auth/${userGlobal.username}/0`;
     const options = {
       method: "POST",
+      mode: "cors",
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
       },
+      credentials: "include",
       body: JSON.stringify(data),
     };
 
-    fetch(uri, options)
+    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa" + data);
+
+    await fetch(uri, options)
       .then((response) => {
         if (response.ok) {
-          //let user = response.json();
-          //console.log(user);
-          //navigate(`/channels?username=${username}`);
-          navigate(`/channels`, { state: { username } });
-
-          //<Navigate to="/channels" stauser;
+          navigate(`/channels`);
         } else {
           notify();
           console.error("Authentication failed", response.statusText);
@@ -60,15 +67,35 @@ function LoginForm() {
       });
   };
 
+  const handleLogin = (e) => {
+    e.preventDefault();
+
+    setUserGlobal({
+      ...userGlobal,
+      username: usernameForm,
+      password: passwordForm,
+    });
+
+    login();
+  };
+
   //reminder: input tag in React <input/>
   return (
-    <div id="" className="container">
-      <div className="row justify-content-center">
-        <div className="col-6 ">
-          <form onSubmit={handleLogin}>
-            <h1 className="text-center mb-5 mt-5 cool-font-medium">
-              Log in to &#129413;
+    <div className="container">
+      <div className="col-12 text-center pt-5 animated-title-container">
+        <div className="row  ">
+          <div className="col-12 d-flex flex-col justify-content-center align-items-center">
+            <h1 className=" animated-title cool-font-medium">Log in to</h1>
+            <h1 className="animated-squeal cool-font" alt="eagle-emoji">
+              &#129413;
             </h1>
+          </div>
+        </div>
+      </div>
+
+      <div className="row justify-content-center ">
+        <div className="col-6">
+          <form onSubmit={handleLogin}>
             <div className="form-group row p-2 mb-3">
               <label
                 htmlFor="inputUsername"
@@ -80,10 +107,11 @@ function LoginForm() {
                 type="text"
                 className="form-control"
                 id="inputUsername"
-                value={username}
+                aria-describedby="username"
                 placeholder="username"
                 autoComplete="on"
-                onChange={(e) => setUsername(e.target.value)}
+                value={usernameForm}
+                onChange={(e) => setUsernameForm(e.target.value)}
               />
             </div>
 
@@ -98,47 +126,48 @@ function LoginForm() {
                 type="password"
                 id="inputPassword"
                 className="form-control"
-                aria-describedby="passwordHelpBlock"
+                aria-describedby="password"
                 placeholder="password"
-                value={password}
                 autoComplete="on"
-                onChange={(e) => setPassword(e.target.value)}
+                value={passwordForm}
+                onChange={(e) => setPasswordForm(e.target.value)}
               />
             </div>
 
             <div className="form-group row p-2">
               <button
                 className="col-12 col-md-4 offset-md-4 mb-5 custom-button"
-                type="button"
-                onClick={handleLogin}
+                type="submit"
               >
                 <ToastContainer />
                 LOGIN
               </button>
             </div>
-
-            <div className="form-group row p-2 mb-5">
-              <div className="col-12 mb-5">
-                <NavLink
-                  style={{ color: "#072f38" }}
-                  className="cool-font-small"
-                  to={ReactConfig.pathFunction("/registration")}
-                >
-                  New Here ?
-                </NavLink>
-              </div>
-
-              <div className="col-12 mb-5">
-                <NavLink
-                  style={{ color: "#072f38" }}
-                  className="cool-font-small"
-                  to={ReactConfig.pathFunction("/home")}
-                >
-                  Skip the log in !
-                </NavLink>
-              </div>
-            </div>
           </form>
+          <button className="custom-button mb-4" type="submit">
+            Forgor password?
+          </button>
+          <div className="row p-2 mb-5">
+            <div className="col-12 mb-5">
+              <NavLink
+                style={{ color: "#072f38" }}
+                className="cool-font-small"
+                to={ReactConfig.pathFunction("/registration")}
+              >
+                New Here ?
+              </NavLink>
+            </div>
+
+            <div className="col-12 mb-5">
+              <NavLink
+                style={{ color: "#072f38" }}
+                className="cool-font-small"
+                to={ReactConfig.pathFunction("/home")}
+              >
+                Skip the log in !
+              </NavLink>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -146,3 +175,16 @@ function LoginForm() {
 }
 
 export default LoginForm;
+
+// Funzione generica per aggiornare le proprietà
+/*
+  const updateProperty = (propertyName, newValue) => {
+    setUserGlobal({
+      ...userGlobal,
+      [propertyName]: newValue,
+    });
+  };
+
+
+   */
+//onClick={() => updateProperty('text', 'New text value')}

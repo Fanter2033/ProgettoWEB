@@ -3,6 +3,7 @@
   --squeal-green: #528b57;
   --squeal-blue: #072f38;
   --squeal-yellow: #e0bb76;
+  --squeal-red: rgb(180, 86, 86);
 }
 
 .my-green {
@@ -30,6 +31,8 @@ html {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+
+  overflow-x: hidden;
 }
 .App {
   text-align: center;
@@ -37,13 +40,15 @@ html {
   color: var(--squeal-blue);
 }
 #elemento-espanso {
-  position: absolute; /* Posizionamento assoluto rispetto alla view
+  position: absolute; /* Posizionamento assoluto rispetto alla view*/
   top: 0; /* Inizia dall'alto della viewport */
   right: 0; /* Finisce a destra della viewport */
   bottom: 0; /* Finisce in basso della viewport */
   left: 0; /* Inizia da sinistra della viewport */
+  width: 100vw;
   background-color: var(--squeal-yellow);
 }
+
 /* -----------------FONT STUFF------------------ */
 .cool-font {
   font-family: "Cool-Font", sans-serif;
@@ -73,12 +78,10 @@ html {
   padding: 10px 20px;
   border: none;
   border-radius: 8px;
-  cursor: pointer; /* Cambia il cursore al passaggio del mouse */
+  cursor: pointer;
 }
 .custom-button:hover {
-  background-color: var(
-    --squeal-green
-  ); /* Cambia il colore di sfondo quando si passa sopra il bottone */
+  background-color: var(--squeal-green);
 }
 .bottoni_omologati {
   width: 3em;
@@ -92,14 +95,100 @@ html {
 .user_button {
   background-color: var(--squeal-blue);
   color: var(--squeal-yellow);
-  width: 40vw;
+  width: 60vw;
+  margin: 1em;
   border: none;
-  padding: 10px 20px;
+  padding: 1em;
   border-radius: 8px;
   transition: background-color 0.3s, box-shadow 0.3s;
   cursor: pointer;
 }
 .user_button:hover {
+  background-color: var(--squeal-green);
+}
+
+#buy-button,
+#change-password,
+#change-username {
+  background-color: var(--squeal-green);
+  color: var(--squeal-yellow);
+
+  width: 20vw;
+  margin: 1em;
+  padding: 1em;
+
+  border: none;
+  border-radius: 0.5rem;
+
+  transition: background-color 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+#upgrade-button {
+  background-color: rgb(184, 121, 184);
+  color: var(--squeal-yellow);
+
+  width: 100%;
+  padding: 1em;
+  margin: 1em;
+  border: none;
+  border-radius: 0.5rem;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  transition: background-color 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+#delete-button,
+#logout-button {
+  background-color: var(--squeal-red);
+  color: var(--squeal-yellow);
+
+  width: 60vw;
+  margin: 1em;
+  padding: 1em;
+
+  border: none;
+  border-color: var(--squeal-yellow);
+  border-radius: 0.5rem;
+
+  transition: background-color 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+#delete-button:hover,
+#logout-button:hover {
+  background-color: var(--squeal-blue);
+}
+
+.red-button {
+  background-color: var(--squeal-red);
+}
+.blue-button {
+  background-color: var(--squeal-blue);
+}
+.yellow-button {
+  background-color: var(--squeal-yellow);
+}
+.green-button {
+  background-color: var(--squeal-green);
+  border-radius: 0.5em;
+  border: none;
+}
+
+.red-button:active {
+  background-color: var(--squeal-red);
+}
+.blue-button:active {
+  background-color: var(--squeal-blue);
+}
+.yellow-button:active {
+  background-color: var(--squeal-yellow);
+}
+.green-button:active {
   background-color: var(--squeal-green);
 }
 
@@ -120,34 +209,45 @@ html {
 }
 
 .altro {
-  color: red;
+  color: var(--squeal-red);
   font-weight: bold;
 }
 
+/* -------------------- ANCHOR STUFF ------------------*/
+#about-us {
+  color: var(--squeal-red);
+}
+
+/* -------------------- MAP STUFF ------------------*/
+#mapid {
+  height: 40vh;
+}
+
 /* -------------------- IMG STUFF ------------------*/
-/* Stile predefinito per l'immagine */
+/* Stile predefinito*/
 img {
   max-width: 100%; /* L'immagine si adatta alla larghezza del suo contenitore */
   height: auto; /* Altezza automatica per evitare distorsioni */
 }
 
-/* Stile per schermi di dimensioni medie (ad esempio, tablet) */
+/* Stile per schermi md */
 @media (max-width: 768px) {
   img {
     max-width: 30%; /* Riduci la larghezza dell'immagine al 80% del suo contenitore */
   }
 }
 
-/* Stile per schermi di dimensioni piccole (ad esempio, smartphone) */
+/* Stile per schermi sm */
 @media (max-width: 300px) {
   img {
     max-width: 70vw;
     max-height: 30vh; /* Riduci ulteriormente la larghezza dell'immagine al 60% del suo contenitore */
   }
 }
+
 /* -------------------- 3D EFFECT ------------------*/
 .box {
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.8); /* Ombra rilievo */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
 }
 
 /* --------------------VOLTURE ------------------*/

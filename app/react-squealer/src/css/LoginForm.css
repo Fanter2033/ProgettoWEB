@@ -1,8 +1,9 @@
 /* ------------ ATTENZIONE AGLI ALTRI FILE CSS -------------*/
-
-body {
+html {
+  text-align: center;
   background-color: var(--squeal-yellow);
   color: var(--squeal-blue);
+  min-height: 100vh;
 }
 
 /* ------------ COLOR STUFF -------------*/
@@ -12,7 +13,6 @@ body {
   --squeal-yellow: #e0bb76;
   --squeal-red: rgb(180, 86, 86);
 }
-
 .my-green {
   background-color: var(--squeal-green);
 }
@@ -47,37 +47,90 @@ body {
   color: var(--squeal-yellow);
   padding: 10px 20px;
   border: none;
-  border-radius: 8px;
-  cursor: pointer; /* Cambia il cursore al passaggio del mouse */
+  border-radius: 0.5rem;
+  cursor: pointer;
 }
 .custom-button:hover {
-  background-color: var(
-    --squeal-red
-  ); /* Cambia il colore di sfondo quando si passa sopra il bottone */
+  background-color: var(--squeal-red);
 }
 
 input[type="radio"] {
   display: none;
 }
 
-/* ------------ BUTTON STUFF -------------*/
-
-/* Stile del radio button personalizzato quando selezionato */
-input[type="radio"]:checked + label {
-  background-color: var(
-    --squeal-blue
-  ); /* Colore di sfondo quando selezionato (blu in questo caso) */
-  color: #fff; /* Colore del testo quando selezionato */
-  border: 1px solid var(--squeal-blue); /* Bordo quando selezionato */
-  border-radius: 4px; /* Angoli arrotondati quando selezionato */
-  padding: 4px 8px; /* Spaziatura interna quando selezionato */
+#button-channel {
+  background-color: var(--squeal-green);
+  color: var(--squeal-yellow);
+  padding: 0.5em 1em;
+  margin: 0.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
-/* Stile predefinito dell'etichetta del radio button */
-label {
-  display: inline-block;
+#create-channel {
+  background-color: var(--squeal-green);
+  color: var(--squeal-red);
+  font-weight: bold;
+
+  padding: 0.5em 1em;
+  margin: 0.5rem;
+
+  border: none;
+  border-radius: 0.5rem;
   cursor: pointer;
-  padding: 4px 8px;
-  border: 1px solid var(--squeal-green);
-  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+/* ------------ MODAL STUFF -------------*/
+.w-form-control {
+  width: 50vw;
+}
+
+/* ------------ CHECKBOX STUFF -------------*/
+#custom-checkbox {
+  order: 1;
+  margin-left: 2rem;
+}
+
+/*non funge prolly react-boostrap
+
+.custom-control-input:checked {
+  background-color: var(--squeal-green);
+  border-color: var(--squeal-green);
+}
+*/
+
+/* ------------ CHECKBOX STUFF -------------*/
+.animated-title-container {
+  overflow: hidden;
+}
+
+.animated-title {
+  animation: slideLeft 1s ease-in-out;
+  white-space: nowrap;
+}
+
+.animated-squeal {
+  animation: slideRight 1s ease-in-out;
+  white-space: nowrap;
+}
+
+@keyframes slideLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideRight {
+  from {
+    transform: translateX(+100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }

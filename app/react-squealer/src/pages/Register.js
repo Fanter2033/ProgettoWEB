@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
-import "../css/LoginForm.css";
 
-//do we want to put some constraints on the password or not?
+import { useUserContext } from "../config/UserContext";
+
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+import "../css/LoginForm.css";
 
 /*
 accessibilità:
@@ -21,26 +25,9 @@ accessibilità:
 8. Keyboard Navigation
 */
 
-/*
-TODO: cancella componente Modal
-import Modal from "./Modal";
-
- const [showModal, setShowModal] = useState(false);
- const closeModal = () => {
-   setShowModal(false);
- };
- const openModal = () => {
-   setShowModal(true);
- };
-
- openModal();
-
- nel render
- <Modal isOpen={showModal} onClose={closeModal} />
-*/
-
 function Register() {
   const navigate = useNavigate();
+  const { userGlobal, setUserGlobal } = useUserContext();
 
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
@@ -48,11 +35,33 @@ function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [showToast, setShowToast] = useState(false);
+  const notify = () =>
+    toast.error("Errore. Compila tutti i campi.", {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
 
   const handleRegistration = async (e) => {
     //prevent a browser reload/refresh.
     e.preventDefault();
+
+    setUserGlobal({
+      ...userGlobal,
+      username: username,
+      firstname: name,
+      surname: surname,
+      email: email,
+      password: password
+    });
+
+    console.log("GLOBALEEEEEEEEEEEEEEE"+userGlobal);
+
 
     //se i campi sono vuoti apri modale
     if (
@@ -62,10 +71,7 @@ function Register() {
       email.trim() === "" ||
       password.trim() === ""
     ) {
-      //TODO:capire perchè non compare la modale
-      //TODO: usare toast
-      setShowToast(true); //TODO IMPLEMENT TOAST
-      //alert("completa");
+      notify();
     } else {
       try {
         //createUser
@@ -87,8 +93,9 @@ function Register() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
           },
+          credentials: "include",
+          mode: "cors",
           body: JSON.stringify(data),
         };
 
@@ -113,8 +120,9 @@ function Register() {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*",
               },
+              credentials: "include",
+              mode: "cors",
               body: JSON.stringify(authData),
             };
 
@@ -255,34 +263,11 @@ function Register() {
                 type="button"
                 onClick={handleRegistration}
               >
+                <ToastContainer />
                 REGISTER
               </button>
             </div>
           </form>
-
-          {showToast && (
-            <div
-              className="toast show"
-              role="alert"
-              aria-live="assertive"
-              aria-atomic="true"
-              data-autohide="false"
-            >
-              <div className="toast-header">
-                <strong className="mr-auto">Error</strong>
-                <button
-                  type="button"
-                  className="ml-2 mb-1 close"
-                  data-dismiss="toast"
-                  aria-label="Close"
-                  onClick={() => setShowToast(false)}
-                >
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div className="toast-body">Completa tutti i campi, pls</div>
-            </div>
-          )}
         </div>
       </div>
     </div>
