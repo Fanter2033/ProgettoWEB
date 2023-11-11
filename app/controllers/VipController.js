@@ -33,7 +33,7 @@ module.exports = class VipController extends Controller {
         let vipObj = new VipDto();
         vipObj.user = username;
         vipObj.linkedSmm = "";
-        vipObj.linkedUsers = "";
+        vipObj.linkedUsers = [];
 
         let dbRes = await this._model.createVip(vipObj);
         if (dbRes)
@@ -68,6 +68,7 @@ module.exports = class VipController extends Controller {
     }
 
     /**
+     * delete all the entities in the linked accounts' array
      * @param username {String}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
@@ -99,5 +100,21 @@ module.exports = class VipController extends Controller {
         return output
     }
 
+    /**
+     *
+     * @param username {String}
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async removeSmm(username){
+        let output = this.getDefaultOutput();
 
+        let vipDto = new VipDto(await this.getVip(username));
+
+        let smmDto = new VipDto(await this.getVip(vipDto.linkedSmm));
+
+        let res = this._model.removeSmm(vipDto, smmDto);
+
+
+        return output;
+    }
 }

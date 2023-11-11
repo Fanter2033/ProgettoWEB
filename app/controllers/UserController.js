@@ -388,7 +388,7 @@ module.exports = class UserController extends Controller {
     }
 
     /**
-     *
+     *Given an username enable or disable his vip status
      * @param username {String}
      * @param authenticatedUser {Promise<{}|UserDto>}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
@@ -411,8 +411,8 @@ module.exports = class UserController extends Controller {
         let userObj = await this._model.getUser(username);
         let vipCtrl = new VipController(new VipModel())
         let newVIPStatus = !userObj.vip;
-        //create the VIP entity
         if(newVIPStatus === true){
+            //create the VIP entity
             let res = await vipCtrl.createVip(username);
             if(res['code'] !== 200)
                 return res;
@@ -433,11 +433,16 @@ module.exports = class UserController extends Controller {
         return output;
     }
 
+    /**
+     * Enable/Disble the smm option
+     * @param authenticatedUser {Promise<{}|UserDto>}
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
     async toggleSmm(authenticatedUser){
         let output = this.getDefaultOutput();
-        let username = authenticatedUser.username;
+        let username = authenticatedUser[1].username; //??????
 
-        if(!(await this._model.userExists(username))){
+        if( !(await this._model.userExists(username)) ){
             output['code'] = 404;
             output['msg'] = 'User not found.';
             return output;
@@ -449,6 +454,7 @@ module.exports = class UserController extends Controller {
             return output;
         }
 
+        //check if the user is Vip
         let isVip = authenticatedUser.vip;
         if(isVip === false){
             output['code'] = 412
@@ -461,7 +467,7 @@ module.exports = class UserController extends Controller {
         let vipCtrl = new VipController(new VipModel());
         if(newSmmStatus){
             //user IS now a SMM, remove actual smm if there is one
-            //TODO
+            //TODO: remove a smm if there's one
         } else {
             //user is NO longer SMM, clear the linked users list
             let clearLinkedUsers = vipCtrl.disableSmm(username);
@@ -470,6 +476,7 @@ module.exports = class UserController extends Controller {
             }
         }
 
+        //toggle isSmm
         let res = this._model.changeSmmStatus(userObj,newSmmStatus);
         if(res === false){
             output['code'] = 500;
@@ -481,7 +488,7 @@ module.exports = class UserController extends Controller {
     /**
      *
      * @param SmmUsername {String}
-     * @param authenticatedUser
+     * @param authenticatedUser {Promise<{}|UserDto>}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
     async pickSmm(SmmUsername, authenticatedUser) {
@@ -519,7 +526,7 @@ module.exports = class UserController extends Controller {
             return output;
         }
 
-        //check if the Smm has more than five linked users
+        //TODO: check if the Smm has more than five linked users
         let vipDto = new VipDto(vipObj.content);
         let smmDto = new VipDto(SmmObj.content);
 
@@ -533,7 +540,41 @@ module.exports = class UserController extends Controller {
         return output;
     }
 
+    /**
+     * @param authenticatedUser {Promise<{}|UserDto>}
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
     async removeSmm(authenticatedUser){
-        //TODO
+        let output = this.getDefaultOutput();
+
+        //check authentication
+        if (this.isObjectVoid(authenticatedUser) === true) {
+            output['code'] = 403;
+            output['msg'] = 'User not authenticated';
+            return output;
+        }
+
+        //check if vip exists
+        let username = authenticatedUser['username'];
+        let vipCtrl = new VipController(new VipModel());
+        let vipObj = await vipCtrl.getVip(username);
+        if(vipObj['code'] !== 200){
+            output['code'] = 412
+            output['msg'] = "Precondition Failed, user is not a VIP"
+            return output;
+        }
+
+        let vipResRemoved =  await vipCtrl.removeSmm(username);
+        if(vipResRemoved['code'] !== 200){
+            output['code'] = 500;
+            output['msg'] = 'Server error in removing a vip'
+        }
+        return output;
     }
 }
+
+/*
+* Problemini:
+* quando un utente viene eliminato bisogna controllare che sia Vip e nel caso
+* rimuovere tutte le relazioni che aveva coe Smm-Vip
+* */
