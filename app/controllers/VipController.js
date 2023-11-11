@@ -7,10 +7,10 @@ module.exports = class VipController extends Controller {
         this._model = model;
     }
 
-    async getVip(username){
+    async getVip(username) {
         let output = this.getDefaultOutput();
         let vip = await this._model.getVip(username);
-        if(vip !== {}){
+        if (vip !== {}) {
             output["code"] = 404;
             output["msg"] = "Not found";
             return output;
@@ -23,7 +23,7 @@ module.exports = class VipController extends Controller {
      * @param username
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
-    async createVip(username){
+    async createVip(username) {
         let output = this.getDefaultOutput();
         let vipObj = new VipDto();
         vipObj.user = username;
@@ -33,14 +33,14 @@ module.exports = class VipController extends Controller {
         let dbRes = await this._model.createVip(vipObj);
         if (dbRes)
             output['content'] = vipObj.getDocument();
-        else{
+        else {
             output["code"] = 500;
             output["msg"] = "Error creating Vip in db";
         }
         return output;
     }
 
-    async deleteVip(username){
+    async deleteVip(username) {
         let output = this.getDefaultOutput();
         let vipObj = await this.getVip(username);
         if (vipObj["code"] !== 200) {
@@ -50,10 +50,28 @@ module.exports = class VipController extends Controller {
         }
 
         let res = await this._model.deleteVip(username);
-        if (res === false){
+        if (res === false) {
             output['code'] = 500;
             output['msg'] = 'Server error in deleting vip'
         }
+        return output;
+    }
+
+    /**
+     * @param username
+     * @return {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async deleteVipByUserDeletions(username) {
+        let output = this.getDefaultOutput();
+
+        let ctrlOut = await this.deleteVip(username);
+        if (ctrlOut.code !== 200 && ctrlOut.code !== 404) {
+            output['code'] = 500;
+            output['msg'] = 'Internal server error VipController::deleteVipByUserDeletions - 1';
+        }
+
+        //TODO CONTINUE - CONTINUE ON REPLACING TOO
+        let result = this._model.removeUserFromLinked(username);
         return output;
     }
 

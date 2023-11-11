@@ -109,7 +109,6 @@ module.exports = class UserController extends Controller {
             output['msg'] = 'Delete executed but no user were deleted.';
         }
 
-        //TODO TEST
         let squealModel = new SquealModel();
         let squealImpressionReactions = new SquealIrModel();
         let squealToUserModel = new SquealToUserModel();
@@ -137,9 +136,15 @@ module.exports = class UserController extends Controller {
             output['msg'] = 'Internal server error UserController::updateUser - 3';
             return output;
         }
-        //TODO TEST
 
         //Now vip users
+        let vipCtrl = new VipController(new VipModel());
+        result = await vipCtrl.deleteVipByUserDeletions(username);
+        if(result.code !== 200){
+            output['code'] = 500;
+            output['msg'] = 'Internal server error UserController::updateUser - 4';
+            return output;
+        }
         //TODO CHIEDERE A SAMI
 
         return output;
