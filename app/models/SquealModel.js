@@ -88,4 +88,21 @@ module.exports = class SquealModel extends Model {
         }
     }
 
+    /**
+     * @param username {string}
+     * @return {Promise<boolean>}
+     */
+    async deleteUser(username){
+        await this.checkMongoose("Squeal", Squeal);
+        let filter = {sender: `${username}`};
+        filter = this.mongo_escape(filter);
+        let update = {sender: `${username}`}
+        try {
+            await this.entityMongooseModel.deleteMany(filter, update);
+            return true;
+        } catch (ignored) {
+            return false;
+        }
+    }
+
 }

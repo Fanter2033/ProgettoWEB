@@ -72,7 +72,22 @@ module.exports = class SquealIrModel extends Model {
         } catch (ignored) {
             return false;
         }
+    }
 
+    /**
+     * @param username {string}
+     * @return {Promise<boolean>}
+     */
+    async deleteUser(username){
+        await  this.checkMongoose("squeal_impression_reactions", SquealIrSchema);
+        let filter = {value: `${username}`, is_session_id: false};
+        filter = this.mongo_escape(filter);
+        try {
+            let result = await this.entityMongooseModel.deleteMany(filter);
+            return true;
+        } catch (ignored) {
+            return false;
+        }
     }
 
 }

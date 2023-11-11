@@ -107,7 +107,38 @@ module.exports = class UserController extends Controller {
             output['msg'] = 'Delete executed but no user were deleted.';
         }
 
-        //TODO AGGIORNARE ANCHE LE ELIMINAZIONI CON LE RELAZIONI
+        //TODO TEST
+        let squealModel = new SquealModel();
+        let squealImpressionReactions = new SquealIrModel();
+        let squealToUserModel = new SquealToUserModel();
+
+        //Now squeals
+        let result = await squealModel.deleteUser(username);
+        if(result === false){
+            output['code'] = 500;
+            output['msg'] = 'Internal server error UserController::deleteUser - 1';
+            return output;
+        }
+
+        //Now impression and reactions
+        result = await squealImpressionReactions.deleteUser(username);
+        if(result === false){
+            output['code'] = 500;
+            output['msg'] = 'Internal server error UserController::deleteUser - 2';
+            return output;
+        }
+
+        //Now squeals to user
+        result = await squealToUserModel.deleteUser(username);
+        if(result === false){
+            output['code'] = 500;
+            output['msg'] = 'Internal server error UserController::updateUser - 3';
+            return output;
+        }
+        //TODO TEST
+
+        //Now vip users
+        //TODO CHIEDERE A SAMI
 
         return output;
     }
@@ -259,18 +290,18 @@ module.exports = class UserController extends Controller {
             let quoteController = new QuoteController(new QuoteModel())
             let result = await quoteController.changeUsernameQuota(oldUsername, newUser.username);
             if(result['code'] !== 200){
-                result['code'] = 500;
-                result['msg'] = 'Internal server error UserController::updateUser - 1';
-                return result;
+                output['code'] = 500;
+                output['msg'] = 'Internal server error UserController::updateUser - 1';
+                return output;
             }
 
             //Now channel
             let channelRoleController = new ChannelRolesController(new ChannelRolesModel());
             result = await channelRoleController.substituteUser(oldUsername, newUser.username);
             if(result['code'] !== 200){
-                result['code'] = 500;
-                result['msg'] = 'Internal server error UserController::updateUser - 2';
-                return result;
+                output['code'] = 500;
+                output['msg'] = 'Internal server error UserController::updateUser - 2';
+                return output;
             }
 
             let squealModel = new SquealModel();
@@ -280,25 +311,25 @@ module.exports = class UserController extends Controller {
             //Now squeals
             result = await squealModel.replaceUser(oldUsername, newUser.username);
             if(result === false){
-                result['code'] = 500;
-                result['msg'] = 'Internal server error UserController::updateUser - 3';
-                return result;
+                output['code'] = 500;
+                output['msg'] = 'Internal server error UserController::updateUser - 3';
+                return output;
             }
 
             //Now impression and reactions
             result = await squealImpressionReactions.replaceUser(oldUsername, newUser.username);
             if(result === false){
-                result['code'] = 500;
-                result['msg'] = 'Internal server error UserController::updateUser - 4';
-                return result;
+                output['code'] = 500;
+                output['msg'] = 'Internal server error UserController::updateUser - 4';
+                return output;
             }
 
             //Now squeals to user
             result = await squealToUserModel.replaceUser(oldUsername, newUser.username);
             if(result === false){
-                result['code'] = 500;
-                result['msg'] = 'Internal server error UserController::updateUser - 5';
-                return result;
+                output['code'] = 500;
+                output['msg'] = 'Internal server error UserController::updateUser - 5';
+                return output;
             }
 
             //Now vip users
