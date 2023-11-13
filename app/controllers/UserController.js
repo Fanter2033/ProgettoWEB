@@ -82,6 +82,15 @@ module.exports = class UserController extends Controller {
             return output;
         }
 
+        let vipCtrl = new VipController(new VipModel());
+        let vipCtrlOut = await vipCtrl.getVip(username);
+        if(vipCtrlOut['code'] !== 200){
+            //To delete it should be 404
+            output['code'] = 412;
+            output['msg'] = 'Downgrade from VIP.';
+            output['sub_code'] = 3;
+        }
+
         //Before deleting quote information we should delete all channel relationship.
         let roleCtrlOut = await channelRoleController.deleteUserRole(username, authenticatedUser);
 
@@ -136,16 +145,6 @@ module.exports = class UserController extends Controller {
             output['msg'] = 'Internal server error UserController::updateUser - 3';
             return output;
         }
-
-        //Now vip users
-        let vipCtrl = new VipController(new VipModel());
-        result = await vipCtrl.deleteVipByUserDeletions(username);
-        if(result.code !== 200){
-            output['code'] = 500;
-            output['msg'] = 'Internal server error UserController::updateUser - 4';
-            return output;
-        }
-        //TODO CHIEDERE A SAMI
 
         return output;
     }

@@ -57,23 +57,5 @@ module.exports = class VipController extends Controller {
         return output;
     }
 
-    /**
-     * @param username
-     * @return {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
-     */
-    async deleteVipByUserDeletions(username) {
-        let output = this.getDefaultOutput();
-
-        let ctrlOut = await this.deleteVip(username);
-        if (ctrlOut.code !== 200 && ctrlOut.code !== 404) {
-            output['code'] = 500;
-            output['msg'] = 'Internal server error VipController::deleteVipByUserDeletions - 1';
-        }
-
-        //TODO CONTINUE - CONTINUE ON REPLACING TOO
-        let result = this._model.removeUserFromLinked(username);
-        return output;
-    }
-
 
 }

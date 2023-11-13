@@ -40,17 +40,4 @@ module.exports = class VipModel extends Model {
         }
         return true;
     }
-
-    /**
-     * @param username {username}
-     * @return {Promise<boolean>}
-     */
-    async removeUserFromLinked(username){
-        //TODO CONTINUE _ MISSING CURRENTSCHEMA
-        await this.checkMongoose("VipUser", VipUser);
-        let filter = { favouriteFoods: `${username}` };
-        filter = this.entityMongooseModel(filter);
-        this.entityMongooseModel.find(filter);
-    }
-
 }

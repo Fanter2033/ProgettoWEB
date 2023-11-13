@@ -361,6 +361,7 @@ module.exports = class ChannelController extends Controller {
         channelRoleDto.username = username;
         channelRoleDto.type = channelDto.type;
         channelRoleDto.channel_name = channelDto.channel_name;
+        /*
         let result = await this.getChannelUserRole(channelDto, username);
         if (result['code'] === 404) {
             if (channelDto.private === true && newRole === 0)
@@ -370,6 +371,7 @@ module.exports = class ChannelController extends Controller {
             else
                 return await this.#channelRolesController.updateUserRole(channelRoleDto, authenticatedUser);
         }
+         */
 
         return await this.#channelRolesController.updateUserRole(channelRoleDto, authenticatedUser);
     }
