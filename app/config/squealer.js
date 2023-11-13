@@ -40,15 +40,19 @@ exports._SESSION_COLLECTION = 'sessions';
 exports._QUOTE_DEFAULT_DAILY = 1000;
 exports._QUOTE_DEFAULT_WEEKLY = 1000 * 6;
 exports._QUOTE_DEFAULT_MONTHLY = 1000 * 20;
+exports._QUOTE_EXTRA_CHARS_TO_END = 15;
+exports._IMG_TO_QUOTE = 125;
 
 //Channels roles
+exports._CHANNEL_ROLE_OWNER = 4;
 exports._CHANNEL_ROLE_ADMIN = 3;
 exports._CHANNEL_ROLE_WRITE = 2;
 exports._CHANNEL_ROLE_READ = 1;
+exports._CHANNEL_ROLE_WAITING_ACCEPT = 0;
 
 //channel privacy
 exports._CHANNEL_TYPE_OFFICIAL = 'CHANNEL_OFFICIAL';
-exports._CHANNEL_TYPE_USER = 'CHANNEL_USER';
+exports._CHANNEL_TYPE_USER = 'CHANNEL_USERS';
 exports._CHANNEL_TYPE_HASHTAG = 'CHANNEL_HASHTAG';
 
 //Session params

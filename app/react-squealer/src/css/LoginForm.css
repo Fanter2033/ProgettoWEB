@@ -1,0 +1,83 @@
+/* ------------ ATTENZIONE AGLI ALTRI FILE CSS -------------*/
+
+body {
+  background-color: var(--squeal-yellow);
+  color: var(--squeal-blue);
+}
+
+/* ------------ COLOR STUFF -------------*/
+:root {
+  --squeal-green: #528b57;
+  --squeal-blue: #072f38;
+  --squeal-yellow: #e0bb76;
+  --squeal-red: rgb(180, 86, 86);
+}
+
+.my-green {
+  background-color: var(--squeal-green);
+}
+.my-yellow {
+  background-color: var(--squeal-yellow);
+}
+.my-blu {
+  background-color: var(--squeal-blue);
+}
+
+/* ------------ FONT STUFF -------------*/
+.cool-font {
+  font-family: "Cool-Font", sans-serif;
+  font-size: 10vw;
+}
+.cool-font-small {
+  font-family: "Cool-Font", sans-serif;
+  font-size: 3vw;
+}
+.cool-font-medium {
+  font-family: "Cool-Font", sans-serif;
+  font-size: 5vw;
+}
+@font-face {
+  font-family: "Cool-Font";
+  src: url("../../public/ArchivoBlack-Regular.ttf");
+}
+
+/* ------------ BUTTON STUFF -------------*/
+.custom-button {
+  background-color: var(--squeal-blue);
+  color: var(--squeal-yellow);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer; /* Cambia il cursore al passaggio del mouse */
+}
+.custom-button:hover {
+  background-color: var(
+    --squeal-red
+  ); /* Cambia il colore di sfondo quando si passa sopra il bottone */
+}
+
+input[type="radio"] {
+  display: none;
+}
+
+/* ------------ BUTTON STUFF -------------*/
+
+/* Stile del radio button personalizzato quando selezionato */
+input[type="radio"]:checked + label {
+  background-color: var(
+    --squeal-blue
+  ); /* Colore di sfondo quando selezionato (blu in questo caso) */
+  color: #fff; /* Colore del testo quando selezionato */
+  border: 1px solid var(--squeal-blue); /* Bordo quando selezionato */
+  border-radius: 4px; /* Angoli arrotondati quando selezionato */
+  padding: 4px 8px; /* Spaziatura interna quando selezionato */
+}
+
+/* Stile predefinito dell'etichetta del radio button */
+label {
+  display: inline-block;
+  cursor: pointer;
+  padding: 4px 8px;
+  border: 1px solid var(--squeal-green);
+  border-radius: 4px;
+}

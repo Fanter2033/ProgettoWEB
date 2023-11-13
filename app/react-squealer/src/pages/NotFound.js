@@ -1,5 +1,5 @@
-import "../Home.css";
 import React from "react";
+import "../css/Home.css";
 
 function NotFound() {
   return (

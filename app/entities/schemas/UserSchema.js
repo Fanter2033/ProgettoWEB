@@ -11,5 +11,7 @@ module.exports = new Schema({
     registration_timestamp: Number,
     isUser: Boolean,
     isSmm: Boolean,
-    isAdmin: Boolean
+    isAdmin: Boolean,
+    vip: {type: Boolean, required: true},
+    locked: {type: Boolean, required: true}
 });

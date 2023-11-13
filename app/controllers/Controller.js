@@ -40,11 +40,12 @@ module.exports = class Controller {
 
     /**
      *
-     * @returns {{msg: string, code: number, content: {}}}
+     * @returns {{msg: string, code: number, sub_code: number,content: {}}}
      */
     getDefaultOutput() {
         return {
             'code': 200,
+            'sub_code': 0,
             'msg': 'Ok.',
             'content': {}
         };
@@ -125,5 +126,24 @@ module.exports = class Controller {
     getRandomInt(max) {
         return Math.floor(Math.random() * max);
     }
+
+    /**
+     * @param unknown
+     * return {boolean}
+     * Given an unknown type object returns true if his type is UserDto
+     */
+    isUserDto(unknown) {
+        return unknown instanceof UserDto;
+    }
+
+    /**
+     * @param authenticatedUser
+     * @return {boolean}
+     * Given the authenticated user param, return true if the user is authenticated, false otherwise
+     */
+    isAuthenticatedUser(authenticatedUser){
+        return !this.isObjectVoid(authenticatedUser);
+    }
+
 
 }
