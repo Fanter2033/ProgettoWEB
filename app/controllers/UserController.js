@@ -465,10 +465,7 @@ module.exports = class UserController extends Controller {
         let userObj = await this._model.getUser(username);
         let newSmmStatus = !userObj.isSmm;
         let vipCtrl = new VipController(new VipModel());
-        if(newSmmStatus){
-            //user IS now a SMM, remove actual smm if there is one
-            let clearLinkedSmm = vipCtrl
-        } else {
+        if(!newSmmStatus) {
             //user is NO longer SMM, clear the linked users list
             let clearLinkedUsers = vipCtrl.disableSmm(username);
             if(clearLinkedUsers['code'] === 500){
@@ -575,7 +572,50 @@ module.exports = class UserController extends Controller {
         }
         return output;
     }
+
+    /**
+     *
+     * @param username {String}
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async getSmm(username){
+        username = username.trim().toLowerCase();
+        let vipCtrl = new VipController(new VipModel());
+        let vipExists = await vipCtrl.getVip(username);
+
+        if(vipExists['code'] !== 200)
+            return vipExists;
+
+        let output = this.getDefaultOutput();
+        output['content'] = vipExists['content'].linkedSmm;
+        return output;
+    }
+
+    /**
+     *
+     * @param username {String}
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async getLinkedUsers(username){
+        username = username.trim().toLowerCase();
+        let vipCtrl = new VipController(new VipModel());
+        let smmExists = await vipCtrl.getVip(username);
+
+        if(smmExists['code']!==200)
+            return smmExists;
+
+        let output = this.getDefaultOutput();
+        let isSmm = await this.getUser(username);
+        if(isSmm['content'].isSmm === false){
+            output['code'] = 412
+            output['msg'] = 'User is not a Smm'
+            return output
+        }
+        output['content'] = smmExists['content'].linkedUsers;
+        return output;
+    }
 }
+
 
 /*
 * Problemini:
@@ -590,6 +630,8 @@ module.exports = class UserController extends Controller {
 * e poi in seguito pue' eliminare il profilo
 *
 * le relazioni sono associazioni di nomi e non di entita'
+*
+* chiunque puo' vedere chi sono gli smm e chi sono i linkati ma per ora chissenefotte
 * */
 
 /**

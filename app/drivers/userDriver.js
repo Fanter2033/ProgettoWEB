@@ -173,5 +173,22 @@ userDriver.patch("/:username/remove-smm", async function(req, res){
       res.status(ctrl['code']).send(ctrl);
 })
 
+userDriver.get("/:username/my-smm", async function(req, res){
+    let ctrl = await controller.getSmm(req.params['username']);
+
+    if(ctrl['code'] === 200)
+        res.status(ctrl['code']).send(ctrl['content']);
+    else
+        res.status(ctrl['code']).send(ctrl);
+})
+
+userDriver.get("/:username/my-users", async function(req, res){
+    let ctrl = await controller.getLinkedUsers(req.params['username']);
+
+    if(ctrl['code'] === 200)
+        res.status(ctrl['code']).send(ctrl['content']);
+    else
+        res.status(ctrl['code']).send(ctrl);
+})
 
 module.exports = userDriver;
