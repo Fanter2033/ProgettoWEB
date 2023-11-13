@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 //import { useCallback } from "react";
 import ReactConfig from "../config/ReactConfig";
 import { useUserContext } from "../config/UserContext";
+import { useNavigate } from "react-router-dom";
 
 import Search from "./Search";
-import Navbar from "./Navbar";
 import Footer from "./Footer";
 import ChannelForm from "./ChannelForm";
 import Chat from "./Chat";
@@ -21,6 +21,12 @@ function Channels() {
   const { userGlobal, setUserGlobal } = useUserContext();
   console.log("cercatooooooooooooo", userGlobal.username);
 
+  const navigate = useNavigate();
+  if (userGlobal.username === undefined) {
+    navigate("/");
+  }
+
+  //TODO: IMPLEMENT FILTER: user, channels: official, user, tag
   //TODO: GET /dashboard/ ------------------------------------------------------------------------------------------------------------
   /*
   const [dash, setDash] = useState({});
@@ -204,14 +210,14 @@ function Channels() {
 
   return (
     <div>
-      <Navbar />
       <div className="container-flex">
         <div className="row" onLoad={getUserData}>
           <div className="col-12 col-md-9">
             <h1>HOME</h1>
 
-            <div>
+            <div className="d-flex flex-row justify-content-center mb-2">
               <ChannelForm />
+              <button className="user_button">FILTER</button>
             </div>
 
             <div>

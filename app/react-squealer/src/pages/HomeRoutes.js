@@ -5,6 +5,7 @@ import Channels from "./Channels";
 import Navbar from "./Navbar";
 import Account from "./Account";
 import Post from "./Post";
+//import Received from "./Received";
 import Chat from "./Chat";
 import InfoChannel from "./InfoChannel";
 import InfoUser from "./InfoUser";

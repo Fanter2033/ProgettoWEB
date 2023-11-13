@@ -6,7 +6,7 @@ import { UserProvider } from "./config/UserContext";
 
 import LoginForm from "./pages/LoginForm";
 import Register from "./pages/Register";
-import Channels from "./pages/Channels";
+import Received from "./pages/Received";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import HomeRoutes from "./pages/HomeRoutes";
@@ -25,8 +25,8 @@ function App() {
           />
 
           <Route
-            path={ReactConfig.pathFunction("/channels")}
-            element={<Channels />}
+            path={ReactConfig.pathFunction("/received")}
+            element={<Received />}
           />
 
           <Route path={ReactConfig.pathFunction("/home")} element={<Home />} />

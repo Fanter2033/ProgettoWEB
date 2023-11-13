@@ -2,11 +2,13 @@ import React from "react";
 import { useEffect, useState } from "react";
 import ReactConfig from "../config/ReactConfig";
 
+import { useNavigate } from "react";
+
 import { useUserContext } from "../config/UserContext";
 
 import CurrentDateTime from "./CurrentDateTime";
 import Dest from "./Dest";
-import LegendaDest from "./LegendaDest";
+//import LegendaDest from "./LegendaDest";
 import MapComponent from "./MapComponent";
 
 import "../css/App.css";

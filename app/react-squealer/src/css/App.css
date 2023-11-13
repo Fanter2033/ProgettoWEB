@@ -3,7 +3,8 @@
   --squeal-green: #528b57;
   --squeal-blue: #072f38;
   --squeal-yellow: #e0bb76;
-  --squeal-red: rgb(180, 86, 86);
+  --squeal-red: #b45656;
+  --squeal-pink: #b879b8;
 }
 
 .my-green {
@@ -124,8 +125,8 @@ html {
   cursor: pointer;
 }
 
-#upgrade-button {
-  background-color: rgb(184, 121, 184);
+.upgrade-button {
+  background-color: var(--squeal-pink);
   color: var(--squeal-yellow);
 
   width: 100%;
@@ -280,6 +281,40 @@ img {
   to {
     opacity: 0;
   }
+}
+
+/* -------------------- MODAL STUFF ------------------*/
+
+/* YourModalStyles.css */
+
+.custom-modal-header {
+  background-color: var(--squeal-pink);
+  color: #ecf0f1;
+}
+
+.custom-modal-body {
+  background: linear-gradient(
+    to bottom,
+    var(--squeal-pink),
+    var(--squeal-yellow)
+  );
+  color: #ecf0f1;
+}
+
+.custom-modal-text {
+  color: var(--squeal-blue);
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.custom-modal-list {
+  list-style-type: none; /* Rimuove i punti dalla lista */
+  padding: 0;
+}
+
+.my-foot {
+  background-color: var(--squeal-yellow);
+  padding: 10rem;
 }
 
 /* -------------------- MADE BY REACT STUFF ------------------*/
