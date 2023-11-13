@@ -1,4 +1,12 @@
 const Controller = require("./Controller");
+const QuoteController = require ("./QuoteController");
+const QuoteModel = require ("../models/QuoteModel");
+const ChannelRolesController = require("./ChannelRolesController");
+const ChannelRolesModel = require("../models/ChannelRolesModel");
+const VipController = require("./VipController");
+const VipModel = require("../models/VipModel");
+const VipDto = require("../entities/dtos/VipDto");
+
 module.exports = class UserController extends Controller {
 
     constructor(model) {
@@ -9,7 +17,7 @@ module.exports = class UserController extends Controller {
     /**
      *
      * @param username {String}
-     * @returns {Promise<*|UserDto|{}>}
+     * @returns {Promise<{msg: string, code: number, sub_code: number,content: {}}>}
      *
      * Given a username, this functions returns the user, if found. Error 404 otherwise.
      */
@@ -38,12 +46,13 @@ module.exports = class UserController extends Controller {
      *
      * @param username {string}
      * @param authenticatedUser {UserDto}
+     * @param escapeControl {boolean}
      * @returns {Promise<{msg: string, code: number, content: {}}>}
      *
-     * Delete a user if it exist, the operation can be made only by the deleting user or a squealer Admin.
+     * Delete a user if it exists, the operation can be made only by the deleting user or a squealer Admin.
      *
      */
-    async deleteUser(username, authenticatedUser) {
+    async deleteUser(username, authenticatedUser, escapeControl = false) {
         let output = this.getDefaultOutput();
 
         username = username.trim();
@@ -53,10 +62,15 @@ module.exports = class UserController extends Controller {
             return output;
         }
 
-        if (this.isObjectVoid(authenticatedUser) || (!authenticatedUser.isAdmin && authenticatedUser.username !== username)) {
-            output['code'] = 403;
-            output['msg'] = 'Forbidden.';
-            return output;
+
+        let channelRoleController = new ChannelRolesController(new ChannelRolesModel());
+
+        if(escapeControl === false){
+            if (this.isObjectVoid(authenticatedUser) || (!authenticatedUser.isAdmin && authenticatedUser.username !== username)) {
+                output['code'] = 403;
+                output['msg'] = 'Forbidden.';
+                return output;
+            }
         }
 
         if (await this._model.userExists(username) === false) {
@@ -65,6 +79,26 @@ module.exports = class UserController extends Controller {
             output['msg'] = 'User not found.';
             return output;
         }
+
+        //Before deleting quote information we should delete all channel relationship.
+        let roleCtrlOut = await channelRoleController.deleteUserRole(username, authenticatedUser);
+
+        if(roleCtrlOut['code'] !== 200){
+            //Errors!
+            output['code'] = 500;
+            output['sub_code'] = 2;
+            output['msg'] = 'Internal server error.';
+        }
+
+        let quoteController = new QuoteController(new QuoteModel())
+        let deleteQuotaResult = await quoteController.deleteQuote(username);
+        if(deleteQuotaResult['code'] !== 200){
+            //Errors!
+            output['code'] = 500;
+            output['sub_code'] = 1;
+            output['msg'] = 'Internal server error.';
+        }
+
 
         //Let's delete the user!
         if (await this._model.deleteUser(username) === false) {
@@ -85,6 +119,8 @@ module.exports = class UserController extends Controller {
      */
     async createUser(userObj, authenticatedUser) {
         let output = this.getDefaultOutput();
+        let quoteController = new QuoteController(new QuoteModel())
+
         let ctrl_response = this.controlUser(userObj);
         if (ctrl_response !== 0) {
             output['code'] = 400;
@@ -114,6 +150,8 @@ module.exports = class UserController extends Controller {
 
         //Salt! - A lot of SALT!!!
         userObj.psw_shadow = await this.crypt(userObj.psw_shadow);
+        userObj.vip = false;
+        userObj.locked = false;
 
         let databaseResponse = await this._model.createUser(userObj);
         if (databaseResponse)
@@ -121,6 +159,15 @@ module.exports = class UserController extends Controller {
         else {
             output['code'] = 500;
             output['msg'] = 'Error inserting into DB.';
+            return  output;
+        }
+
+        let quoteCtrl = await quoteController.createQuote(userObj.username);
+        if(quoteCtrl.code !== 200){
+            //if we are in this case we should revert all and throw an error
+            output['code'] = 500;
+            output['msg'] = 'Warning! Cannot create associate quota. Operation failed';
+            await this.deleteUser(userObj.username, null, true);
         }
 
         return output;
@@ -188,6 +235,9 @@ module.exports = class UserController extends Controller {
 
 
         newUser.registration_timestamp = oldUserObj.registration_timestamp;
+        newUser.vip = oldUserObj.vip
+        newUser.locked = oldUserObj.locked;
+
         if(newUser.psw_shadow !== '') //if password isn't set, save the old password
             newUser.psw_shadow = await this.crypt(newUser.psw_shadow);
         else //Password set, save new in the database.
@@ -227,14 +277,9 @@ module.exports = class UserController extends Controller {
         if (this.isEmail(email) === false)
             return -2;
 
-        if(userObj.isUser !== true && userObj.isUser !== false)
-            return -3;
-
-        if(userObj.isSmm !== true && userObj.isSmm !== false)
-            return -3;
-
-        if(userObj.isAdmin !== true && userObj.isAdmin !== false)
-            return -3;
+        if(userObj.isUser !== true && userObj.isUser !== false) return -3;
+        if(userObj.isSmm !== true && userObj.isSmm !== false) return -3;
+        if(userObj.isAdmin !== true && userObj.isAdmin !== false) return -3;
 
         userObj.username = username;
         userObj.psw_shadow = password;
@@ -302,4 +347,295 @@ module.exports = class UserController extends Controller {
     }
 
 
+    /**
+     * @param {string} username
+     * @param {UserDto} authUser
+     * @return {Promise<{msg: string, code: number, sub_code: number,content: {}}>}
+     */
+    async toggleLock(username, authUser){
+        let output = this.getDefaultOutput();
+
+        let userExists = await this._model.userExists(username);
+        if (userExists !== true) {
+            output['code'] = 404;
+            output['msg'] = 'Not found.';
+            return output;
+        }
+
+        let userDto = await this._model.getUser(username);
+
+        if (this.isObjectVoid(authUser) === true) {
+            output['code'] = 403;
+            output['msg'] = 'User not authenticated';
+            return output;
+        }
+
+        if (!authUser.isAdmin) {
+            output['code'] = 401;
+            output['msg'] = 'Not allowed for non-moderators.';
+            return output;
+        }
+
+        let newLock = userDto.locked;
+        newLock = !newLock;
+        let result = await this._model.changeUserLock(userDto, newLock);
+        if (result === false) {
+            output['code'] = 500;
+            output['msg'] = 'Internal server error.';
+            return output;
+        }
+        return output;
+    }
+
+    /**
+     *Given an username enable or disable his vip status
+     * @param username {String}
+     * @param authenticatedUser {{}|UserDto}
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async toggleVip(username, authenticatedUser){
+        let output = this.getDefaultOutput();
+
+        if(!(await this._model.userExists(username))){
+            output['code'] = 404;
+            output['msg'] = 'User not found.';
+            return output;
+        }
+
+        if (this.isObjectVoid(authenticatedUser) === true) {
+            output['code'] = 403;
+            output['msg'] = 'User not authenticated';
+            return output;
+        }
+
+        let userObj = await this._model.getUser(username);
+        let vipCtrl = new VipController(new VipModel())
+        let newVIPStatus = !userObj.vip;
+        if(newVIPStatus === true){
+            //create the VIP entity
+            let res = await vipCtrl.createVip(username);
+            if(res['code'] !== 200)
+                return res;
+        } else {
+            //delete the VIP entity
+            let res = await vipCtrl.deleteVip(username);
+            if(res['code'] !== 200)
+                return res;
+        }
+        //switch the toggle
+        let result = this._model.changeVipStatus(userObj, newVIPStatus);
+        if(result === false){
+            output['code'] = 500;
+            output['msg'] = 'Internal server error.';
+            return output;
+        }
+        //output['content'] =
+        return output;
+    }
+
+    /**
+     * Enable/Disable the smm option
+     * @param authenticatedUser {{}|UserDto}
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async toggleSmm(authenticatedUser){
+        let output = this.getDefaultOutput();
+        let username = authenticatedUser.username;
+
+        if( !(await this._model.userExists(username)) ){
+            output['code'] = 404;
+            output['msg'] = 'User not found.';
+            return output;
+        }
+
+        if (this.isObjectVoid(authenticatedUser) === true) {
+            output['code'] = 403;
+            output['msg'] = 'User not authenticated';
+            return output;
+        }
+
+        //check if the user is Vip
+        let isVip = authenticatedUser.vip;
+        if(isVip === false){
+            output['code'] = 412
+            output['msg'] = "Precondition Failed, user is not a VIP"
+            return output;
+        }
+
+        let userObj = await this._model.getUser(username);
+        let newSmmStatus = !userObj.isSmm;
+        let vipCtrl = new VipController(new VipModel());
+        if(!newSmmStatus) {
+            //user is NO longer SMM, clear the linked users list
+            let clearLinkedUsers = vipCtrl.disableSmm(username);
+            if(clearLinkedUsers['code'] === 500){
+                return clearLinkedUsers;
+            }
+        }
+
+        //toggle isSmm
+        let res = this._model.changeSmmStatus(userObj,newSmmStatus);
+        if(res === false){
+            output['code'] = 500;
+            output['msg'] = 'Internal server error.';
+        }
+        return output;
+    }
+
+    /**
+     *
+     * @param SmmUsername {String}
+     * @param authenticatedUser {{}|UserDto}
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async pickSmm(SmmUsername, authenticatedUser) {
+        let output = this.getDefaultOutput();
+
+        //check authentication
+        if (this.isObjectVoid(authenticatedUser) === true) {
+            output['code'] = 403;
+            output['msg'] = 'User not authenticated';
+            return output;
+        }
+
+        //check if vip exists
+        let username = authenticatedUser['username'];
+        let vipCtrl = new VipController(new VipModel());
+        let vipObj = await vipCtrl.getVip(username);
+        if(vipObj['code'] !== 200){
+            output['code'] = 412
+            output['msg'] = "Precondition Failed, user is not a VIP"
+            return output;
+        }
+
+        //check if vip has already a smm
+        if (vipObj.content['linkedSmm'] !== ""){
+            output['code'] = 412
+            output['msg'] = "Precondition Failed, user has already a smm"
+            return output;
+        }
+
+        //check the user is not a smm
+        if(vipObj['content'].isSmm === true){
+            output['code'] = 412
+            output['msg'] = "Precondition Failed, user is a Smm"
+            return output;
+        }
+
+        //check the Smm is a Vip
+        let SmmObj = await vipCtrl.getVip(SmmUsername);
+        if(SmmObj['code'] !== 200){
+            output['code'] = 412
+            output['msg'] = "Precondition Failed, Smm is not a VIP"
+            return output;
+        }
+
+        //TODO: check if the Smm has more than five linked users
+        let vipDto = new VipDto(vipObj.content);
+        let smmDto = new VipDto(SmmObj.content);
+
+        let res = vipCtrl.pickSmm(vipDto, smmDto);
+
+        if(res['code'] !== 200){
+            return res;
+        }
+        return output;
+    }
+
+    /**
+     * @param authenticatedUser {{}|UserDto}
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async removeSmm(authenticatedUser){
+        let output = this.getDefaultOutput();
+
+        //check authentication
+        if (this.isObjectVoid(authenticatedUser) === true) {
+            output['code'] = 403;
+            output['msg'] = 'User not authenticated';
+            return output;
+        }
+
+        //check if vip exists
+        let username = authenticatedUser['username'];
+        let vipCtrl = new VipController(new VipModel());
+        let vipObj = await vipCtrl.getVip(username);
+        if(vipObj['code'] !== 200){
+            output['code'] = 412
+            output['msg'] = "Precondition Failed, user is not a VIP"
+            return output;
+        }
+
+        let vipResRemoved =  await vipCtrl.removeSmm(username);
+        if(vipResRemoved['code'] !== 200){
+            return vipResRemoved;
+        }
+        return output;
+    }
+
+    /**
+     *
+     * @param username {String}
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async getSmm(username){
+        username = username.trim().toLowerCase();
+        let vipCtrl = new VipController(new VipModel());
+        let vipExists = await vipCtrl.getVip(username);
+
+        if(vipExists['code'] !== 200)
+            return vipExists;
+
+        let output = this.getDefaultOutput();
+        output['content'] = vipExists['content'].linkedSmm;
+        return output;
+    }
+
+    /**
+     *
+     * @param username {String}
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async getLinkedUsers(username){
+        username = username.trim().toLowerCase();
+        let vipCtrl = new VipController(new VipModel());
+        let smmExists = await vipCtrl.getVip(username);
+
+        if(smmExists['code']!==200)
+            return smmExists;
+
+        let output = this.getDefaultOutput();
+        let isSmm = await this.getUser(username);
+        if(isSmm['content'].isSmm === false){
+            output['code'] = 412
+            output['msg'] = 'User is not a Smm'
+            return output
+        }
+        output['content'] = smmExists['content'].linkedUsers;
+        return output;
+    }
 }
+
+
+/*
+* Problemini:
+* quando un utente viene eliminato bisogna controllare che sia Vip e nel caso
+* rimuovere tutte le relazioni che aveva coe Smm-Vip
+*
+*
+* stessa cosa per quando un utente non diventa piu' vip
+*
+*
+* -----> un utente non puo' eliminare il proprio profilo se e' vip, deve fare il toggle
+* e poi in seguito pue' eliminare il profilo
+*
+* le relazioni sono associazioni di nomi e non di entita'
+*
+* chiunque puo' vedere chi sono gli smm e chi sono i linkati ma per ora chissenefotte
+* */
+
+/**
+ * TODO: get di tutti gli account linkati
+ * TODO: store di informazioni importati solo per i vip user???
+ *
+ */

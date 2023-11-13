@@ -1,50 +1,57 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+//import { Navigate } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
-import { NavLink } from "react-router-dom";
-import "../LoginForm.css";
 
-//import { response } from "../../../drivers/views/viewAdminDriver";
-//import "../LoginForm.css";
+import { toast, ToastContainer } from "react-toastify";
 
-//TODO: implementa il bottone per chi non si vuole autenticare
-//radio button: does one have to be clicked or not?
-//do we want to put some constraints on the password or not?
+import "../css/LoginForm.css";
+import "react-toastify/dist/ReactToastify.css";
 
 function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  function handleUsernameChange(event) {
-    setUsername(event.target.value);
-  }
-
-  function handlePasswordChange(event) {
-    setPassword(event.target.value);
-  }
+  const notify = () =>
+    toast.error("Errore di autenticazione. Riprovare", {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
 
   const handleLogin = () => {
-    //navigate('/home'); This code is dangerous cause after using it the browser can stop the execution of the code
-    //send a POST to driver
-    //const data = { nome: username, password: password }; //nope. According to Swagger specifics, the username is sent in path, with the requested role.
-    const data = { password: password }; //nope. According to Swagger specifics, the username is sent in path, with the requested role.
-    //URI: where I want ot send the POST: viewDriver
-    //@romanellas comment. No u should send post to authDriver
-    let uri = `${ReactConfig.base_url_requests}/auth/${username}/0`;
-    console.log(uri);
-    fetch(uri, {
+    //corrected with love by @romanellas
+    //URI: where I want ot send the POST
+    //according to Swagger specifics, the username is sent in path, with the requested role.
+
+    const data = { password: password };
+    const uri = `${ReactConfig.base_url_requests}/auth/${username}/0`;
+    const options = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
       },
       body: JSON.stringify(data),
-    })
+    };
+
+    fetch(uri, options)
       .then((response) => {
         if (response.ok) {
-          navigate(`home`);
+          //let user = response.json();
+          //console.log(user);
+          //navigate(`/channels?username=${username}`);
+          navigate(`/channels`, { state: { username } });
+
+          //<Navigate to="/channels" stauser;
         } else {
+          notify();
           console.error("Authentication failed", response.statusText);
         }
       })
@@ -63,7 +70,10 @@ function LoginForm() {
               Log in to &#129413;
             </h1>
             <div className="form-group row p-2 mb-3">
-              <label for="inputUsername" className="form-label cool-font-small">
+              <label
+                htmlFor="inputUsername"
+                className="form-label cool-font-small"
+              >
                 Username
               </label>
               <input
@@ -72,13 +82,14 @@ function LoginForm() {
                 id="inputUsername"
                 value={username}
                 placeholder="username"
-                onChange={handleUsernameChange}
+                autoComplete="on"
+                onChange={(e) => setUsername(e.target.value)}
               />
             </div>
 
             <div className="form-group row p-2 mb-4">
               <label
-                for="inputPassword5"
+                htmlFor="inputPassword5"
                 className="form-label cool-font-small"
               >
                 Password
@@ -90,7 +101,8 @@ function LoginForm() {
                 aria-describedby="passwordHelpBlock"
                 placeholder="password"
                 value={password}
-                onChange={handlePasswordChange}
+                autoComplete="on"
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
 
@@ -100,6 +112,7 @@ function LoginForm() {
                 type="button"
                 onClick={handleLogin}
               >
+                <ToastContainer />
                 LOGIN
               </button>
             </div>
@@ -109,17 +122,19 @@ function LoginForm() {
                 <NavLink
                   style={{ color: "#072f38" }}
                   className="cool-font-small"
-                  to={ReactConfig.pathFunction("/home/registration")}
+                  to={ReactConfig.pathFunction("/registration")}
                 >
-                  New Here
+                  New Here ?
                 </NavLink>
               </div>
+
               <div className="col-12 mb-5">
                 <NavLink
                   style={{ color: "#072f38" }}
                   className="cool-font-small"
+                  to={ReactConfig.pathFunction("/home")}
                 >
-                 Skip the log in
+                  Skip the log in !
                 </NavLink>
               </div>
             </div>

@@ -1,23 +1,47 @@
 import React from "react";
-import "../App.css";
+import "../css/App.css";
 
 function Reactions() {
+  function love() {}
+  function like() {}
+  function doNotLike() {}
+  function hate() {}
+
+  //TODO: implement ON CLICK
+  /*
+  <button id="bottone3" className="my-blu  bottoni_omologati m-1" onCLik={boh}>
+          😑
+  </button> 
+  */
   return (
-    <div>
-      <div class="card-footer d-flex justify-content-center">
-        <button id="bottone1" class=" my-blu  bottoni-omologati">
+    <div className="mt-2">
+      <div className="card-footer d-flex justify-content-center ">
+        <button
+          id="bottone1"
+          className=" my-blu  bottoni_omologati m-1"
+          onCLik={love}
+        >
           😍
         </button>
-        <button id="bottone2" class=" my-blu  bottoni-omologati">
+        <button
+          id="bottone2"
+          className=" my-blu  bottoni_omologati m-1"
+          onCLik={like}
+        >
           🙂
         </button>
-        <button id="bottone3" class="my-blu  bottoni-omologati">
-          😑
-        </button>
-        <button id="bottone4" class="my-blu bottoni-omologati">
+        <button
+          id="bottone4"
+          className="my-blu bottoni_omologati m-1"
+          onCLik={doNotLike}
+        >
           ☹️
         </button>
-        <button id="bottone5" class="my-blu bottoni-omologati">
+        <button
+          id="bottone5"
+          className="my-blu bottoni_omologati m-1"
+          onCLik={hate}
+        >
           😡
         </button>
       </div>

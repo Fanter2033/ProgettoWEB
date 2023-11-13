@@ -1,21 +1,34 @@
 import React from "react";
-import {Routes, Route} from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import ReactConfig from "./config/ReactConfig";
 
 import LoginForm from "./pages/LoginForm";
-import HomeRoutes from "./pages/HomeRoutes";
+import Register from "./pages/Register";
+import Channels from "./pages/Channels";
 import Home from "./pages/Home";
+import About from "./pages/About";
+import HomeRoutes from "./pages/HomeRoutes";
 import NotFound from "./pages/NotFound";
 
+//Routes without <Navbar/>
 function App() {
-
   return (
     <div className="App">
       <Routes>
-        <Route path={ReactConfig.pathFunction('/')} element={<LoginForm />} />
-        <Route path={ReactConfig.pathFunction('/home')} element={<Home />} />
-        <Route path={ReactConfig.pathFunction('/home/*')} element={<HomeRoutes />} />
-        <Route path={ReactConfig.pathFunction('*')} element={<NotFound />} />
+        <Route path={ReactConfig.pathFunction("/")} element={<LoginForm />} />
+
+        <Route
+          path={ReactConfig.pathFunction("/registration")}
+          element={<Register />}
+        />
+        <Route
+          path={ReactConfig.pathFunction("/channels")}
+          element={<Channels />}
+        />
+        <Route path={ReactConfig.pathFunction("/home")} element={<Home />} />
+        <Route path={ReactConfig.pathFunction("/about")} element={<About />} />
+        <Route path={ReactConfig.pathFunction("/*")} element={<HomeRoutes />} />
+        <Route path={ReactConfig.pathFunction("*")} element={<NotFound />} />
       </Routes>
     </div>
   );
