@@ -1,5 +1,6 @@
 const Model = require("./Model");
 const SquealIrSchema = require("../entities/schemas/SquealIrSchema");
+const SquealIrDto = require("../entities/dtos/SquealIrDto");
 module.exports = class SquealIrModel extends Model {
     constructor() {
         super();
@@ -37,6 +38,35 @@ module.exports = class SquealIrModel extends Model {
         }
     }
 
+    /**
+     * @param {SquealIrDto} dto
+     * @return {Promise<SquealIrDto>}
+     */
+    async getCurrentAssoc(dto){
+        await  this.checkMongoose("squeal_impression_reactions", SquealIrSchema);
+        let filter = this.mongo_escape(dto.getDocument());
+        if(typeof filter.reaction !== 'undefined')
+            delete filter.reaction;
+        try {
+            let result = await this.entityMongooseModel.find(filter);
+            return new SquealIrDto(result[0]._doc);
+        } catch (ignored){
+            return {};
+        }
+    }
+
+    async deleteCurrentAssoc(dto){
+        await  this.checkMongoose("squeal_impression_reactions", SquealIrSchema);
+        let filter = this.mongo_escape(dto.getDocument());
+        if(typeof filter.reaction !== 'undefined')
+            delete filter.reaction;
+        try {
+            let result = await this.entityMongooseModel.deleteMany(filter);
+            return true;
+        } catch (ignored){
+            return false;
+        }
+    }
 
     /**
      * @param {SquealIrDto} dto
@@ -87,6 +117,27 @@ module.exports = class SquealIrModel extends Model {
             return true;
         } catch (ignored) {
             return false;
+        }
+    }
+
+
+    /**
+     * @param {number} squeal_id
+     * @return {Promise<number>}
+     * Given a squeal id returns the total impression assoc to it
+     */
+    async countImpression(squeal_id){
+        await  this.checkMongoose("squeal_impression_reactions", SquealIrSchema);
+        if(isNaN(squeal_id))
+            return -1;
+
+        let filter = {squeal_id: `${squeal_id}`};
+        filter = this.mongo_escape(filter);
+        try {
+            let result = await this.entityMongooseModel.count(filter);
+            return result;
+        } catch (ignored) {
+            return -1;
         }
     }
 

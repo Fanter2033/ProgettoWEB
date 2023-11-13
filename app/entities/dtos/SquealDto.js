@@ -2,9 +2,7 @@ module.exports = class SquealDto {
 
     #id;
     #date;
-    #destinations;
     #sender;
-    #reactions;
     #message_type;
     #positive_value;
     #negative_value;
@@ -16,9 +14,7 @@ module.exports = class SquealDto {
         if (documentFromMongoose === null) {
             this.#id = null;
             this.#date = null;
-            this.#destinations = null;
             this.#sender = null;
-            this.#reactions = null;
             this.#message_type = null;
             this.#positive_value = null;
             this.#negative_value = null;
@@ -29,7 +25,6 @@ module.exports = class SquealDto {
             this.#id = documentFromMongoose._id;
             this.#date = documentFromMongoose.date;
             this.#sender = documentFromMongoose.sender;
-            this.#reactions = documentFromMongoose.reactions;
             this.#message_type = documentFromMongoose.message_type;
             this.#positive_value = documentFromMongoose.positive_value;
             this.#negative_value = documentFromMongoose.negative_value;
@@ -44,7 +39,6 @@ module.exports = class SquealDto {
             _id: this.#id,
             date: this.#date,
             sender: this.#sender,
-            reactions: this.#reactions,
             message_type: this.#message_type,
             positive_value: this.#positive_value,
             negative_value: this.#negative_value,
@@ -70,28 +64,12 @@ module.exports = class SquealDto {
         this.#date = value;
     }
 
-    get destinations() {
-        return this.#destinations;
-    }
-
-    set destinations(value) {
-        this.#destinations = value;
-    }
-
     get sender() {
         return this.#sender;
     }
 
     set sender(value) {
         this.#sender = value;
-    }
-
-    get reactions() {
-        return this.#reactions;
-    }
-
-    set reactions(value) {
-        this.#reactions = value;
     }
 
     get message_type() {

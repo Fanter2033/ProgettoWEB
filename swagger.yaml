@@ -859,9 +859,11 @@ definitions:
         type: string
         enum:
           - MESSAGE_TEXT
-          - IMAGE_URL
+          - IMAGE
           - VIDEO_URL
           - POSITION
+          - TEXT_AUTO
+          - POSITION_AUTO
       message_value:
         type: string
         description: Message value, how this field is used depends on message_type value.

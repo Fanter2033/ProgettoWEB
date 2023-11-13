@@ -1,6 +1,7 @@
 const Model = require("./Model");
 const Squeal = require("../entities/schemas/SquealSchema");
-const SquealDto = require("../entities/dtos/SquelDto");
+const SquealDto = require("../entities/dtos/SquealDto");
+const SquealIrSchema = require("../entities/schemas/SquealIrSchema");
 
 module.exports = class SquealModel extends Model {
     constructor(CollectionName) {
@@ -99,6 +100,28 @@ module.exports = class SquealModel extends Model {
         let update = {sender: `${username}`}
         try {
             await this.entityMongooseModel.deleteMany(filter, update);
+            return true;
+        } catch (ignored) {
+            return false;
+        }
+    }
+
+    /**
+     * @param {number} squeal_id
+     * @param {number} critical_mass
+     * @return {Promise<boolean>}
+     */
+    async updateCriticalMass(squeal_id, critical_mass){
+        await this.checkMongoose("Squeal", Squeal);
+        if(isNaN(squeal_id) || isNaN(critical_mass))
+            return false;
+
+        let filter = {_id: squeal_id};
+        filter = this.mongo_escape(filter);
+        let update = {critical_mass: critical_mass};
+        update = this.mongo_escape(update);
+        try {
+            let result = await this.entityMongooseModel.updateOne(filter, update);
             return true;
         } catch (ignored) {
             return false;

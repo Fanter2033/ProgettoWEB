@@ -3,32 +3,32 @@ const Controller = require("./Controller");
 const QuoteDto = require("../entities/dtos/QuoteDto");
 
 module.exports = class QuoteController extends Controller {
-  constructor(model) {
-    super();
-    this._model = model;
-  }
-
-  /**
-   * @param {string} username
-   * @return {Promise<{msg: string, code: number, content: {}}>}
-   * Given an username returns the quota in standard controller output.
-   */
-  async getQuote(username) {
-    let out = this.getDefaultOutput();
-    let quote = await this._model.getQuote(username);
-    if (!(quote instanceof QuoteDto)) {
-      out["code"] = 404;
-      out["msg"] = "Not found";
-      return out;
+    constructor(model) {
+        super();
+        this._model = model;
     }
-    out["content"] = quote.getDocument();
-    return out;
-  }
+
+    /**
+     * @param {string} username
+     * @return {Promise<{msg: string, code: number, content: {}}>}
+     * Given an username returns the quota in standard controller output.
+     */
+    async getQuote(username) {
+        let out = this.getDefaultOutput();
+        let quote = await this._model.getQuote(username);
+        if (!(quote instanceof QuoteDto)) {
+            out["code"] = 404;
+            out["msg"] = "Not found";
+            return out;
+        }
+        out["content"] = quote.getDocument();
+        return out;
+    }
 
     /**
      @param username {string}
      @return Promise<{msg: string, code: number, content: {}}>
-      precondition: user exist, already checked in createUser
+     precondition: user exist, already checked in createUser
      */
     async createQuote(username) {
         let output = this.getDefaultOutput();
@@ -73,31 +73,32 @@ module.exports = class QuoteController extends Controller {
         return output;
     }
 
-  /**
-   * @param {UserDto} userAuth
-   * @param {string} username
-   * @param {number} percentage
-   * @return {Promise<{msg: string, code: number, content: {}}>}
-   */
-  async applyPercentageQuote(userAuth, username, percentage) {
-    let output = this.getDefaultOutput();
-    if (this.isObjectVoid(userAuth)) {
-      output["code"] = 403;
-      output["msg"] = "Forbidden";
-      return output;
-    }
+    /**
+     * @param {UserDto} userAuth
+     * @param {string} username
+     * @param {number} percentage
+     * @param {boolean} escapeControl
+     * @return {Promise<{msg: string, code: number, content: {}}>}
+     */
+    async applyPercentageQuote(userAuth, username, percentage, escapeControl = false) {
+        let output = this.getDefaultOutput();
+        if (escapeControl === false && this.isObjectVoid(userAuth)) {
+            output["code"] = 403;
+            output["msg"] = "Forbidden";
+            return output;
+        }
 
-        if (userAuth.isAdmin === false) {
+        if (escapeControl === false && userAuth.isAdmin === false) {
             output["code"] = 401;
             output["msg"] = "Sorry you are not an admin";
             return output;
         }
 
-    if (percentage < 0 || percentage > 10000) {
-      output["code"] = 400;
-      output["msg"] = "Percentage noi in [0, 10000] range. Bad request.";
-      return output;
-    }
+        if (percentage < 0 || percentage > 10000) {
+            output["code"] = 400;
+            output["msg"] = "Percentage noi in [0, 10000] range. Bad request.";
+            return output;
+        }
 
         let userQuote = await this.getQuote(username);
         if (userQuote["code"] === 404) {
@@ -107,15 +108,15 @@ module.exports = class QuoteController extends Controller {
         } else if (userQuote["code"] !== 200) {
             output["code"] = 500;
             output["msg"] = "Internal server error";
-      return output;
-    }
-    //Quote found! :D
+            return output;
+        }
+        //Quote found! :D
 
-    let quoteDto = new QuoteDto(userQuote.content);
-    quoteDto.limit_daily = Math.floor(
-      quoteDto.limit_daily * (percentage / 100)
+        let quoteDto = new QuoteDto(userQuote.content);
+        quoteDto.limit_daily = Math.floor(
+            quoteDto.limit_daily * (percentage / 100)
         );
-    quoteDto.limit_weekly = Math.floor(
+        quoteDto.limit_weekly = Math.floor(
             quoteDto.limit_weekly * (percentage / 100)
         );
         quoteDto.limit_monthly = Math.floor(
@@ -144,34 +145,32 @@ module.exports = class QuoteController extends Controller {
     }
 
 
+    //There are no controls because it's a system function
+    async resetQuote(userList) {
+        let today = new Date();
 
+        //modifica il campo desiderato in ciascund username
+        for (let userDto of userList) {
+            let username = userDto.username;
+            let quote = await this.getQuote(username);
+            if (quote["code"] !== 200) {
+                continue;
+            }
 
-  //There are no controls because it's a system function
-  async resetQuote(userList) {
-    let today = new Date();
-
-    //modifica il campo desiderato in ciascund username
-    for (let userDto of userList) {
-      let username = userDto.username;
-      let quote = await this.getQuote(username);
-      if (quote["code"] !== 200) {
-        continue;
-      }
-
-      let quoteDto = new QuoteDto(quote['content']);
-      quoteDto.remaining_daily = quoteDto.limit_daily;
-      //primo giorno della settimana
-      if (today.getDay() === 1) {
-        quoteDto.remaining_weekly = quoteDto.limit_weekly;
-      }
-      //primo giorno del mese
-      if (today.getDate() === 1) {
-        quoteDto.remaining_monthly = quoteDto.limit_monthly;
-      }
-      //usiamo il model
-      await this._model.patchQuote(quoteDto);
+            let quoteDto = new QuoteDto(quote['content']);
+            quoteDto.remaining_daily = quoteDto.limit_daily;
+            //primo giorno della settimana
+            if (today.getDay() === 1) {
+                quoteDto.remaining_weekly = quoteDto.limit_weekly;
+            }
+            //primo giorno del mese
+            if (today.getDate() === 1) {
+                quoteDto.remaining_monthly = quoteDto.limit_monthly;
+            }
+            //usiamo il model
+            await this._model.patchQuote(quoteDto);
+        }
     }
-  }
 
 
     /**
@@ -191,7 +190,7 @@ module.exports = class QuoteController extends Controller {
         }
 
         let result = await this.deleteQuote(oldUsername);
-        if(result['code'] !== 200){
+        if (result['code'] !== 200) {
             output["code"] = 500;
             output["msg"] = "Internal server error. QuoteController::changeUsernameQuota - 1";
             return output;
@@ -199,7 +198,7 @@ module.exports = class QuoteController extends Controller {
 
         quota.id = newUsername;
         result = await this._model.createQuote(quota);
-        if(result === false){
+        if (result === false) {
             output['code'] = 500;
             output['msg'] = 'Internal server error QuoteController::changeUsernameQuota - 2';
         }
@@ -217,26 +216,26 @@ module.exports = class QuoteController extends Controller {
         let output = this.getDefaultOutput();
         let quoteRes = await this.getQuote(username);
 
-        if(quoteRes.code !== 200){
+        if (quoteRes.code !== 200) {
             output['code'] = 404;
             output['msg'] = 'Not found.';
             return output;
         }
         quoteRes = new QuoteDto(quoteRes.content);
 
-        if(quoteRes.remaining_daily < debitQuota){
+        if (quoteRes.remaining_daily < debitQuota) {
             output['code'] = 412;
             output['msg'] = 'Daily quote not available';
             return output;
         }
 
-        if(quoteRes.remaining_weekly < debitQuota){
+        if (quoteRes.remaining_weekly < debitQuota) {
             output['code'] = 412;
             output['msg'] = 'Weekly quote not available';
             return output;
         }
 
-        if(quoteRes.remaining_monthly < debitQuota){
+        if (quoteRes.remaining_monthly < debitQuota) {
             output['code'] = 412;
             output['msg'] = 'Monthly quote not available';
             return output;
@@ -247,7 +246,7 @@ module.exports = class QuoteController extends Controller {
         quoteRes.remaining_monthly = quoteRes.remaining_monthly - debitQuota;
 
         let response = await this._model.patchQuote(quoteRes);
-        if(response === false){
+        if (response === false) {
             output['code'] = 500;
             output['msg'] = 'Internal server error';
             return output;

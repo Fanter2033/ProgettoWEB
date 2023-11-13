@@ -1,6 +1,6 @@
 const {Schema} = require("mongoose");
 
-const message_type = ['MESSAGE_TEXT', 'IMAGE_URL', 'VIDEO_URL', 'POSITION'];
+const message_type = ['MESSAGE_TEXT', 'IMAGE', 'VIDEO_URL', 'POSITION', 'TEXT_AUTO', 'POSITION_AUTO'];
 
 module.exports = new Schema({
     _id: {type: Number, unique: true},

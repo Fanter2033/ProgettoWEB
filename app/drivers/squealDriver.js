@@ -2,7 +2,7 @@ const express = require("express");
 const squealDriver = express();
 const SquealController = require("../controllers/SquealController");
 const SquealModel = require("../models/SquealModel");
-const SquealDto = require("../entities/dtos/SquelDto");
+const SquealDto = require("../entities/dtos/SquealDto");
 const AuthController = require("../controllers/AuthController")
 const AuthModel = require("../models/AuthModel")
 

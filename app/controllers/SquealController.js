@@ -2,7 +2,7 @@ const Controller = require("./Controller");
 const QuoteController = require("./QuoteController");
 const QuoteModel = require("../models/QuoteModel");
 const QuoteDto = require("../entities/dtos/QuoteDto");
-const SquealDto = require("../entities/dtos/SquelDto");
+const SquealDto = require("../entities/dtos/SquealDto");
 const UserController = require("./UserController");
 const UserModel = require("../models/UserModel");
 const ChannelController = require("./ChannelController");
@@ -49,29 +49,35 @@ module.exports = class SquealController extends Controller {
         }
 
         let isPublic = await this.isSquealPublic(identifier);
-        if(isPublic === false && escapeAddImpression === false){
-            if(this.isAuthenticatedUser(authenticatedUser) === false){
+        if (isPublic === false && escapeAddImpression === false) {
+            if (this.isAuthenticatedUser(authenticatedUser) === false) {
                 output['code'] = 403;
                 output['msg'] = 'Login to see this content.';
                 return output;
             }
 
             let isDest = await this.#squealToUserModel.isUserDest(squeal_id, user.username);
-            if(isDest === false && authenticatedUser.username.trim() !== squeal.sender.trim() && authenticatedUser.isAdmin === false){
+            if (isDest === false && authenticatedUser.username.trim() !== squeal.sender.trim() && authenticatedUser.isAdmin === false) {
                 output['code'] = 401;
                 output['msg'] = 'Not authorized to see this content.';
                 return output;
             }
         }
 
-        if(escapeAddImpression){
+        if (escapeAddImpression) {
             output['content'] = squeal.getDocument();
             return output;
         }
 
+        //We should calculate if the squeal is popular and unpopular, because if the CM > Good reactions is still popular.
+        //Same thing for unpopular case
+        let isPopular = (squeal.critical_mass <= squeal.positive_value);
+        let isUnpopular = (squeal.critical_mass <= squeal.negative_value);
+        let isControversial = (isPopular && isUnpopular);
+
         let irDto = new SquealIrDto();
         irDto.squeal_id = identifier;
-        if(this.isAuthenticatedUser(authenticatedUser) === false){
+        if (this.isAuthenticatedUser(authenticatedUser) === false) {
             irDto.is_session_id = true;
             irDto.value = session_id;
         } else {
@@ -80,12 +86,68 @@ module.exports = class SquealController extends Controller {
         }
 
         let result = await this.#squealImpressionReactions.assocExists(irDto);
-        if(result === false){
+        if (result === false) {
             result = await this.#squealImpressionReactions.createAssocSquealUser(irDto);
-            if(result === false){
+            if (result === false) {
                 output['code'] = 500;
                 output['msg'] = 'Internal server error (1).';
                 return output;
+            }
+        }
+
+        if (isPublic === false) {
+            output['content'] = squeal.getDocument();
+            return output;
+        }
+
+        //If the squeal is public we should recalculate the critical mass for every impression
+        let total_impression = await this.#squealImpressionReactions.countImpression(squeal.id);
+        let cm = Math.floor(total_impression / (100 / autoload.config._CRITICAL_MASS_PERCENTAGE));
+
+        if (squeal.critical_mass !== cm) {
+            //Critical mass increased
+            result = await this._model.updateCriticalMass(squeal.id, cm);
+            if (result === false) {
+                output['code'] = 500;
+                output['msg'] = 'Internal server error (2).';
+                return output;
+            }
+
+            let quoteCtrl = new QuoteController(new QuoteModel());
+            //Is the squeal still popular?
+            if (isPopular && cm > squeal.positive_value && isControversial === false) {
+                //now is not popular cause cm increased
+                result = await quoteCtrl.applyPercentageQuote(authenticatedUser, squeal.sender, 100 - autoload.config._POPULAR_QUOTE_LOSS_CM_INCREASE, true);
+                if (result.code !== 200) {
+                    output['code'] = 500;
+                    output['msg'] = 'Internal server error (3).';
+                    return output;
+                }
+            } else if (isPopular && cm > squeal.positive_value && isControversial === true && cm <= squeal.negative_value) {
+                //Was popular, was controversial and now is only unpopular
+                result = await quoteCtrl.applyPercentageQuote(authenticatedUser, squeal.sender, 100 - autoload.config._UNPOPULAR_QUOTE_LOSS_PERCENTAGE, true);
+                if (result.code !== 200) {
+                    output['code'] = 500;
+                    output['msg'] = 'Internal server error (3).';
+                    return output;
+                }
+            }
+            //Is squeal still unpopular?
+            if (isUnpopular && cm > squeal.negative_value && isControversial === false) {
+                result = await quoteCtrl.applyPercentageQuote(authenticatedUser, squeal.sender, 100 + autoload.config._UNPOPULAR_QUOTE_GAIN_CM_INCREASE, true);
+                if (result.code !== 200) {
+                    output['code'] = 500;
+                    output['msg'] = 'Internal server error (4).';
+                    return output;
+                }
+            } else if (isUnpopular && cm > squeal.negative_value && isControversial === true && cm <= squeal.positive_value) {
+                //Was unpopular, was controversial, now is only popular
+                result = await quoteCtrl.applyPercentageQuote(authenticatedUser, squeal.sender, 100 + autoload.config._POPULAR_QUOTE_GAIN_PERCENTAGE, true);
+                if (result.code !== 200) {
+                    output['code'] = 500;
+                    output['msg'] = 'Internal server error (3).';
+                    return output;
+                }
             }
         }
 
@@ -98,10 +160,10 @@ module.exports = class SquealController extends Controller {
      * @param {number} squeal_id
      * @return {Promise<boolean>}
      */
-    async isSquealPublic(squeal_id){
+    async isSquealPublic(squeal_id) {
         let channelLinked = await this.#squealToChannelModel.countChannelLinked(squeal_id);
-        if(channelLinked > 0) return true;
-        return false;
+        return channelLinked > 0;
+
     }
 
     /**
@@ -140,7 +202,7 @@ module.exports = class SquealController extends Controller {
         }
         let checkResult = await this.checkDestinations(squealDto.destinations);
 
-        if (!checkResult){
+        if (!checkResult) {
             output['code'] = 404;
             output['msg'] = 'At least one destination do not exists.';
             return output;
@@ -195,30 +257,30 @@ module.exports = class SquealController extends Controller {
 
         //Adesso che ho gli id posso inserire l'associazione della quota per ogni utente.
         for (const dest of squealDto.destinations)
-            if(this.isDestUserFormat(dest)){
+            if (this.isDestUserFormat(dest)) {
                 let dto = new Squeal2UserDto();
                 let searchValue = dest.substring(1);
                 dto.squeal_id = squealDto.id;
                 dto.destination_username = searchValue;
                 let result = await this.#squealToUserModel.createAssocSquealUser(dto);
-                if(result === false) {
+                if (result === false) {
                     output['code'] = 500;
                     output['msg'] = 'Internal server error (2)';
                     return output;
                 }
-            } else if(this.isDestChannelFormat(dest)){
+            } else if (this.isDestChannelFormat(dest)) {
                 let dto = new Squeal2ChannelDto();
                 let searchValue = dest.substring(1);
                 dto.squeal_id = squealDto.id;
                 dto.channel_name = searchValue;
-                if(dest.charAt(0) === '#')
+                if (dest.charAt(0) === '#')
                     dto.channel_type = autoload.config._CHANNEL_TYPE_HASHTAG;
-                else if(dest.charAt(0) === '§' && searchValue === searchValue.toUpperCase())
+                else if (dest.charAt(0) === '§' && searchValue === searchValue.toUpperCase())
                     dto.channel_type = autoload.config._CHANNEL_TYPE_OFFICIAL;
                 else
                     dto.channel_type = autoload.config._CHANNEL_TYPE_USER;
                 let result = await this.#squealToChannelModel.createAssocSquealChannel(dto);
-                if(result === false) {
+                if (result === false) {
                     output['code'] = 500;
                     output['msg'] = 'Internal server error (4)';
                     return output;
@@ -241,15 +303,15 @@ module.exports = class SquealController extends Controller {
      * @param reaction {string}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
-    async addSquealerReaction(squeal_id, sessionId, authenticatedUser, reaction){
+    async addSquealerReaction(squeal_id, sessionId, authenticatedUser, reaction) {
         let output = this.getDefaultOutput();
         let getCtrlOut = await this.getSqueal(squeal_id, authenticatedUser, sessionId);
 
-        if(getCtrlOut.code !== 200){
+        if (getCtrlOut.code !== 200) {
             return getCtrlOut;
         }
 
-        if(this.checkReactionType(reaction) === false){
+        if (this.checkReactionType(reaction) === false) {
             output['code'] = 400;
             output['msg'] = 'Invalid reaction';
             return output;
@@ -257,7 +319,7 @@ module.exports = class SquealController extends Controller {
 
         let irDto = new SquealIrDto();
         irDto.squeal_id = squeal_id;
-        if(this.isAuthenticatedUser(authenticatedUser) === false){
+        if (this.isAuthenticatedUser(authenticatedUser) === false) {
             irDto.is_session_id = true;
             irDto.value = sessionId;
         } else {
@@ -266,27 +328,46 @@ module.exports = class SquealController extends Controller {
         }
         irDto.reactions = reaction;
 
+        let currentReaction = await this.#squealImpressionReactions.getCurrentAssoc(irDto);
+        if (currentReaction instanceof SquealIrDto) {
+            if (currentReaction.reactions === autoload.config._REACTION_LIKE || currentReaction.reactions === autoload.config._REACTION_LIKE_A_LOT) {
+                //Decrement positive value
+                let res = await this.incrementValue(squeal_id, -1);
+                if (res.code !== 200) {
+                    output['code'] = 500;
+                    output['msg'] = 'Internal server error';
+                    return output;
+                }
+            } else if (currentReaction.reactions === autoload.config._REACTION_DO_NOT_LIKE || currentReaction.reactions === autoload.config._REACTION_DISGUSTED) {
+                //Decrement negative value
+                let res = await this.incrementValue(squeal_id, -1, false);
+                if (res.code !== 200) {
+                    output['code'] = 500;
+                    output['msg'] = 'Internal server error';
+                    return output;
+                }
+            }
+        }
+
         let modelResult = await this.#squealImpressionReactions.insertReactionIntoAssoc(irDto);
-        if (modelResult === false){
+        if (modelResult === false) {
             output['code'] = 500;
             output['msg'] = 'Internal server error';
             return output;
         }
 
         let finalOut;
-        if(reaction === autoload.config._REACTION_LIKE || reaction === autoload.config._REACTION_LIKE_A_LOT){
+        if (reaction === autoload.config._REACTION_LIKE || reaction === autoload.config._REACTION_LIKE_A_LOT) {
             finalOut = await this.incrementValue(squeal_id, 1);
-        } else{
+        } else {
             finalOut = await this.incrementValue(squeal_id, 1, false);
         }
 
-        if(finalOut['code'] !== 200){
+        if (finalOut['code'] !== 200) {
             output['code'] = 500;
             output['msg'] = 'Internal server error (2)';
             return output;
         }
-
-        //TODO FARE RICALCOLO E OPERAZIONI DI VARIAZIONE QUOTA.
 
 
         return output;
@@ -299,24 +380,103 @@ module.exports = class SquealController extends Controller {
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      * THIS DO NOT EXECUTE CONTROLS. SHOULD BE IMPLEMENTED VIA ANTOHER CONTROLLER OR WITH A VARIABLE
      */
-    async incrementValue(squeal_id, amount, positiveValue = true){
+    async incrementValue(squeal_id, amount, positiveValue = true) {
         let output = this.getDefaultOutput();
 
         let squeal = await this.getSqueal(squeal_id, new UserDto(), "", true);
-        if(squeal.code !== 200){
+        if (squeal.code !== 200) {
             output['code'] = 404;
             output['msg'] = 'Not found';
             return output;
         }
         squeal = new SquealDto(squeal.content);
-        if(positiveValue)
+
+        let isPopular = (squeal.critical_mass <= squeal.positive_value && squeal.critical_mass !== 0);
+        let isUnpopular = (squeal.critical_mass <= squeal.negative_value && squeal.critical_mass !== 0);
+        let isControversial = (isPopular && isUnpopular);
+
+        if (positiveValue)
             squeal.positive_value = squeal.positive_value + amount;
         else
             squeal.negative_value = squeal.negative_value + amount;
+
         let result = await this._model.replaceSqueal(squeal, squeal_id);
-        if(result === false){
+        if (result === false) {
             output['code'] = 500;
             output['msg'] = 'Internal server error in SquealController::incrementPositiveValue';
+            return output;
+        }
+
+        result = await this.isSquealPublic(squeal_id);
+        if (result === false) return output;
+
+        let isNowPopular = (squeal.critical_mass <= squeal.positive_value && squeal.critical_mass !== 0);
+        let isNowUnpopular = (squeal.critical_mass <= squeal.negative_value && squeal.critical_mass !== 0);
+        let isNowControversial = (isNowPopular && isNowUnpopular);
+
+        //noting changed.
+        if (isControversial && isNowControversial)
+            return output;
+
+        let quoteCtrl = new QuoteController(new QuoteModel());
+
+        //Now is not controversial, restore the quota change
+        if (isControversial && isNowControversial === false) {
+            if (isNowPopular) {
+                result = await quoteCtrl.applyPercentageQuote({}, squeal.sender, 100 + autoload.config._POPULAR_QUOTE_GAIN_PERCENTAGE, true);
+                if (result.code !== 200) {
+                    output['code'] = 500;
+                    output['msg'] = 'Internal server error in SquealController::incrementPositiveValue - 3';
+                }
+                return output;
+            } else if (isNowUnpopular) {
+                result = await quoteCtrl.applyPercentageQuote({}, squeal.sender, 100 - autoload.config._UNPOPULAR_QUOTE_LOSS_PERCENTAGE, true);
+                if (result.code !== 200) {
+                    output['code'] = 500;
+                    output['msg'] = 'Internal server error in SquealController::incrementPositiveValue - 4';
+                }
+                return output;
+            }
+            //Else case does not exists in case the squeal is not popular and not unpopular
+        }
+
+        if (isControversial === false && isNowControversial === true) {
+            if (isPopular) {
+                result = await quoteCtrl.applyPercentageQuote({}, squeal.sender, 100 - autoload.config._POPULAR_QUOTE_LOSS_CM_INCREASE, true);
+                if (result.code !== 200) {
+                    output['code'] = 500;
+                    output['msg'] = 'Internal server error in SquealController::incrementPositiveValue - 5';
+                    return output;
+                }
+                return output;
+            } else {
+                //isUnpopular = true
+                result = await quoteCtrl.applyPercentageQuote({}, squeal.sender, 100 + autoload.config._UNPOPULAR_QUOTE_GAIN_CM_INCREASE, true);
+                if (result.code !== 200) {
+                    output['code'] = 500;
+                    output['msg'] = 'Internal server error in SquealController::incrementPositiveValue - 6';
+                    return output;
+                }
+                return output;
+            }
+        }
+
+        if (isPopular === false && isNowPopular === true) {
+            result = await quoteCtrl.applyPercentageQuote({}, squeal.sender, 100 + autoload.config._POPULAR_QUOTE_GAIN_PERCENTAGE, true);
+        } else if (isUnpopular === false && isNowUnpopular === true) {
+            result = await quoteCtrl.applyPercentageQuote({}, squeal.sender, 100 - autoload.config._UNPOPULAR_QUOTE_LOSS_PERCENTAGE, true);
+        }
+
+        if(result === true)
+            return output;
+
+        if ((
+                isPopular === false && isNowPopular === true ||
+                isUnpopular === false && isNowUnpopular === true
+            ) &&
+            result.code !== 200) {
+            output['code'] = 500;
+            output['msg'] = 'Internal server error in SquealController::incrementPositiveValue - 2';
             return output;
         }
 
@@ -327,25 +487,21 @@ module.exports = class SquealController extends Controller {
      * @param {string} dest
      * @return {boolean}
      */
-    isDestUserFormat(dest){
+    isDestUserFormat(dest) {
         let classChannelChar = dest.charAt(0);
-        if(classChannelChar === '@')
-            return true;
-        return false;
+        return classChannelChar === '@';
+
     }
 
     /**
      * @param {string} dest
      * @return {boolean}
      */
-    isDestChannelFormat(dest){
+    isDestChannelFormat(dest) {
         let classChannelChar = dest.charAt(0);
-        if(classChannelChar === '§' || classChannelChar === '#')
-            return true;
-        return false;
+        return classChannelChar === '§' || classChannelChar === '#';
+
     }
-
-
 
 
     /**
@@ -398,44 +554,13 @@ module.exports = class SquealController extends Controller {
         return true;
     }
 
-    /*
-    penso che in questa funzione bisognera' implementare anche
-    un controllo per vedere se uno squeal diventa popolare o meno
-    si puo' fare una funzione esterna "becomePopular" (e becomeUnpopular)
-    che modifica la quota dell'utente e inserisce il post nella sezione opportuna
-     */
-    async reactSquel(identifier, authenticatedUser, reaction) {
-        let output = this.getDefaultOutput();
-
-        //check the user
-        if (this.isObjectVoid(authenticatedUser)) {
-            output['code'] = 403;
-            output['msg'] = 'Please Login, cugliun'
-            return output;
-        }
-
-        let squealPromise = this.getSqueal(identifier);
-        //check the squeal
-        if (squealPromise['code'] !== 200) {
-            output['code'] = 404;
-            output['msg'] = 'Squeal not found';
-            return output;
-        }
-
-        //check the reaction type
-        if (!this.checkReactionType(reaction)) {
-            output['code'] = 400;
-            output['msg'] = 'Invalid type of reaction. Bad request'
-            return output;
-        }
-
-    }
-
     checkSquealType(type) {
         return type === 'MESSAGE_TEXT' ||
             type === 'IMAGE_URL' ||
             type === 'VIDEO_URL' ||
-            type === 'POSITION';
+            type === 'POSITION' ||
+            type === 'TEXT_AUTO' ||
+            type === 'POSITION_AUTO';
     }
 
     checkReactionType(type) {
