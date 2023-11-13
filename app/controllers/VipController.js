@@ -74,8 +74,9 @@ module.exports = class VipController extends Controller {
      */
     async disableSmm(username){
         let output = this.getDefaultOutput();
-        let vipObj = await this. getVip(username);
-        let res = await this._model.disableSmm(vipObj);
+        let vipObj = await this.getVip(username);
+        let vipDto = new VipDto(vipObj['content'])
+        let res = await this._model.disableSmm(vipDto);
         if(res === false){
             output['code'] = 500;
             output['msg'] = 'Server error in deleting vip'
@@ -108,13 +109,23 @@ module.exports = class VipController extends Controller {
     async removeSmm(username){
         let output = this.getDefaultOutput();
 
-        let vipDto = new VipDto(await this.getVip(username));
+        let vipObj_res = await this.getVip(username);
+        let vipDto = new VipDto(vipObj_res['content']);
 
-        let smmDto = new VipDto(await this.getVip(vipDto.linkedSmm));
+        let smmObj_res = await this.getVip(vipDto.linkedSmm);
+        let smmDto = new VipDto(smmObj_res['content']);
+
+        if(vipObj_res['code'] !== 200 && smmObj_res['code'] !== 200){
+            output['code'] = 404;
+            output['msg'] = 'User/Smm not found';
+            return output;
+        }
 
         let res = this._model.removeSmm(vipDto, smmDto);
-
-
+        if(res === false){
+            output['code'] = 500;
+            output['msg'] = 'Server error in removing smm'
+        }
         return output;
     }
 }

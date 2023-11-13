@@ -13,7 +13,7 @@ module.exports = class VipModel extends Model {
      */
     async getVip(username){
         await this.checkMongoose("VipUser", VipUser);
-        let filter = { user: `${username}`};
+        let filter = { "user": `${username}`};
         let vipFound = await this.entityMongooseModel.find(filter);
         if(vipFound.length === 1)
             return new VipDto(vipFound[0]._doc);
@@ -56,17 +56,17 @@ module.exports = class VipModel extends Model {
 
     /**
      *
-     * @param vipObj {VipDto}
+     * @param vipDto {VipDto}
      * @returns {Promise<boolean>}
      */
-    async disableSmm(vipObj){
+    async disableSmm(vipDto){
         await this.checkMongoose("VipUser", VipUser);
-        let filter = { user: `${vipObj.user}`};
+        let filter = { user: `${vipDto.user}`};
         filter = this.mongo_escape(filter);
-        vipObj.linkedUsers = [];
-        vipObj = this.mongo_escape(vipObj.getDocument());
+        vipDto.linkedUsers = [];
+        vipDto = this.mongo_escape(vipDto.getDocument());
         try{
-            await this.entityMongooseModel.updateOne(filter, vipObj);
+            await this.entityMongooseModel.updateOne(filter, vipDto);
         } catch (ignored){
             return false;
         }
@@ -93,7 +93,7 @@ module.exports = class VipModel extends Model {
         try{
             await this.entityMongooseModel.updateOne(filter, vipDto);
             await this.entityMongooseModel.updateOne (SmmFilter,
-                { $push: {linkedUsers: `${vipDto.user}`}}, //??????
+                { $push: {linkedUsers: `${vipDto.user}`}}, //apparentemente funziona
         )
         } catch (ignored) {
             return false;
@@ -110,19 +110,20 @@ module.exports = class VipModel extends Model {
      */
     async removeSmm(vipDto, smmDto){
         await this.checkMongoose("VipUser", VipUser);
-        vipDto['linkedSmm'] = " ";
+        vipDto['linkedSmm'] = "";
         let filter = {"user": `${vipDto['user']}`};
 
         filter = this.mongo_escape(filter);
         vipDto = this.mongo_escape(vipDto.getDocument());
 
-        let SmmFilter = {"user": `${smmDto['user']}}`}
+        let SmmFilter = {"user": `${smmDto['user']}`}
         SmmFilter = this.mongo_escape(SmmFilter);
-
-        //TODO: prendersi la lista degli utenti, levare quello interessato e aggiornare il db (problema np completo)
 
         try {
             await this.entityMongooseModel.updateOne(filter, vipDto);
+            await this.entityMongooseModel.updateOne(SmmFilter,
+                { $pull:{ linkedUsers: `${vipDto.user}` }}
+            );
         } catch (ignored) {
             return false;
         }

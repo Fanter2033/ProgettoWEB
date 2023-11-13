@@ -143,7 +143,6 @@ userDriver.patch("/:username/toggle/vip", async function(req, res){
 });
 
 userDriver.patch("/:username/toggle/smm", async function(req, res){
-    let username = req.params['username'];
     let ctrl = await controller.toggleSmm(await authController.getAuthenticatedUser(req));
     if(ctrl['code'] === 200)
         res.status(ctrl['code']).send(ctrl['content']);
@@ -151,6 +150,28 @@ userDriver.patch("/:username/toggle/smm", async function(req, res){
         res.status(ctrl['code']).send(ctrl);
 });
 
+userDriver.patch("/:username/pick-smm/:smm", async  function(req, res){
+    let ctrl = await controller.pickSmm(
+        req.params['smm'],
+        await authController.getAuthenticatedUser(req));
+
+    if(ctrl['code'] === 200)
+        res.status(ctrl['code']).send(ctrl['content']);
+    else
+        res.status(ctrl['code']).send(ctrl);
+
+})
+
+userDriver.patch("/:username/remove-smm", async function(req, res){
+  let ctrl = await controller.removeSmm(
+      await authController.getAuthenticatedUser(req)
+  );
+
+  if(ctrl['code'] === 200)
+      res.status(ctrl['code']).send(ctrl['content']);
+  else
+      res.status(ctrl['code']).send(ctrl);
+})
 
 
 module.exports = userDriver;
