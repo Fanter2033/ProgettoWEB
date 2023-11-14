@@ -372,6 +372,9 @@ module.exports = class SquealController extends Controller {
 
         let result = await tmpModel.getCurrentExecutionList(timestamp);
         for (const squealTextAutoDto of result) {
+            if(squealTextAutoDto.iteration === squealTextAutoDto.iteration_end)
+                continue;
+
             squealTextAutoDto.iteration = squealTextAutoDto.iteration + 1;
             squealTextAutoDto.next_scheduled_operation = timestamp + squealTextAutoDto.delay_seconds;
             let newContent = this.resolveContent(squealTextAutoDto);
