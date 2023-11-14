@@ -258,8 +258,6 @@ module.exports = class SquealController extends Controller {
             return output;
         }
 
-        //TODO: controllo coerenza content
-
         //Controls ended. Let's insert
         squealDto.id = await this._model.getNextId();
         squealDto.date = this.getCurrentTimestampSeconds();
