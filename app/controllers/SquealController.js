@@ -200,6 +200,29 @@ module.exports = class SquealController extends Controller {
             output['msg'] = 'Invalid destinations';
             return output;
         }
+
+        if(squealDto.message_type === 'IMAGE' ||
+            squealDto.message_type === 'VIDEO_URL' ||
+            squealDto.message_type === 'POSITION' ||
+            squealDto.message_type === 'POSITION_AUTO'){
+            squealDto.quote_cost = 125;
+        }
+
+
+        if(squealDto.message_type === 'IMAGE' && this.isBase64(squealDto.content) === false){
+            output['code'] = 400;
+            output['msg'] = 'Content is not base64';
+            return output;
+        }
+
+        if(squealDto.message_type === 'VIDEO_URL' && this.isYoutubeVideo(squealDto.content) === false){
+            output['code'] = 400;
+            output['msg'] = 'Link is not YT url';
+            return output;
+        }
+
+        //TODO FARE CONTROLLI SU POSIZIONE ETC ETC
+
         let checkResult = await this.checkDestinations(squealDto.destinations);
 
         if (!checkResult) {
@@ -228,8 +251,6 @@ module.exports = class SquealController extends Controller {
         }
 
         //CONTROLLI OK DEVO SCALARE LA QUOTA ED EFFETTUARE LE RELAZIONI
-
-
         let ctrlOut = await quoteCtrl.chargeLimitQuota(squealDto.sender, squealDto.quote_cost);
         if (ctrlOut.code !== 200) {
             output['code'] = 500;
@@ -294,6 +315,23 @@ module.exports = class SquealController extends Controller {
 
         output['content'] = squealDto.getDocument();
         return output;
+    }
+
+    /**
+     * @param {string} string
+     * @return {boolean}
+     */
+    isBase64(string){
+        if(string.trim().length === 0) return false;
+        return Buffer.from(string, 'base64').toString('base64') === string;
+    }
+
+    /**
+     * @param {string} string
+     * @return {boolean}
+     */
+    isYoutubeVideo(string){
+        return string.startsWith("https://www.youtube.com/watch");
     }
 
     /**
@@ -556,7 +594,7 @@ module.exports = class SquealController extends Controller {
 
     checkSquealType(type) {
         return type === 'MESSAGE_TEXT' ||
-            type === 'IMAGE_URL' ||
+            type === 'IMAGE' ||
             type === 'VIDEO_URL' ||
             type === 'POSITION' ||
             type === 'TEXT_AUTO' ||
