@@ -621,7 +621,7 @@ paths:
         - squeal
       summary: Create a new squeal
       parameters:
-        - name: new_squeal
+        - name: squeal
           description: Squeal object to add
           required: true
           in: body

@@ -23,15 +23,24 @@ let controller = new QuoteController(new QuoteModel());
 const UserController = require("./controllers/UserController");
 const UserModel = require("./models/UserModel");
 let userTestQuote = new UserController(new UserModel());
-//TODO: RISOLVERE LIMIT. SE SI METTE -1 PRENDE TUTTI GLI UTENTI
+
+const SquealController = require("./controllers/SquealController");
+const SquealModel = require("./models/SquealModel");
+let squealCtrl = new SquealController(new SquealModel());
+
 cronDaemon.schedule("0 0 * * *", async function () {
     //It's midnight!
     try {
-        let userList = await userTestQuote.getUserList({}, 0, 100, "", "", "");
+        let userList = await userTestQuote.getUserList({}, 0, -1, "", "", "");
         await controller.resetQuote(userList.content.users);
     } catch (error) {
         console.error("Errore duranate l'aggiornamento quote");
     }
+});
+
+cronDaemon.schedule("* * * * * *", async function () {
+    //Every second
+    await squealCtrl.updateAutoMessages();
 });
 
 global.rootDir = __dirname;

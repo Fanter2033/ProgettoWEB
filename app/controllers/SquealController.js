@@ -15,6 +15,7 @@ const Squeal2UserDto = require("../entities/dtos/Squeal2UserDto");
 const Squeal2ChannelDto = require("../entities/dtos/Squeal2ChannelDto");
 const SquealIrDto = require("../entities/dtos/SquealIrDto");
 const UserDto = require("../entities/dtos/UserDto");
+const SquealTextAutoModel = require('../models/SquealTextAutoModel');
 
 module.exports = class SquealController extends Controller {
 
@@ -169,9 +170,10 @@ module.exports = class SquealController extends Controller {
     /**
      * @param squealDto {SquealDto}
      * @param authenticatedUser {UserDto}
+     * @param autoSqueal {SquealTextAutoDto}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
-    async postSqueal(squealDto, authenticatedUser) {
+    async postSqueal(squealDto, authenticatedUser, autoSqueal) {
         let output = this.getDefaultOutput();
         squealDto.sender = authenticatedUser.username;
 
@@ -250,6 +252,21 @@ module.exports = class SquealController extends Controller {
             return output;
         }
 
+        if(squealDto.message_type === 'TEXT_AUTO'){
+            //Execute controls over scheduled things
+            if(isNaN(autoSqueal.next_scheduled_operation) || autoSqueal.next_scheduled_operation < 1){
+                output['code'] = 400;
+                output['msg'] = 'Invalid next scheduled operation';
+                return output;
+            }
+
+            if(isNaN(autoSqueal.iteration_end) || autoSqueal.iteration_end < 1){
+                output['code'] = 400;
+                output['msg'] = 'Invalid number of iterations';
+                return output;
+            }
+        }
+
         //CONTROLLI OK DEVO SCALARE LA QUOTA ED EFFETTUARE LE RELAZIONI
         let ctrlOut = await quoteCtrl.chargeLimitQuota(squealDto.sender, squealDto.quote_cost);
         if (ctrlOut.code !== 200) {
@@ -311,8 +328,125 @@ module.exports = class SquealController extends Controller {
             }
 
 
+        if(squealDto.message_type === 'TEXT_AUTO'){
+            //create the scheduled operation
+            let tmpModel = new SquealTextAutoModel();
+            autoSqueal.id = squealDto.id;
+            autoSqueal.quota_update_cost = this.countPlaceHolders(squealDto.content);
+            autoSqueal.original_content = squealDto.content;
+            //TODO MOSTRARE DIRETTAMENTE UNO SQUEAL AGGIORNATO
+            let result = await tmpModel.createScheduledOperation(autoSqueal, this.getCurrentTimestampSeconds() + 3);
+            if(result === false){
+                output['code'] = 500;
+                output['msg'] = 'Internal server error (5)';
+                return output;
+            }
+        }
+
+
         output['content'] = squealDto.getDocument();
         return output;
+    }
+
+    /**
+     * @param text {string}
+     * @return {number}
+     */
+    countPlaceHolders(text){
+        let out = 1;
+        if (text.includes('{DATA}')) out++;
+        if (text.includes('{ORA}')) out++;
+        if (text.includes('{MINUTO}')) out++;
+        if (text.includes('{SECONDO}')) out++;
+        if (text.includes('{NUMERO}')) out++;
+        return out;
+    }
+
+    /**
+     * @return {Promise<void>}
+     */
+    async updateAutoMessages(){
+        let timestamp = this.getCurrentTimestampSeconds();
+        let tmpModel = new SquealTextAutoModel();
+        let promises = [];
+
+        let result = await tmpModel.getCurrentExecutionList(timestamp);
+        for (const squealTextAutoDto of result) {
+            squealTextAutoDto.iteration = squealTextAutoDto.iteration + 1;
+            squealTextAutoDto.next_scheduled_operation = timestamp + squealTextAutoDto.delay_seconds;
+            let newContent = this.resolveContent(squealTextAutoDto);
+            promises.push(tmpModel.updateSchedule(squealTextAutoDto.id, squealTextAutoDto));
+            promises.push(this._model.updateSquealContent(squealTextAutoDto.id, newContent));
+            //TODO ADDEBITARE LA QUOTA ALL'AGGIORNAMENTO
+        }
+        await Promise.all(promises);
+    }
+
+    /**
+     * @param dto {SquealTextAutoDto}
+     * @return {string}
+     */
+    resolveContent(dto){
+        let date = this.getCurrentDate();
+        let hour = this.getCurrentHour();
+        let minute = this.getCurrentMinute();
+        let second = this.getCurrentSecond();
+        let number = dto.iteration;
+        let content = dto.original_content;
+        content = content.replace('{DATA}', date);
+        content = content.replace('{ORA}', hour);
+        content = content.replace('{MINUTO}', minute);
+        content = content.replace('{SECONDO}', second);
+        content = content.replace('{NUMERO}', number);
+        return content;
+    }
+
+    /**
+     * @return {string}
+     */
+    getCurrentDate(){
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        let mm = today.getMonth() + 1; // Months start at 0!
+        let dd = today.getDate();
+
+        if (dd < 10) dd = '0' + dd;
+        if (mm < 10) mm = '0' + mm;
+
+        return yyyy + '/' + mm + '/' + dd;
+    }
+
+    /**
+     * @return {string|number}
+     */
+    getCurrentHour(){
+        const today = new Date();
+        let hr = today.getHours();
+        if(hr < 10)
+            hr = '0' + hr;
+        return hr;
+    }
+
+    /**
+     * @return {string|number}
+     */
+    getCurrentMinute() {
+        const today = new Date();
+        let min = today.getMinutes();
+        if(min < 10)
+            min = '0' + min;
+        return min;
+    }
+
+    /**
+     * @return {string|number}
+     */
+    getCurrentSecond() {
+        const today = new Date();
+        let sec = today.getSeconds();
+        if(sec < 10)
+            sec = '0' + sec;
+        return sec;
     }
 
     /**

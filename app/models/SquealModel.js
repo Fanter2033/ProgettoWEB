@@ -23,6 +23,28 @@ module.exports = class SquealModel extends Model {
         return {};
     }
 
+
+    /**
+     * @param identifier {Number}
+     * @param newContent {string}
+     * @return {Promise<void>}
+     */
+    async updateSquealContent(identifier, newContent){
+        await this.checkMongoose("Squeal", Squeal);
+        let filter = {_id: `${identifier}`};
+        filter = this.mongo_escape(filter);
+        let update = {
+            content: `${newContent}`
+        }
+        update = this.mongo_escape(update);
+        try{
+            let result = await this.entityMongooseModel.findOneAndUpdate(filter, update);
+            return true;
+        }catch (ignored){
+            return false;
+        }
+    }
+
     /**
      * @param squealDto {SquealDto}
      * @returns {Promise<boolean>}
