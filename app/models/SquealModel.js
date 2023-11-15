@@ -13,12 +13,12 @@ module.exports = class SquealModel extends Model {
      * @param identifier {Number}
      * @returns {Promise<SquealDto|{}>}
      */
-    async getSqueal(identifier){
+    async getSqueal(identifier) {
         await this.checkMongoose("Squeal", Squeal);
         let filter = {_id: `${identifier}`};
         filter = this.mongo_escape(filter);
         let result = await this.entityMongooseModel.find(filter);
-        if(result.length === 1)
+        if (result.length === 1)
             return new SquealDto(result[0]._doc);
         return {};
     }
@@ -29,7 +29,7 @@ module.exports = class SquealModel extends Model {
      * @param newContent {string}
      * @return {Promise<void>}
      */
-    async updateSquealContent(identifier, newContent){
+    async updateSquealContent(identifier, newContent) {
         await this.checkMongoose("Squeal", Squeal);
         let filter = {_id: `${identifier}`};
         filter = this.mongo_escape(filter);
@@ -37,10 +37,10 @@ module.exports = class SquealModel extends Model {
             content: `${newContent}`
         }
         update = this.mongo_escape(update);
-        try{
+        try {
             let result = await this.entityMongooseModel.findOneAndUpdate(filter, update);
             return true;
-        }catch (ignored){
+        } catch (ignored) {
             return false;
         }
     }
@@ -49,13 +49,13 @@ module.exports = class SquealModel extends Model {
      * @param squealDto {SquealDto}
      * @returns {Promise<boolean>}
      */
-    async postSqueal(squealDto){
-        await  this.checkMongoose("Squeal", Squeal);
+    async postSqueal(squealDto) {
+        await this.checkMongoose("Squeal", Squeal);
         squealDto = this.mongo_escape(squealDto.getDocument());
         let newSqueal = new this.entityMongooseModel(squealDto);
         try {
             await newSqueal.save();
-        } catch (ignored){
+        } catch (ignored) {
             return false;
         }
         return true;
@@ -66,17 +66,17 @@ module.exports = class SquealModel extends Model {
      * @param squeal_id {number}
      * @returns {Promise<boolean>}
      */
-    async replaceSqueal(squealDto, squeal_id){
-        await  this.checkMongoose("Squeal", Squeal);
+    async replaceSqueal(squealDto, squeal_id) {
+        await this.checkMongoose("Squeal", Squeal);
         let squealDoc = this.mongo_escape(squealDto.getDocument());
         squeal_id = parseInt(squeal_id);
-        if(isNaN(squeal_id))
+        if (isNaN(squeal_id))
             return false;
 
         try {
             await this.entityMongooseModel.findByIdAndUpdate(squealDto.id, squealDoc);
             return true;
-        } catch (ignored){
+        } catch (ignored) {
             return false;
         }
     }
@@ -85,8 +85,8 @@ module.exports = class SquealModel extends Model {
      * @return {Promise<number>}
      * Returns the next id of the squeal
      */
-    async getNextId(){
-        await  this.checkMongoose("Squeal", Squeal);
+    async getNextId() {
+        await this.checkMongoose("Squeal", Squeal);
         let result = await this.entityMongooseModel.find({}).sort({'_id': 'desc'}).limit(1);
         if (result.length === 1)
             return parseInt(result[0]._doc._id) + 1;
@@ -98,7 +98,7 @@ module.exports = class SquealModel extends Model {
      * @param newUsername {string}
      * @return {Promise<boolean>}
      */
-    async replaceUser(oldUsername, newUsername){
+    async replaceUser(oldUsername, newUsername) {
         await this.checkMongoose("Squeal", Squeal);
         let filter = {sender: `${oldUsername}`};
         filter = this.mongo_escape(filter);
@@ -115,7 +115,7 @@ module.exports = class SquealModel extends Model {
      * @param username {string}
      * @return {Promise<boolean>}
      */
-    async deleteUser(username){
+    async deleteUser(username) {
         await this.checkMongoose("Squeal", Squeal);
         let filter = {sender: `${username}`};
         filter = this.mongo_escape(filter);
@@ -133,9 +133,9 @@ module.exports = class SquealModel extends Model {
      * @param {number} critical_mass
      * @return {Promise<boolean>}
      */
-    async updateCriticalMass(squeal_id, critical_mass){
+    async updateCriticalMass(squeal_id, critical_mass) {
         await this.checkMongoose("Squeal", Squeal);
-        if(isNaN(squeal_id) || isNaN(critical_mass))
+        if (isNaN(squeal_id) || isNaN(critical_mass))
             return false;
 
         let filter = {_id: squeal_id};
@@ -148,6 +148,47 @@ module.exports = class SquealModel extends Model {
         } catch (ignored) {
             return false;
         }
+    }
+
+    /**
+     * @param {string} username
+     * @return {Promise<number>}
+     * Count every popular squeal, controversial squeals are included.
+     */
+    async countPopularSquealUser(username) {
+        await this.checkMongoose("Squeal", Squeal);
+        let filter = {$expr: {$gt: ["$positive_value", "$critical_mass"]}, "sender": `${username}`};
+        filter = this.mongo_escape(filter);
+        return await this.entityMongooseModel.find(filter).count();
+    }
+
+    /**
+     * @param {string} username
+     * @return {Promise<number>}
+     * Count every popular squeal, controversial squeals are included.
+     */
+    async countUnpopularSquealUser(username) {
+        await this.checkMongoose("Squeal", Squeal);
+        let filter = {$expr: {$gt: ["$negative_value", "$critical_mass"]}, "sender": `${username}`};
+        filter = this.mongo_escape(filter);
+        return await this.entityMongooseModel.find(filter).count();
+    }
+
+    /**
+     * @param username
+     * @return {Promise<number>}
+     */
+    async countControversial(username) {
+        await this.checkMongoose("Squeal", Squeal);
+        let filter = {
+            $and : [
+                {$expr: {$gt: ["$positive_value", "$critical_mass"]}},
+                {$expr: {$gt: ["$negative_value", "$critical_mass"]}},
+            ],
+            "sender": `${username}`
+        };
+        filter = this.mongo_escape(filter);
+        return await this.entityMongooseModel.find(filter).count();
     }
 
 }

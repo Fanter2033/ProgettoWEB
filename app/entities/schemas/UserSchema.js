@@ -13,5 +13,7 @@ module.exports = new Schema({
     isSmm: Boolean,
     isAdmin: Boolean,
     vip: {type: Boolean, required: true},
-    locked: {type: Boolean, required: true}
+    locked: {type: Boolean, required: true},
+    verbalized_popularity: {type: Number, default: 0},
+    verbalized_unpopularity: {type: Number, default: 0},
 });
