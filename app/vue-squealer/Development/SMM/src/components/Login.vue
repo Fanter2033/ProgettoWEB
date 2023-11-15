@@ -78,7 +78,7 @@ export default {
       })
         .then((res) => {
           if (res.ok) {
-            this.$store.state.userZero.push(this.formLoginValues.username);
+            this.$store.commit('setUserZero',this.formLoginValues.username);
             router.push("/dashboard");
           } else console.error("Authentication failed", res.statusText);
         })

@@ -21,9 +21,12 @@
             id="menu"
           >
 
-            <template v-for="">
+            <template v-for="vip in myVips ">
 
+              <MyVip :vip-name = "vip" ></MyVip>
             </template>
+
+
 
           </ul>
           <!-- Linea divisoria -->
@@ -55,6 +58,12 @@ import MyVip from "@/components/dashboard/MyVip.vue";
 
 export default {
   name: "SideBar",
+  computed: {
+    myVips() {
+      return this.$store.state.myVips;
+    },
+  },
+  components: {MyVip}
 };
 </script>
 

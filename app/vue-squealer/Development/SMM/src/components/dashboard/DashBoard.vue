@@ -9,28 +9,37 @@
 import Nav from "../Nav.vue";
 import SideBar from "@/components/dashboard/SideBar.vue";
 import VueConfig from "@/config/VueConfig";
-import {store} from "@/store";
-
-
+import { store } from "@/store";
 
 export default {
   name: "DashBoard",
 
   methods: {
-    fetchVips: function (){
-      const vipsUri =  VueConfig.base_url_requests+ '/' + store.getters.getVips + '/my-users/';
-      fetch(vipsUri,{
-        method: "GET",
-      }).then((res)=>{
-        if(res.ok){
-          //this.$store.state.myVips.push();
-          store.commit('setVips', res.json());
-          console.log(res.json())
-        } else console.error("Authentication failed", res.statusText);
-      }).catch((error)=>{
+    fetchVips: function () {
+      console.log("user: " + store.getters.getUserZero);
+      const vipsUri =
+        VueConfig.base_url_requests +
+        "/user/" +
+        store.getters.getUserZero +
+        "/my-users/";
+      console.log("fetching: " + vipsUri);
 
+      fetch(vipsUri, {
+        method: "GET",
       })
-    }
+        .then((res) => {
+          if (res.ok) {
+            return res.json();
+          } else console.error("ERROR FETCHING VIPS", res.statusText);
+        })
+        .then((data) => {
+          console.log("my vips: " + data);
+          this.$store.commit("setVips", data);
+        })
+        .catch((error) => {
+          console.error("network error", error);
+        });
+    },
   },
 
   computed: {
@@ -45,7 +54,7 @@ export default {
   components: { SideBar, Nav },
 
   beforeMount() {
-    this.$store.state.userZero.push();
+    this.fetchVips();
   },
 };
 </script>

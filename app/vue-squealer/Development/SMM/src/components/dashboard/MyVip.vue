@@ -10,9 +10,9 @@
         aria-expanded="false"
     >
       <i class="fs-4 bi-person-circle mx-sm-auto icon-small"></i>   <!--qui deve prendere icona da db-->
-      <span class="ms-1 d-none d-sm-inline">{{vipName}}}</span>
+      <span class="ms-1 d-none d-sm-inline">{{vipName}}</span>
     </a>
-    <!-- Sottomenu di Products -->
+    <!-- Sottomenu -->
     <ul
         class="collapse nav flex-column ms-1"
         id="submenu3"
