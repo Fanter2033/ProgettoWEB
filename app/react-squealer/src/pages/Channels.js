@@ -20,6 +20,7 @@ import "../css/App.css";
 function Channels() {
   const { userGlobal, setUserGlobal } = useUserContext();
   console.log("cercatooooooooooooo", userGlobal.username);
+  //console.log("viiiiiiiiiiiiiiiiiiiiiiiiiiiip", userGlobal.vip);
 
   const navigate = useNavigate();
   if (userGlobal.username === undefined) {
