@@ -65,6 +65,20 @@ backEndRouter.use(
     })
 );
 
+/*   Express middleware
+*   saves and crypts sessions
+*/
+backEndRouter.use(session({
+    secret: autoload.config._SESSION_SECRET,
+    store: MongoStore.create({
+        mongoUrl: `mongodb://${autoload.config._DATABASE_USER}:${autoload.config._DATABASE_PWD}@${autoload.config._DATABASE_HOST}:${autoload.config._DATABASE_PORT}/${autoload.config._DATABASE_NAME}${autoload.config._DATABASE_EXTRA}`,
+        collection: autoload.config._SESSION_COLLECTION
+    }),
+    saveUninitialized: true,
+    cookie: {maxAge: oneDay},
+    resave: false
+}));
+
 // parsing the incoming data
 backEndRouter.use(express.json());
 backEndRouter.use(express.urlencoded({extended: true}));

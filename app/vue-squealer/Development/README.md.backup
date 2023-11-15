@@ -1,0 +1,41 @@
+## Breve Descrizione
+*Il SMM dashboard, ovvero l'applicazione per influencer, VIP e
+utenti professionali che permette di visualizzare in maniera
+integrata e complessiva tutte le attività di interazione con il proprio
+pubblico:, squeal, risposte, reazioni, trend, ec. Questa è
+un'applicazione per PC (ma non impossibile da usare su
+smartphone)*
+  
+## Caratteristiche SMM  
+Il SMM è un'applicazione web tradizionale, solo online, sia per device mobili sia
+per PC, orientata a fornire accesso all'account di un VIP da parte di un Social
+Media Manager.  
+- __Tipi di account__: Sia il VIP sia il SMM debbono essere account pro. Il VIP scegli il
+SMM e può successivamente rimuoverlo.
+- __SMM multiplo__: il SMM può dover gestire diversi account VIP (diciamo anche a 5-
+6, ma non c'è un numero massimo).
+NON DEVE SBAGLIARSI PER NESSUN MOTIVO.
+- __Scrittura__: il SMM deve poter postare squeal a nome e per conto del VIP. Non deve
+essere possibile per i destinatari distinguere se lo squeal è del VIP o del suo SMM.
+-  __Monitoraggio__: risposte ai post, post con più e meno reazioni, post popolari, post
+a rischio controversia o impopolare. Caratteri residui giornalieri, settimanali,
+mensili
+NON SI PUO' RIMANERE MUTI PER MANCANZA DI CARATTERI
+- Acquisto d'emergenza di caratteri (a prezzo maggiorato)
+- Trend dei post del VIP: grafici con andamenti storici di popolarità, numero di
+reply, frequenza di post, ecc.
+- Geolocazione fittizia: il SMM può cliccare in una posizione qualunque della
+mappa e mandare uno squeal geolocalizzato lì.
+  
+## Implementazione
+Il SMM dashboard è sia mobile sia desktop, ed è realizzato con il
+framework Javascript e CSS preferito, purché diverso da app e da
+moderator dashboard. E' pensato per un professionista che ha un
+numero limitato di clienti (1-5) ma che ha un traffico intenso sia in
+uscita sia di reazioni e like
+
+
+- pulsante diventa SMM, o scegli SMM
+- SMM non ha altri SMM
+- controllo su VIP, cambio sessione
+- collection linkedaccounts

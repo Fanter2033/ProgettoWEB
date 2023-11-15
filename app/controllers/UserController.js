@@ -8,6 +8,7 @@ const SquealIrModel = require("../models/SquealIrModel");
 const SquealModel = require("../models/SquealModel");
 const VipController = require("./VipController");
 const VipModel = require("../models/VipModel");
+const VipDto = require("../entities/dtos/VipDto");
 
 module.exports = class UserController extends Controller {
 
@@ -486,6 +487,12 @@ module.exports = class UserController extends Controller {
         return output;
     }
 
+    /**
+     *Given an username enable or disable his vip status
+     * @param username {String}
+     * @param authenticatedUser {{}|UserDto}
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
     async toggleVip(username, authenticatedUser){
         let output = this.getDefaultOutput();
 
@@ -504,12 +511,13 @@ module.exports = class UserController extends Controller {
         let userObj = await this._model.getUser(username);
         let vipCtrl = new VipController(new VipModel())
         let newVIPStatus = !userObj.vip;
-        //create the VIP entity
         if(newVIPStatus === true){
+            //create the VIP entity
             let res = await vipCtrl.createVip(username);
             if(res['code'] !== 200)
                 return res;
         } else {
+            //delete the VIP entity
             let res = await vipCtrl.deleteVip(username);
             if(res['code'] !== 200)
                 return res;
@@ -521,18 +529,220 @@ module.exports = class UserController extends Controller {
             output['msg'] = 'Internal server error.';
             return output;
         }
+        //output['content'] =
         return output;
     }
 
+    /**
+     * Enable/Disable the smm option
+     * @param authenticatedUser {{}|UserDto}
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
     async toggleSmm(authenticatedUser){
-        //TODO
+        let output = this.getDefaultOutput();
+        let username = authenticatedUser.username;
+
+        if( !(await this._model.userExists(username)) ){
+            output['code'] = 404;
+            output['msg'] = 'User not found.';
+            return output;
+        }
+
+        if (this.isObjectVoid(authenticatedUser) === true) {
+            output['code'] = 403;
+            output['msg'] = 'User not authenticated';
+            return output;
+        }
+
+        //check if the user is Vip
+        let isVip = authenticatedUser.vip;
+        if(isVip === false){
+            output['code'] = 412
+            output['msg'] = "Precondition Failed, user is not a VIP"
+            return output;
+        }
+
+        let userObj = await this._model.getUser(username);
+        let newSmmStatus = !userObj.isSmm;
+        let vipCtrl = new VipController(new VipModel());
+        if(!newSmmStatus) {
+            //user is NO longer SMM, clear the linked users list
+            let clearLinkedUsers = vipCtrl.disableSmm(username);
+            if(clearLinkedUsers['code'] === 500){
+                return clearLinkedUsers;
+            }
+        }
+
+        //toggle isSmm
+        let res = this._model.changeSmmStatus(userObj,newSmmStatus);
+        if(res === false){
+            output['code'] = 500;
+            output['msg'] = 'Internal server error.';
+        }
+        return output;
     }
 
+    /**
+     *
+     * @param SmmUsername {String}
+     * @param authenticatedUser {{}|UserDto}
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
     async pickSmm(SmmUsername, authenticatedUser) {
-        //TODO
+        let output = this.getDefaultOutput();
+
+        //check authentication
+        if (this.isObjectVoid(authenticatedUser) === true) {
+            output['code'] = 403;
+            output['msg'] = 'User not authenticated';
+            return output;
+        }
+
+        //check if vip exists
+        let username = authenticatedUser['username'];
+        let vipCtrl = new VipController(new VipModel());
+        let vipObj = await vipCtrl.getVip(username);
+        if(vipObj['code'] !== 200){
+            output['code'] = 412
+            output['msg'] = "Precondition Failed, user is not a VIP"
+            return output;
+        }
+
+        //check if vip has already a smm
+        if (vipObj.content['linkedSmm'] !== ""){
+            output['code'] = 412
+            output['msg'] = "Precondition Failed, user has already a smm"
+            return output;
+        }
+
+        //check the user is not a smm
+        if(vipObj['content'].isSmm === true){
+            output['code'] = 412
+            output['msg'] = "Precondition Failed, user is a Smm"
+            return output;
+        }
+
+        //check the Smm is a Vip
+        let SmmObj = await vipCtrl.getVip(SmmUsername);
+        if(SmmObj['code'] !== 200){
+            output['code'] = 412
+            output['msg'] = "Precondition Failed, Smm is not a VIP"
+            return output;
+        }
+
+        //check if the Smm has more than five linked users, not yet tested
+        let otherVips = await this.getLinkedUsers(SmmUsername);
+        if(otherVips['content'].length >= 5){
+            output['code'] = 412
+            output['msg'] = "Precondition Failed, Smm has reach linkedUsers limit"
+            return output;
+        }
+
+        let vipDto = new VipDto(vipObj.content);
+        let smmDto = new VipDto(SmmObj.content);
+
+        let res = vipCtrl.pickSmm(vipDto, smmDto);
+
+        if(res['code'] !== 200){
+            return res;
+        }
+        return output;
     }
 
+    /**
+     * @param authenticatedUser {{}|UserDto}
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
     async removeSmm(authenticatedUser){
-        //TODO
+        let output = this.getDefaultOutput();
+
+        //check authentication
+        if (this.isObjectVoid(authenticatedUser) === true) {
+            output['code'] = 403;
+            output['msg'] = 'User not authenticated';
+            return output;
+        }
+
+        //check if vip exists
+        let username = authenticatedUser['username'];
+        let vipCtrl = new VipController(new VipModel());
+        let vipObj = await vipCtrl.getVip(username);
+        if(vipObj['code'] !== 200){
+            output['code'] = 412
+            output['msg'] = "Precondition Failed, user is not a VIP"
+            return output;
+        }
+
+        let vipResRemoved =  await vipCtrl.removeSmm(username);
+        if(vipResRemoved['code'] !== 200){
+            return vipResRemoved;
+        }
+        return output;
+    }
+
+    /**
+     *
+     * @param username {String}
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async getSmm(username){
+        username = username.trim().toLowerCase();
+        let vipCtrl = new VipController(new VipModel());
+        let vipExists = await vipCtrl.getVip(username);
+
+        if(vipExists['code'] !== 200)
+            return vipExists;
+
+        let output = this.getDefaultOutput();
+        output['content'] = vipExists['content'].linkedSmm;
+        return output;
+    }
+
+    /**
+     *
+     * @param username {String}
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async getLinkedUsers(username){
+        username = username.trim().toLowerCase();
+        let vipCtrl = new VipController(new VipModel());
+        let smmExists = await vipCtrl.getVip(username);
+
+        if(smmExists['code']!==200)
+            return smmExists;
+
+        let output = this.getDefaultOutput();
+        let isSmm = await this.getUser(username);
+        if(isSmm['content'].isSmm === false){
+            output['code'] = 412
+            output['msg'] = 'User is not a Smm'
+            return output
+        }
+        output['content'] = smmExists['content'].linkedUsers;
+        return output;
     }
 }
+
+
+/*
+* Problemini:
+* quando un utente viene eliminato bisogna controllare che sia Vip e nel caso
+* rimuovere tutte le relazioni che aveva coe Smm-Vip
+*
+*
+* stessa cosa per quando un utente non diventa piu' vip
+*
+*
+* -----> un utente non puo' eliminare il proprio profilo se e' vip, deve fare il toggle
+* e poi in seguito pue' eliminare il profilo
+*
+* le relazioni sono associazioni di nomi e non di entita'
+*
+* chiunque puo' vedere chi sono gli smm e chi sono i linkati ma per ora chissenefotte
+* */
+
+/**
+ *
+ * TODO: store di informazioni importati solo per i vip user???
+ *
+ */

@@ -1,14 +1,13 @@
 //testing per registrazione e login
 
 /* BASE CONTROLLER CLASS */
-const bcrypt = require('bcryptjs')
+const bcryptjs = require('bcryptjs')
 const config = require('../config/squealer')
-const UserDto = require("../entities/dtos/UserDto");
 module.exports = class Controller {
 
     constructor() {
         this._emailRegex = config._REGEX_EMAIL;
-        this.bcrypt = bcrypt;
+        this.bcryptjs = bcryptjs;
     }
 
 
@@ -111,7 +110,7 @@ module.exports = class Controller {
      *
      */
     async hashCheck(hash, string, saltRound = config._CIPHER_SALT) {
-        return bcrypt
+        return bcryptjs
             .compare(string, hash)
             .then(res => {
                 return res;

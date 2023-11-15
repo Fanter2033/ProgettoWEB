@@ -98,7 +98,9 @@ Dov'è il mio TAXI?, Dov'è il mio bus?, Dove sto andando?, Caccia al tesoro
 - text: string
 - type: enum
 	+ MESSAGE
-	+ 
+	+ IMAGE_URL
+	+ VIDEO_URL
+	+ POSITION
 - img: uri 
 
 
