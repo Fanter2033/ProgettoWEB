@@ -70,12 +70,6 @@ module.exports = class SquealController extends Controller {
             return output;
         }
 
-        //We should calculate if the squeal is popular and unpopular, because if the CM > Good reactions is still popular.
-        //Same thing for unpopular case
-        let isPopular = (squeal.critical_mass <= squeal.positive_value);
-        let isUnpopular = (squeal.critical_mass <= squeal.negative_value);
-        let isControversial = (isPopular && isUnpopular);
-
         let irDto = new SquealIrDto();
         irDto.squeal_id = identifier;
         if (this.isAuthenticatedUser(authenticatedUser) === false) {
