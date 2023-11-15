@@ -157,8 +157,8 @@ module.exports = class SquealModel extends Model {
      */
     async countPopularSquealUser(username) {
         await this.checkMongoose("Squeal", Squeal);
+        username = this.mongo_escape(username);
         let filter = {$expr: {$gt: ["$positive_value", "$critical_mass"]}, "sender": `${username}`};
-        filter = this.mongo_escape(filter);
         return await this.entityMongooseModel.find(filter).count();
     }
 
@@ -169,8 +169,8 @@ module.exports = class SquealModel extends Model {
      */
     async countUnpopularSquealUser(username) {
         await this.checkMongoose("Squeal", Squeal);
+        username = this.mongo_escape(username);
         let filter = {$expr: {$gt: ["$negative_value", "$critical_mass"]}, "sender": `${username}`};
-        filter = this.mongo_escape(filter);
         return await this.entityMongooseModel.find(filter).count();
     }
 
@@ -180,6 +180,7 @@ module.exports = class SquealModel extends Model {
      */
     async countControversial(username) {
         await this.checkMongoose("Squeal", Squeal);
+        username = this.mongo_escape(username);
         let filter = {
             $and : [
                 {$expr: {$gt: ["$positive_value", "$critical_mass"]}},
@@ -187,7 +188,6 @@ module.exports = class SquealModel extends Model {
             ],
             "sender": `${username}`
         };
-        filter = this.mongo_escape(filter);
         return await this.entityMongooseModel.find(filter).count();
     }
 

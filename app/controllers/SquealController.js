@@ -372,71 +372,6 @@ module.exports = class SquealController extends Controller {
     }
 
     /**
-     * @return {string}
-     */
-    getCurrentDate() {
-        const today = new Date();
-        const yyyy = today.getFullYear();
-        let mm = today.getMonth() + 1; // Months start at 0!
-        let dd = today.getDate();
-
-        if (dd < 10) dd = '0' + dd;
-        if (mm < 10) mm = '0' + mm;
-
-        return yyyy + '/' + mm + '/' + dd;
-    }
-
-    /**
-     * @return {string|number}
-     */
-    getCurrentHour() {
-        const today = new Date();
-        let hr = today.getHours();
-        if (hr < 10)
-            hr = '0' + hr;
-        return hr;
-    }
-
-    /**
-     * @return {string|number}
-     */
-    getCurrentMinute() {
-        const today = new Date();
-        let min = today.getMinutes();
-        if (min < 10)
-            min = '0' + min;
-        return min;
-    }
-
-    /**
-     * @return {string|number}
-     */
-    getCurrentSecond() {
-        const today = new Date();
-        let sec = today.getSeconds();
-        if (sec < 10)
-            sec = '0' + sec;
-        return sec;
-    }
-
-    /**
-     * @param {string} string
-     * @return {boolean}
-     */
-    isBase64(string) {
-        if (string.trim().length === 0) return false;
-        return Buffer.from(string, 'base64').toString('base64') === string;
-    }
-
-    /**
-     * @param {string} string
-     * @return {boolean}
-     */
-    isYoutubeVideo(string) {
-        return string.startsWith("https://www.youtube.com/watch");
-    }
-
-    /**
      * @param squeal_id {number}
      * @param sessionId {string}
      * @param authenticatedUser {UserDto}
@@ -548,7 +483,11 @@ module.exports = class SquealController extends Controller {
             return output;
 
         result = await this.handleReactions(squeal.sender);
-        //TODO HANDLE ERROR
+        if(result === false){
+            output['code'] = 500;
+            output['msg'] = 'Internal server error in SquealController::incrementPositiveValue - 2';
+            return output;
+        }
 
         return output;
     }
@@ -574,12 +513,16 @@ module.exports = class SquealController extends Controller {
 
         if(user.verbalized_popularity < realPopular &&
             realPopular % autoload.config._POPULAR_QUOTE_POSTS === 0){
-            //TODO CONTINUE HERE
+            await quoteCtrl.applyPercentageQuote({}, user.username, 101, true);
+            let r = await userCtrl.updateVerbalizedPopularity(username, realPopular, -1);
+            if(r === false) return false;
         }
 
         if(user.verbalized_unpopularity < realUnpopular &&
             realUnpopular % autoload.config._UNPOPULAR_QUOTE_POSTS === 0){
-            //TODO CONTINUE HERE
+            await quoteCtrl.applyPercentageQuote({}, user.username, 99, true);
+            let r = await userCtrl.updateVerbalizedPopularity(username, -1, realUnpopular);
+            if(r === false) return false;
         }
 
 

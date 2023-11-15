@@ -535,4 +535,27 @@ module.exports = class UserController extends Controller {
     async removeSmm(authenticatedUser){
         //TODO
     }
+
+
+    /**
+     * @param {string} username Existing username
+     * @param {number} newPop new Popularity Verbalized
+     * @param {number} newUnPop new Unpopularity Verbalized
+     * @return {Promise<boolean>}
+     * If newPop = -1 or newUnPop = -1 then the respective fields are not update.
+     */
+    async updateVerbalizedPopularity(username, newPop= -1, newUnPop= -1){
+        if(newPop !== -1){
+            let result = await this._model.updateUserField(username, 'verbalized_popularity', newPop);
+            if(result === false)
+                return false;
+        }
+        if(newUnPop !== -1) {
+            let result = await this._model.updateUserField(username, 'verbalized_unpopularity', newUnPop);
+            if(result === false)
+                return false;
+        }
+        return true;
+    }
+
 }
