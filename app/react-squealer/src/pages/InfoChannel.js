@@ -5,7 +5,7 @@ import { useUserContext } from "../config/UserContext";
 
 import "../css/App.css";
 
-function InfoChannel(props) {
+function InfoChannel() {
   const location = useLocation();
   const channel = location.state;
 

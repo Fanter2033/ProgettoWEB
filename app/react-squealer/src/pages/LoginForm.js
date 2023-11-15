@@ -54,7 +54,7 @@ function LoginForm() {
     await fetch(uri, options)
       .then((response) => {
         if (response.ok) {
-          navigate(`/channels`);
+          navigate(`/received`);
         } else {
           notify();
           console.error("Authentication failed", response.statusText);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, Link } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 
@@ -9,7 +9,6 @@ import Footer from "./Footer";
 import { Button, Card, Col, Row } from "react-bootstrap";
 
 function Home() {
-  //TODO: mi da una lista vuota
   //GET /channel    list of channels ------------------------------------------------------------------------------------------------------------
   const [channels, setChannels] = useState([]);
 
@@ -40,6 +39,14 @@ function Home() {
   }
 
   console.log("LISTA CANALI", channels);
+
+  useEffect(() => {
+    const intervalId1 = setInterval(getChannels, 5000);
+
+    return () => {
+      clearInterval(intervalId1);
+    };
+  });
 
   return (
     <div>

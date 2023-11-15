@@ -7,7 +7,6 @@ import ReactConfig from "../config/ReactConfig";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "../css/LoginForm.css";
 
 import { useUserContext } from "../config/UserContext";
 
@@ -15,9 +14,15 @@ import Geo from "./Geo";
 import VultureAnimation from "./VoltureAnimation";
 import ChangeUsername from "./ChangeUsername";
 import ChangePassword from "./ChanegePassword";
+import UserDeleteModal from "./UserDeleteModal";
+import VipModal from "./VipModal";
 
 import "../css/App.css";
 import cattyy from "./media/splash.jpeg";
+import pink from "./media/avvoltoioEli.png";
+import { Modal } from "react-bootstrap";
+
+//TODO:modal for delete user
 
 /*
 col-12 col-md-6
@@ -39,6 +44,31 @@ function Account() {
 
   //per il logout
   const navigate = useNavigate();
+
+  const navigate_logout = useNavigate();
+  if (userGlobal.username === undefined || userGlobal.username === "") {
+    navigate_logout("/");
+  }
+
+  //modalssssssss
+  const [showModal, setShowModal] = useState(false);
+  const handleShowModal = () => {
+    setShowModal(true);
+  };
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const handleDeleteUser = () => {
+    handleCloseDeleteModal();
+  };
+  const handleOpenDeleteModal = () => {
+    setShowDeleteModal(true);
+  };
+  const handleCloseDeleteModal = () => {
+    setShowDeleteModal(false);
+  };
 
   //GET USER QUOTE-----------------------------------------------------------------------------------------------
   const [userQuote, setUserQuote] = useState("");
@@ -156,7 +186,6 @@ function Account() {
 
   //DELETE USER con toast /user/${username}-----------------------------------------------------------------------------------------------------
   async function deleteUser() {
-    notify();
     const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}`;
     const options = {
       method: "DELETE",
@@ -219,6 +248,7 @@ function Account() {
               onMouseOver={showVulture}
               onMouseLeave={hideVulture}
             />
+            
             {showVultureAnimation && <VultureAnimation />}
           </div>
 
@@ -227,8 +257,9 @@ function Account() {
               <div className="col-12 col-md d-flex align-items-center justify-content-center ">
                 <div className="d-md-flex flex-md-row flex-column">
                   <div className="col-12">
-                    <h1 className="cool-font-medium mt-2 mb-2">
+                    <h1 className="d-flex flex-col align-items-center justify-content-center cool-font-medium mt-2 mb-2">
                       {userGlobal.username}
+                      <img src={pink} style={{ width: "10%" }}/>
                     </h1>
                     <h2>
                       {userData.first_name} {userData.last_name}
@@ -240,13 +271,15 @@ function Account() {
                       N SQUEALS
                     </button>
                     <button
-                      id="upgrade-button"
-                      className="box"
-                    
-                      onClick={buyQuote}
+                      className="box upgrade-button"
+                      onClick={handleShowModal}
                     >
                       UPGRADE
                     </button>
+                    <VipModal
+                      showModal={showModal}
+                      handleClose={handleCloseModal}
+                    />
                   </div>
                 </div>
               </div>
@@ -313,14 +346,20 @@ function Account() {
               <ToastContainer />
               LOGOUT
             </button>
+
             <button
               id="delete-button"
               className=" mb-2 box"
-              onClick={deleteUser}
+              onClick={showDeleteModal}
             >
               DELETE ACCOUNT
               <ToastContainer />
             </button>
+            <UserDeleteModal
+              showDeleteModal={showDeleteModal}
+              handleDeleteUser={handleDeleteUser}
+              handleCloseDeleteModal={handleCloseDeleteModal}
+            />
             <button className="user_button mb-2 box">
               <Link to={ReactConfig.pathFunction("/about")} id="about-us">
                 ABOUT US:
@@ -330,10 +369,12 @@ function Account() {
         </div>
 
         <div id="vip_buttons">
-          <button className="user_button mb-2 box" onClick={addSmm}>
+          <p>quando l'utente fa l'update a vip fai comparire:</p>
+          <p>badge squeal</p>
+          <button className="upgrade-button mb-2 box" onClick={addSmm}>
             ADD SMM?
           </button>
-          <button className="user_button mb-2 box" onClick={removeSmm}>
+          <button className="upgrade-button mb-2 box" onClick={removeSmm}>
             NO MORE SMM!
           </button>
         </div>
