@@ -221,6 +221,29 @@ module.exports = class UserModel extends Model {
         return true;
     }
 
+
+    /**
+     * @param username {string}
+     * @param field {string}
+     * @param newValue {*}
+     * @return {Promise<boolean>}
+     */
+    async updateUserField(username, field, newValue){
+        await this.checkMongoose("User", User);
+        let filter = {"username": `${username}`};
+        filter = this.mongo_escape(filter);
+        let update = {};
+        update[field] = newValue
+        update = this.mongo_escape(update);
+        try {
+            await this.entityMongooseModel.updateOne(filter, update);
+        } catch (ignored) {
+            return false;
+        }
+        return true;
+    }
+
+
     async changeSmmStatus(userDto, newSmmStat){
         await this.checkMongoose("User", User);
         let filter = {"username": `${userDto.username}`};

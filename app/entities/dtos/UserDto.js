@@ -11,6 +11,8 @@ module.exports = class UserDto {
     #isUser;
     #vip;
     #locked;
+    #verbalized_popularity;
+    #verbalized_unpopularity;
 
     constructor(documentFromMongoose = null) {
         if(documentFromMongoose === null) {
@@ -25,6 +27,8 @@ module.exports = class UserDto {
             this.#isUser = null;
             this.#vip = null;
             this.#locked = null;
+            this.#verbalized_popularity = 0;
+            this.#verbalized_unpopularity = 0;
         } else {
             this.#username = documentFromMongoose.username;
             this.#email = documentFromMongoose.email;
@@ -37,6 +41,8 @@ module.exports = class UserDto {
             this.#isUser = documentFromMongoose.isUser;
             this.#vip = documentFromMongoose.vip;
             this.#locked = documentFromMongoose.locked;
+            this.#verbalized_popularity = documentFromMongoose.verbalized_popularity;
+            this.#verbalized_unpopularity = documentFromMongoose.verbalized_popularity;
         }
 
     }
@@ -133,6 +139,22 @@ module.exports = class UserDto {
         this.#locked = value;
     }
 
+    get verbalized_popularity() {
+        return this.#verbalized_popularity;
+    }
+
+    set verbalized_popularity(value) {
+        this.#verbalized_popularity = value;
+    }
+
+    get verbalized_unpopularity() {
+        return this.#verbalized_unpopularity;
+    }
+
+    set verbalized_unpopularity(value) {
+        this.#verbalized_unpopularity = value;
+    }
+
     getDocument() {
         return {
             username: this.#username,
@@ -145,7 +167,9 @@ module.exports = class UserDto {
             isSmm: this.#isSmm,
             isUser: this.#isUser,
             vip: this.#vip ,
-            locked: this.#locked
+            locked: this.#locked,
+            verbalized_popularity: this.#verbalized_popularity,
+            verbalized_unpopularity: this.#verbalized_unpopularity,
         }
     }
 

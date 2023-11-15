@@ -102,58 +102,26 @@ module.exports = class SquealController extends Controller {
         }
 
         //If the squeal is public we should recalculate the critical mass for every impression
-        let total_impression = await this.#squealImpressionReactions.countImpression(squeal.id);
-        let cm = Math.floor(total_impression / (100 / autoload.config._CRITICAL_MASS_PERCENTAGE));
-
-        if (squeal.critical_mass !== cm) {
-            //Critical mass increased
-            result = await this._model.updateCriticalMass(squeal.id, cm);
-            if (result === false) {
-                output['code'] = 500;
-                output['msg'] = 'Internal server error (2).';
-                return output;
-            }
-
-            let quoteCtrl = new QuoteController(new QuoteModel());
-            //Is the squeal still popular?
-            if (isPopular && cm > squeal.positive_value && isControversial === false) {
-                //now is not popular cause cm increased
-                result = await quoteCtrl.applyPercentageQuote(authenticatedUser, squeal.sender, 100 - autoload.config._POPULAR_QUOTE_LOSS_CM_INCREASE, true);
-                if (result.code !== 200) {
-                    output['code'] = 500;
-                    output['msg'] = 'Internal server error (3).';
-                    return output;
-                }
-            } else if (isPopular && cm > squeal.positive_value && isControversial === true && cm <= squeal.negative_value) {
-                //Was popular, was controversial and now is only unpopular
-                result = await quoteCtrl.applyPercentageQuote(authenticatedUser, squeal.sender, 100 - autoload.config._UNPOPULAR_QUOTE_LOSS_PERCENTAGE, true);
-                if (result.code !== 200) {
-                    output['code'] = 500;
-                    output['msg'] = 'Internal server error (3).';
-                    return output;
-                }
-            }
-            //Is squeal still unpopular?
-            if (isUnpopular && cm > squeal.negative_value && isControversial === false) {
-                result = await quoteCtrl.applyPercentageQuote(authenticatedUser, squeal.sender, 100 + autoload.config._UNPOPULAR_QUOTE_GAIN_CM_INCREASE, true);
-                if (result.code !== 200) {
-                    output['code'] = 500;
-                    output['msg'] = 'Internal server error (4).';
-                    return output;
-                }
-            } else if (isUnpopular && cm > squeal.negative_value && isControversial === true && cm <= squeal.positive_value) {
-                //Was unpopular, was controversial, now is only popular
-                result = await quoteCtrl.applyPercentageQuote(authenticatedUser, squeal.sender, 100 + autoload.config._POPULAR_QUOTE_GAIN_PERCENTAGE, true);
-                if (result.code !== 200) {
-                    output['code'] = 500;
-                    output['msg'] = 'Internal server error (3).';
-                    return output;
-                }
-            }
+        result = await this.updateCriticalMass(squeal);
+        if (result === false) {
+            output['code'] = 500;
+            output['msg'] = 'Internal server error (1).';
+            return output;
         }
+
 
         output['content'] = squeal.getDocument();
         return output;
+    }
+
+    /**
+     * @param {SquealDto} squeal
+     * @return {Promise<boolean>}
+     */
+    async updateCriticalMass(squeal) {
+        let total_impression = await this.#squealImpressionReactions.countImpression(squeal.id);
+        let cm = Math.floor(total_impression / (100 / autoload.config._CRITICAL_MASS_PERCENTAGE));
+        return await this._model.updateCriticalMass(squeal.id, cm);
     }
 
     /**
@@ -164,7 +132,6 @@ module.exports = class SquealController extends Controller {
     async isSquealPublic(squeal_id) {
         let channelLinked = await this.#squealToChannelModel.countChannelLinked(squeal_id);
         return channelLinked > 0;
-
     }
 
     /**
@@ -203,21 +170,21 @@ module.exports = class SquealController extends Controller {
             return output;
         }
 
-        if(squealDto.message_type === 'IMAGE' ||
+        if (squealDto.message_type === 'IMAGE' ||
             squealDto.message_type === 'VIDEO_URL' ||
             squealDto.message_type === 'POSITION' ||
-            squealDto.message_type === 'POSITION_AUTO'){
+            squealDto.message_type === 'POSITION_AUTO') {
             squealDto.quote_cost = 125;
         }
 
 
-        if(squealDto.message_type === 'IMAGE' && this.isBase64(squealDto.content) === false){
+        if (squealDto.message_type === 'IMAGE' && this.isBase64(squealDto.content) === false) {
             output['code'] = 400;
             output['msg'] = 'Content is not base64';
             return output;
         }
 
-        if(squealDto.message_type === 'VIDEO_URL' && this.isYoutubeVideo(squealDto.content) === false){
+        if (squealDto.message_type === 'VIDEO_URL' && this.isYoutubeVideo(squealDto.content) === false) {
             output['code'] = 400;
             output['msg'] = 'Link is not YT url';
             return output;
@@ -252,15 +219,15 @@ module.exports = class SquealController extends Controller {
             return output;
         }
 
-        if(squealDto.message_type === 'TEXT_AUTO'){
+        if (squealDto.message_type === 'TEXT_AUTO') {
             //Execute controls over scheduled things
-            if(isNaN(autoSqueal.next_scheduled_operation) || autoSqueal.next_scheduled_operation < 1){
+            if (isNaN(autoSqueal.next_scheduled_operation) || autoSqueal.next_scheduled_operation < 1) {
                 output['code'] = 400;
                 output['msg'] = 'Invalid next scheduled operation';
                 return output;
             }
 
-            if(isNaN(autoSqueal.iteration_end) || autoSqueal.iteration_end < 1){
+            if (isNaN(autoSqueal.iteration_end) || autoSqueal.iteration_end < 1) {
                 output['code'] = 400;
                 output['msg'] = 'Invalid number of iterations';
                 return output;
@@ -328,7 +295,7 @@ module.exports = class SquealController extends Controller {
             }
 
 
-        if(squealDto.message_type === 'TEXT_AUTO'){
+        if (squealDto.message_type === 'TEXT_AUTO') {
             //create the scheduled operation
             let tmpModel = new SquealTextAutoModel();
             autoSqueal.id = squealDto.id;
@@ -336,7 +303,7 @@ module.exports = class SquealController extends Controller {
             autoSqueal.original_content = squealDto.content;
             //TODO MOSTRARE DIRETTAMENTE UNO SQUEAL AGGIORNATO
             let result = await tmpModel.createScheduledOperation(autoSqueal, this.getCurrentTimestampSeconds() + 3);
-            if(result === false){
+            if (result === false) {
                 output['code'] = 500;
                 output['msg'] = 'Internal server error (5)';
                 return output;
@@ -352,7 +319,7 @@ module.exports = class SquealController extends Controller {
      * @param text {string}
      * @return {number}
      */
-    countPlaceHolders(text){
+    countPlaceHolders(text) {
         let out = 1;
         if (text.includes('{DATA}')) out++;
         if (text.includes('{ORA}')) out++;
@@ -365,14 +332,14 @@ module.exports = class SquealController extends Controller {
     /**
      * @return {Promise<void>}
      */
-    async updateAutoMessages(){
+    async updateAutoMessages() {
         let timestamp = this.getCurrentTimestampSeconds();
         let tmpModel = new SquealTextAutoModel();
         let promises = [];
 
         let result = await tmpModel.getCurrentExecutionList(timestamp);
         for (const squealTextAutoDto of result) {
-            if(squealTextAutoDto.iteration === squealTextAutoDto.iteration_end)
+            if (squealTextAutoDto.iteration === squealTextAutoDto.iteration_end)
                 continue;
 
             squealTextAutoDto.iteration = squealTextAutoDto.iteration + 1;
@@ -389,7 +356,7 @@ module.exports = class SquealController extends Controller {
      * @param dto {SquealTextAutoDto}
      * @return {string}
      */
-    resolveContent(dto){
+    resolveContent(dto) {
         let date = this.getCurrentDate();
         let hour = this.getCurrentHour();
         let minute = this.getCurrentMinute();
@@ -402,71 +369,6 @@ module.exports = class SquealController extends Controller {
         content = content.replace('{SECONDO}', second);
         content = content.replace('{NUMERO}', number);
         return content;
-    }
-
-    /**
-     * @return {string}
-     */
-    getCurrentDate(){
-        const today = new Date();
-        const yyyy = today.getFullYear();
-        let mm = today.getMonth() + 1; // Months start at 0!
-        let dd = today.getDate();
-
-        if (dd < 10) dd = '0' + dd;
-        if (mm < 10) mm = '0' + mm;
-
-        return yyyy + '/' + mm + '/' + dd;
-    }
-
-    /**
-     * @return {string|number}
-     */
-    getCurrentHour(){
-        const today = new Date();
-        let hr = today.getHours();
-        if(hr < 10)
-            hr = '0' + hr;
-        return hr;
-    }
-
-    /**
-     * @return {string|number}
-     */
-    getCurrentMinute() {
-        const today = new Date();
-        let min = today.getMinutes();
-        if(min < 10)
-            min = '0' + min;
-        return min;
-    }
-
-    /**
-     * @return {string|number}
-     */
-    getCurrentSecond() {
-        const today = new Date();
-        let sec = today.getSeconds();
-        if(sec < 10)
-            sec = '0' + sec;
-        return sec;
-    }
-
-    /**
-     * @param {string} string
-     * @return {boolean}
-     */
-    isBase64(string){
-        if(string.trim().length === 0) return false;
-        return Buffer.from(string, 'base64').toString('base64') === string;
-    }
-
-    /**
-     * @param {string} string
-     * @return {boolean}
-     */
-    isYoutubeVideo(string){
-        return string.startsWith("https://www.youtube.com/watch");
     }
 
     /**
@@ -564,10 +466,6 @@ module.exports = class SquealController extends Controller {
         }
         squeal = new SquealDto(squeal.content);
 
-        let isPopular = (squeal.critical_mass <= squeal.positive_value && squeal.critical_mass !== 0);
-        let isUnpopular = (squeal.critical_mass <= squeal.negative_value && squeal.critical_mass !== 0);
-        let isControversial = (isPopular && isUnpopular);
-
         if (positiveValue)
             squeal.positive_value = squeal.positive_value + amount;
         else
@@ -581,79 +479,54 @@ module.exports = class SquealController extends Controller {
         }
 
         result = await this.isSquealPublic(squeal_id);
-        if (result === false) return output;
-
-        let isNowPopular = (squeal.critical_mass <= squeal.positive_value && squeal.critical_mass !== 0);
-        let isNowUnpopular = (squeal.critical_mass <= squeal.negative_value && squeal.critical_mass !== 0);
-        let isNowControversial = (isNowPopular && isNowUnpopular);
-
-        //noting changed.
-        if (isControversial && isNowControversial)
+        if (result === false)
             return output;
 
-        let quoteCtrl = new QuoteController(new QuoteModel());
-
-        //Now is not controversial, restore the quota change
-        if (isControversial && isNowControversial === false) {
-            if (isNowPopular) {
-                result = await quoteCtrl.applyPercentageQuote({}, squeal.sender, 100 + autoload.config._POPULAR_QUOTE_GAIN_PERCENTAGE, true);
-                if (result.code !== 200) {
-                    output['code'] = 500;
-                    output['msg'] = 'Internal server error in SquealController::incrementPositiveValue - 3';
-                }
-                return output;
-            } else if (isNowUnpopular) {
-                result = await quoteCtrl.applyPercentageQuote({}, squeal.sender, 100 - autoload.config._UNPOPULAR_QUOTE_LOSS_PERCENTAGE, true);
-                if (result.code !== 200) {
-                    output['code'] = 500;
-                    output['msg'] = 'Internal server error in SquealController::incrementPositiveValue - 4';
-                }
-                return output;
-            }
-            //Else case does not exists in case the squeal is not popular and not unpopular
-        }
-
-        if (isControversial === false && isNowControversial === true) {
-            if (isPopular) {
-                result = await quoteCtrl.applyPercentageQuote({}, squeal.sender, 100 - autoload.config._POPULAR_QUOTE_LOSS_CM_INCREASE, true);
-                if (result.code !== 200) {
-                    output['code'] = 500;
-                    output['msg'] = 'Internal server error in SquealController::incrementPositiveValue - 5';
-                    return output;
-                }
-                return output;
-            } else {
-                //isUnpopular = true
-                result = await quoteCtrl.applyPercentageQuote({}, squeal.sender, 100 + autoload.config._UNPOPULAR_QUOTE_GAIN_CM_INCREASE, true);
-                if (result.code !== 200) {
-                    output['code'] = 500;
-                    output['msg'] = 'Internal server error in SquealController::incrementPositiveValue - 6';
-                    return output;
-                }
-                return output;
-            }
-        }
-
-        if (isPopular === false && isNowPopular === true) {
-            result = await quoteCtrl.applyPercentageQuote({}, squeal.sender, 100 + autoload.config._POPULAR_QUOTE_GAIN_PERCENTAGE, true);
-        } else if (isUnpopular === false && isNowUnpopular === true) {
-            result = await quoteCtrl.applyPercentageQuote({}, squeal.sender, 100 - autoload.config._UNPOPULAR_QUOTE_LOSS_PERCENTAGE, true);
-        }
-
-        if(result === true)
-            return output;
-
-        if ((
-                isPopular === false && isNowPopular === true ||
-                isUnpopular === false && isNowUnpopular === true
-            ) &&
-            result.code !== 200) {
+        result = await this.handleReactions(squeal.sender);
+        if(result === false){
             output['code'] = 500;
             output['msg'] = 'Internal server error in SquealController::incrementPositiveValue - 2';
             return output;
         }
 
         return output;
+    }
+
+    /**
+     * @param username {string}
+     * @return {Promise<boolean>}
+     */
+    async handleReactions(username) {
+        let quoteCtrl = new QuoteController(new QuoteModel());
+        let userCtrl = new UserController(new UserModel());
+        let userOut = await userCtrl.getUser(username);
+        if(userOut.code !== 200){
+            return false;
+        }
+        let user = new UserDto(userOut.content);
+
+        let countPopular = await this._model.countPopularSquealUser(user.username);
+        let countUnpopular = await this._model.countUnpopularSquealUser(user.username);
+        let countControversial = await this._model.countControversial(user.username);
+        let realPopular = countPopular - countControversial;
+        let realUnpopular = countUnpopular - countControversial;
+
+        if(user.verbalized_popularity < realPopular &&
+            realPopular % autoload.config._POPULAR_QUOTE_POSTS === 0){
+            await quoteCtrl.applyPercentageQuote({}, user.username, 101, true);
+            let r = await userCtrl.updateVerbalizedPopularity(username, realPopular, -1);
+            if(r === false) return false;
+        }
+
+        if(user.verbalized_unpopularity < realUnpopular &&
+            realUnpopular % autoload.config._UNPOPULAR_QUOTE_POSTS === 0){
+            await quoteCtrl.applyPercentageQuote({}, user.username, 99, true);
+            let r = await userCtrl.updateVerbalizedPopularity(username, -1, realUnpopular);
+            if(r === false) return false;
+        }
+
+
+        return true;
     }
 
     /**
