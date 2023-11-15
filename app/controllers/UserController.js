@@ -530,7 +530,14 @@ module.exports = class UserController extends Controller {
             return output;
         }
 
-        //TODO: check if the Smm has more than five linked users
+        //check if the Smm has more than five linked users, not yet tested
+        let otherVips = await this.getLinkedUsers(SmmUsername);
+        if(otherVips['content'].length >= 5){
+            output['code'] = 412
+            output['msg'] = "Precondition Failed, Smm has reach linkedUsers limit"
+            return output;
+        }
+
         let vipDto = new VipDto(vipObj.content);
         let smmDto = new VipDto(SmmObj.content);
 
@@ -635,7 +642,7 @@ module.exports = class UserController extends Controller {
 * */
 
 /**
- * TODO: get di tutti gli account linkati
+ *
  * TODO: store di informazioni importati solo per i vip user???
  *
  */

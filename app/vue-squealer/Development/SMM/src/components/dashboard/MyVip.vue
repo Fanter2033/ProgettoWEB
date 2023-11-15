@@ -21,7 +21,7 @@
       <li class="w-100">
         <router-link to="/dashboard/graphs" class="nav-link px-0">
           <i class="fs-4 bi-file-bar-graph"></i>
-          <span class="d-none d-sm-inline">Graphs</span>
+          <span class="d-none d-sm-inline">Charts</span>
         </router-link>
       </li>
       <li>

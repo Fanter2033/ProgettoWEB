@@ -7,8 +7,8 @@
       <div class="col-2">
         <SideBar />
       </div>
-      <div class="col-10">qui ce stanno i grafici
-        <img src="https://static.wikia.nocookie.net/silly-cats/images/0/08/Millybleh.jpg/" alt="sillicato" />
+      <div class="col-10">
+        <LineChart/>
       </div>
     </div>
   </div>
@@ -17,9 +17,11 @@
 <script>
 import { defineComponent } from "vue";
 import SideBar from "@/components/dashboard/SideBar.vue";
+import Nav from "../Nav.vue";
+import LineChart from "@/components/dashboard/LineChart.vue";
 
 export default defineComponent({
-  components: { SideBar },
+  components: { SideBar, Nav, LineChart},
 });
 </script>
 
