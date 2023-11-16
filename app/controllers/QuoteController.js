@@ -212,7 +212,7 @@ module.exports = class QuoteController extends Controller {
      * @param {number} debitQuota
      * @return {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
-    async chargeLimitQuota(username, debitQuota) {
+    async chargeDebitQuota(username, debitQuota) {
         let output = this.getDefaultOutput();
         let quoteRes = await this.getQuote(username);
 

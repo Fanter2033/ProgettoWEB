@@ -229,7 +229,7 @@ module.exports = class SquealController extends Controller {
         }
 
         //CONTROLLI OK DEVO SCALARE LA QUOTA ED EFFETTUARE LE RELAZIONI
-        let ctrlOut = await quoteCtrl.chargeLimitQuota(squealDto.sender, squealDto.quote_cost);
+        let ctrlOut = await quoteCtrl.chargeDebitQuota(squealDto.sender, squealDto.quote_cost);
         if (ctrlOut.code !== 200) {
             output['code'] = 500;
             output['msg'] = 'Internal server error.';
@@ -242,7 +242,6 @@ module.exports = class SquealController extends Controller {
         squealDto.critical_mass = 0;
         squealDto.negative_value = 0;
         squealDto.positive_value = 0;
-        squealDto.reactions = [];
 
         let modelOutput = await this._model.postSqueal(squealDto);
 
@@ -295,13 +294,15 @@ module.exports = class SquealController extends Controller {
             autoSqueal.id = squealDto.id;
             autoSqueal.quota_update_cost = this.countPlaceHolders(squealDto.content);
             autoSqueal.original_content = squealDto.content;
-            //TODO MOSTRARE DIRETTAMENTE UNO SQUEAL AGGIORNATO
             let result = await tmpModel.createScheduledOperation(autoSqueal, this.getCurrentTimestampSeconds() + 3);
             if (result === false) {
                 output['code'] = 500;
                 output['msg'] = 'Internal server error (5)';
                 return output;
             }
+            autoSqueal.iteration = 0;
+            let newContent = this.resolveContent(autoSqueal);
+            await this._model.updateSquealContent(autoSqueal.id, newContent);
         }
 
 
@@ -336,12 +337,18 @@ module.exports = class SquealController extends Controller {
             if (squealTextAutoDto.iteration === squealTextAutoDto.iteration_end)
                 continue;
 
+            let quoteCtrl = new QuoteController(new QuoteModel());
+            let squeal = await this._model.getSqueal(squealTextAutoDto.id);
+            let quoteChargeResult = await quoteCtrl.chargeDebitQuota(squeal.sender, squealTextAutoDto.quota_update_cost);
+            if(quoteChargeResult.code !== 200)
+                continue;
+
             squealTextAutoDto.iteration = squealTextAutoDto.iteration + 1;
             squealTextAutoDto.next_scheduled_operation = timestamp + squealTextAutoDto.delay_seconds;
             let newContent = this.resolveContent(squealTextAutoDto);
             promises.push(tmpModel.updateSchedule(squealTextAutoDto.id, squealTextAutoDto));
             promises.push(this._model.updateSquealContent(squealTextAutoDto.id, newContent));
-            //TODO ADDEBITARE LA QUOTA ALL'AGGIORNAMENTO
+
         }
         await Promise.all(promises);
     }
