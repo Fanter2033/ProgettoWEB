@@ -340,7 +340,7 @@ module.exports = class UserController extends Controller {
             }
 
             //Now vip users
-            //TODO CHIEDERE A SAMI
+            //TODO CHIEDERE A SAMI: sami dice che bisogna disabilitare il vip per cambiare username
         }
 
         return output;
@@ -722,7 +722,6 @@ module.exports = class UserController extends Controller {
 
 
     /**
-     *
      * @param username {String}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
@@ -763,9 +762,3 @@ module.exports = class UserController extends Controller {
 *
 * chiunque puo' vedere chi sono gli smm e chi sono i linkati ma per ora chissenefotte
 * */
-
-/**
- *
- * TODO: store di informazioni importati solo per i vip user???
- *
- */

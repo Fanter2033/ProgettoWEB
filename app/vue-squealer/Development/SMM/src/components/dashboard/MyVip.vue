@@ -31,10 +31,7 @@
         >
       </li>
       <li>
-        <div>
           <Squeal />
-        </div>
-
       </li>
     </ul>
   </li>
