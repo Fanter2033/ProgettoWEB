@@ -22,7 +22,6 @@
           >
 
             <template v-for="vip in myVips ">
-
               <MyVip :vip-name = "vip" ></MyVip>
             </template>
 

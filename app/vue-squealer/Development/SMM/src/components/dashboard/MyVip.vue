@@ -26,21 +26,22 @@
       </li>
       <li>
         <a href="#" class="nav-link px-0">
-          <i class="fs-4 bi-send"></i
-          ><span class="d-none d-sm-inline">Squeal</span></a
-        >
-      </li>
-      <li>
-        <a href="#" class="nav-link px-0">
           <i class="fs-4 bi-currency-euro"></i
           ><span class="d-none d-sm-inline">Quote</span></a
         >
+      </li>
+      <li>
+        <div>
+          <Squeal />
+        </div>
+
       </li>
     </ul>
   </li>
 </template>
 
 <script setup>
+  import Squeal from "@/components/dashboard/Squeal.vue";
   defineProps({
     vipName: String,
   })

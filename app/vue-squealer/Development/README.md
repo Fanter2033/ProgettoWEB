@@ -35,8 +35,20 @@ numero limitato di clienti (1-5) ma che ha un traffico intenso sia in
 uscita sia di reazioni e like
 
 
-- pulsante diventa SMM, o scegli SMM
-- SMM non ha altri SMM
-- controllo su VIP, cambio sessione
-- collection linkedaccounts
-- 
+# TODO
+- **[DONE]** Tipi di account: Sia il VIP sia il SMM debbono essere account pro. Il VIP scegli il
+  SMM e può successivamente rimuoverlo.
+- **[ALMOST DONE]** SMM multiplo: il SMM può dover gestire diversi account VIP (diciamo anche a 5-
+  6, ma non c'è un numero massimo).
+  NON DEVE SBAGLIARSI PER NESSUN MOTIVO.
+- **[IN PROGRESS...]** Scrittura: il SMM deve poter postare squeal a nome e per conto del VIP. Non deve
+  essere possibile per i destinatari distinguere se lo squeal è del VIP o del suo SMM.
+- **[IN PROGRESS...]** Monitoraggio: risposte ai post, post con più e meno reazioni, post popolari, post
+  a rischio controversia o impopolare. Caratteri residui giornalieri, settimanali,
+  mensili
+  NON SI PUO' RIMANERE MUTI PER MANCANZA DI CARATTERI
+- **[]** Acquisto d'emergenza di caratteri (a prezzo maggiorato)
+- **[IN PROGRESS...]** Trend dei post del VIP: grafici con andamenti storici di popolarità, numero di
+  reply, frequenza di post, ecc.
+- **[]** Geolocazione fittizia: il SMM può cliccare in una posizione qualunque della
+  mappa e mandare uno squeal geolocalizzato lì.
