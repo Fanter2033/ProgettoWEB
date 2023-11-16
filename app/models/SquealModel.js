@@ -1,7 +1,7 @@
 const Model = require("./Model");
 const Squeal = require("../entities/schemas/SquealSchema");
 const SquealDto = require("../entities/dtos/SquealDto");
-const SquealIrSchema = require("../entities/schemas/SquealIrSchema");
+const SquealStat = require('../entities/SquealStat');
 
 module.exports = class SquealModel extends Model {
     constructor(CollectionName) {
@@ -182,13 +182,40 @@ module.exports = class SquealModel extends Model {
         await this.checkMongoose("Squeal", Squeal);
         username = this.mongo_escape(username);
         let filter = {
-            $and : [
+            $and: [
                 {$expr: {$gt: ["$positive_value", "$critical_mass"]}},
                 {$expr: {$gt: ["$negative_value", "$critical_mass"]}},
             ],
             "sender": `${username}`
         };
         return await this.entityMongooseModel.find(filter).count();
+    }
+
+    /**
+     * @param username {string}
+     * @param from {number}
+     * @param to {number}
+     * @return {Promise<SquealStat[]>}
+     */
+    async getPopularityStats(username, from, to) {
+        await this.checkMongoose("Squeal", Squeal);
+        username = this.mongo_escape(username);
+        from = this.mongo_escape(from);
+        to = this.mongo_escape(to);
+
+        let filter = {
+            $and: [
+                {$expr: {$gt: ["$date", `${from}`]}},
+                {$expr: {$lt: ["$date", `${to}`]}}
+            ],
+            "sender": `${username}`
+        };
+        let results = await this.entityMongooseModel.find(filter).sort({date: 'asc'});
+        let out = [];
+        for (const result of results) {
+            out.push(new SquealStat(result._doc._id, result._doc.sender, result._doc.date, result._doc.positive_value, result._doc.negative_value));
+        }
+        return out;
     }
 
 }

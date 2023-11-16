@@ -236,6 +236,38 @@ paths:
           description: 'User not found'
         '500':
           description: 'Internal server error'
+  /user/{username}/stats/squealPopularity:
+    get:
+      tags:
+        - user
+      summary: Get the squeal stats
+      description: Returns only the squeal published between 2 timestamps.
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+        - name: fromTimestamp
+          in: formData
+          required: true
+          type: number
+        - name: toTimestamp
+          in: formData
+          required: true
+          type: number
+      responses:
+        '200':
+          description: 'Everything is ok'
+        '400':
+          description: 'Bad Request.'
+        '401':
+          description: 'User logged but not authorized to execute the operation'
+        '403':
+          description: 'User not logged'
+        '404':
+          description: 'User not found'
+        '500':
+          description: 'Internal server error'
   /channel:
     post:
       tags:
