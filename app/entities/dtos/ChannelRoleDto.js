@@ -1,3 +1,4 @@
+const ChannelDto = require("./ChannelDto");
 module.exports = class ChannelRoleDto {
 
     #channel_name;
@@ -30,6 +31,16 @@ module.exports = class ChannelRoleDto {
             role: this.#role,
             role_since: this.#role_since
         }
+    }
+
+    /**
+     * @return {ChannelDto}
+     */
+    getChannelDto(){
+        let out = new ChannelDto();
+        out.type = this.#type;
+        out.channel_name = this.#channel_name;
+        return out;
     }
 
 

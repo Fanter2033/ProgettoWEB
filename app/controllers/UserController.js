@@ -515,6 +515,24 @@ module.exports = class UserController extends Controller {
         return output;
     }
 
+    /**
+     * @param username {string}
+     * @return {Promise<{msg: string, code: number, sub_code: number,content: {}}>}
+     */
+    async getUserRoles(username){
+        let output = this.getDefaultOutput();
+
+        let exists = await this.userExists(username);
+        if(exists === false){
+            output['code'] = 404;
+            output['msg'] = 'User not found.';
+            return output;
+        }
+
+        let channelRoleController = new ChannelRolesController(new ChannelRolesModel());
+        return await channelRoleController.getAllRolesOfUser(username);
+    }
+
 
     /**
      *Given an username enable or disable his vip status

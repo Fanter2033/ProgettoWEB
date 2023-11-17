@@ -286,6 +286,26 @@ paths:
           description: 'User not found'
         '500':
           description: 'Internal server error'
+  /user/{username}/roles/:
+    get:
+      tags:
+        - user
+      summary: Get the user roles
+      description: Returns all user roles.
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'OK'
+        '400':
+          description: 'Bad Request.'
+        '404':
+          description: 'User not found'
+        '500':
+          description: 'Internal server error'
   /channel:
     post:
       tags:

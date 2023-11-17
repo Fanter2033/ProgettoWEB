@@ -326,4 +326,25 @@ module.exports = class ChannelRolesController extends Controller {
         return output;
     }
 
+
+    /**
+     * @param username {string}
+     * @return {Promise<{msg: string, code: number, sub_code: number,content: {}}>}
+     */
+    async getAllRolesOfUser(username){
+        let output = this.getDefaultOutput();
+
+        let modelResult = await this.#_model.getAllRolesOfUser(username);
+        if(modelResult === null){
+            output['code'] = 404;
+            output['msg'] = 'User role not found'
+            output['sub_code'] = 1;
+            return output;
+        }
+        output['content'] = [];
+        for (const res of modelResult)
+            output['content'].push(res.getDocument());
+        return output;
+    }
+
 }

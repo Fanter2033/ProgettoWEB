@@ -60,5 +60,31 @@ module.exports = class SquealToChannelModel extends Model {
     }
 
 
+    /**
+     * @param channels {ChannelDto[]}
+     * @return {Promise<number[]>}
+     */
+    async getAllSquealsToChannels(channels){
+        await  this.checkMongoose("squeal_to_channels", SquealChannel);
+        let ids = [];
+        let filterOr = [];
+        for (const channel of channels) {
+            filterOr.push({
+                channel_name: channel.channel_name,
+                channel_type: channel.type
+            });
+        }
+        filterOr = this.mongo_escape(filterOr);
+        let filter = {
+            $or: filterOr
+        }
+        let results = await this.entityMongooseModel.find(filter);
+        for (const result of results) {
+            ids.push(result._doc['squeal_id']);
+        }
+        return ids;
+    }
+
+
 
 }

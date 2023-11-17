@@ -145,7 +145,17 @@ userDriver.get(`/:username/stats/squealPopularity`, async function (req, res) {
         res.status(ctrl.code).send(ctrl.content);
     else
         res.status(ctrl.code).send(ctrl);
-})
+});
+
+userDriver.get(`/:username/roles`, async function (req, res) {
+    let username = req.params['username'];
+
+    let ctrl = await controller.getUserRoles(username);
+    if (ctrl.code === 200)
+        res.status(ctrl.code).send(ctrl.content);
+    else
+        res.status(ctrl.code).send(ctrl);
+});
 
 userDriver.patch("/:username/toggle/vip", async function(req, res){
     let username = req.params['username'];
