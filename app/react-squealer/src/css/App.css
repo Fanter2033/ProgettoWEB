@@ -84,6 +84,8 @@ html {
 .custom-button:hover {
   background-color: var(--squeal-green);
 }
+
+/*emoji*/
 .bottoni_omologati {
   width: 3em;
   min-height: 3em;
@@ -167,29 +169,62 @@ html {
 
 .red-button {
   background-color: var(--squeal-red);
+  color: var(--squeal-yellow);
+  width: 20vw;
+
+  margin: 1em;
+  padding: 1em;
+  border: none;
+
+  border-radius: 0.5rem;
+  cursor: pointer;
 }
 .blue-button {
   background-color: var(--squeal-blue);
+  color: var(--squeal-yellow);
+  width: 20vw;
+  margin: 1em;
+  padding: 1em;
+  border: none;
+
+  border-radius: 0.5rem;
+  cursor: pointer;
 }
 .yellow-button {
   background-color: var(--squeal-yellow);
+  color: var(--squeal-blue);
+  width: 20vw;
+
+  margin: 1em;
+  padding: 1em;
+  border: none;
+  
+  border-radius: 0.5rem;
+  cursor: pointer;
 }
 .green-button {
   background-color: var(--squeal-green);
-  border-radius: 0.5em;
+  color: var(--squeal-yellow);
+  width: 20vw;
+
+  margin: 1em;
+  padding: 1em;
   border: none;
+
+  border-radius: 0.5rem;
+  cursor: pointer;
 }
 
-.red-button:active {
+.red-button:hover {
   background-color: var(--squeal-red);
 }
-.blue-button:active {
+.blue-button:hover {
   background-color: var(--squeal-blue);
 }
-.yellow-button:active {
+.yellow-button:hover {
   background-color: var(--squeal-yellow);
 }
-.green-button:active {
+.green-button:hover {
   background-color: var(--squeal-green);
 }
 
@@ -315,6 +350,34 @@ img {
 .my-foot {
   background-color: var(--squeal-yellow);
   padding: 10rem;
+}
+
+.modal-buy-header {
+  background-color: var(--squeal-green);
+  color: #ecf0f1;
+}
+
+.modal-buy-body {
+  background: linear-gradient(
+    to bottom,
+    var(--squeal-green),
+    var(--squeal-yellow)
+  );
+  color: #ecf0f1;
+}
+
+.modal-delete-header {
+  background-color: var(--squeal-red);
+  color: #ecf0f1;
+}
+
+.modal-delete-body {
+  background: linear-gradient(
+    to bottom,
+    var(--squeal-red),
+    var(--squeal-yellow)
+  );
+  color: #ecf0f1;
 }
 
 /* -------------------- MADE BY REACT STUFF ------------------*/

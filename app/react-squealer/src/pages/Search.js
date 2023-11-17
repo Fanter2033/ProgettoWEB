@@ -38,59 +38,10 @@ function Search() {
 
     // Pulisci il timer precedente se l'utente continua a digitare
     return () => clearTimeout(delayTimer);
-  }, [inputValue]); // Esegui useEffect ogni volta che il valore di inputValue cambia
-
-  /**
-   * 
-   *    const ChannelCard = ({ channel }) => {
-    return (
-      <div
-        style={{
-          border: "1px solid #ccc",
-          padding: "10px",
-          margin: "10px",
-          borderRadius: "5px",
-        }}
-      >
-        <h3>Channel Name: {channel.channel_name}</h3>
-        <p>Type: {channel.type}</p>
-        <p>Private: {channel.private.toString()}</p>
-        <p>Locked: {channel.locked.toString()}</p>
-        <p>Owner: {channel.owner}</p>
-        <p>Subscribers: {channel.subscribers}</p>
-        <p>Posts: {channel.posts}</p>
-        <Link to="/infoc">
-          <button variant="primary" className="ms-4 me-4">
-            Info
-          </button>
-        </Link>
-      </div>
-    );
-  };
+  }, [inputValue]);
 
 
-
-  
-  /*
-  {channels.map((channel, index) => (
-        <ChannelCard key={index} channel={channel} />
-      ))}
-  */
-
-  /*
-      <div>
-      <h2>Lista Canali:</h2>
-      <ul>
-        {responseData.channels.map((channel, index) => (
-          <li key={index}>
-            Channel Name: {channel.channel_name}
-          </li>
-        ))}
-      </ul>
-      </div>
-*/
-
-  //TODO: PUT channel/{type}/{channel_name}
+  //TODO: follow a channel
   const follow = () => {
     alert("il follow è da implementare :)");
   };

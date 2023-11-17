@@ -12,7 +12,6 @@ function Received() {
     navigate("/");
   }
 
-  //TODO: banner per gli appena iscritti?
   return (
     <>
       <Navbar />
