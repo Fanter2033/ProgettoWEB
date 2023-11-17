@@ -1,14 +1,19 @@
 import React from "react";
-import { Modal, Button } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
+import { useUserContext } from "../config/UserContext";
 
 function VipModal({ showModal, handleClose }) {
+
+  const { userGlobal } = useUserContext();
+
   const handleUpgrade = () => {
     // Simulazione di una richiesta al server per il pagamento
     simulatePaymentRequest()
       .then((response) => {
         // Simula una risposta positiva dal server
         alert("Pagamento effettuato con successo!");
-        handleClose(); // Chiudi la modale dopo la simulazione di pagamento
+        handleClose(); 
+        userGlobal.vip=true;
       })
       .catch((error) => {
         // Simula una risposta negativa o gestisce eventuali errori
@@ -19,13 +24,13 @@ function VipModal({ showModal, handleClose }) {
   const simulatePaymentRequest = () => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        const success = Math.random() > 0.2; // pagamento riuscito il 90% delle volte
+        const success = Math.random() > 0; // pagamento riuscito il 100% delle volte
         if (success) {
           resolve("Pagamento riuscito");
         } else {
           reject("Pagamento fallito");
         }
-      }, 1000); //ritardo nella risposta del server (1 secondo)
+      }, 1000); //ritardo nella risposta: 1 sec
     });
   };
 

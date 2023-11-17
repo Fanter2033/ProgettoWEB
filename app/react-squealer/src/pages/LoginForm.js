@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 
@@ -77,6 +77,26 @@ function LoginForm() {
     await login();
   };
 
+  //premi invio per muoverti
+
+  const input1Ref = useRef(null);
+  const input2Ref = useRef(null);
+
+
+  const handleKeyPress = (event, nextInputRef) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      nextInputRef.current.focus();
+    }
+  };
+
+  const   handleKeyFinal= (event) => {
+    if (event.key === "Enter") {
+      // Esegui la tua logica quando viene premuto il tasto "Invio"
+      console.log("Tasto Invio premuto!");
+    }
+  };
+
   //reminder: input tag in React <input/>
   return (
     <div className="container">
@@ -110,6 +130,8 @@ function LoginForm() {
                 autoComplete="on"
                 value={usernameForm}
                 onChange={(e) => setUsernameForm(e.target.value)}
+                ref={input1Ref}
+                onKeyDown={(e) => handleKeyPress(e, input2Ref)}
               />
             </div>
 
@@ -128,6 +150,7 @@ function LoginForm() {
                 placeholder="password"
                 autoComplete="on"
                 value={passwordForm}
+                ref={input2Ref}
                 onChange={(e) => setPasswordForm(e.target.value)}
               />
             </div>
@@ -136,6 +159,7 @@ function LoginForm() {
               <button
                 className="col-12 col-md-4 offset-md-4 mb-5 custom-button"
                 type="submit"
+                onKeyDown={handleKeyFinal}
               >
                 <ToastContainer />
                 LOGIN
