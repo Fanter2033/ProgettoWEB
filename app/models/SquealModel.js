@@ -38,7 +38,7 @@ module.exports = class SquealModel extends Model {
         }
         update = this.mongo_escape(update);
         try {
-            let result = await this.entityMongooseModel.findOneAndUpdate(filter, update);
+            await this.entityMongooseModel.findOneAndUpdate(filter, update);
             return true;
         } catch (ignored) {
             return false;
@@ -104,7 +104,7 @@ module.exports = class SquealModel extends Model {
         filter = this.mongo_escape(filter);
         let update = {sender: `${newUsername}`}
         try {
-            let result = await this.entityMongooseModel.updateMany(filter, update);
+            await this.entityMongooseModel.updateMany(filter, update);
             return true;
         } catch (ignored) {
             return false;
@@ -143,7 +143,7 @@ module.exports = class SquealModel extends Model {
         let update = {critical_mass: critical_mass};
         update = this.mongo_escape(update);
         try {
-            let result = await this.entityMongooseModel.updateOne(filter, update);
+            await this.entityMongooseModel.updateOne(filter, update);
             return true;
         } catch (ignored) {
             return false;

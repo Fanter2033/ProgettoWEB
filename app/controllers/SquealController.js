@@ -16,6 +16,7 @@ const Squeal2ChannelDto = require("../entities/dtos/Squeal2ChannelDto");
 const SquealIrDto = require("../entities/dtos/SquealIrDto");
 const UserDto = require("../entities/dtos/UserDto");
 const SquealTextAutoModel = require('../models/SquealTextAutoModel');
+const ChannelRoleDto = require("../entities/dtos/ChannelRoleDto");
 
 module.exports = class SquealController extends Controller {
 
@@ -48,8 +49,11 @@ module.exports = class SquealController extends Controller {
             output['msg'] = 'Squeal not found.';
             return output;
         }
+        let squeal_id = squeal.id;
 
         let isPublic = await this.isSquealPublic(identifier);
+        let isDest = await this.#squealToUserModel.isUserDest(squeal_id, authenticatedUser.username);
+
         if (isPublic === false && escapeAddImpression === false) {
             if (this.isAuthenticatedUser(authenticatedUser) === false) {
                 output['code'] = 403;
@@ -57,7 +61,6 @@ module.exports = class SquealController extends Controller {
                 return output;
             }
 
-            let isDest = await this.#squealToUserModel.isUserDest(squeal_id, user.username);
             if (isDest === false && authenticatedUser.username.trim() !== squeal.sender.trim() && authenticatedUser.isAdmin === false) {
                 output['code'] = 401;
                 output['msg'] = 'Not authorized to see this content.';
@@ -90,9 +93,31 @@ module.exports = class SquealController extends Controller {
             }
         }
 
-        if (isPublic === false) {
+        if (isDest === true) {
             output['content'] = squeal.getDocument();
             return output;
+        }
+
+        if(isPublic === true && isDest === false){
+            let channelDtos = await this.#squealToChannelModel.getDestinationsChannels(identifier);
+            let theresIsPublicChannel = await this.#channelController.thereIsPublicChannel(channelDtos);
+            if(theresIsPublicChannel === false){
+                let found = false;
+                for (const channelDto of channelDtos) {
+                    let result = await this.#channelController.getChannelUserRole(channelDto, authenticatedUser.username);
+                    if(this.isObjectVoid(result.content) === true) continue;
+                    let role = new ChannelRoleDto(result.content)
+                    if(role.role >= autoload.config._CHANNEL_ROLE_READ){
+                        found = true;
+                        break;
+                    }
+                }
+                if(found === false){
+                    output['code'] = 401;
+                    output['msg'] = 'Not authorized to see this content. (2)';
+                    return output;
+                }
+            }
         }
 
         //If the squeal is public we should recalculate the critical mass for every impression
