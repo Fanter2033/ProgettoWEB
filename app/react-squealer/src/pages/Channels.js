@@ -15,6 +15,7 @@ import Chat from "./Chat";
 import "../css/LoginForm.css";
 import "react-toastify/dist/ReactToastify.css";
 
+import { Card, Col, Row } from "react-bootstrap";
 import "../css/App.css";
 
 function Channels() {
@@ -154,7 +155,14 @@ function Channels() {
   //TODO: GET /channel/{type} list of channel------------------------------------------------------------------------------------------------------------
   //types: CHANNEL_OFFICIAL, CHANNEL_USERS, CHANNEL_HASHTAG
 
-  //const [ty, seTy] = useState("");
+  //DROPDOWN MENU
+  const [ty, setTy] = useState("");
+  const [list, setList] = useState([]);
+
+  const handleOptionChange = (e) => {
+    const selectedValue = e.target.value;
+    setTy(selectedValue);
+  };
 
   /*
   const response = {
@@ -167,36 +175,42 @@ function Channels() {
     ],
     "totalCount": 0
   };
-   */
+  */
 
-  /*
   async function getTypes() {
     try {
-      const uri = `${ReactConfig.base_url_requests}/channel/{type}`;
+      const uri = `${ReactConfig.base_url_requests}/channel/${ty}`;
       let result = await fetch(uri);
       if (result.ok) {
-        let channel = await result.json();
-        console.log(channel);
-        seTy(channel);
-        return channel;
+        let listCH = await result.json();
+        setList(listCH);
+        return listCH;
       } else {
         console.error("Errore nella richiesta:", result.statusText);
       }
     } catch (error) {
       console.error("Errore nella fetch:", error);
     }
+    <Row className="">
+      {arrayChannel.map((channel) => (
+        <Col key={channel.id} lg={6} className="mb-4">
+          <Card>
+            <Card.Body className="mb-4 d-flex flex-row">
+              <Card.Title className="">{channel.channel_name}</Card.Title>
+
+              <Link to="/infoc" state={channel}>
+                <button className="custom-button me-2">Info</button>
+              </Link>
+
+              <button className="custom-button">Segui</button>
+            </Card.Body>
+          </Card>
+        </Col>
+      ))}
+    </Row>;
   }
-  
-
-  console.log(ty);
-
-  useEffect(() => {
-    const intervalId = setInterval(getTypes, 10000);
-    return () => {
-      clearInterval(intervalId);
-    };
-  });
-  */
+  let arrayChannel = list.channels;
+  console.log("LISTAAAAAAAA", arrayChannel);
 
   const [functionsCalled, setFunctionsCalled] = useState(false);
 
@@ -213,15 +227,31 @@ function Channels() {
     <div>
       <div className="container-flex">
         <div className="row" onLoad={getUserData}>
-          <div className="col-12 col-md-9">
+          <div className="col-12 col-md-8">
             <h1>HOME</h1>
 
-            <div className="d-flex flex-row justify-content-center mb-2">
-              <ChannelForm />
-              <button className="user_button">FILTER</button>
+            <div className="row mb-2">
+              <div className="col-md-6 mx-auto">
+                <select
+                  className="form-select me-2"
+                  id="dropdown"
+                  value={ty}
+                  onChange={handleOptionChange}
+                >
+                  <option value="">Filtro</option>
+                  <option value="CHANNEL_USERS">§ : Utenti</option>
+                  <option value="CHANNEL_OFFICIAL">§ : UFFICIALI</option>
+                  <option value="CHANNEL_HASHTAG"># : Tag</option>
+                </select>
+
+                <button className="blue-button" onClick={getTypes}>
+                  FILTRA
+                </button>
+              </div>
             </div>
 
             <div>
+              <ChannelForm />
               <Search />
             </div>
 
@@ -237,7 +267,7 @@ function Channels() {
               </ul>
             </div>
           </div>
-          <div className="col-md-3 d-none d-md-block">
+          <div className="col-md-4 d-none d-md-block">
             <h1>CHAT</h1>
             <Chat />
           </div>

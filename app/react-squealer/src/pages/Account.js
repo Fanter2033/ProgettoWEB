@@ -318,7 +318,6 @@ function Account() {
           <div className="col-md-6">
             <h4 className="mt-4 mb-5 cool-font-small">Email: {userData.email}</h4>
             <h4 className="mt-4 cool-font-small">Dove sono nel mondo:</h4>
-            <Geo />
           </div>
         </div>
 

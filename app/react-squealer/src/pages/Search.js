@@ -57,7 +57,7 @@ function Search() {
           onChange={(e) => setInputValue(e.target.value)}
         />
         <button className="custom-button" type="submit">
-          Search
+          Cerca
         </button>
       </form>
 

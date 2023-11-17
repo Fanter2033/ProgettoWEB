@@ -3,10 +3,9 @@ import { Link } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 
 import "../css/App.css";
-import { Button, Card, Col, Row } from "react-bootstrap";
+import { Container, Button, Card, Col, Row } from "react-bootstrap";
 
-
-//TODO: GET utils/chat/ all private post----------------------------------------------------------------
+//GET utils/chat/ all private post----------------------------------------------------------------
 
 function Chat() {
   const [squeals, setSqueals] = useState([]);
@@ -27,8 +26,12 @@ function Chat() {
 
       if (result.ok) {
         let json = await result.json();
-        let camp = json.squeals;
-        setSqueals(camp);
+        /*
+        for (let s of json) {
+          squeals.push(s);
+        }
+        */
+        setSqueals(json);
       } else {
         console.error("Errore nella richiesta:", result.statusText);
       }
@@ -41,7 +44,6 @@ function Chat() {
 
   useEffect(() => {
     const intervalId1 = setInterval(chatReq, 5000);
-
     return () => {
       clearInterval(intervalId1);
     };
@@ -55,27 +57,32 @@ function Chat() {
         <div className="row">
           <div className="col-12">
             <h2>Privati:</h2>
-            <Row className="ms-4 me-4">
-              {squeals !== undefined ? (squeals.map((squeal) => (
-                <Col key={squeal.id} lg={6} className="mb-4 ">
-                  <Card>
-                    <Card.Body className="mb-4 d-flex flex-row">
-                      <Card.Title className="ms-4 me-4">
-                        {squeal}
-                      </Card.Title>
-                      <Link to="/infou">
-                        <Button variant="primary" className="ms-4 me-4">
-                          Info
-                        </Button>
-                      </Link>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              ))) : (
-                <p>No private squeals</p>
-              )
-              }
-            </Row>
+
+            <Container className="">
+              <Row className="w-100">
+                {squeals.map((squeal) => (
+                  <Col lg={12} key={squeal.id} className="mb-4">
+                    <Card style={{ height: "100%" }}>
+                      <Card.Header className="d-flex flex-col justify-content-center align-items-center">
+                        {" "}
+                        <b>{squeal.sender}</b>
+                        <Link to="/infou">
+                          <button className="ms-4 me-4 custom-button box">
+                            Info
+                          </button>
+                        </Link>
+                      </Card.Header>
+                      <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
+                        <div>{squeal.content}</div>
+                      </Card.Body>
+                      <Card.Footer>
+                        <div>Id: {squeal._id}</div>
+                      </Card.Footer>
+                    </Card>
+                  </Col>
+                ))}
+              </Row>
+            </Container>
           </div>
         </div>
       </div>
