@@ -488,6 +488,35 @@ module.exports = class UserController extends Controller {
     }
 
     /**
+     * @param username {string}
+     * @param fromTimestamp {number}
+     * @param toTimestamp {number}
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     * Siam sicuri di mantenere questa funzione qui?
+     */
+    async getPopularityStats(username, fromTimestamp, toTimestamp){
+        let output = this.getDefaultOutput();
+        let squealModel = new SquealModel();
+
+        if(isNaN(fromTimestamp)) fromTimestamp = 0;
+        if(isNaN(toTimestamp)) toTimestamp = 0;
+
+        let exists = await this.userExists(username);
+        if(exists === false){
+            output['code'] = 404;
+            output['msg'] = 'User not found.';
+            return output;
+        }
+        let result = await squealModel.getPopularityStats(username, fromTimestamp, toTimestamp);
+        for (const resultKey in result) {
+            result[resultKey] = result[resultKey].getDocument();
+        }
+        output.content = result;
+        return output;
+    }
+
+
+    /**
      *Given an username enable or disable his vip status
      * @param username {String}
      * @param authenticatedUser {{}|UserDto}

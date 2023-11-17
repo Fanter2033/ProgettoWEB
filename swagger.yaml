@@ -52,12 +52,21 @@ paths:
           description: Failed authentication due server error
         '404':
           description: No user to de-authenticate found.
-  /dashboard/:
+  /utils/dashboard/:
     get:
       tags:
         - utils
       summary: Get public posts of the user.
       description: Are returned all posts that have as receivers a channel where the user is subscribed
+      parameters:
+        - name: excludeFrom
+          required: false
+          type: number
+          in: query
+        - name: excludeTo
+          required: false
+          type: number
+          in: query
       responses:
         '200':
           description: returns an array of Squeals
@@ -65,12 +74,21 @@ paths:
             type: array
             maxLength: 10
             $ref: '#/definitions/Squeal'
-  /chat/:
+  /utils/chat/:
     get:
       tags:
         - utils
       summary: Get private posts of the user.
       description: Are returned all posts that have as receivers the user
+      parameters:
+        - name: excludeFrom
+          required: false
+          type: number
+          in: query
+        - name: excludeTo
+          required: false
+          type: number
+          in: query
       responses:
         '200':
           description: returns an array of Squeals
@@ -223,6 +241,38 @@ paths:
           in: path
           required: true
           type: string
+      responses:
+        '200':
+          description: 'Everything is ok'
+        '400':
+          description: 'Bad Request.'
+        '401':
+          description: 'User logged but not authorized to execute the operation'
+        '403':
+          description: 'User not logged'
+        '404':
+          description: 'User not found'
+        '500':
+          description: 'Internal server error'
+  /user/{username}/stats/squealPopularity:
+    get:
+      tags:
+        - user
+      summary: Get the squeal stats
+      description: Returns only the squeal published between 2 timestamps.
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+        - name: fromTimestamp
+          in: formData
+          required: true
+          type: number
+        - name: toTimestamp
+          in: formData
+          required: true
+          type: number
       responses:
         '200':
           description: 'Everything is ok'

@@ -515,7 +515,7 @@ module.exports = class ChannelController extends Controller {
             output['msg'] = 'Not valid username';
             return output;
         }
-z
+
         let user = await userController.getUser(username);
         if (user['code'] !== 200) {
             //User not found
@@ -529,6 +529,17 @@ z
         if (channelDto.type === autoload.config._CHANNEL_TYPE_HASHTAG) {
             let response = new ChannelRoleDto();
             response.role = autoload.config._CHANNEL_ROLE_WRITE;
+            response.type = channelDto.type;
+            response.channel_name = channelDto.channel_name;
+            response.role_since = 0;
+            response.username = username;
+            output['content'] = response.getDocument();
+            return output;
+        }
+
+        if (channelDto.type === autoload.config._CHANNEL_TYPE_OFFICIAL && user.isAdmin === false) {
+            let response = new ChannelRoleDto();
+            response.role = autoload.config._CHANNEL_ROLE_READ;
             response.type = channelDto.type;
             response.channel_name = channelDto.channel_name;
             response.role_since = 0;
@@ -582,6 +593,30 @@ z
         if (type === 'CHANNEL_OFFICIAL') return true;
         if (type === 'CHANNEL_USERS') return true;
         return type === 'CHANNEL_HASHTAG';
+    }
+
+    checkChannelPublicType(type){
+        if (type === 'CHANNEL_OFFICIAL') return true;
+        return type === 'CHANNEL_HASHTAG';
+    }
+
+    /**
+     * @param {ChannelDto[]} dtos
+     * @return {Promise<boolean>}
+     */
+    async thereIsPublicChannel(dtos){
+        for (const dto of dtos)
+            if (this.checkChannelPublicType(dto.channel_type))
+                return true;
+        //mmm we should scan every channel
+        for (const dto of dtos){
+            let result = await this.#_model.getChannel(dto);
+            if(!(result instanceof ChannelDto))
+                continue;
+            if(result.private === false)
+                return true;
+        }
+        return false;
 
     }
 

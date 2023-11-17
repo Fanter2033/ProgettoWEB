@@ -20,7 +20,7 @@ import VipModal from "./VipModal";
 import "../css/App.css";
 import cattyy from "./media/splash.jpeg";
 import pink from "./media/avvoltoioEli.png";
-import { Modal } from "react-bootstrap";
+import { Modal, Button } from "react-bootstrap";
 
 //TODO:modal for delete user
 
@@ -36,6 +36,7 @@ const { firstname, lastname, username, email, password } = userData;
 */
 
 function Account() {
+  
   //username from <Navbar/>
   //const location = useLocation();
   //const { username } = location.state;
@@ -212,12 +213,82 @@ function Account() {
 
   //!channels
   //TODO: PUT: CANALI SEGUITI /user/${username}-----------------------------------------------------------------------------------------------------
-  async function followedChannels() {}
+  async function followedChannels() {
+    //GET channels: if followed by user, print
+  }
 
   //!quote
-  //TODO: PUT: BUY QUOTE /user/${username}-----------------------------------------------------------------------------------------------------
-  async function buyQuote() {}
   //TODO: PATCH USER QUOTE /user/${username}/quote     when BUY is clicked percentageeeee-----------------------------------------------------------------------------------------------
+  /*
+  const simulatePaymentRequest = () => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const success = Math.random() > 0;
+        if (success) {
+          resolve("Pagamento riuscito");
+        } else {
+          reject("Pagamento fallito");
+        }
+      }, 1000);
+    });
+  };
+*/
+
+  async function buyQuote() {
+    /*
+    simulatePaymentRequest()
+      .then((response) => {
+        alert("Pagamento effettuato con successo!");
+
+        //TODO:body of squeal
+        const data = {
+          quote: {},
+        };
+
+        const url = `${ReactConfig.base_url_requests}/user/${userGlobal.username}/quote`;
+        const options = {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          mode: "cors",
+          body: JSON.stringify(data),
+        };
+
+        fetch(url, options)
+          .then((response) => {
+            if (response.ok) {
+              console.log("Aumento riuscito con successo");
+            } else {
+              console.error("Aumento fallito", response.statusText);
+            }
+          })
+          .catch((error) => {
+            console.error("Network error", error);
+          });
+
+      })
+      .catch((error) => {
+        alert("Errore durante il pagamento. Riprova più tardi.");
+      });
+
+    <Modal show={showModal} onHide={handleShowModal}>
+      <Modal.Header closeButton>
+        <Modal.Title>Conferma Eliminazione Utente</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>Sei sicuro di voler eliminare questo utente?</Modal.Body>
+      <Modal.Footer>
+        <button variant="secondary" onClick={handleCloseModal}>
+          Annulla
+        </button>
+        <button variant="danger" onClick={simulatePaymentRequest}>
+          Paga
+        </button>
+      </Modal.Footer>
+    </Modal>;
+    */
+  }
 
   //!vip
   //TODO: PUT: ADD SMM /user/${username}----------------------------------------------------------------------------------------------------------
@@ -248,7 +319,7 @@ function Account() {
               onMouseOver={showVulture}
               onMouseLeave={hideVulture}
             />
-            
+
             {showVultureAnimation && <VultureAnimation />}
           </div>
 
@@ -259,7 +330,9 @@ function Account() {
                   <div className="col-12">
                     <h1 className="d-flex flex-col align-items-center justify-content-center cool-font-medium mt-2 mb-2">
                       {userGlobal.username}
-                      <img src={pink} style={{ width: "10%" }}/>
+                      {userGlobal.vip && (
+                        <img src={pink} style={{ width: "10%" }} />
+                      )}
                     </h1>
                     <h2>
                       {userData.first_name} {userData.last_name}
@@ -317,6 +390,8 @@ function Account() {
             <button id="buy-button" className="box" onClick={buyQuote}>
               BUY
             </button>
+            <p>for a year</p>
+            <p>MAX 10.000</p>
           </div>
 
           <div className="col-md-6">
@@ -368,16 +443,19 @@ function Account() {
           </div>
         </div>
 
-        <div id="vip_buttons">
-          <p>quando l'utente fa l'update a vip fai comparire:</p>
-          <p>badge squeal</p>
-          <button className="upgrade-button mb-2 box" onClick={addSmm}>
-            ADD SMM?
-          </button>
-          <button className="upgrade-button mb-2 box" onClick={removeSmm}>
-            NO MORE SMM!
-          </button>
-        </div>
+        {userGlobal.vip && (
+          <div
+            id="vip_buttons"
+            className="row d-flex flex-row justify-content-center align-items-center"
+          >
+            <button className="upgrade-button mb-2 box" onClick={addSmm}>
+              ADD SMM?
+            </button>
+            <button className="upgrade-button mb-2 box" onClick={removeSmm}>
+              NO MORE SMM!
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

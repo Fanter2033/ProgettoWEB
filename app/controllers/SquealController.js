@@ -16,6 +16,7 @@ const Squeal2ChannelDto = require("../entities/dtos/Squeal2ChannelDto");
 const SquealIrDto = require("../entities/dtos/SquealIrDto");
 const UserDto = require("../entities/dtos/UserDto");
 const SquealTextAutoModel = require('../models/SquealTextAutoModel');
+const ChannelRoleDto = require("../entities/dtos/ChannelRoleDto");
 
 module.exports = class SquealController extends Controller {
 
@@ -48,8 +49,14 @@ module.exports = class SquealController extends Controller {
             output['msg'] = 'Squeal not found.';
             return output;
         }
-
+        let squeal_id = squeal.id;
         let isPublic = await this.isSquealPublic(identifier);
+        let isDest;
+        if(this.isAuthenticatedUser(authenticatedUser) === true)
+            isDest = await this.#squealToUserModel.isUserDest(squeal_id, authenticatedUser.username);
+        else
+            isDest = false;
+
         if (isPublic === false && escapeAddImpression === false) {
             if (this.isAuthenticatedUser(authenticatedUser) === false) {
                 output['code'] = 403;
@@ -57,7 +64,6 @@ module.exports = class SquealController extends Controller {
                 return output;
             }
 
-            let isDest = await this.#squealToUserModel.isUserDest(squeal_id, user.username);
             if (isDest === false && authenticatedUser.username.trim() !== squeal.sender.trim() && authenticatedUser.isAdmin === false) {
                 output['code'] = 401;
                 output['msg'] = 'Not authorized to see this content.';
@@ -69,12 +75,6 @@ module.exports = class SquealController extends Controller {
             output['content'] = squeal.getDocument();
             return output;
         }
-
-        //We should calculate if the squeal is popular and unpopular, because if the CM > Good reactions is still popular.
-        //Same thing for unpopular case
-        let isPopular = (squeal.critical_mass <= squeal.positive_value);
-        let isUnpopular = (squeal.critical_mass <= squeal.negative_value);
-        let isControversial = (isPopular && isUnpopular);
 
         let irDto = new SquealIrDto();
         irDto.squeal_id = identifier;
@@ -96,9 +96,36 @@ module.exports = class SquealController extends Controller {
             }
         }
 
-        if (isPublic === false) {
+        if (isDest === true) {
             output['content'] = squeal.getDocument();
             return output;
+        }
+
+        if(isPublic === true && isDest === false){
+            let channelDtos = await this.#squealToChannelModel.getDestinationsChannels(identifier);
+            let theresIsPublicChannel = await this.#channelController.thereIsPublicChannel(channelDtos);
+            if(theresIsPublicChannel === false){
+                if(this.isAuthenticatedUser(authenticatedUser) === false) {
+                    output['code'] = 401;
+                    output['msg'] = 'Not authorized to see this content. (3)';
+                    return output;
+                }
+                let found = false;
+                for (const channelDto of channelDtos) {
+                    let result = await this.#channelController.getChannelUserRole(channelDto, authenticatedUser.username);
+                    if(this.isObjectVoid(result.content) === true) continue;
+                    let role = new ChannelRoleDto(result.content)
+                    if(role.role >= autoload.config._CHANNEL_ROLE_READ){
+                        found = true;
+                        break;
+                    }
+                }
+                if(found === false){
+                    output['code'] = 401;
+                    output['msg'] = 'Not authorized to see this content. (2)';
+                    return output;
+                }
+            }
         }
 
         //If the squeal is public we should recalculate the critical mass for every impression
@@ -235,7 +262,7 @@ module.exports = class SquealController extends Controller {
         }
 
         //CONTROLLI OK DEVO SCALARE LA QUOTA ED EFFETTUARE LE RELAZIONI
-        let ctrlOut = await quoteCtrl.chargeLimitQuota(squealDto.sender, squealDto.quote_cost);
+        let ctrlOut = await quoteCtrl.chargeDebitQuota(squealDto.sender, squealDto.quote_cost);
         if (ctrlOut.code !== 200) {
             output['code'] = 500;
             output['msg'] = 'Internal server error.';
@@ -248,7 +275,6 @@ module.exports = class SquealController extends Controller {
         squealDto.critical_mass = 0;
         squealDto.negative_value = 0;
         squealDto.positive_value = 0;
-        squealDto.reactions = [];
 
         let modelOutput = await this._model.postSqueal(squealDto);
 
@@ -301,13 +327,15 @@ module.exports = class SquealController extends Controller {
             autoSqueal.id = squealDto.id;
             autoSqueal.quota_update_cost = this.countPlaceHolders(squealDto.content);
             autoSqueal.original_content = squealDto.content;
-            //TODO MOSTRARE DIRETTAMENTE UNO SQUEAL AGGIORNATO
             let result = await tmpModel.createScheduledOperation(autoSqueal, this.getCurrentTimestampSeconds() + 3);
             if (result === false) {
                 output['code'] = 500;
                 output['msg'] = 'Internal server error (5)';
                 return output;
             }
+            autoSqueal.iteration = 0;
+            let newContent = this.resolveContent(autoSqueal);
+            await this._model.updateSquealContent(autoSqueal.id, newContent);
         }
 
 
@@ -342,12 +370,18 @@ module.exports = class SquealController extends Controller {
             if (squealTextAutoDto.iteration === squealTextAutoDto.iteration_end)
                 continue;
 
+            let quoteCtrl = new QuoteController(new QuoteModel());
+            let squeal = await this._model.getSqueal(squealTextAutoDto.id);
+            let quoteChargeResult = await quoteCtrl.chargeDebitQuota(squeal.sender, squealTextAutoDto.quota_update_cost);
+            if(quoteChargeResult.code !== 200)
+                continue;
+
             squealTextAutoDto.iteration = squealTextAutoDto.iteration + 1;
             squealTextAutoDto.next_scheduled_operation = timestamp + squealTextAutoDto.delay_seconds;
             let newContent = this.resolveContent(squealTextAutoDto);
             promises.push(tmpModel.updateSchedule(squealTextAutoDto.id, squealTextAutoDto));
             promises.push(this._model.updateSquealContent(squealTextAutoDto.id, newContent));
-            //TODO ADDEBITARE LA QUOTA ALL'AGGIORNAMENTO
+
         }
         await Promise.all(promises);
     }
