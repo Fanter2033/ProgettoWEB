@@ -6,6 +6,7 @@ const ChannelRoleDto = require("../entities/dtos/ChannelRoleDto");
 const UserController = require("./UserController");
 const UserModel = require("../models/UserModel");
 const UserDto = require("../entities/dtos/UserDto");
+const SquealToChannelModel = require("../models/SquealToChannelModel");
 let userController = new UserController(new UserModel());
 
 module.exports = class ChannelController extends Controller {
@@ -124,6 +125,7 @@ module.exports = class ChannelController extends Controller {
      */
     async getChannelList(requestingUser, offset, limit, search, orderBy, orderDir, type) {
         let output = this.getDefaultOutput();
+        let s2c = new SquealToChannelModel();
 
         let isAdmin = false;
         if (this.isObjectVoid(requestingUser) === false)
@@ -143,6 +145,9 @@ module.exports = class ChannelController extends Controller {
 
         output.content = {}
         output.content['channels'] = await this.#_model.getChannelList(offset, limit, search, orderBy, orderDir, type);
+        for (const channelKey in output.content['channels']) {
+            output.content['channels'][channelKey].posts = await s2c.getNumberAssoc(output.content['channels'][channelKey]);
+        }
         output.content['totalCount'] = await this.#_model.getChannelCount(search, type);
 
         for (let i = 0; i < output.content['channels'].length; i++)

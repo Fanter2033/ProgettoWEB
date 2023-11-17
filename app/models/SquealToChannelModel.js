@@ -12,13 +12,13 @@ module.exports = class SquealToChannelModel extends Model {
      * @param {Squeal2ChannelDto} dto
      * @return {Promise<boolean>}
      */
-    async createAssocSquealChannel(dto){
-        await  this.checkMongoose("squeal_to_channels", SquealChannel);
+    async createAssocSquealChannel(dto) {
+        await this.checkMongoose("squeal_to_channels", SquealChannel);
         let doc = this.mongo_escape(dto.getDocument());
         let newAssoc = new this.entityMongooseModel(doc);
         try {
             await newAssoc.save();
-        } catch (ignored){
+        } catch (ignored) {
             return false;
         }
         return true;
@@ -28,8 +28,8 @@ module.exports = class SquealToChannelModel extends Model {
      * @param {number} id
      * @return {Promise<number>}
      */
-    async countChannelLinked(id){
-        await  this.checkMongoose("squeal_to_channels", SquealChannel);
+    async countChannelLinked(id) {
+        await this.checkMongoose("squeal_to_channels", SquealChannel);
         id = this.mongo_escape(id);
         let filter = {
             "squeal_id": `${id}`
@@ -42,8 +42,8 @@ module.exports = class SquealToChannelModel extends Model {
      * @param id
      * @return {Promise<ChannelDto[]>}
      */
-    async getDestinationsChannels(id){
-        await  this.checkMongoose("squeal_to_channels", SquealChannel);
+    async getDestinationsChannels(id) {
+        await this.checkMongoose("squeal_to_channels", SquealChannel);
         id = this.mongo_escape(id);
         let filter = {
             "squeal_id": `${id}`
@@ -64,8 +64,8 @@ module.exports = class SquealToChannelModel extends Model {
      * @param channels {ChannelDto[]}
      * @return {Promise<number[]>}
      */
-    async getAllSquealsToChannels(channels){
-        await  this.checkMongoose("squeal_to_channels", SquealChannel);
+    async getAllSquealsToChannels(channels) {
+        await this.checkMongoose("squeal_to_channels", SquealChannel);
         let ids = [];
         let filterOr = [];
         for (const channel of channels) {
@@ -85,6 +85,20 @@ module.exports = class SquealToChannelModel extends Model {
         return ids;
     }
 
+
+    /**
+     * @param channel {ChannelDto}
+     * @return {Promise<number>}
+     */
+    async getNumberAssoc(channel) {
+        await this.checkMongoose("squeal_to_channels", SquealChannel);
+        let filter = {
+            channel_name: channel.channel_name,
+            channel_type: channel.type
+        };
+        filter = this.mongo_escape(filter);
+        return await this.entityMongooseModel.find(filter).count();
+    }
 
 
 }
