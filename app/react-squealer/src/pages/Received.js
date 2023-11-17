@@ -6,7 +6,7 @@ import Navbar from "./Navbar";
 import "../css/App.css";
 
 function Received() {
-  const { userGlobal, setUserGlobal } = useUserContext();
+  const { userGlobal } = useUserContext();
   const navigate = useNavigate();
   if (userGlobal.username === undefined) {
     navigate("/");

@@ -24,6 +24,7 @@ function InfoChannel() {
         console.error("Failed to get channel info, errore:", error);
       });
   };
+  
   //TODO: GET /channel/{type}/{channel_name}/users/     list of following
   const getChTypeNameUsers = () => {
     const url = `${ReactConfig.base_url_requests}/channel/${channel.type}/${channel.channel_name}/users/;`;
