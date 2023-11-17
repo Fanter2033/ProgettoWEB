@@ -13,6 +13,7 @@ module.exports = class ChannelController extends Controller {
 
     #_model;
     #channelRolesController;
+    #squealsToChannelModel;
 
     /**
      * @param {ChannelModel} model
@@ -21,6 +22,7 @@ module.exports = class ChannelController extends Controller {
         super();
         this.#_model = model;
         this.#channelRolesController = new ChannelRolesController(new ChannelRolesModel());
+        this.#squealsToChannelModel = new SquealToChannelModel();
     }
 
     /**
@@ -250,9 +252,17 @@ module.exports = class ChannelController extends Controller {
                 output['msg'] = 'Internal server error (2).';
                 return output;
             }
-        }
 
-        //TODO FARLO PER GLI SQUEAL DIRETTI AL CANALE
+            //Replace on substitution
+            let result = await this.#squealsToChannelModel.substituteChannels(oldChannel, newChannel);
+            if(result === false){
+                output['code'] = 500;
+                output['msg'] = 'Internal server error (3).';
+                return output;
+            }
+
+
+        }
 
         return output;
     }
@@ -479,7 +489,12 @@ module.exports = class ChannelController extends Controller {
             return output;
         }
 
-        //TODO DELETE RELATIONSHIP SQUEAL TO CHANNELS
+        modelResult = await this.#squealsToChannelModel.deleteChannelRef(channelDto);
+        if (modelResult === false) {
+            output['code'] = 500;
+            output['msg'] = 'Internal server error (2)';
+            return output;
+        }
 
         return output;
     }

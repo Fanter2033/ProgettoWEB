@@ -2,6 +2,7 @@ const Model = require("./Model");
 const SquealChannel = require("../entities/schemas/SquealChannel");
 const Squeal2ChannelDto = require("../entities/dtos/Squeal2ChannelDto");
 const ChannelDto = require("../entities/dtos/ChannelDto");
+const ChannelRoleSchema = require("../entities/schemas/ChannelRoleSchema");
 
 module.exports = class SquealToChannelModel extends Model {
     constructor() {
@@ -106,6 +107,44 @@ module.exports = class SquealToChannelModel extends Model {
         };
         filter = this.mongo_escape(filter);
         return await this.entityMongooseModel.find(filter).count();
+    }
+
+    /**
+     * @param {ChannelDto} oldChannel
+     * @param {ChannelDto} newChannel
+     * @return {Promise<boolean>}
+     */
+    async substituteChannels(oldChannel, newChannel){
+        await this.checkMongoose("squeal_to_channels", SquealChannel);
+        let filter = {"channel_name": `${oldChannel.channel_name}`, "channel_type": oldChannel.type};
+        filter = this.mongo_escape(filter);
+        let update = {"channel_name": newChannel.channel_name, "channel_type": newChannel.type};
+        update = this.mongo_escape(update);
+        try {
+            let result = await this.entityMongooseModel.updateMany(filter, update);
+            return true;
+        } catch (ignored) {
+            return false;
+        }
+    }
+
+    /**
+     * @param {ChannelDto} channelDto
+     * @return {Promise<boolean>}
+     */
+    async deleteChannelRef(channelDto){
+        await this.checkMongoose("squeal_to_channels", SquealChannel);
+
+        let filter = {};
+        if(channelDto.type !== null) filter['channel_type'] = this.mongo_escape(channelDto.type);
+        if(channelDto.channel_name !== null) filter['channel_name'] = this.mongo_escape(channelDto.channel_name);
+
+        try {
+            await this.entityMongooseModel.deleteMany(filter);
+        } catch (ignored) {
+            return false;
+        }
+        return true;
     }
 
 

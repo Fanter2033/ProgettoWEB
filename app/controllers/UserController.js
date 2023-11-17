@@ -283,6 +283,14 @@ module.exports = class UserController extends Controller {
         else //Password set, save new in the database.
             newUser.psw_shadow = oldUserObj.psw_shadow;
 
+        let isSmm = await this.getVip(oldUsername);
+        if(isSmm.code === 200){
+            output['code'] = 409;
+            output['req_error'] = -6;
+            output['msg'] = 'Vip cannot change their name.';
+            return output;
+        }
+
         let databaseResponse = await this._model.replaceUser(newUser, oldUserObj.username);
         if (databaseResponse)
             output['content'] = newUser;
@@ -293,6 +301,7 @@ module.exports = class UserController extends Controller {
         }
 
         if(newUser.username !== oldUsername){
+
             //Updating references entities. Let's start by quote
             let quoteController = new QuoteController(new QuoteModel())
             let result = await quoteController.changeUsernameQuota(oldUsername, newUser.username);
@@ -338,9 +347,6 @@ module.exports = class UserController extends Controller {
                 output['msg'] = 'Internal server error UserController::updateUser - 5';
                 return output;
             }
-
-            //Now vip users
-            //TODO CHIEDERE A SAMI
         }
 
         return output;
