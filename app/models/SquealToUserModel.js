@@ -38,7 +38,7 @@ module.exports = class SquealToUserModel extends Model {
             "destination_username": `${username}`
         }
         let results = await this.entityMongooseModel.find(filter);
-        if (results === 0)
+        if (results.length === 0)
             return false;
         return true;
     }

@@ -606,7 +606,8 @@ module.exports = class ChannelController extends Controller {
      */
     async thereIsPublicChannel(dtos){
         for (const dto of dtos)
-            if (this.checkChannelPublicType(dto.type)) return true;
+            if (this.checkChannelPublicType(dto.channel_type))
+                return true;
         //mmm we should scan every channel
         for (const dto of dtos){
             let result = await this.#_model.getChannel(dto);

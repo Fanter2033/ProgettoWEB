@@ -50,9 +50,12 @@ module.exports = class SquealController extends Controller {
             return output;
         }
         let squeal_id = squeal.id;
-
         let isPublic = await this.isSquealPublic(identifier);
-        let isDest = await this.#squealToUserModel.isUserDest(squeal_id, authenticatedUser.username);
+        let isDest;
+        if(this.isAuthenticatedUser(authenticatedUser) === true)
+            isDest = await this.#squealToUserModel.isUserDest(squeal_id, authenticatedUser.username);
+        else
+            isDest = false;
 
         if (isPublic === false && escapeAddImpression === false) {
             if (this.isAuthenticatedUser(authenticatedUser) === false) {
@@ -102,6 +105,11 @@ module.exports = class SquealController extends Controller {
             let channelDtos = await this.#squealToChannelModel.getDestinationsChannels(identifier);
             let theresIsPublicChannel = await this.#channelController.thereIsPublicChannel(channelDtos);
             if(theresIsPublicChannel === false){
+                if(this.isAuthenticatedUser(authenticatedUser) === false) {
+                    output['code'] = 401;
+                    output['msg'] = 'Not authorized to see this content. (3)';
+                    return output;
+                }
                 let found = false;
                 for (const channelDto of channelDtos) {
                     let result = await this.#channelController.getChannelUserRole(channelDto, authenticatedUser.username);
