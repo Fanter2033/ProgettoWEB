@@ -64,7 +64,7 @@ module.exports = class SquealToChannelModel extends Model {
      * @param channels {ChannelDto[]}
      * @return {Promise<number[]>}
      */
-    async getAllSquealsToChannels(channels) {
+    async getAllSquealsToChannels(channels, excludeFrom, excludeTo, limit) {
         await this.checkMongoose("squeal_to_channels", SquealChannel);
         let ids = [];
         let filterOr = [];
@@ -76,7 +76,15 @@ module.exports = class SquealToChannelModel extends Model {
         }
         filterOr = this.mongo_escape(filterOr);
         let filter = {
-            $or: filterOr
+            $and: [
+                {$or: filterOr},
+                {
+                    $or: [
+                        {$expr: {$lt: ["$squeal_id", `${excludeFrom}`]}},
+                        {$expr: {$gt: ["$squeal_id", `${excludeTo}`]}},
+                    ]
+                }
+            ]
         }
         let results = await this.entityMongooseModel.find(filter);
         for (const result of results) {

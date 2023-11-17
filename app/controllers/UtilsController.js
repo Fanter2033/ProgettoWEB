@@ -67,7 +67,7 @@ module.exports = class UtilsController extends Controller {
             if(role.role >= autoload.config._CHANNEL_ROLE_READ)
                 rolesRead.push(role.getChannelDto());
         let squealToChannels = new SquealToChannelModel();
-        let squealsIds = await squealToChannels.getAllSquealsToChannels(rolesRead);
+        let squealsIds = await squealToChannels.getAllSquealsToChannels(rolesRead, excludeFrom, excludeTo, autoload.config._LIMIT_RETURN_POSTS);
         let promises = [];
         for (const id of squealsIds)
             promises.push(squealCtrl.getSqueal(id, authUser, sessionId));
