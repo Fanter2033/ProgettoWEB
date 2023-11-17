@@ -52,7 +52,7 @@ module.exports = class SquealController extends Controller {
         let squeal_id = squeal.id;
         let isPublic = await this.isSquealPublic(identifier);
         let isDest;
-        if(this.isAuthenticatedUser(authenticatedUser) === true)
+        if (this.isAuthenticatedUser(authenticatedUser) === true)
             isDest = await this.#squealToUserModel.isUserDest(squeal_id, authenticatedUser.username);
         else
             isDest = false;
@@ -101,11 +101,11 @@ module.exports = class SquealController extends Controller {
             return output;
         }
 
-        if(isPublic === true && isDest === false){
+        if (isPublic === true && isDest === false) {
             let channelDtos = await this.#squealToChannelModel.getDestinationsChannels(identifier);
             let theresIsPublicChannel = await this.#channelController.thereIsPublicChannel(channelDtos);
-            if(theresIsPublicChannel === false){
-                if(this.isAuthenticatedUser(authenticatedUser) === false) {
+            if (theresIsPublicChannel === false) {
+                if (this.isAuthenticatedUser(authenticatedUser) === false) {
                     output['code'] = 401;
                     output['msg'] = 'Not authorized to see this content. (3)';
                     return output;
@@ -113,14 +113,14 @@ module.exports = class SquealController extends Controller {
                 let found = false;
                 for (const channelDto of channelDtos) {
                     let result = await this.#channelController.getChannelUserRole(channelDto, authenticatedUser.username);
-                    if(this.isObjectVoid(result.content) === true) continue;
+                    if (this.isObjectVoid(result.content) === true) continue;
                     let role = new ChannelRoleDto(result.content)
-                    if(role.role >= autoload.config._CHANNEL_ROLE_READ){
+                    if (role.role >= autoload.config._CHANNEL_ROLE_READ) {
                         found = true;
                         break;
                     }
                 }
-                if(found === false){
+                if (found === false) {
                     output['code'] = 401;
                     output['msg'] = 'Not authorized to see this content. (2)';
                     return output;
@@ -227,6 +227,14 @@ module.exports = class SquealController extends Controller {
             return output;
         }
 
+        if(authenticatedUser.isAdmin === false) {
+            checkResult = await this.checkDestinationsAuthorizations(squealDto.destinations, authenticatedUser.username);
+            if (!checkResult) {
+                output['code'] = 401;
+                output['msg'] = 'Do not have all authorization to write on all channels.';
+                return output;
+            }
+        }
 
         if (quoteRes.remaining_daily < squealDto.quote_cost) {
             output['code'] = 412;
@@ -373,7 +381,7 @@ module.exports = class SquealController extends Controller {
             let quoteCtrl = new QuoteController(new QuoteModel());
             let squeal = await this._model.getSqueal(squealTextAutoDto.id);
             let quoteChargeResult = await quoteCtrl.chargeDebitQuota(squeal.sender, squealTextAutoDto.quota_update_cost);
-            if(quoteChargeResult.code !== 200)
+            if (quoteChargeResult.code !== 200)
                 continue;
 
             squealTextAutoDto.iteration = squealTextAutoDto.iteration + 1;
@@ -517,7 +525,7 @@ module.exports = class SquealController extends Controller {
             return output;
 
         result = await this.handleReactions(squeal.sender);
-        if(result === false){
+        if (result === false) {
             output['code'] = 500;
             output['msg'] = 'Internal server error in SquealController::incrementPositiveValue - 2';
             return output;
@@ -534,7 +542,7 @@ module.exports = class SquealController extends Controller {
         let quoteCtrl = new QuoteController(new QuoteModel());
         let userCtrl = new UserController(new UserModel());
         let userOut = await userCtrl.getUser(username);
-        if(userOut.code !== 200){
+        if (userOut.code !== 200) {
             return false;
         }
         let user = new UserDto(userOut.content);
@@ -545,18 +553,18 @@ module.exports = class SquealController extends Controller {
         let realPopular = countPopular - countControversial;
         let realUnpopular = countUnpopular - countControversial;
 
-        if(user.verbalized_popularity < realPopular &&
-            realPopular % autoload.config._POPULAR_QUOTE_POSTS === 0){
+        if (user.verbalized_popularity < realPopular &&
+            realPopular % autoload.config._POPULAR_QUOTE_POSTS === 0) {
             await quoteCtrl.applyPercentageQuote({}, user.username, 101, true);
             let r = await userCtrl.updateVerbalizedPopularity(username, realPopular, -1);
-            if(r === false) return false;
+            if (r === false) return false;
         }
 
-        if(user.verbalized_unpopularity < realUnpopular &&
-            realUnpopular % autoload.config._UNPOPULAR_QUOTE_POSTS === 0){
+        if (user.verbalized_unpopularity < realUnpopular &&
+            realUnpopular % autoload.config._UNPOPULAR_QUOTE_POSTS === 0) {
             await quoteCtrl.applyPercentageQuote({}, user.username, 99, true);
             let r = await userCtrl.updateVerbalizedPopularity(username, -1, realUnpopular);
-            if(r === false) return false;
+            if (r === false) return false;
         }
 
 
@@ -630,6 +638,58 @@ module.exports = class SquealController extends Controller {
         for (const result of results)
             if (result !== true)
                 return false;
+
+        return true;
+    }
+
+    /**
+     * @param {String[]} destinations
+     * @param {String} username
+     * @return {Promise<boolean>}
+     * Auxiliary function, given an array of destinations returns true if we have all authorizzation, false otherwise.
+     */
+    async checkDestinationsAuthorizations(destinations, username) {
+        let promises = [];
+        for (let dest of destinations) {
+            dest = dest.trim();
+            if (typeof dest !== "string" || dest.length < 2)
+                return false;
+            let promise;
+            let classChannelChar = dest.charAt(0);
+            let searchValue = dest.substring(1);
+            switch (classChannelChar) {
+                case '@':
+                    continue;
+                case '#':
+                    continue;
+                case '§':
+                    if (searchValue === searchValue.toUpperCase()) {
+                        let cd = new ChannelDto();
+                        cd.channel_name = searchValue;
+                        cd.type = autoload.config._CHANNEL_TYPE_OFFICIAL;
+                        promise = this.#channelController.getChannelUserRole(cd, username);
+                        promises.push(promise);
+                    } else if (searchValue === searchValue.toLowerCase()) {
+                        let cd = new ChannelDto();
+                        cd.channel_name = searchValue;
+                        cd.type = autoload.config._CHANNEL_TYPE_USER;
+                        promise = this.#channelController.getChannelUserRole(cd, username);
+                        promises.push(promise);
+                    } else return false;
+                    break;
+            }
+        }
+
+        let results = await Promise.all(promises);
+        for (const result of results) {
+            if (result.code !== 200) {
+                return false;
+            }
+            let tmpRole = new ChannelRoleDto(result.content);
+            if(tmpRole.role < autoload.config._CHANNEL_ROLE_WRITE){
+                return false;
+            }
+        }
 
         return true;
     }
