@@ -133,6 +133,8 @@ module.exports = class ChannelRolesModel extends Model {
 
         try {
             let results = await this.entityMongooseModel.find(filter).limit(1);
+            if(results.length === 0)
+                return null;
             return new ChannelRoleDto(results[0]._doc);
         } catch (ignored) {
             return null;

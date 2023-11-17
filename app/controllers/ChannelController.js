@@ -537,17 +537,6 @@ module.exports = class ChannelController extends Controller {
             return output;
         }
 
-        if (channelDto.type === autoload.config._CHANNEL_TYPE_OFFICIAL && user.isAdmin === false) {
-            let response = new ChannelRoleDto();
-            response.role = autoload.config._CHANNEL_ROLE_READ;
-            response.type = channelDto.type;
-            response.channel_name = channelDto.channel_name;
-            response.role_since = 0;
-            response.username = username;
-            output['content'] = response.getDocument();
-            return output;
-        }
-
         if (channelDto.type === autoload.config._CHANNEL_TYPE_OFFICIAL && user.isAdmin) {
             let response = new ChannelRoleDto();
             response.role = autoload.config._CHANNEL_ROLE_ADMIN;
@@ -573,6 +562,16 @@ module.exports = class ChannelController extends Controller {
         roleDto.username = username;
         let ctrlOut = await this.#channelRolesController.getChannelRoleOfUser(roleDto);
         if (ctrlOut['code'] !== 200) {
+            if (channelDto.type === autoload.config._CHANNEL_TYPE_OFFICIAL && user.isAdmin === false) {
+                let response = new ChannelRoleDto();
+                response.role = autoload.config._CHANNEL_ROLE_READ;
+                response.type = channelDto.type;
+                response.channel_name = channelDto.channel_name;
+                response.role_since = 0;
+                response.username = username;
+                output['content'] = response.getDocument();
+                return output;
+            }
             output['code'] = 404;
             output['msg'] = 'Not found. (2)';
             return output;
@@ -595,7 +594,7 @@ module.exports = class ChannelController extends Controller {
         return type === 'CHANNEL_HASHTAG';
     }
 
-    checkChannelPublicType(type){
+    checkChannelPublicType(type) {
         if (type === 'CHANNEL_OFFICIAL') return true;
         return type === 'CHANNEL_HASHTAG';
     }
@@ -604,20 +603,70 @@ module.exports = class ChannelController extends Controller {
      * @param {ChannelDto[]} dtos
      * @return {Promise<boolean>}
      */
-    async thereIsPublicChannel(dtos){
+    async thereIsPublicChannel(dtos) {
         for (const dto of dtos)
             if (this.checkChannelPublicType(dto.channel_type))
                 return true;
         //mmm we should scan every channel
-        for (const dto of dtos){
+        for (const dto of dtos) {
             let result = await this.#_model.getChannel(dto);
-            if(!(result instanceof ChannelDto))
+            if (!(result instanceof ChannelDto))
                 continue;
-            if(result.private === false)
+            if (result.private === false)
                 return true;
         }
         return false;
+    }
 
+    /**
+     * @param dto {ChannelDto}
+     * @param authUser {UserDto}
+     * @return {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async followChannel(dto, authUser) {
+        let output = this.getDefaultOutput();
+
+        let channelExists = await this.channelExists(dto);
+        if (channelExists !== true) {
+            output['code'] = 404;
+            output['msg'] = 'Not found. (1)';
+            return output;
+        }
+
+        if (this.isAuthenticatedUser(authUser) === false) {
+            output['code'] = 403;
+            output['msg'] = 'Not authenticated';
+            return output;
+        }
+
+
+        let role = 0;
+        if (dto.type === autoload.config._CHANNEL_TYPE_HASHTAG)
+            role = 2;
+        else if (dto.type === autoload.config._CHANNEL_TYPE_OFFICIAL)
+            role = 1;
+        else {
+            //Users
+            dto = await this.#_model.getChannel(dto);
+            if (dto.private === false)
+                role = 2;
+        }
+
+        let newRole = new ChannelRoleDto();
+        newRole.type = dto.type;
+        newRole.channel_name = dto.channel_name;
+        newRole.role_since = this.getCurrentTimestampSeconds();
+        newRole.username = authUser.username;
+        newRole.role = role;
+
+        let ctrlOut = await this.#channelRolesController.createRole(newRole);
+        if(ctrlOut.code !== 200){
+            output['code'] = 500;
+            output['msg'] = 'Internal server error';
+            return output;
+        }
+
+        return output;
     }
 
 

@@ -495,6 +495,34 @@ paths:
             description: 'More information about the error'
         '404':
           description: 'The specified channel in URL path is not found'
+    patch:
+      tags:
+        - channel
+      summary: Follow channel
+      parameters:
+        - name: channel_name
+          in: path
+          required: true
+          type: string
+        - name: type
+          in: path
+          required: true
+          type: string
+          enum:
+            - CHANNEL_OFFICIAL
+            - CHANNEL_USERS
+            - CHANNEL_HASHTAG
+      responses:
+        '200':
+          schema:
+            type: number
+          description: 'Returns the role assoc'
+        '400':
+          description: 'Bad Request.'
+        '403':
+          description: 'Not logged'
+        '404':
+          description: 'The specified channel in URL path is not found'
   /channel/{type}/{channel_name}/{username}/:
     patch:
       tags:
