@@ -366,6 +366,21 @@ img {
   color: #ecf0f1;
 }
 
+.modal-change-header {
+  background-color: var(--squeal-blue);
+  color: #ecf0f1;
+}
+
+.modal-change-body {
+  background: linear-gradient(
+    to bottom,
+    var(--squeal-blue),
+    var(--squeal-yellow)
+  );
+  color: #ecf0f1;
+}
+
+
 .modal-delete-header {
   background-color: var(--squeal-red);
   color: #ecf0f1;

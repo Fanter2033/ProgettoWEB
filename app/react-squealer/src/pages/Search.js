@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
-import { Card, Col, Row } from "react-bootstrap";
+import { Card, Col, Container, Row } from "react-bootstrap";
 
 import "../css/App.css";
 
@@ -61,27 +61,27 @@ function Search() {
         </button>
       </form>
 
-      <Row className="">
+      <Container fluide>
         {channels.map((channel) => (
-          <Col key={channel.id} lg={6} className="mb-4">
-            <Card>
-              <Card.Body className="mb-4 d-flex flex-row">
+          <Col key={channel.id} lg={12} className="mb-4">
+            <Card style={{ height: "100%" }}>
+              <Card.Body className="mb-4  w-100 d-flex flex-column justify-content-center align-items-center">
                 <Card.Title className="">{channel.channel_name}</Card.Title>
 
                 <Link to="/infoc" state={channel}>
-                  <button className="custom-button me-2">
+                  <button className="custom-button mb-2">
                     Info
                   </button>
                 </Link>
-
-                <button className="custom-button" onClick={follow}>
+                <button className="custom-button mb-2" onClick={follow}>
                   Segui
                 </button>
+                <div>{channel.type}</div>
               </Card.Body>
             </Card>
           </Col>
         ))}
-      </Row>
+      </Container>
     </div>
   );
 }

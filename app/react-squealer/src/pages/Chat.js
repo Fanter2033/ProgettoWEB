@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 
 import "../css/App.css";
-import { Container, Button, Card, Col, Row } from "react-bootstrap";
+import { Container, Card, Col, Row } from "react-bootstrap";
 
 //GET utils/chat/ all private post----------------------------------------------------------------
 
@@ -51,12 +51,10 @@ function Chat() {
 
   return (
     <>
-      <div className="cool-font-small">Chat component</div>
-
       <div className="container-flex pb-5">
         <div className="row">
           <div className="col-12">
-            <h2>Privati:</h2>
+            <h2>Squeals Privati:</h2>
 
             <Container className="">
               <Row className="w-100">

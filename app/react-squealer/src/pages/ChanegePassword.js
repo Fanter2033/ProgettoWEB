@@ -110,6 +110,10 @@ function ChangePassword() {
     }
   };
 
+  const footerStyle = {
+    backgroundColor: "#e0bb76",
+  };
+
   return (
     <div>
       <button className="user_button mb-2 box" onClick={handleShow}>
@@ -117,13 +121,13 @@ function ChangePassword() {
       </button>
 
       <Modal show={show} onHide={handleClose} centered>
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="modal-change-header">
           <Modal.Title style={{ textAlign: "center" }}>
             Cambia password
           </Modal.Title>
         </Modal.Header>
 
-        <Modal.Body>
+        <Modal.Body className="modal-change-body">
           <Form>
             <Form.Group
               as={Row}
@@ -142,14 +146,13 @@ function ChangePassword() {
           </Form>
         </Modal.Body>
 
-        <Modal.Footer>
-          <Button
-            id="change-password"
-            classname="custom-button"
+        <Modal.Footer style={footerStyle}>
+          <button
+            className="blue-button box"
             onClick={changeP}
           >
             CAMBIA
-          </Button>
+          </button>
           <ToastContainer />
         </Modal.Footer>
       </Modal>
