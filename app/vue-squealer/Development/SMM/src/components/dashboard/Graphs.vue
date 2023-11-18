@@ -22,6 +22,12 @@ import LineChart from "@/components/dashboard/LineChart.vue";
 
 export default defineComponent({
   components: { SideBar, Nav, LineChart},
+
+  methods: {
+    updatePopData: function (username){
+
+    }
+  }
 });
 </script>
 
