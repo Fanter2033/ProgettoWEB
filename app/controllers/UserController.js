@@ -492,7 +492,7 @@ module.exports = class UserController extends Controller {
      * @param fromTimestamp {number}
      * @param toTimestamp {number}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
-     * Siam sicuri di mantenere questa funzione qui?
+     * Siam sicuri di mantenere questa funzione qui? Si dai
      */
     async getPopularityStats(username, fromTimestamp, toTimestamp){
         let output = this.getDefaultOutput();

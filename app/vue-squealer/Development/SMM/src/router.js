@@ -1,8 +1,7 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import Login from "./components/Login.vue";
 import DashBoard from "./components/dashboard/DashBoard.vue";
-import Graphs from "@/components/dashboard/Graphs.vue";
-
+import Chart from "@/components/dashboard/Chart.vue";
 
 const routes = [
   {
@@ -17,9 +16,9 @@ const routes = [
     component: DashBoard,
   },
   {
-    path: "/dashboard/graphs",
-    name: "Graphs",
-    component: Graphs
+    path: "/dashboard/charts/:vip",
+    name: "Chart",
+    component: Chart
   },
 ];
 

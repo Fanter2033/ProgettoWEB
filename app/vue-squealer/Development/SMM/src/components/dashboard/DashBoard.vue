@@ -28,9 +28,9 @@ export default {
         method: "GET",
       })
         .then((res) => {
-          if (res.ok) {
+          if (res.ok)
             return res.json();
-          } else console.error("ERROR FETCHING VIPS", res.statusText);
+          console.error("ERROR FETCHING VIPS", res.statusText);
         })
         .then((data) => {
           console.log("my vips: " + data);

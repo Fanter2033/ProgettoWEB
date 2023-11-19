@@ -1,6 +1,6 @@
 <template>
   <button type="button"
-          class="btn btn-primary"
+          class="btn"
           @click="openModal">
     <i class="bi p-1 bi-send-plus"></i>
     <span class="d-none d-sm-inline">Quick Squeal</span>

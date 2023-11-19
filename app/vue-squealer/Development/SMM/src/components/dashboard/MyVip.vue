@@ -19,7 +19,7 @@
         data-bs-parent="#menu"
     >
       <li class="w-100">
-        <router-link to="/dashboard/graphs" class="nav-link px-0">
+        <router-link :to="{ name:'Chart', params: {vip: vipName} }">
           <i class="fs-4 bi-file-bar-graph"></i>
           <span class="d-none d-sm-inline">Charts</span>
         </router-link>
