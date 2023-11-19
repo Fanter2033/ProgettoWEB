@@ -9,7 +9,7 @@
       </div>
 
       <div class="col-8">
-        <LineChart/>
+        <LineChart />
       </div>
 
       <div class="container col-2 border row-cols-sm-auto">
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import {defineComponent} from "vue";
 import VueConfig from "@/config/VueConfig";
 import SideBar from "@/components/dashboard/SideBar.vue";
 import Nav from "../Nav.vue";
@@ -51,10 +51,8 @@ export default defineComponent({
 
   methods: {
     convertToTimeStamp: function (date){
-      let arrayDate = date.split("-");
-      let newDate = new Date(arrayDate[2], arrayDate[1] - 1, arrayDate[0]);
-      console.log(newDate.getTime());
-      return(newDate.getTime());
+      const newDate = new Date(date);
+      return Math.floor(newDate.getTime() / 1000);
     },
 
     updatePopData: function (vipName){
@@ -63,8 +61,8 @@ export default defineComponent({
           vipName +
           "/stats/squealPopularity?" +
           new URLSearchParams({
-            fromTimestamp: this.convertToTimeStamp(this.fromTimeForm()),
-            toTimestamp: this.convertToTimeStamp(this.toTimeForm())
+            fromTimestamp: this.convertToTimeStamp(this.fromTimeForm),
+            toTimestamp: this.convertToTimeStamp(this.toTimeForm)
           })
       console.log("fetching: " + ChartDataUri);
       fetch(ChartDataUri, {
@@ -77,8 +75,9 @@ export default defineComponent({
             console.error("ERROR FETCHING VIP DATAS", res.statusText);
           })
           .then((data) => {
-            console.log("Chart Data: " + data);
             this.$store.commit("setLineChartData", data);
+            console.log(data);
+            console.log("Chart Data: " + this.$store.getters.getLineChartData);
           })
           .catch((error) => {
             console.error("network error", error);

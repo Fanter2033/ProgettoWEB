@@ -1,6 +1,7 @@
 <template>
 
   <Line
+      v-if="loaded"
     id="Pop-squeal"
     :options="chartOptions"
     :data="chartData"
@@ -11,26 +12,62 @@
 <script>
 import { Line } from 'vue-chartjs';
 import 'chart.js/auto'
+import {store} from "@/store";
 
 export default {
   name: 'LineChart',
-  components: { Line },
-  data(){
-    return{
-      chartData: {
-        labels: ['Gen', 'Feb ', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic'], // queste possono essere filtrate per settimana-mese e anno
+  components: {Line},
+  methods: {
+    populateLabels: function () {
+      let x_labels = [];
+      let y_labels_pos = [];
+      let y_labels_neg = [];
+      let obj;
+      let squeals = JSON.parse(JSON.stringify(store.getters.getLineChartData));
+      for (let i = 0; i < squeals.length; i++) {
+        obj = squeals[i];
+        let date = new Date(obj.timestamp * 1000);
+        console.log(date);
+        x_labels.push(date.getDate());
+        let value = obj.positive_value;
+        y_labels_pos.push(value);
+        value = obj.negative_value;
+        y_labels_neg.push(value);
+      }
+      return{
+        labels: x_labels,
         datasets: [{
-          label:'popularity',
-          data: [40,50,20,10,60,70,5,40,40,90,53,0], //dati presi dal database, calcolo viene fatto front
+          label: 'popularity',
+          data: y_labels_pos,
         }]
-      },
-      chartOptions: {
+      };
+    }
+  },
+  data: () => ({
+    loaded:false,
+    chartData: null,
+  }),
+  async mounted() {
+    this.loaded = false;
+    try {
+      this.chartData = this.populateLabels();
+      this.loaded = true;
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  computed: {
+    chartOptions() {
+      return{
         responsive: true,
       }
+    },
+    LineChartData(){
+      return this.$store.state.LineChartData;
     }
-
   }
 }
+
 </script>
 
 <style>
