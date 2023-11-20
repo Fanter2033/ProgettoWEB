@@ -12,9 +12,8 @@ let authController = new AuthController(new AuthModel());
 userDriver.use(express.json());
 userDriver.use(express.urlencoded({extended: true}));
 userDriver.get('/:username', async function (req, res) {
-    let authUser = authController.getAuthenticatedUser(req);
     let username = req.params['username'];
-    let ctrl = await controller.getUserAuth(username, await authUser);
+    let ctrl = await controller.getUser(username);
     if (ctrl.code === 200)
         res.status(ctrl.code).send(ctrl.content);
     else
@@ -115,6 +114,7 @@ userDriver.get('/', async function (req, res) {
     let orderBy = (typeof req.query.orderBy !== 'undefined' ? req.query.orderBy : '');
     let orderDir = (typeof req.query.orderDir !== 'undefined' ? req.query.orderDir : '');
     authUser = await authUser;
+    if(limit < 0) limit = 10;
 
     let ctrl = await controller.getUserList(authUser, offset, limit, search, orderBy, orderDir);
     if (ctrl.code === 200)
@@ -123,8 +123,74 @@ userDriver.get('/', async function (req, res) {
         res.status(ctrl.code).send(ctrl);
 });
 
+userDriver.patch('/:username/toggle/lock', async function (req, res) {
+    let username = req.params['username'];
+    let ctrl = await controller.toggleLock(username, await authController.getAuthenticatedUser(req));
+    if (ctrl.code === 200)
+        res.status(ctrl.code).send(ctrl.content);
+    else
+        res.status(ctrl.code).send(ctrl);
+});
+
 userDriver.use(`/:username/quote`, quoteDriver);
 
+userDriver.patch("/:username/toggle/vip", async function(req, res){
+    let username = req.params['username'];
+    let ctrl = await controller.toggleVip(username, await authController.getAuthenticatedUser(req));
+    if(ctrl['code'] === 200)
+        res.status(ctrl['code']).send(ctrl['content']);
+    else
+        res.status(ctrl['code']).send(ctrl);
+});
 
+userDriver.patch("/:username/toggle/smm", async function(req, res){
+    let ctrl = await controller.toggleSmm(await authController.getAuthenticatedUser(req));
+    if(ctrl['code'] === 200)
+        res.status(ctrl['code']).send(ctrl['content']);
+    else
+        res.status(ctrl['code']).send(ctrl);
+});
+
+userDriver.patch("/:username/pick-smm/:smm", async  function(req, res){
+    let ctrl = await controller.pickSmm(
+        req.params['smm'],
+        await authController.getAuthenticatedUser(req));
+
+    if(ctrl['code'] === 200)
+        res.status(ctrl['code']).send(ctrl['content']);
+    else
+        res.status(ctrl['code']).send(ctrl);
+
+})
+
+userDriver.patch("/:username/remove-smm", async function(req, res){
+  let ctrl = await controller.removeSmm(
+      await authController.getAuthenticatedUser(req)
+  );
+
+  if(ctrl['code'] === 200)
+      res.status(ctrl['code']).send(ctrl['content']);
+  else
+      res.status(ctrl['code']).send(ctrl);
+})
+
+userDriver.get("/:username/my-smm", async function(req, res){
+    let ctrl = await controller.getSmm(req.params['username']);
+
+    if(ctrl['code'] === 200)
+        res.status(ctrl['code']).send(ctrl['content']);
+    else
+        res.status(ctrl['code']).send(ctrl);
+})
+
+
+userDriver.get("/:username/my-users/", async function(req, res){
+    let ctrl = await controller.getLinkedUsers(req.params['username']);
+
+    if(ctrl['code'] === 200)
+        res.status(ctrl['code']).send(ctrl['content']);
+    else
+        res.status(ctrl['code']).send(ctrl);
+})
 
 module.exports = userDriver;

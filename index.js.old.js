@@ -45,7 +45,7 @@ backEndRouter.get("/app/user/:username", (req, res) => {
 });
 
 //testing per registrazione e login
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 
 //lista utenti temporanea
 const usersList = [];

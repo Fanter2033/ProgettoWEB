@@ -12,6 +12,8 @@ schemes:
 paths:
   /auth/{username}/{auth_field}:
     post:
+      tags:
+        - auth
       summary: Authenticate the user
       description: Authenticate the user with his password and start new session for them.
       parameters:
@@ -26,7 +28,7 @@ paths:
           required: true
           description: Required role authenticating
         - name: password
-          in: body
+          in: formData
           type: string
           required: true
           description: User password
@@ -39,6 +41,8 @@ paths:
           description: Failed authentication due wrong password or username.
   /auth/logout:
     post:
+      tags:
+        - auth
       summary: De-Authenticate user
       description: De-Authenticate the requesting user, if one is logged, the user is got by the server using session id!
       responses:
@@ -48,6 +52,32 @@ paths:
           description: Failed authentication due server error
         '404':
           description: No user to de-authenticate found.
+  /dashboard/:
+    get:
+      tags:
+        - utils
+      summary: Get public posts of the user.
+      description: Are returned all posts that have as receivers a channel where the user is subscribed
+      responses:
+        '200':
+          description: returns an array of Squeals
+          schema:
+            type: array
+            maxLength: 10
+            $ref: '#/definitions/Squeal'
+  /chat/:
+    get:
+      tags:
+        - utils
+      summary: Get private posts of the user.
+      description: Are returned all posts that have as receivers the user
+      responses:
+        '200':
+          description: returns an array of Squeals
+          schema:
+            type: array
+            maxLength: 10
+            $ref: '#/definitions/Squeal'
   /user/{username}:
     put:
       tags:
@@ -266,6 +296,30 @@ paths:
       responses:
         '200':
           description: 'Successful operation'       
+  /user/{username}/toggle/locked:
+    patch:
+      tags:
+        - user
+      summary: Toggle the lock of a user.
+      description: Toggle the lock of a user. If the user is locked unlock them, if is user lock them.
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Everything is ok'
+        '400':
+          description: 'Bad Request.'
+        '401':
+          description: 'User logged but not authorized to execute the operation'
+        '403':
+          description: 'User not logged'
+        '404':
+          description: 'User not found'
+        '500':
+          description: 'Internal server error'
   /channel:
     post:
       tags:
@@ -283,15 +337,19 @@ paths:
         '201':
           description: 'Created channel'
         '400':
-          description: 'Invalid channel name or object'
+          description: 'Invalid channel name, object or invalid type'
           schema:
             type: string
             description: 'More info about the error'
+        '401':
+          description: 'User authenticated but tried to create an official channel.'
         '403':
-          description: 'Unable to create channel due low privileges or created a TAG channel'
+          description: 'Unable to create channel due low privileges'
           schema:
             type: string
             description: 'More information about the error'
+        '409':
+          description: 'Channel already exists. Cannot create'
     get:
       tags:
         - channel
@@ -328,7 +386,54 @@ paths:
           schema:
             type: object
             properties:
-              users:
+              channels:
+                type: array
+                items:
+                  $ref: '#/definitions/Channel'
+              totalCount:
+                type: integer
+  /channel/{type}/:
+    get:
+      tags:
+        - channel
+      summary: Get a list of channels
+      description: Returns an array of Channels.
+      parameters:
+        - name: type
+          in: path
+          required: true
+          type: string
+        - name: offset
+          in: query
+          required: false
+          type: integer
+        - name: limit
+          in: query
+          required: false
+          type: integer
+        - name: search
+          in: query
+          required: false
+          type: string
+        - name: orderBy
+          in: query
+          required: false
+          description: The order by value should be a key of Channel.
+          type: string
+        - name: orderDir
+          in: query
+          required: false
+          type: string
+          enum:
+            - ORDER_ASC
+            - ORDER_DESC
+      responses:
+        '200':
+          description: 'Successful operation'
+          schema:
+            type: object
+            properties:
+              channels:
                 type: array
                 items:
                   $ref: '#/definitions/Channel'
@@ -424,37 +529,183 @@ paths:
             description: 'More information about the error'
         '404':
           description: 'The specified channel in URL path is not found'
-  /squeal/:
-    get:
+  /channel/{type}/{channel_name}/{username}/:
+    patch:
       tags:
-        - squeal
-      summary: Get the squeal to see of the user
+        - channel
+      summary: Change the role of the user.
       parameters:
-        - name: last
-          description: Last squeal identifier received from client. This parameter is used to get the user logged content to see after the specified identifier. If not present return the first posts to see.
-          required: false
-          in: query
+        - name: channel_name
+          in: path
+          required: true
           type: string
+        - name: type
+          in: path
+          required: true
+          type: string
+          enum:
+            - CHANNEL_OFFICIAL
+            - CHANNEL_USERS
+            - CHANNEL_HASHTAG
+        - name: username
+          in: path
+          type: string
+          required: true
+        - name: new_role
+          in: formData
+          type: number
+          required: true
       responses:
         '200':
-          description: 'Successful operation'
-          schema:
-            type: array
-            maxLength: 10
-            items:
-              $ref: '#/definitions/Squeal'
+          description: 'Everything is ok'
         '400':
-          description: 'Generic error'
+          description: 'Bad Request.'
+        '401':
+          description: 'User logged but not authorized to execute the operation'
         '403':
           description: 'User not logged'
         '404':
-          description: 'Identifier not found'
+          description: 'User not found'
+        '500':
+          description: 'Internal server error'
+  /channel/{type}/{channel_name}/toggle/lock:
+    patch:
+      tags:
+        - channel
+      summary: Toggle the lock of a channel.
+      description: Toggle the lock of a channel. If the channel is locked unlock it, if is unlocked lock it.
+      parameters:
+        - name: channel_name
+          in: path
+          required: true
+          type: string
+        - name: type
+          in: path
+          required: true
+          type: string
+          enum:
+            - CHANNEL_OFFICIAL
+            - CHANNEL_USERS
+            - CHANNEL_HASHTAG
+      responses:
+        '200':
+          description: 'Everything is ok'
+        '400':
+          description: 'Bad Request.'
+        '401':
+          description: 'User logged but not authorized to execute the operation'
+        '403':
+          description: 'User not logged'
+        '404':
+          description: 'Channel not found'
+        '500':
+          description: 'Internal server error'
+  /channel/{type}/{channel_name}/users/:
+    get:
+      tags:
+        - channel
+      summary: Get the users following a channel.
+      parameters:
+        - name: channel_name
+          in: path
+          required: true
+          type: string
+        - name: type
+          in: path
+          required: true
+          type: string
+          enum:
+            - CHANNEL_OFFICIAL
+            - CHANNEL_USERS
+            - CHANNEL_HASHTAG
+      responses:
+        '200':
+          description: 'Everything is ok'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        '400':
+          description: 'Bad Request.'
+        '401':
+          description: 'User logged but not authorized to execute the operation'
+        '403':
+          description: 'User not logged'
+        '500':
+          description: 'Internal server error'
+  /channel/{type}/{channel_name}/users/{username}/:
+    get:
+      tags:
+        - channel
+      summary: Get the role of the user in the channel.
+      parameters:
+        - name: channel_name
+          in: path
+          required: true
+          type: string
+        - name: type
+          in: path
+          required: true
+          type: string
+          enum:
+            - CHANNEL_OFFICIAL
+            - CHANNEL_USERS
+            - CHANNEL_HASHTAG
+        - name: username
+          type: string
+          required: true
+          in: path
+      responses:
+        '200':
+          description: 'Everything is ok'
+        '400':
+          description: 'Bad Request.'
+        '401':
+          description: 'User logged but not authorized to execute the operation'
+        '403':
+          description: 'User not logged'
+        '500':
+          description: 'Internal server error'
+  /channel/{type}/{channel_name}/roles/{role}:
+    get:
+      tags:
+        - channel
+      summary: Get the users following a channel.
+      parameters:
+        - name: channel_name
+          in: path
+          required: true
+          type: string
+        - name: type
+          in: path
+          required: true
+          type: string
+          enum:
+            - CHANNEL_OFFICIAL
+            - CHANNEL_USERS
+            - CHANNEL_HASHTAG
+        - name: role
+          in: path
+          required: true
+          type: number
+      responses:
+        '200':
+          description: 'Everything is ok'
+        '400':
+          description: 'Bad Request.'
+        '401':
+          description: 'User logged but not authorized to execute the operation'
+        '403':
+          description: 'User not logged'
+        '500':
+          description: 'Internal server error'
+  /squeal/:
     post:
       tags:
         - squeal
       summary: Create a new squeal
       parameters:
-        - name: new_squeal
+        - name: squeal
           description: Squeal object to add
           required: true
           in: body
@@ -475,6 +726,30 @@ paths:
         '403':
           description: 'User not logged'
   /squeal/{identifier_id}:
+    get:
+      tags:
+        - squeal
+      summary: Get squeal
+      parameters:
+        - name: identifier_id
+          description: Squeal ID
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: 'Successful operation'
+          schema:
+            type: object
+            $ref: '#/definitions/Squeal'
+        '400':
+          description: 'Generic error'
+        '401':
+          description: 'Not authorized'
+        '403':
+          description: 'Not authenticated'
+        '404':
+          description: 'Identifier not found'
     put:
       tags:
         - squeal
@@ -511,25 +786,31 @@ paths:
             description: 'More information about the error'
         '404':
           description: 'The specified squeal in URL path is not found'
-    delete:
+  /squeal/{identifier_id}/reactions/{reaction}:
+    patch:
       tags:
         - squeal
-      summary: Delete the squeal
+      summary: Set squeal reaction
       parameters:
         - name: identifier_id
-          in: path
+          description: Squeal ID
           required: true
-          type: integer
+          in: path
+          type: string
+        - name: reaction
+          description: Reaction
+          required: true
+          in: path
+          type: string
       responses:
         '200':
-          description: 'Deleted squeal'
-        '403':
-          description: 'Unable to delete channel due low privileges'
-          schema:
-            type: string
-            description: 'More information about the error'
+          description: 'Successful operation'
+        '400':
+          description: 'Generic error'
+        '401':
+          description: 'Not authorized'
         '404':
-          description: 'The specified squeal in URL path is not found'
+          description: 'Identifier not found'
   /user/{username}/quote:
     get:
       tags:
@@ -565,6 +846,8 @@ paths:
       responses:
         '200':
           description: 'Successful operation'
+        '401':
+          description: 'Unauthorized'
         '403':
           description: 'Requesting user is not an admin'
         '404':
@@ -629,7 +912,7 @@ definitions:
     type: object
     properties:
       importance:
-        type: string
+        type: integer
         enum:
           - LIKE_A_LOT
           - LIKE
@@ -642,25 +925,41 @@ definitions:
         description: squeal id
   Squeal:
     type: object
-    description: Squealer post
+    description: Squealer post/message
     properties:
       identifier:
         type: integer
+      date:
+        type: object
       destinations:
         type: array
         items:
           $ref: '#/definitions/Destination'
         minItems: 1
+      sender:
+        type: string
+        description: username of the squealer's sender
       message_type:
         type: string
         enum:
-          - MESSAGE
-          - IMAGE_URL
+          - MESSAGE_TEXT
+          - IMAGE
           - VIDEO_URL
           - POSITION
+          - TEXT_AUTO
+          - POSITION_AUTO
       message_value:
         type: string
         description: Message value, how this field is used depends on message_type value.
+      critical_mass:
+        type: integer
+        description: used to identify a squeal as; popular, unpopular or controversial
+      positive_value:
+        type: number
+        description: R+, positive reaction increment this number
+      negative_value:
+        type: number
+        description: R-, negative reaction decrement this number
       reactions:
         type: array
         items:

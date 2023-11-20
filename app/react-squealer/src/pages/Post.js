@@ -1,0 +1,33 @@
+import React from "react";
+//userGlobal.usernameimport { useLocation } from "react-router-dom";
+
+import Squeal from "./Squeal";
+import Reactions from "./Reactions";
+import Comment from "./Comment";
+
+import { useNavigate } from "react-router-dom";
+
+import { useUserContext } from "../config/UserContext";
+
+import "../css/App.css";
+
+function Post() {
+  const { userGlobal } = useUserContext();
+
+  const navigate = useNavigate();
+  if (userGlobal.username === undefined) {
+    navigate("/");
+  }
+  console.log(userGlobal.username);
+  return (
+    <>
+      <div className="mt-5 ">
+        <Squeal />
+        <Reactions />
+        <Comment />
+      </div>
+    </>
+  );
+}
+
+export default Post;

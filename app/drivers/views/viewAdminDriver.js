@@ -1,14 +1,16 @@
+const path = require("path");
+const publicDir = path.join(__dirname, '../../public');
+
 const express = require("express");
 const viewAdminDriver = express();
-const path = require("path")
+viewAdminDriver.use(express.static(publicDir));
+
 const AuthController = require("../../controllers/AuthController");
 const AuthModel = require("../../models/AuthModel");
-const publicDir = path.join(__dirname, '../../public');
-viewAdminDriver.use(express.static(publicDir));
 const authController = new AuthController(new AuthModel());
 
 //ejs: embedded javascript
-//template js, per generare pagine hatml dinamiche
+//template js, per generare pagine html dinamiche
 viewAdminDriver.engine('html', require('ejs').renderFile);
 
 viewAdminDriver.get('/', function (req, res){

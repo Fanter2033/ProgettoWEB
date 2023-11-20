@@ -9,6 +9,10 @@ module.exports = class UserDto {
     #isAdmin;
     #isSmm;
     #isUser;
+    #vip;
+    #locked;
+    #verbalized_popularity;
+    #verbalized_unpopularity;
 
     constructor(documentFromMongoose = null) {
         if(documentFromMongoose === null) {
@@ -21,6 +25,10 @@ module.exports = class UserDto {
             this.#isAdmin = null;
             this.#isSmm = null;
             this.#isUser = null;
+            this.#vip = null;
+            this.#locked = null;
+            this.#verbalized_popularity = 0;
+            this.#verbalized_unpopularity = 0;
         } else {
             this.#username = documentFromMongoose.username;
             this.#email = documentFromMongoose.email;
@@ -31,6 +39,10 @@ module.exports = class UserDto {
             this.#isAdmin = documentFromMongoose.isAdmin;
             this.#isSmm = documentFromMongoose.isSmm;
             this.#isUser = documentFromMongoose.isUser;
+            this.#vip = documentFromMongoose.vip;
+            this.#locked = documentFromMongoose.locked;
+            this.#verbalized_popularity = documentFromMongoose.verbalized_popularity;
+            this.#verbalized_unpopularity = documentFromMongoose.verbalized_popularity;
         }
 
     }
@@ -111,6 +123,38 @@ module.exports = class UserDto {
         this.#isUser = value;
     }
 
+    get vip() {
+        return this.#vip;
+    }
+
+    set vip(value) {
+        this.#vip = value;
+    }
+
+    get locked() {
+        return this.#locked;
+    }
+
+    set locked(value) {
+        this.#locked = value;
+    }
+
+    get verbalized_popularity() {
+        return this.#verbalized_popularity;
+    }
+
+    set verbalized_popularity(value) {
+        this.#verbalized_popularity = value;
+    }
+
+    get verbalized_unpopularity() {
+        return this.#verbalized_unpopularity;
+    }
+
+    set verbalized_unpopularity(value) {
+        this.#verbalized_unpopularity = value;
+    }
+
     getDocument() {
         return {
             username: this.#username,
@@ -121,7 +165,11 @@ module.exports = class UserDto {
             psw_shadow: this.#psw_shadow,
             isAdmin: this.#isAdmin,
             isSmm: this.#isSmm,
-            isUser: this.#isUser
+            isUser: this.#isUser,
+            vip: this.#vip ,
+            locked: this.#locked,
+            verbalized_popularity: this.#verbalized_popularity,
+            verbalized_unpopularity: this.#verbalized_unpopularity,
         }
     }
 

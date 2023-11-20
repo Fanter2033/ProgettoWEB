@@ -23,6 +23,10 @@ module.exports = class UserModel extends Model {
     return {};
   }
 
+  /**
+   * @param quoteObj {QuoteDto}
+   * @return {Promise<boolean>}
+   */
   async createQuote(quoteObj) {
     await this.checkMongoose("Quote", Quote);
     quoteObj = this.mongo_escape(quoteObj.getDocument());
@@ -53,6 +57,33 @@ module.exports = class UserModel extends Model {
     return true;
   }
 
+  /**
+   * @param oldUsername {string}
+   * @param newUsername {string}
+   * @return {Promise<boolean>}
+   */
+  async changeUsernameQuote(oldUsername, newUsername){
+    await this.checkMongoose("Quote", Quote);
+    let filter = { _id: `${oldUsername}` };
+    filter = this.mongo_escape(filter);
+    let replace = {
+      $set: {
+        _id: `${newUsername}`
+      }
+    }
+    replace = this.mongo_escape(replace);
+    try {
+      await this.entityMongooseModel.updateOne(filter, replace);
+    } catch (ignored) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * @param {QuoteDto} quoteDto
+   * @return {Promise<boolean>}
+   */
   async patchQuote(quoteDto) {
     await this.checkMongoose("Quote", Quote);
     let filter = { _id: `${quoteDto.id}` };

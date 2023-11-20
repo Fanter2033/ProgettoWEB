@@ -1,6 +1,7 @@
 const User = require("../entities/schemas/UserSchema");
 const Model = require("./Model");
 const UserDto = require("../entities/dtos/UserDto");
+const Channel = require("../entities/schemas/ChannelSchema");
 module.exports = class UserModel extends Model {
     constructor(userCollectionName) {
         super(userCollectionName);
@@ -86,7 +87,7 @@ module.exports = class UserModel extends Model {
      */
     async createUser(userObj) {
         await this.checkMongoose("User", User);
-        userObj = this.mongo_escape(userObj.getDocument()); //
+        userObj = this.mongo_escape(userObj.getDocument());
         let userInserting = new this.entityMongooseModel(userObj);
         try {
             await userInserting.save();
@@ -143,13 +144,22 @@ module.exports = class UserModel extends Model {
             sorting = {};
 
         offset = this.mongo_escape(offset);
-        limit = this.mongo_escape(limit);
+
         try {
-            let results = await this.entityMongooseModel
-                .find(filter)
-                .sort(sorting)
-                .skip(offset)
-                .limit(limit);
+            let results;
+            if(limit > 0){
+                limit = this.mongo_escape(limit);
+                results = await this.entityMongooseModel
+                    .find(filter)
+                    .sort(sorting)
+                    .skip(offset)
+                    .limit(limit);
+            } else {
+                results = await this.entityMongooseModel
+                    .find(filter)
+                    .sort(sorting)
+                    .skip(offset)
+            }
 
             let output = [];
             for (let i = 0; i < results.length; i++)
@@ -178,4 +188,73 @@ module.exports = class UserModel extends Model {
         return await this.entityMongooseModel.count(filter);
     }
 
+    /**
+     * @param userObj {UserDto}
+     * @param newLock {number}
+     * @returns {Promise<boolean>}
+     */
+    async changeUserLock(userObj, newLock) {
+        await this.checkMongoose("User", User);
+        let filter = {"username": `${userObj.username}`};
+        filter = this.mongo_escape(filter);
+        userObj.locked = newLock;
+        userObj = this.mongo_escape(userObj.getDocument());
+        try {
+            await this.entityMongooseModel.updateOne(filter, userObj);
+        } catch (ignored) {
+            return false;
+        }
+        return true;
+    }
+
+    async changeVipStatus(userDto, newVipStat){
+        await this.checkMongoose("User", User);
+        let filter = {"username": `${userDto.username}`};
+        filter = this.mongo_escape(filter);
+        userDto.vip = newVipStat;
+        userDto = this.mongo_escape(userDto.getDocument());
+        try {
+            await this.entityMongooseModel.updateOne(filter, userDto);
+        } catch (ignored) {
+            return false;
+        }
+        return true;
+    }
+
+
+    /**
+     * @param username {string}
+     * @param field {string}
+     * @param newValue {*}
+     * @return {Promise<boolean>}
+     */
+    async updateUserField(username, field, newValue){
+        await this.checkMongoose("User", User);
+        let filter = {"username": `${username}`};
+        filter = this.mongo_escape(filter);
+        let update = {};
+        update[field] = newValue
+        update = this.mongo_escape(update);
+        try {
+            await this.entityMongooseModel.updateOne(filter, update);
+        } catch (ignored) {
+            return false;
+        }
+        return true;
+    }
+
+
+    async changeSmmStatus(userDto, newSmmStat){
+        await this.checkMongoose("User", User);
+        let filter = {"username": `${userDto.username}`};
+        filter = this.mongo_escape(filter);
+        userDto.isSmm = newSmmStat;
+        userDto = this.mongo_escape(userDto.getDocument());
+        try {
+            await this.entityMongooseModel.updateOne(filter, userDto);
+        } catch (ignored) {
+            return false;
+        }
+        return true;
+    }
 }
