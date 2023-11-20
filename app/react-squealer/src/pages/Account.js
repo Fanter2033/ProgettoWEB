@@ -108,11 +108,12 @@ function Account() {
   }
 
   useEffect(() => {
-    const intervalId = setInterval(getUserQuote, 3000);
+    const intervalId = setInterval(getUserQuote, 10000); //10 sec
+    getUserQuote();
     return () => {
       clearInterval(intervalId);
     };
-  });
+  }, []);
 
   //GET USER DATA-----------------------------------------------------------------------------------------------
   const [userData, setUserData] = useState("");
@@ -145,11 +146,12 @@ function Account() {
   }
 
   useEffect(() => {
-    const intervalId = setInterval(getUserData, 10000);
+    const intervalId = setInterval(getUserData, 10000); //10 sec
+    getUserData();
     return () => {
       clearInterval(intervalId);
     };
-  });
+  }, []);
 
   //LOGOUT  USER------------------------------------------------------------------------------
   const notify = () =>
@@ -316,8 +318,26 @@ function Account() {
           </div>
 
           <div className="col-md-6">
+            <div className="col-12">
+              <h3 className="cool-font-small">Limit</h3>
+                <h4>Daily</h4>
+                <button className="blue-button m-2 box">
+                  {userQuote.limit_daily}
+                </button>
+              </div>
+              <div className="col-12">
+                <h4>Weekly</h4>
+                <button className="blue-button m-2 box">
+                  {userQuote.limit_weekly}
+                </button>
+              </div>
+              <div className="col-12">
+                <h4>Monthly</h4>
+                <button className="blue-button m-2 box">
+                  {userQuote.limit_monthly}
+                </button>
+              </div>
             <h4 className="mt-4 mb-5 cool-font-small">Email: {userData.email}</h4>
-            <h4 className="mt-4 cool-font-small">Dove sono nel mondo:</h4>
           </div>
         </div>
 

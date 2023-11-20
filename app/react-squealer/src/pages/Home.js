@@ -42,11 +42,11 @@ function Home() {
 
   useEffect(() => {
     const intervalId1 = setInterval(getChannels, 5000);
-
+    getChannels();
     return () => {
       clearInterval(intervalId1);
     };
-  });
+  }, []);
 
   return (
     <div>

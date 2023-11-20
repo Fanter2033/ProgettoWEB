@@ -8,7 +8,6 @@ import { Modal } from "react-bootstrap";
 import "../css/App.css";
 
 function VipModal({ buyModal, closeBuyModal, userQuote }) {
-    
   const { userGlobal } = useUserContext();
 
   const [percentualeAumento, setPercentualeAumento] = useState("");
@@ -39,32 +38,6 @@ function VipModal({ buyModal, closeBuyModal, userQuote }) {
 
   async function buyQuote(e) {
     alert("SIMULA PAGAMENTO CON SUCCESSO");
-    const percentualeNumero = parseFloat(percentualeAumento);
-    if (isNaN(percentualeNumero) || percentualeNumero <= 0 || percentualeNumero > 100) {
-      alert("Inserisci una percentuale valida.");
-      return;
-    }
-
-    const quotaInizialeGiorno = userQuote.remaining_daily;
-    const quotaInizialeSettimana= userQuote.remaining_weekly;
-    const quotaInizialeMese = userQuote.remaining_monthly;
-
-    const aumentoG = (percentualeNumero / 100) * quotaInizialeGiorno;
-    const aumentoS = (percentualeNumero / 100) * quotaInizialeSettimana;
-    const aumentoM = (percentualeNumero / 100) * quotaInizialeMese;
-
-    const nuovaQuotaGiorno = quotaInizialeGiorno + aumentoG;
-    const nuovaQuotaSettimana = quotaInizialeSettimana + aumentoS;
-    const nuovaQuotaMese = quotaInizialeMese + aumentoM;
-
-
-
-    //setRisultato(nuovaQuota.toFixed(2));
-    setRisultatoG(nuovaQuotaGiorno.toFixed(0));
-    setRisultatoS(nuovaQuotaSettimana.toFixed(0));
-    setRisultatoM(nuovaQuotaMese.toFixed(0));
-
-
     e.preventDefault();
     /*
     simulatePaymentRequest()
@@ -110,7 +83,6 @@ function VipModal({ buyModal, closeBuyModal, userQuote }) {
     backgroundColor: "#e0bb76",
   };
 
-
   /*
    {risultatoG !== null && risultatoS !== null && risultatoM !== null (
    <div>
@@ -129,24 +101,60 @@ function VipModal({ buyModal, closeBuyModal, userQuote }) {
           <Modal.Title className="">Buy Quote</Modal.Title>
         </Modal.Header>
         <Modal.Body className="modal-buy-body">
-          <form onSubmit={buyQuote} >
-            <label className="form-label me-3">
-              Percentuale di Aumento:
-              <input
-                type="text"
-                className="form-control"
-                value={percentualeAumento}
-                onChange={handlePercentualeChange}
-              />
-            </label>
-            <button type="submit" className="blue-button box">Calcola</button>
-          </form>
+          <div className="m-3">
+            <div class="card text-center">
+              <div class="card-header">PACCHETTO 1</div>
+              <div class="card-body">
+                <h5 class="card-title">Aumento del 10%</h5>
+                <p class="card-text">
+                  With supporting text below as a natural lead-in to additional
+                  content.
+                </p>
+                <a href="#" class="btn btn-primary">
+                  Go somewhere
+                </a>
+              </div>
+              <div class="card-footer text-muted">2 days ago</div>
+            </div>
+          </div>
+          <div className="m-3">
+            <div class="card text-center">
+              <div class="card-header">PACCHETTO 2</div>
+              <div class="card-body">
+                <h5 class="card-title">Aumento del 25%</h5>
+                <p class="card-text">
+                  With supporting text below as a natural lead-in to additional
+                  content.
+                </p>
+                <a href="#" class="btn btn-primary">
+                  Go somewhere
+                </a>
+              </div>
+              <div class="card-footer text-muted">2 days ago</div>
+            </div>
+          </div>
+          <div className="m-3">
+            <div class="card text-center">
+              <div class="card-header">PACCHETTO 3</div>
+              <div class="card-body">
+                <h5 class="card-title">Aumento del 50%</h5>
+                <p class="card-text">
+                  With supporting text below as a natural lead-in to additional
+                  content.
+                </p>
+                <a href="#" class="btn btn-primary">
+                  Go somewhere
+                </a>
+              </div>
+              <div class="card-footer text-muted">2 days ago</div>
+            </div>
+          </div>
         </Modal.Body>
         <Modal.Footer className="my-foot" style={footerStyle}>
           <button className="blue-button box" onClick={closeBuyModal}>
             Annulla
           </button>
-          <button className="green-button box" onClick={closeBuyModal}>
+          <button className="green-button box" onClick={buyQuote}>
             Compra
           </button>
         </Modal.Footer>

@@ -80,10 +80,14 @@ function InfoChannel() {
   };
 
   useEffect(() => {
+
     const intervalId1 = setInterval(getChTypeName, 5000);
     const intervalId2 = setInterval(getChTypeNameUsers, 5000);
     const intervalId4 = setInterval(getAllRoles, 5000);
 
+    getChTypeName();
+    getChTypeNameUsers();
+    getAllRoles();
     //se iscritto
     const intervalId3 = setInterval(getMyRole, 5000);
 
@@ -93,7 +97,7 @@ function InfoChannel() {
       clearInterval(intervalId3);
       clearInterval(intervalId4);
     };
-  });
+  }, []);
 
   console.log("ownerrrrrrrrrrrrrrrrr " + channel.owner);
   console.log("userrrrrrrrrrrrrrrrrrr " + userGlobal.username);

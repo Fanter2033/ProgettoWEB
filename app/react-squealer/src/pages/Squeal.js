@@ -377,7 +377,8 @@ function Squeal() {
   //console.log(channelsArray);
 
   useEffect(() => {
-    const intervalId = setInterval(getSqueals, 5000);
+    const intervalId = setInterval(getSqueals, 10000);
+    getSqueals()
     return () => {
       clearInterval(intervalId);
     };

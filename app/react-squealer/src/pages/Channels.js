@@ -224,8 +224,7 @@ function Channels() {
     <div>
       <div className="container-flex">
         <div className="row" onLoad={getUserData}>
-          <div className="col-12">
-            <h1>HOME</h1>
+          <div className="col-12 mt-5">
 
             <div className="row mb-2 d-flex flex-column justify-content-center align-items-center">
               <div className="col-6">

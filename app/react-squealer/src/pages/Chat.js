@@ -43,11 +43,12 @@ function Chat() {
   console.log("CHAAAAAAAAAT", squeals);
 
   useEffect(() => {
-    const intervalId1 = setInterval(chatReq, 5000);
+    const intervalId1 = setInterval(chatReq, 10000); //10 sec
+    chatReq();
     return () => {
       clearInterval(intervalId1);
     };
-  });
+  }, []);
 
   return (
     <>
