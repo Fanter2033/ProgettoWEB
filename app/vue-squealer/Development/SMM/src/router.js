@@ -34,3 +34,5 @@ const router = createRouter({
 });
 
 export default router;
+
+//TODO: guarda vue router guards

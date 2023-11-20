@@ -9,8 +9,10 @@
       </div>
 
       <div class="col-10">
-        Quote of {{ vipName }}
-      </div>
+        Quote of {{ this.$route.params.vip }}
+      </div >
+
+      <button @click="getQuoteInfo">Don't click me</button>
 
     </div>
   </div>
@@ -20,9 +22,15 @@
 import Nav from "@/components/Nav.vue";
 import SideBar from "@/components/dashboard/SideBar.vue";
 import VueConfig from "@/config/VueConfig";
+import { useRoute } from 'vue-router'
+import {onMounted} from "vue";
+import {ref} from "vue";
 
-const props = defineProps({
-  vipName: String,
+const route = useRoute();
+const VipName = ref('');
+
+onMounted(()=>{
+  VipName.value = route.params.vip;
 })
 
 let quote = {
@@ -32,9 +40,10 @@ let quote = {
 }
 
 function getQuoteInfo() {
+
   const uri = VueConfig.base_url_requests +
       '/user/' +
-      props.vipName +
+      VipName.value +
       '/quote';
   console.log(uri);
   fetch(uri, {
@@ -49,7 +58,7 @@ function getQuoteInfo() {
         console.log(data);
       })
       .catch((error) => {
-        console.error("Network error");
+        console.error("Network error", error);
       })
 }
 
