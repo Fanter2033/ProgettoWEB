@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import Login from "./components/Login.vue";
 import DashBoard from "./components/dashboard/DashBoard.vue";
 import Chart from "@/components/dashboard/Chart.vue";
+import Quote from "@/components/dashboard/Quote.vue";
 
 const routes = [
   {
@@ -20,6 +21,11 @@ const routes = [
     name: "Chart",
     component: Chart
   },
+  {
+    path: "/dashboard/quote/:vip",
+    name: "Quote",
+    component: Quote
+  }
 ];
 
 const router = createRouter({
