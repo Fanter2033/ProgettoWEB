@@ -116,11 +116,3 @@ function registerUser() {
         }
     });
 }
-
-/*
-function showModalRecuperaAccount() {
-    //TODO IMPLEMENT THIS
-    toastr["error"]("Funzione ancora non implementata");
-}
-
- */

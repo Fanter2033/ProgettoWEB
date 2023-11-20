@@ -182,7 +182,7 @@ module.exports = class ChannelModel extends Model {
 
                 tmp.owner = results[i].owner[0]['username'];
                 tmp.subscribers = results[i].subscribers[0]['username'];
-                tmp.posts = 0; //TODO GESTIRE POST
+                tmp.posts = 0;
                 output.push(tmp);
             }
 

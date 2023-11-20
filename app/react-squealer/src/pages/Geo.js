@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from "react";
+import { useUserContext } from "../config/UserContext";
 
 function Geo() {
+  const { userGlobal, setUserGlobal } = useUserContext();
   const [geolocationData, setGeolocationData] = useState(null);
   const [loading, setLoading] = useState(true);
+
+ 
+ 
+
+ 
+ 
 
   useEffect(() => {
     async function getGeolocation() {
@@ -13,6 +21,7 @@ function Geo() {
         if (response.ok) {
           const data = await response.json();
           setGeolocationData(data);
+          //userGlobal.location=locArray;
         }
       } catch (error) {
         console.error("Errore:", error);
@@ -22,9 +31,12 @@ function Geo() {
     }
 
     getGeolocation();
-  }, []);
+  });
+   //const locString = geolocationData.loc;
+ //console.log(geolocationData.loc);
+ //const locArray = locString.split(",").map(Number);
+ //console.log("aaaaaaaaaaaaaaaaa",locArray);
 
-  //  <p>Geolocalizzazione:</p>
 
   return (
     <div>

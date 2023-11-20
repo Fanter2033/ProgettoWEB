@@ -283,6 +283,14 @@ module.exports = class UserController extends Controller {
         else //Password set, save new in the database.
             newUser.psw_shadow = oldUserObj.psw_shadow;
 
+        let isSmm = await this.getVip(oldUsername);
+        if(isSmm.code === 200){
+            output['code'] = 409;
+            output['req_error'] = -6;
+            output['msg'] = 'Vip cannot change their name.';
+            return output;
+        }
+
         let databaseResponse = await this._model.replaceUser(newUser, oldUserObj.username);
         if (databaseResponse)
             output['content'] = newUser;
@@ -293,6 +301,7 @@ module.exports = class UserController extends Controller {
         }
 
         if(newUser.username !== oldUsername){
+
             //Updating references entities. Let's start by quote
             let quoteController = new QuoteController(new QuoteModel())
             let result = await quoteController.changeUsernameQuota(oldUsername, newUser.username);
@@ -338,9 +347,6 @@ module.exports = class UserController extends Controller {
                 output['msg'] = 'Internal server error UserController::updateUser - 5';
                 return output;
             }
-
-            //Now vip users
-            //TODO CHIEDERE A SAMI
         }
 
         return output;
@@ -486,6 +492,53 @@ module.exports = class UserController extends Controller {
         }
         return output;
     }
+
+    /**
+     * @param username {string}
+     * @param fromTimestamp {number}
+     * @param toTimestamp {number}
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     * Siam sicuri di mantenere questa funzione qui?
+     */
+    async getPopularityStats(username, fromTimestamp, toTimestamp){
+        let output = this.getDefaultOutput();
+        let squealModel = new SquealModel();
+
+        if(isNaN(fromTimestamp)) fromTimestamp = 0;
+        if(isNaN(toTimestamp)) toTimestamp = 0;
+
+        let exists = await this.userExists(username);
+        if(exists === false){
+            output['code'] = 404;
+            output['msg'] = 'User not found.';
+            return output;
+        }
+        let result = await squealModel.getPopularityStats(username, fromTimestamp, toTimestamp);
+        for (const resultKey in result) {
+            result[resultKey] = result[resultKey].getDocument();
+        }
+        output.content = result;
+        return output;
+    }
+
+    /**
+     * @param username {string}
+     * @return {Promise<{msg: string, code: number, sub_code: number,content: {}}>}
+     */
+    async getUserRoles(username){
+        let output = this.getDefaultOutput();
+
+        let exists = await this.userExists(username);
+        if(exists === false){
+            output['code'] = 404;
+            output['msg'] = 'User not found.';
+            return output;
+        }
+
+        let channelRoleController = new ChannelRolesController(new ChannelRolesModel());
+        return await channelRoleController.getAllRolesOfUser(username);
+    }
+
 
     /**
      *Given an username enable or disable his vip status

@@ -6,6 +6,7 @@ const SquealDto = require("../entities/dtos/SquealDto");
 const AuthController = require("../controllers/AuthController")
 const AuthModel = require("../models/AuthModel")
 const SquealTextAutoDto = require("../entities/dtos/SquealTextAutoDto");
+const {parse} = require("nodemon/lib/cli");
 
 let squealController = new SquealController(new SquealModel());
 let authController = new AuthController(new AuthModel());
@@ -47,6 +48,9 @@ squealDriver.post('/', async function(req, res){
 
     autoSqueal.iteration_end = (typeof req.body.squeal['auto_iterations'] !== 'undefined' ? req.body.squeal['auto_iterations']: null);
     autoSqueal.next_scheduled_operation = (typeof req.body.squeal['auto_seconds_delay'] !== 'undefined' ? req.body.squeal['auto_seconds_delay']: null);
+
+    autoSqueal.iteration_end = parseInt(autoSqueal.iteration_end);
+    autoSqueal.next_scheduled_operation = parseInt(autoSqueal.next_scheduled_operation);
 
     let ctrlOut = await squealController.postSqueal(squealDto, await authUser, autoSqueal);
     if (ctrlOut.code === 200)

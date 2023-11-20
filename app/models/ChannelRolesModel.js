@@ -133,6 +133,8 @@ module.exports = class ChannelRolesModel extends Model {
 
         try {
             let results = await this.entityMongooseModel.find(filter).limit(1);
+            if(results.length === 0)
+                return null;
             return new ChannelRoleDto(results[0]._doc);
         } catch (ignored) {
             return null;
@@ -290,6 +292,26 @@ module.exports = class ChannelRolesModel extends Model {
             return false;
         }
         return true;
+    }
+
+    /**
+     *
+     * @param username {string}
+     * @return {Promise<ChannelRoleDto[]|null>}
+     */
+    async getAllRolesOfUser(username){
+        let out = [];
+        await this.checkMongoose("ChannelRole", ChannelRoleSchema);
+        let filter = {"username": `${username}`};
+        filter = this.mongo_escape(filter);
+        try {
+            let results = await this.entityMongooseModel.find(filter);
+            for (const result of results)
+                out.push(new ChannelRoleDto(result._doc));
+        } catch (ignored) {
+            return null;
+        }
+        return out;
     }
 
 

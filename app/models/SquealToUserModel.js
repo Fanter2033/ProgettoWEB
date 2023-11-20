@@ -9,13 +9,13 @@ module.exports = class SquealToUserModel extends Model {
      * @param {Squeal2UserDto} dto
      * @return {Promise<boolean>}
      */
-    async createAssocSquealUser(dto){
-        await  this.checkMongoose("squeal_to_users", SquealUser);
+    async createAssocSquealUser(dto) {
+        await this.checkMongoose("squeal_to_users", SquealUser);
         let doc = this.mongo_escape(dto.getDocument());
         let newAssoc = new this.entityMongooseModel(doc);
         try {
             await newAssoc.save();
-        } catch (ignored){
+        } catch (ignored) {
             return false;
         }
         return true;
@@ -27,8 +27,8 @@ module.exports = class SquealToUserModel extends Model {
      * @param {string} username
      * @return {Promise<boolean>}
      */
-    async isUserDest(squeal_id, username){
-        await  this.checkMongoose("squeal_to_users", SquealUser);
+    async isUserDest(squeal_id, username) {
+        await this.checkMongoose("squeal_to_users", SquealUser);
 
         squeal_id = this.mongo_escape(squeal_id);
         username = this.mongo_escape(username);
@@ -38,7 +38,7 @@ module.exports = class SquealToUserModel extends Model {
             "destination_username": `${username}`
         }
         let results = await this.entityMongooseModel.find(filter);
-        if(results === 0)
+        if (results.length === 0)
             return false;
         return true;
     }
@@ -48,8 +48,8 @@ module.exports = class SquealToUserModel extends Model {
      * @param newUsername {string}
      * @return {Promise<boolean>}
      */
-    async replaceUser(oldUsername, newUsername){
-        await  this.checkMongoose("squeal_to_users", SquealUser);
+    async replaceUser(oldUsername, newUsername) {
+        await this.checkMongoose("squeal_to_users", SquealUser);
         let filter = {
             "destination_username": `${oldUsername}`
         }
@@ -70,8 +70,8 @@ module.exports = class SquealToUserModel extends Model {
      * @param username {string}
      * @return {Promise<boolean>}
      */
-    async deleteUser(username){
-        await  this.checkMongoose("squeal_to_users", SquealUser);
+    async deleteUser(username) {
+        await this.checkMongoose("squeal_to_users", SquealUser);
         let filter = {
             "destination_username": `${username}`
         }
@@ -81,6 +81,40 @@ module.exports = class SquealToUserModel extends Model {
             return true;
         } catch (ignored) {
             return false;
+        }
+    }
+
+    /**
+     * @param username {string}
+     * @param excludeFrom {number}
+     * @param excludeTo {number}
+     * @param limit {number}
+     * @return {Promise<number[]>}
+     */
+    async getSquealsToUser(username, excludeFrom, excludeTo, limit) {
+        await this.checkMongoose("squeal_to_users", SquealUser);
+
+        username = this.mongo_escape(username);
+        excludeFrom = this.mongo_escape(excludeFrom);
+        excludeTo = this.mongo_escape(excludeTo);
+        limit = this.mongo_escape(limit);
+
+        let filter = {
+            "destination_username": `${username}`,
+            $or: [
+                {$expr: {$lt: ["$squeal_id", `${excludeFrom}`]}},
+                {$expr: {$gt: ["$squeal_id", `${excludeTo}`]}},
+            ]
+        }
+        let output = [];
+        try {
+            let result = await this.entityMongooseModel.find(filter).sort({squeal_id: -1}).limit(limit);
+            for (const resultElement of result)
+                if(output.length === 0 || output[output.length - 1] !== resultElement._doc['squeal_id'])
+                    output.push(resultElement._doc['squeal_id']);
+            return output;
+        } catch (ignored) {
+            return output;
         }
     }
 

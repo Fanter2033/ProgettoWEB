@@ -228,8 +228,8 @@ module.exports = class ChannelRolesController extends Controller {
         requestingUserRole.type = channelRole.type;
         requestingUserRole.username = authenticatedUser.username;
 
-        let userResults = await this.#_model.getRolesByDto(requestingUserRole);
-        if(userResults === null && authenticatedUser.isAdmin === false){
+        let userChannelRole = await this.#_model.getRolesByDto(requestingUserRole);
+        if(userChannelRole === null && authenticatedUser.isAdmin === false){
             output['code'] = 403;
             output['msg'] = 'No role for requesting user';
             return output;
@@ -237,8 +237,8 @@ module.exports = class ChannelRolesController extends Controller {
 
         if ((
             authenticatedUser.isAdmin ||
-            (userResults !== null &&
-                (userResults.role === autoload.config._CHANNEL_ROLE_OWNER || userResults.role === autoload.config._CHANNEL_ROLE_ADMIN))
+            (userChannelRole !== null &&
+                (userChannelRole.role === autoload.config._CHANNEL_ROLE_OWNER || userChannelRole.role === autoload.config._CHANNEL_ROLE_ADMIN))
         ) === false) {
             output['code'] = 401;
             output['sub_code'] = 1;
@@ -246,14 +246,14 @@ module.exports = class ChannelRolesController extends Controller {
             return output;
         }
 
-        if(channelRole.role === autoload.config._CHANNEL_ROLE_OWNER && userResults.role !== autoload.config._CHANNEL_ROLE_OWNER && !authenticatedUser.isAdmin){
+        if(channelRole.role === autoload.config._CHANNEL_ROLE_OWNER && userChannelRole.role !== autoload.config._CHANNEL_ROLE_OWNER && !authenticatedUser.isAdmin){
             output['code'] = 401;
             output['sub_code'] = 2;
             output['msg'] = 'Unauthorized (2)';
             return output;
         }
 
-        if(channelRole.role === autoload.config._CHANNEL_ROLE_ADMIN && userResults.role !== autoload.config._CHANNEL_ROLE_OWNER && !authenticatedUser.isAdmin){
+        if(channelRole.role === autoload.config._CHANNEL_ROLE_ADMIN && userChannelRole.role !== autoload.config._CHANNEL_ROLE_OWNER && !authenticatedUser.isAdmin){
             output['code'] = 401;
             output['sub_code'] = 3;
             output['msg'] = 'Unauthorized (3)';
@@ -285,7 +285,7 @@ module.exports = class ChannelRolesController extends Controller {
                     return output;
                 }
             }
-        } else if(!escape_control && userResults !== null && userResults.role < channelRole.role && authenticatedUser.isAdmin === false){
+        } else if(!escape_control && userChannelRole !== null && userChannelRole.role < channelRole.role && authenticatedUser.isAdmin === false){
             output['code'] = 401;
             output['sub_code'] = 4;
             output['msg'] = 'Unauthorized (4)';
@@ -323,6 +323,27 @@ module.exports = class ChannelRolesController extends Controller {
         }
 
         output['content'] = modelResult.getDocument();
+        return output;
+    }
+
+
+    /**
+     * @param username {string}
+     * @return {Promise<{msg: string, code: number, sub_code: number,content: {}}>}
+     */
+    async getAllRolesOfUser(username){
+        let output = this.getDefaultOutput();
+
+        let modelResult = await this.#_model.getAllRolesOfUser(username);
+        if(modelResult === null){
+            output['code'] = 404;
+            output['msg'] = 'User role not found'
+            output['sub_code'] = 1;
+            return output;
+        }
+        output['content'] = [];
+        for (const res of modelResult)
+            output['content'].push(res.getDocument());
         return output;
     }
 

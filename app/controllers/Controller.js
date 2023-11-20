@@ -90,9 +90,9 @@ module.exports = class Controller {
      * crypt a string then create the hash with the salt and return the final hash
      */
     async crypt(string, saltRound = config._CIPHER_SALT) {
-        return bcrypt.genSalt(saltRound)
+        return bcryptjs.genSalt(saltRound)
             .then(salt => {
-                return bcrypt.hash(string, salt);
+                return bcryptjs.hash(string, salt);
             })
             .then(hash => {
                 return hash;

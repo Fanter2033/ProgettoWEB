@@ -134,6 +134,29 @@ userDriver.patch('/:username/toggle/lock', async function (req, res) {
 
 userDriver.use(`/:username/quote`, quoteDriver);
 
+userDriver.get(`/:username/stats/squealPopularity`, async function (req, res) {
+    let username = req.params['username'];
+
+    let fromTimestamp = (typeof req.body.fromTimestamp !== 'undefined' ? parseInt(req.body.fromTimestamp) : 0);
+    let toTimestamp = (typeof req.body.toTimestamp !== 'undefined' ? parseInt(req.body.toTimestamp) : 0);
+
+    let ctrl = await controller.getPopularityStats(username, fromTimestamp, toTimestamp);
+    if (ctrl.code === 200)
+        res.status(ctrl.code).send(ctrl.content);
+    else
+        res.status(ctrl.code).send(ctrl);
+});
+
+userDriver.get(`/:username/roles`, async function (req, res) {
+    let username = req.params['username'];
+
+    let ctrl = await controller.getUserRoles(username);
+    if (ctrl.code === 200)
+        res.status(ctrl.code).send(ctrl.content);
+    else
+        res.status(ctrl.code).send(ctrl);
+});
+
 userDriver.patch("/:username/toggle/vip", async function(req, res){
     let username = req.params['username'];
     let ctrl = await controller.toggleVip(username, await authController.getAuthenticatedUser(req));
