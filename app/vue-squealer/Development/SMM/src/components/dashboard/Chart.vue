@@ -8,24 +8,28 @@
         <SideBar />
       </div>
 
-      <div class="col-8">
+      <div class="col-10">
         <LineChart />
+        <div class="container border">
+          <form class="mx-sm-auto p-2">
+            <label for="fromDate">From</label>
+            <input type="date"
+                   id="fromDate"
+                   class="row"
+                   v-model="fromTimeForm">
+            <label for="toDate" class="mt-2">To</label>
+            <input type="date"
+                   id="toDate"
+                   class="row"
+                   v-model="toTimeForm">
+          </form>
+          <button class="btn mb-3" @click="this.updatePopData(this.$route.params.vip);">click me</button>
       </div>
 
-      <div class="container col-2 border row-cols-sm-auto">
-        <form class="mx-sm-auto p-2">
-          <label for="fromDate">From</label>
-          <input type="date"
-                 id="fromDate"
-                 class="row"
-                 v-model="fromTimeForm">
-          <label for="toDate" class="mt-2">To</label>
-          <input type="date"
-                 id="toDate"
-                 class="row"
-                 v-model="toTimeForm">
-        </form>
-        <button class="btn" @click="this.updatePopData(this.$route.params.vip);">click me</button>
+      <div class="row">
+
+      </div>
+
 
       </div>
     </div>
@@ -84,8 +88,6 @@ export default defineComponent({
           })
     }
   },
-
-
 
 });
 </script>

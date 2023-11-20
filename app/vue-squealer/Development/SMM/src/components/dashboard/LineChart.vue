@@ -1,75 +1,87 @@
 <template>
-
   <Line
       v-if="loaded"
-    id="Pop-squeal"
-    :options="chartOptions"
-    :data="chartData"
-    />
-
+      id="Pop-squeal"
+      :options="chartOptions"
+      :data="chartData"
+  />
 </template>
 
 <script>
 import { Line } from 'vue-chartjs';
-import 'chart.js/auto'
-import {store} from "@/store";
+import 'chart.js/auto';
+import { store } from "@/store";
 
 export default {
   name: 'LineChart',
-  components: {Line},
+  components: { Line },
+  data() {
+    return {
+      loaded: false,
+      chartData: null
+    };
+  },
   methods: {
     populateLabels: function () {
-      let x_labels = [];
-      let y_labels_pos = [];
-      let y_labels_neg = [];
-      let obj;
-      let squeals = JSON.parse(JSON.stringify(store.getters.getLineChartData));
+      const x_labels = [];
+      const y_labels_pos = [];
+      const y_labels_neg = [];
+      const squeals = store.getters.getLineChartData || [];
+
       for (let i = 0; i < squeals.length; i++) {
-        obj = squeals[i];
-        let date = new Date(obj.timestamp * 1000);
+        const obj = squeals[i];
+        const date = new Date(obj.timestamp * 1000);
         console.log(date);
         x_labels.push(date.getDate());
-        let value = obj.positive_value;
-        y_labels_pos.push(value);
-        value = obj.negative_value;
-        y_labels_neg.push(value);
+        y_labels_pos.push(obj.positive_value);
+        y_labels_neg.push(obj.negative_value);
       }
-      return{
+
+      return {
         labels: x_labels,
-        datasets: [{
-          label: 'popularity',
-          data: y_labels_pos,
-        }]
+        datasets: [
+          {
+            label: 'Positive popularity',
+            data: y_labels_pos,
+            borderColor: '#498bff',
+            backgroundColor: 'rgba(73, 139, 255,0.5)'
+          },
+          {
+            label: 'Negative popularity',
+            data: y_labels_neg,
+            borderColor: '#de2525',
+            backgroundColor: 'rgba(222, 37, 37,0.5)'
+          }
+        ],
       };
-    }
+    },
+    updateChartData: function () {
+      try {
+        this.chartData = this.populateLabels();
+        this.loaded = true;
+      } catch (e) {
+        console.error(e);
+      }
+    },
   },
-  data: () => ({
-    loaded:false,
-    chartData: null,
-  }),
-  async mounted() {
-    this.loaded = false;
-    try {
-      this.chartData = this.populateLabels();
-      this.loaded = true;
-    } catch (e) {
-      console.error(e);
-    }
+  watch: {
+    '$store.state.LineChartData': {
+      handler: 'updateChartData',
+      deep: true,
+    },
+  },
+  mounted() {
+    this.updateChartData();
   },
   computed: {
     chartOptions() {
-      return{
+      return {
         responsive: true,
-      }
+      };
     },
-    LineChartData(){
-      return this.$store.state.LineChartData;
-    }
-  }
-}
-
+  },
+};
 </script>
 
 <style>
-
 </style>

@@ -3,7 +3,7 @@
           class="btn"
           @click="openModal">
     <i class="bi p-1 bi-send-plus"></i>
-    <span class="d-none d-sm-inline">Quick Squeal</span>
+    <span class="d-none d-lg-inline">Quick Squeal</span>
   </button>
 
   <div class="modal fade" id="quickSqueal" tabindex="-1"  aria-hidden="true">
