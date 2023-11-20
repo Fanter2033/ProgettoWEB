@@ -182,6 +182,90 @@ paths:
                   $ref: '#/definitions/User'
               totalCount:
                 type: integer
+  /user/{username}/toggle/vip:
+    patch:
+      tags:
+        - vip
+      summary: Toggle vip
+      description: Given an username, enable or disable his/her vip status
+      parameters: 
+        - name: username
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Successful operation'
+  /user/{username}/toggle/smm:
+    patch:
+      tags:
+        - vip
+      summary: Toggle smm
+      description: Given a vip, enable or disable the smm status
+      parameters: 
+        - name: username
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Successful operation'
+  /user/{username}/pick-smm/{smm}:
+    patch:
+      tags:
+        - vip
+      summary: Choose smm for vip
+      description:  Choose smm for vip
+      parameters: 
+        - name: username
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Successful operation'
+  /user/{username}/remove-smm:
+    patch:
+      tags:
+        - vip
+      summary: Remove smm
+      description: Remove smm
+      parameters: 
+        - name: username
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Successful operation'
+  /user/{username}/my-smm:
+    get:
+      tags:
+        - vip
+      summary: Returns smm of vip
+      description: Returns smm of vip
+      parameters: 
+        - name: username
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Successful operation'
+  /user/{username}/my-users/:
+    get:
+      tags:
+        - vip
+      summary: Returns vip(s) of smm
+      description: Returns vip(s) of smm
+      parameters: 
+        - name: username
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Successful operation'       
   /channel:
     post:
       tags:
@@ -600,4 +684,15 @@ definitions:
         type: integer
       remaining_monthly:
         type: integer
-
+  Vip:
+    type: object
+    properties:
+      user: 
+        type: string
+        description: username of the vip
+      linked_smm:
+        type: string
+        description: smm of the vip (if the vip in not smm)
+      linked_users:
+        type: array
+        description: if the vip is smm, this are his fellas
