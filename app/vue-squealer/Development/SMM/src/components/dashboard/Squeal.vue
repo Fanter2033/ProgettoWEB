@@ -64,7 +64,7 @@
     color: yellow;
   }
   #squealButton{
-    background-color: green;
+    background-color: #528b57;
   }
   .modal-content{
     background-color: midnightblue;
