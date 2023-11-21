@@ -63,7 +63,7 @@
   .modal-title{
     color: yellow;
   }
-  #squealButton{
+  .btn{
     background-color: #528b57;
   }
   .modal-content{

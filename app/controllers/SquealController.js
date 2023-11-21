@@ -643,7 +643,7 @@ module.exports = class SquealController extends Controller {
      * @param vipUsername {string}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
-    async postSquealfromSmm(squealDto, authenticatedSmm, autoSqueal, vipUsername) {
+    async postSquealFromSmm(squealDto, authenticatedSmm, autoSqueal, vipUsername) {
         let output = this.getDefaultOutput();
         squealDto.sender = vipUsername;
 

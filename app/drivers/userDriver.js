@@ -79,7 +79,7 @@ userDriver.put('/:username', async function (req, res) {
     }
 
     let username = (typeof req.body.user.username !== 'undefined' ? req.body.user.username : '');
-    let email = (typeof req.body.user.email !== 'undefFpined' ? req.body.user.email : '');
+    let email = (typeof req.body.user.email !== 'undefined' ? req.body.user.email : '');
     let firstname = (typeof req.body.user.firstname !== 'undefined' ? req.body.user.firstname : '');
     let lastname = (typeof req.body.user.lastname !== 'undefined' ? req.body.user.lastname : '');
     let password = (typeof req.body.user.password !== 'undefined' ? req.body.user.password : '');
@@ -205,5 +205,7 @@ userDriver.get("/:username/my-users/", async function(req, res){
     else
         res.status(ctrl['code']).send(ctrl);
 })
+
+
 
 module.exports = userDriver;

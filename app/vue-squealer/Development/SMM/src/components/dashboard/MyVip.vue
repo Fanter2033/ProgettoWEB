@@ -1,14 +1,15 @@
 <template>
   <!-- Elemento di menu con submenu: per ora statico con il signor romanellas -->
   <li class="mb-2">
-    <div class="py-1">
+    <div class="py-1 px-1 d-flex">
     <i class="fs-4 bi-person-circle mx-lg-1 icon-small"></i>   <!--qui deve prendere icona da db-->
     <span class="ms-1 d-none d-lg-inline">{{vipName}}</span>
-    <button class="btn btn-toggle align-items-center rounded dropdown-toggle"
+    <a      href="#submenu"
+            class="align-items-center dropdown-toggle"
             data-bs-toggle="collapse"
             data-bs-target="#submenu"
             @click="toggleCollapse"
-            :aria-expanded="isCollapse"></button>
+            :aria-expanded="isCollapse"></a>
     </div>
     <!-- Sottomenu -->
     <ul
