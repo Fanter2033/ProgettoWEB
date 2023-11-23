@@ -20,6 +20,7 @@ function Reactions() {
   function hate() {
     setHate(hateMe + 1);
   }
+
   //!da togliere
   function reset() {
     setLove(0);
@@ -29,7 +30,6 @@ function Reactions() {
   }
 
   //TODO: implement ON CLICK
-
   return (
     <div className="mt-2">
       <div className="card-footer d-flex justify-content-center ">

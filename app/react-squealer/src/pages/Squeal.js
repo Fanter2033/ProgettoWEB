@@ -1,7 +1,8 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import ReactConfig from "../config/ReactConfig";
-
+import { useNavigate
+ } from "react-router-dom";
 import { useUserContext } from "../config/UserContext";
 
 import CurrentDateTime from "./CurrentDateTime";
@@ -18,6 +19,7 @@ function Squeal() {
   const { userGlobal } = useUserContext();
   console.log(userGlobal);
 
+  const navigate = useNavigate();
   //DEST INPUT-----------------------------------------------------------------------------------
   const [destinatariFromDest, setDestinatariFromDest] = useState([]);
 
@@ -87,7 +89,7 @@ function Squeal() {
     inputElement = (
       <div className="mb-3">
         <label htmlFor="userInput" className="form-label">
-          Testo
+          <b>Testo</b>
         </label>
         <textarea
           id="userInput"
@@ -104,7 +106,7 @@ function Squeal() {
     inputElement = (
       <div className="mb-3">
         <label htmlFor="imageInput" className="form-label">
-          Carica un'immagine:
+          <b>Immagine</b>
         </label>
         <input
           type="file"
@@ -120,7 +122,7 @@ function Squeal() {
     inputElement = (
       <div className="mb-3">
         <label htmlFor="youtubeLink" className="form-label">
-          Link YouTube:
+          <b>Link YouTube</b>
         </label>
         <input
           type="text"
@@ -138,7 +140,7 @@ function Squeal() {
   } else if (inputType === "POSITION") {
     inputElement = (
       <div className="mb-3">
-        <p>Geolocalizzazione</p>
+        <b>Geolocalizzazione</b>
         <p>API:Leaflet</p>
         <MapComponent />
       </div>
@@ -147,25 +149,27 @@ function Squeal() {
     inputElement = (
       <div className="mb-3">
         <label htmlFor="userInput" className="form-label">
-          Testo
+          <b>Messaggio temporizzato</b>
         </label>
 
-        <div>
-          <label htmlFor="numero1">Quante ripetizioni?</label>
+        <div className="">
+          <label htmlFor="numero1" className="me-2">Quante ripetizioni?</label>
           <input
             type="number"
             id="numero1"
             value={numero1}
+            style={{ width: '20%' }}
             onChange={handleNumero1Change}
           />
         </div>
 
-        <div>
-          <label htmlFor="numero2">Ogni quanti secondi?</label>
+        <div className="">
+          <label htmlFor="numero2"className="me-2">Ogni quanti secondi?</label>
           <input
             type="number"
             id="numero2"
             value={numero2}
+            style={{ width: '20%' }}
             onChange={handleNumero2Change}
           />
         </div>
@@ -235,7 +239,7 @@ function Squeal() {
   } else if (inputType === "POSITION_AUTO") {
     inputElement = (
       <div className="mb-3">
-        <p>Geolocalizzazione temporizzata</p>
+        <b>Geolocalizzazione temporizzata</b>
       </div>
     );
   }
@@ -244,6 +248,11 @@ function Squeal() {
   const [fetchDataFlag, setFetchDataFlag] = useState(false);
 
   async function postSqueal() {
+    if (isValidLink) {
+      console.log("Link YouTube valido:", youtubeLink);
+    } else {
+      console.log("Il link YouTube non è valido.");
+    }
     /*
     squeal:{
       destinations
@@ -321,23 +330,6 @@ function Squeal() {
       });
   }
 
-  useEffect(() => {
-    if (fetchDataFlag) {
-      if (isValidLink) {
-        console.log("Link YouTube valido:", youtubeLink);
-      } else {
-        console.log("Il link YouTube non è valido.");
-      }
-
-      postSqueal();
-      setFetchDataFlag(false);
-    }
-  }, [fetchDataFlag]);
-
-  const handleClickButton = () => {
-    setFetchDataFlag(true); // Attiva useEffect quando clicchi sul pulsante
-  };
-
   /*
     squeal:{
       destinations
@@ -385,7 +377,8 @@ function Squeal() {
   //console.log(channelsArray);
 
   useEffect(() => {
-    const intervalId = setInterval(getSqueals, 5000);
+    const intervalId = setInterval(getSqueals, 10000);
+    getSqueals()
     return () => {
       clearInterval(intervalId);
     };
@@ -410,9 +403,6 @@ function Squeal() {
             </div>
 
             <div className="mb-3 mt-3">
-              <label className="me-3 mb-2" htmlFor="inputType">
-                Tipo:
-              </label>
 
               <div
                 className="btn-group"
@@ -421,7 +411,7 @@ function Squeal() {
               >
                 <button
                   type="button"
-                  className={`green-button ${
+                  className={`bottoni_omologati ${
                     inputType === "MESSAGE_TEXT" ? "active" : ""
                   }`}
                   onClick={() => setInputType("MESSAGE_TEXT")}
@@ -441,7 +431,7 @@ function Squeal() {
 
                 <button
                   type="button"
-                  className={`green-button ${
+                  className={`bottoni_omologati ${
                     inputType === "IMAGE_URL" ? "active" : ""
                   }`}
                   onClick={() => setInputType("IMAGE_URL")}
@@ -462,7 +452,7 @@ function Squeal() {
 
                 <button
                   type="button"
-                  className={`green-button ${
+                  className={`bottoni_omologati ${
                     inputType === "VIDEO_URL" ? "active" : ""
                   }`}
                   onClick={() => setInputType("VIDEO_URL")}
@@ -482,7 +472,7 @@ function Squeal() {
 
                 <button
                   type="button"
-                  className={`green-button ${
+                  className={` bottoni_omologati ${
                     inputType === "POSITION" ? "active" : ""
                   }`}
                   onClick={() => setInputType("POSITION")}
@@ -503,7 +493,7 @@ function Squeal() {
 
                 <button
                   type="button"
-                  className={`green-button ${
+                  className={`bottoni_omologati ${
                     inputType === "TEXT_AUTO" ? "active" : ""
                   }`}
                   onClick={() => setInputType("TEXT_AUTO")}
@@ -525,7 +515,7 @@ function Squeal() {
 
                 <button
                   type="button"
-                  className={`green-button ${
+                  className={`bottoni_omologati ${
                     inputType === "POSITION_AUTO" ? "active" : ""
                   }`}
                   onClick={() => setInputType("POSITION_AUTO")}
@@ -557,7 +547,7 @@ function Squeal() {
                 <button
                   className="custom-button"
                   style={{ width: "80%" }}
-                  onClick={handleClickButton}
+                  onClick={postSqueal}
                 >
                   SQUEAL
                 </button>

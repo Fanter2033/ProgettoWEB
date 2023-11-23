@@ -1,7 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-//import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 
@@ -12,15 +11,18 @@ import { useUserContext } from "../config/UserContext";
 
 import Geo from "./Geo";
 import VultureAnimation from "./VoltureAnimation";
+
 import ChangeUsername from "./ChangeUsername";
 import ChangePassword from "./ChanegePassword";
+
 import UserDeleteModal from "./UserDeleteModal";
 import VipModal from "./VipModal";
+import BuyQuoteModal from "./BuyQuoteModal";
 
 import "../css/App.css";
 import cattyy from "./media/splash.jpeg";
 import pink from "./media/avvoltoioEli.png";
-import { Modal, Button } from "react-bootstrap";
+//import { Modal, Button } from "react-bootstrap";
 
 //TODO:modal for delete user
 
@@ -36,10 +38,6 @@ const { firstname, lastname, username, email, password } = userData;
 */
 
 function Account() {
-  
-  //username from <Navbar/>
-  //const location = useLocation();
-  //const { username } = location.state;
 
   const { userGlobal, setUserGlobal } = useUserContext();
 
@@ -51,7 +49,7 @@ function Account() {
     navigate_logout("/");
   }
 
-  //modalssssssss
+  //VIP modalssssssss
   const [showModal, setShowModal] = useState(false);
   const handleShowModal = () => {
     setShowModal(true);
@@ -60,15 +58,22 @@ function Account() {
     setShowModal(false);
   };
 
+  //DELETE modalssssssss
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const handleDeleteUser = () => {
-    handleCloseDeleteModal();
-  };
   const handleOpenDeleteModal = () => {
     setShowDeleteModal(true);
   };
   const handleCloseDeleteModal = () => {
     setShowDeleteModal(false);
+  };
+
+  //BUY modalssssssss
+  const [buyModal, setBuyModal] = useState(false);
+  const openBuyModal = () => {
+    setBuyModal(true);
+  };
+  const closeBuyModal = () => {
+    setBuyModal(false);
   };
 
   //GET USER QUOTE-----------------------------------------------------------------------------------------------
@@ -103,11 +108,12 @@ function Account() {
   }
 
   useEffect(() => {
-    const intervalId = setInterval(getUserQuote, 3000);
+    const intervalId = setInterval(getUserQuote, 10000); //10 sec
+    getUserQuote();
     return () => {
       clearInterval(intervalId);
     };
-  });
+  }, []);
 
   //GET USER DATA-----------------------------------------------------------------------------------------------
   const [userData, setUserData] = useState("");
@@ -140,11 +146,12 @@ function Account() {
   }
 
   useEffect(() => {
-    const intervalId = setInterval(getUserData, 10000);
+    const intervalId = setInterval(getUserData, 10000); //10 sec
+    getUserData();
     return () => {
       clearInterval(intervalId);
     };
-  });
+  }, []);
 
   //LOGOUT  USER------------------------------------------------------------------------------
   const notify = () =>
@@ -185,109 +192,16 @@ function Account() {
       });
   }
 
-  //DELETE USER con toast /user/${username}-----------------------------------------------------------------------------------------------------
-  async function deleteUser() {
-    const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}`;
-    const options = {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      mode: "cors",
-    };
-
-    fetch(uri, options)
-      .then((response) => {
-        if (response.ok) {
-          console.log("Cancellazione riuscita con successo");
-          navigate(`/registration`);
-        } else {
-          console.error("Delete failed", response.statusText);
-        }
-      })
-      .catch((error) => {
-        console.error("Network error", error);
-      });
-  }
-
+  
   //!channels
   //TODO: PUT: CANALI SEGUITI /user/${username}-----------------------------------------------------------------------------------------------------
   async function followedChannels() {
     //GET channels: if followed by user, print
   }
 
-  //!quote
-  //TODO: PATCH USER QUOTE /user/${username}/quote     when BUY is clicked percentageeeee-----------------------------------------------------------------------------------------------
-  /*
-  const simulatePaymentRequest = () => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const success = Math.random() > 0;
-        if (success) {
-          resolve("Pagamento riuscito");
-        } else {
-          reject("Pagamento fallito");
-        }
-      }, 1000);
-    });
-  };
-*/
-
-  async function buyQuote() {
-    /*
-    simulatePaymentRequest()
-      .then((response) => {
-        alert("Pagamento effettuato con successo!");
-
-        //TODO:body of squeal
-        const data = {
-          quote: {},
-        };
-
-        const url = `${ReactConfig.base_url_requests}/user/${userGlobal.username}/quote`;
-        const options = {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          mode: "cors",
-          body: JSON.stringify(data),
-        };
-
-        fetch(url, options)
-          .then((response) => {
-            if (response.ok) {
-              console.log("Aumento riuscito con successo");
-            } else {
-              console.error("Aumento fallito", response.statusText);
-            }
-          })
-          .catch((error) => {
-            console.error("Network error", error);
-          });
-
-      })
-      .catch((error) => {
-        alert("Errore durante il pagamento. Riprova più tardi.");
-      });
-
-    <Modal show={showModal} onHide={handleShowModal}>
-      <Modal.Header closeButton>
-        <Modal.Title>Conferma Eliminazione Utente</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>Sei sicuro di voler eliminare questo utente?</Modal.Body>
-      <Modal.Footer>
-        <button variant="secondary" onClick={handleCloseModal}>
-          Annulla
-        </button>
-        <button variant="danger" onClick={simulatePaymentRequest}>
-          Paga
-        </button>
-      </Modal.Footer>
-    </Modal>;
-    */
+  //TODO: GET: CANALI CREATI -----------------------------------------------------------------------------------------------------
+  async function createdChannels() {
+    //GET channels: if user is owner, get
   }
 
   //!vip
@@ -306,6 +220,7 @@ function Account() {
   const hideVulture = () => {
     setShowVultureAnimation(false);
   };
+
   //----------------------------------------------------------------------------------------------------------------
   return (
     <div className="container-flex">
@@ -343,12 +258,15 @@ function Account() {
                     >
                       N SQUEALS
                     </button>
-                    <button
+
+                    {!userGlobal.vip &&
+                      <button
                       className="box upgrade-button"
                       onClick={handleShowModal}
                     >
                       UPGRADE
-                    </button>
+                    </button>}
+
                     <VipModal
                       showModal={showModal}
                       handleClose={handleCloseModal}
@@ -363,47 +281,69 @@ function Account() {
         <div className="row mb-4 ">
           <div className="col-md-6">
             <div className="row">
-              <h3 className="mb-4">Quota rimanente</h3>
+              <h3 className="mb-4 cool-font-small">Quota rimanente</h3>
             </div>
 
-            <div className="row d-flex align-items-center justify-content-evenly">
-              <div className="col-sm-6">
+            <div className="row d-flex align-items-center justify-content-evenly mb-4">
+              <div className="col-12">
                 <h4>Daily</h4>
-                <button className="custom-button m-2 box">
+                <button className="blue-button m-2 box">
                   {userQuote.remaining_daily}
                 </button>
               </div>
-              <div className="col-sm-6">
+              <div className="col-12">
                 <h4>Weekly</h4>
-                <button className="custom-button m-2 box">
+                <button className="blue-button m-2 box">
                   {userQuote.remaining_weekly}
                 </button>
               </div>
-              <div className="col-sm-6">
+              <div className="col-12">
                 <h4>Monthly</h4>
-                <button className="custom-button m-2 box">
+                <button className="blue-button m-2 box">
                   {userQuote.remaining_monthly}
                 </button>
               </div>
             </div>
 
-            <button id="buy-button" className="box" onClick={buyQuote}>
+            <button id="buy-button" className="box" onClick={openBuyModal}>
               BUY
             </button>
+            <BuyQuoteModal
+            buyModal={buyModal}
+            closeBuyModal={closeBuyModal}
+            userQuote = {userQuote}
+            />
             <p>for a year</p>
             <p>MAX 10.000</p>
           </div>
 
           <div className="col-md-6">
-            <h4 className="mt-4 mb-5">Email: {userData.email}</h4>
-            <h4 className="mt-4">Dove sono nel mondo:</h4>
-            <Geo />
+            <div className="col-12">
+              <h3 className="cool-font-small">Limit</h3>
+                <h4>Daily</h4>
+                <button className="blue-button m-2 box">
+                  {userQuote.limit_daily}
+                </button>
+              </div>
+              <div className="col-12">
+                <h4>Weekly</h4>
+                <button className="blue-button m-2 box">
+                  {userQuote.limit_weekly}
+                </button>
+              </div>
+              <div className="col-12">
+                <h4>Monthly</h4>
+                <button className="blue-button m-2 box">
+                  {userQuote.limit_monthly}
+                </button>
+              </div>
+            <h4 className="mt-4 mb-5 cool-font-small">Email: {userData.email}</h4>
           </div>
         </div>
 
         <div className=" mb-5">
           <div className=" d-flex flex-column justify-content-center align-items-center ">
-            <button className="user_button mb-2 box" onClick={followedChannels}>
+            <button className="user_button mb-2 box" onClick={createdChannels}>
               CANALI CREATI
             </button>
             <button className="user_button mb-2 box" onClick={followedChannels}>
@@ -425,21 +365,21 @@ function Account() {
             <button
               id="delete-button"
               className=" mb-2 box"
-              onClick={showDeleteModal}
+              onClick={handleOpenDeleteModal}
             >
               DELETE ACCOUNT
-              <ToastContainer />
             </button>
             <UserDeleteModal
               showDeleteModal={showDeleteModal}
-              handleDeleteUser={handleDeleteUser}
               handleCloseDeleteModal={handleCloseDeleteModal}
             />
+
             <button className="user_button mb-2 box">
               <Link to={ReactConfig.pathFunction("/about")} id="about-us">
                 ABOUT US:
               </Link>
             </button>
+
           </div>
         </div>
 

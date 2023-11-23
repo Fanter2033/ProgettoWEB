@@ -42,11 +42,11 @@ function Home() {
 
   useEffect(() => {
     const intervalId1 = setInterval(getChannels, 5000);
-
+    getChannels();
     return () => {
       clearInterval(intervalId1);
     };
-  });
+  }, []);
 
   return (
     <div>
@@ -96,16 +96,6 @@ function Home() {
                 </Col>
               ))}
             </Row>
-            <h1>CHANNELS</h1>
-            <div className=""></div>
-            <div className="row justify-content-center">
-              <h3>TODO:</h3>
-              <ul className="list-group col-md-4 pb-5">
-                <li className="list-group-item list">GET CHANNELS</li>
-                <li className="list-group-item list">GET HASH</li>
-                <li className="list-group-item list">SEARCH</li>
-              </ul>
-            </div>
           </div>
         </div>
       </div>

@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
-import { Card, Col, Row } from "react-bootstrap";
+import { Card, Col, Container, Row } from "react-bootstrap";
 
 import "../css/App.css";
 
@@ -38,59 +38,10 @@ function Search() {
 
     // Pulisci il timer precedente se l'utente continua a digitare
     return () => clearTimeout(delayTimer);
-  }, [inputValue]); // Esegui useEffect ogni volta che il valore di inputValue cambia
-
-  /**
-   * 
-   *    const ChannelCard = ({ channel }) => {
-    return (
-      <div
-        style={{
-          border: "1px solid #ccc",
-          padding: "10px",
-          margin: "10px",
-          borderRadius: "5px",
-        }}
-      >
-        <h3>Channel Name: {channel.channel_name}</h3>
-        <p>Type: {channel.type}</p>
-        <p>Private: {channel.private.toString()}</p>
-        <p>Locked: {channel.locked.toString()}</p>
-        <p>Owner: {channel.owner}</p>
-        <p>Subscribers: {channel.subscribers}</p>
-        <p>Posts: {channel.posts}</p>
-        <Link to="/infoc">
-          <button variant="primary" className="ms-4 me-4">
-            Info
-          </button>
-        </Link>
-      </div>
-    );
-  };
+  }, [inputValue]);
 
 
-
-  
-  /*
-  {channels.map((channel, index) => (
-        <ChannelCard key={index} channel={channel} />
-      ))}
-  */
-
-  /*
-      <div>
-      <h2>Lista Canali:</h2>
-      <ul>
-        {responseData.channels.map((channel, index) => (
-          <li key={index}>
-            Channel Name: {channel.channel_name}
-          </li>
-        ))}
-      </ul>
-      </div>
-*/
-
-  //TODO: PUT channel/{type}/{channel_name}
+  //TODO: follow a channel
   const follow = () => {
     alert("il follow è da implementare :)");
   };
@@ -106,31 +57,31 @@ function Search() {
           onChange={(e) => setInputValue(e.target.value)}
         />
         <button className="custom-button" type="submit">
-          Search
+          Cerca
         </button>
       </form>
 
-      <Row className="">
+      <Container fluide>
         {channels.map((channel) => (
-          <Col key={channel.id} lg={6} className="mb-4">
-            <Card>
-              <Card.Body className="mb-4 d-flex flex-row">
+          <Col key={channel.id} lg={12} className="mb-4">
+            <Card style={{ height: "100%" }}>
+              <Card.Body className="mb-4  w-100 d-flex flex-column justify-content-center align-items-center">
                 <Card.Title className="">{channel.channel_name}</Card.Title>
 
                 <Link to="/infoc" state={channel}>
-                  <button className="custom-button me-2">
+                  <button className="custom-button mb-2">
                     Info
                   </button>
                 </Link>
-
-                <button className="custom-button" onClick={follow}>
+                <button className="custom-button mb-2" onClick={follow}>
                   Segui
                 </button>
+                <div>{channel.type}</div>
               </Card.Body>
             </Card>
           </Col>
         ))}
-      </Row>
+      </Container>
     </div>
   );
 }

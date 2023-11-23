@@ -1,18 +1,14 @@
 import { Routes, Route } from "react-router-dom";
-//import { useLocation } from "react-router-dom";
 
 import Channels from "./Channels";
 import Navbar from "./Navbar";
 import Account from "./Account";
 import Post from "./Post";
-//import Received from "./Received";
 import Chat from "./Chat";
 import InfoChannel from "./InfoChannel";
 import InfoUser from "./InfoUser";
 
 function HomeRoutes() {
-  //const location = useLocation();
-  //const { username } = location.state;
 
   return (
     <>

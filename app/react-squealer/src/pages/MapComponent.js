@@ -1,24 +1,25 @@
 import React from "react";
-// import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   MapContainer,
   TileLayer,
   Popup,
   Marker,
-  //useMapEvents,
+  useMapEvents,
 } from "react-leaflet";
 import L from "leaflet";
 
 import { useUserContext } from "../config/UserContext";
 
-//import { SearchControl, OpenStreetMapProvider } from "react-leaflet-geosearch";
-//import "leaflet-control-geocoder/dist/Control.Geocoder.js";
+import { SearchControl, OpenStreetMapProvider } from "leaflet-geosearch";
+import "leaflet-control-geocoder/dist/Control.Geocoder.js";
 
-//import "leaflet-control-geocoder/dist/Control.Geocoder.css";
+import "leaflet-control-geocoder/dist/Control.Geocoder.css";
 import "leaflet/dist/leaflet.css";
 import "../css/App.css";
 
 const MapComponent = () => {
+  
   const { userGlobal, setUserGlobal } = useUserContext();
 
   const skater = new L.Icon({
@@ -33,14 +34,17 @@ const MapComponent = () => {
   const position = [latitude, longitude];
 
   //const position = userGlobal.location;
-  /*
+
   const [userLocation, setUserLocation] = useState(null);
 
   const getLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setUserLocation([position.coords.latitude, position.coords.longitude]);
+          setUserLocation([
+            position.coords.latitude,
+            position.coords.longitude,
+          ]);
         },
         (error) => {
           console.error("Error getting user location:", error);
@@ -77,18 +81,6 @@ const MapComponent = () => {
     );
   };
 
-NEL RENDER
-  <SearchComponent />
-
-  {userLocation && (
-  <Marker 
-  position={userLocation} 
-   icon={skater}>
-    <Popup>Your Location</Popup>
-  </Marker>
-)}
-  */
-
   return (
     <div className="map__container d-flex flex-row justify-content-center">
       <div className="mt-3" style={{ height: "200px", width: "100%" }}>
@@ -106,6 +98,13 @@ NEL RENDER
           <Marker position={position} icon={skater}>
             <Popup>Here you are.</Popup>
           </Marker>
+          <SearchComponent />
+
+          {userLocation && (
+            <Marker position={userLocation} icon={skater}>
+              <Popup>Your Location</Popup>
+            </Marker>
+          )}
         </MapContainer>
       </div>
     </div>

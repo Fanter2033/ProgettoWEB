@@ -2,7 +2,7 @@ import React from "react";
 
 function Modal({ isOpen, onClose }) {
   if (!isOpen) {
-    return null; // Se la modale non è aperta, non viene renderizzata
+    return null;
   } else {
     return (
       <div className="modal-overlay">
