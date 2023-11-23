@@ -23,29 +23,37 @@ function Squeal() {
   //console.log(userGlobal);
 
   const notify = () =>
-  toast.error("Manca desinatario. Riprovare", {
-    position: "bottom-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "colored",
-  });
+    toast.error("Manca desinatario. Riprovare", {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
 
   const notify2 = () =>
-  toast.error("Manca il contenuto? L'utente esiste?", {
-    position: "bottom-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "colored",
-  });
+    toast.error("Manca il contenuto? L'utente esiste?", {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
 
+  //LOCATION STUFF
+  const [markerCoordinates, setMarkerCoordinates] = useState(null);
+  const handleMarkerAdded = (position) => {
+    setMarkerCoordinates(position);
+    // Questa funzione verrà chiamata quando l'utente aggiunge un marker
+    console.log("Posizione del marker aggiunta:", position);
+    // Puoi fare ulteriori elaborazioni o passare le informazioni ad altri componenti qui
+  };
 
   const navigate = useNavigate();
   //DEST INPUT-----------------------------------------------------------------------------------
@@ -106,6 +114,25 @@ function Squeal() {
 
   const handleNumero2Change = (e) => {
     setNumero2(e.target.value);
+  };
+  //MSG TEMP---------------
+
+  const [postText, setPostText] = useState("");
+  const [clickedButtons, setClickedButtons] = useState([]);
+
+  const handleButtonClick = (buttonText) => {
+    // Aggiungi il testo del bottone cliccato al testo del post
+    setPostText((prevText) => prevText + buttonText);
+
+    // Aggiungi il testo del bottone alla lista dei bottoni cliccati
+    setClickedButtons((prevButtons) => [...prevButtons, buttonText]);
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Esegui le operazioni desiderate con il testo del post e i bottoni cliccati
+    console.log("Testo del post:", postText);
+    console.log("Bottoni cliccati:", clickedButtons);
+    // Puoi inviare i dati al server o eseguire altre azioni qui
   };
 
   //TYPE INPUT--------------------------------------------------------------
@@ -170,8 +197,7 @@ function Squeal() {
       <div className="mb-3">
         <b>Geolocalizzazione</b>
         <p>API:Leaflet</p>
-        <MapWithSearch/>
-
+        <MapWithSearch onMarkerAdded={handleMarkerAdded} />
       </div>
     );
   } else if (inputType === "TEXT_AUTO") {
@@ -180,7 +206,33 @@ function Squeal() {
         <label htmlFor="userInput" className="form-label">
           <b>Messaggio temporizzato</b>
         </label>
-
+        <form onSubmit={handleSubmit}>
+          <textarea
+            rows="4"
+            cols="50"
+            placeholder="Inserisci il testo del post..."
+            value={postText}
+            onChange={(e) => setPostText(e.target.value)}
+          ></textarea>
+          <div>
+            <button type="button" onClick={() => handleButtonClick("Button 1")}>
+              Button 1
+            </button>
+            <button type="button" onClick={() => handleButtonClick("Button 2")}>
+              Button 2
+            </button>
+            <button type="button" onClick={() => handleButtonClick("Button 3")}>
+              Button 3
+            </button>
+            <button type="button" onClick={() => handleButtonClick("Button 4")}>
+              Button 4
+            </button>
+            <button type="button" onClick={() => handleButtonClick("Button 5")}>
+              Button 5
+            </button>
+          </div>
+          <button type="submit">Pubblica</button>
+        </form>
         <div className="">
           <label htmlFor="numero1" className="me-2">
             Quante ripetizioni?
@@ -326,6 +378,19 @@ function Squeal() {
             auto_seconds_delay: numero2,
           },
         };
+      } else if (inputType === "POSITION") {
+        data = {
+          squeal: {
+            destinations: destinatariFromDest,
+            sender: userGlobal.username,
+            message_type: inputType,
+            content: markerCoordinates,
+            auto_iterations: numero1,
+            auto_seconds_delay: numero2,
+          },
+        };
+
+        console.log("aaaaaaaaaaaaaaaaaaaa", markerCoordinates);
       } else {
         data = {
           squeal: {
@@ -364,8 +429,7 @@ function Squeal() {
         .catch((error) => {
           console.error("Network error", error);
         });
-    }
-    else{
+    } else {
       notify();
     }
   }
