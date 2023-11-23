@@ -7,7 +7,7 @@
       <div class="col-auto px-sm-2 px-0 bg-dark">
         <!-- Contenuto della barra laterale -->
         <div
-          class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100"
+          class="d-flex flex-column align-items-center align-items-md-start px-3 pt-2 text-white min-vh-100"
         >
           <!-- Logo o link alla home -->
           <div

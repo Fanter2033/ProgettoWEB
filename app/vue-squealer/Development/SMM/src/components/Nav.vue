@@ -1,10 +1,13 @@
 <template>
     
   <div id = "app">
-    <nav class="navbar navbar-expand-sm bg-dark navbar-dark ">
+    <nav class="navbar navbar-expand-sm navbar-dark ">
         <div class="container-fluid">
             <div class="navbar-header">
-
+              <div class="navbar-brand">
+                <img src="../../public/media/Nav_logo.png" alt="Logo" width="60" >
+                <span class="mx-3"> <b>Squealer</b> </span>
+              </div>
             </div>
             <ul class="navbar-nav">
                 <li class="nav-item"><a class="nav-link"><router-link to="/dashboard/">Linked Accounts</router-link></a></li>

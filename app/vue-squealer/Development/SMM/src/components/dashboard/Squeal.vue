@@ -1,8 +1,9 @@
 <template>
   <button type="button"
+          id="squealButton"
           class="btn"
           @click="openModal">
-    <i class="bi p-1 bi-send-plus"></i>
+    <i class="bi bi-send-plus"></i>
     <span class="d-none d-lg-inline">Quick Squeal</span>
   </button>
 
@@ -63,7 +64,7 @@
     color: yellow;
   }
   .btn{
-    background-color: green;
+    background-color: #528b57;
   }
   .modal-content{
     background-color: midnightblue;
