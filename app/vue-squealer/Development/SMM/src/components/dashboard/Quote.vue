@@ -45,6 +45,7 @@
           Quick Refill
         </button>
         <p><i>you cannot remain mute for lack of characters...</i></p>
+        <img src="../../../public/media/post.gif" alt="post" style="height: 100px">
 
       </div >
 
@@ -57,12 +58,11 @@ import Nav from "@/components/Nav.vue";
 import SideBar from "@/components/dashboard/SideBar.vue";
 import VueConfig from "@/config/VueConfig";
 import { useRoute } from 'vue-router'
-import {onMounted} from "vue";
+import { onMounted, onUpdated, watch} from "vue";
 import {ref} from "vue";
 
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
-import { Pie } from 'vue-chartjs'
-
+//import { Pie } from 'vue-chartjs'
 
 const route = useRoute();
 const VipName = ref('');
@@ -70,6 +70,15 @@ const isMouseOver = ref(false);
 
 onMounted(()=>{
   VipName.value = route.params.vip;
+  getQuoteInfo();
+})
+
+onUpdated(()=>{
+  VipName.value = route.params.vip;
+})
+
+watch(VipName, ()=>{
+  getQuoteInfo();
 })
 
 let quote = ref({});
@@ -103,9 +112,6 @@ function getQuoteInfo() {
         console.error("Network error", error);
       })
 }
-onMounted(()=>{
-  getQuoteInfo();
-})
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 const data = {
