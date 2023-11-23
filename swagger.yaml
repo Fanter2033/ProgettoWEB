@@ -950,6 +950,30 @@ paths:
           description: 'Requesting user is not an admin'
         '404':
           description: 'User not found'
+  /user/{username}/quote/buy:
+    patch:
+      tags:
+        - quote
+      summary: Change user quota by percentage
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+        - name: percentage
+          in: formData
+          type: integer
+          minimum: 0
+          maximum: 10000
+      responses:
+        '200':
+          description: 'Successful operation'
+        '401':
+          description: 'Unauthorized'
+        '403':
+          description: 'Requesting user is not an admin'
+        '404':
+          description: 'User not found'
 definitions:
   User:
     type: object
