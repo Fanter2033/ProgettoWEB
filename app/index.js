@@ -85,8 +85,8 @@ backEndRouter.use(express.urlencoded({extended: true}));
 
 //Allow CORS
 backEndRouter.use(cors({
-    /*origin: "http://localhost:3000"*/
-    origin: 'http://localhost:3000',
+    /*origin: "http://localhost:8000"*/
+    origin: ['http://localhost:5173', 'http://localhost:8000'],
     credentials: true
 }));
 
@@ -97,7 +97,7 @@ backEndRouter.use(cookieParser());
 backEndRouter.get("*", (req, res, next) => {
     autoload.logRequests(req, next);
 });
-backEndRouter.post("*", (req, res, next) => {
+backEndRouter.post("*", (req , res, next) => {
     autoload.logRequests(req, next);
 });
 backEndRouter.put("*", (req, res, next) => {

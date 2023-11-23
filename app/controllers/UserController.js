@@ -498,7 +498,7 @@ module.exports = class UserController extends Controller {
      * @param fromTimestamp {number}
      * @param toTimestamp {number}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
-     * Siam sicuri di mantenere questa funzione qui?
+     * Siam sicuri di mantenere questa funzione qui? Si dai
      */
     async getPopularityStats(username, fromTimestamp, toTimestamp){
         let output = this.getDefaultOutput();
@@ -541,7 +541,7 @@ module.exports = class UserController extends Controller {
 
 
     /**
-     *Given an username enable or disable his vip status
+     * Given an username enable or disable his/her vip status
      * @param username {String}
      * @param authenticatedUser {{}|UserDto}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
@@ -587,7 +587,7 @@ module.exports = class UserController extends Controller {
     }
 
     /**
-     * Enable/Disable the smm option
+     * Enable/Disable the smm status
      * @param authenticatedUser {{}|UserDto}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
@@ -636,7 +636,7 @@ module.exports = class UserController extends Controller {
     }
 
     /**
-     *
+     * if the user is vip, he/she can choose an existing smm to link in his/her vip collection
      * @param SmmUsername {String}
      * @param authenticatedUser {{}|UserDto}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
@@ -703,6 +703,7 @@ module.exports = class UserController extends Controller {
     }
 
     /**
+     * if the user is vip, he/she can remove his/her actual smm
      * @param authenticatedUser {{}|UserDto}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
@@ -734,7 +735,7 @@ module.exports = class UserController extends Controller {
     }
 
     /**
-     *
+     * get the smm of a vip
      * @param username {String}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
@@ -775,7 +776,7 @@ module.exports = class UserController extends Controller {
 
 
     /**
-     *
+     * get users list linked to a smm
      * @param username {String}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
@@ -816,9 +817,3 @@ module.exports = class UserController extends Controller {
 *
 * chiunque puo' vedere chi sono gli smm e chi sono i linkati ma per ora chissenefotte
 * */
-
-/**
- *
- * TODO: store di informazioni importati solo per i vip user???
- *
- */

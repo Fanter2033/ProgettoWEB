@@ -9,10 +9,15 @@ export const store = new Vuex.Store({
     state:{
         userZero : "",
         myVips : [],
+        LineChartData:{
+            squeals:[],
+            popularity:[]
+        }
     },
     getters: {
         getUserZero: (state) => {return state.userZero},
         getVips: (state) => { return state.myVips},
+        getLineChartData: (state) => {return state.LineChartData}
     },
     mutations:{
         setUserZero(state, user){
@@ -20,6 +25,9 @@ export const store = new Vuex.Store({
         },
         setVips(state, vipsArray){
             state.myVips = vipsArray;
+        },
+        setLineChartData(state, DataObj){
+            state.LineChartData = DataObj;
         }
     },
     plugins:[vuexLocal.plugin]

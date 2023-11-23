@@ -74,7 +74,7 @@ export default {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
         },
-        body: JSON.stringify(passData),
+        body: JSON.stringify(passData)
       })
         .then((res) => {
           if (res.ok) {

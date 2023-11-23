@@ -79,7 +79,7 @@ userDriver.put('/:username', async function (req, res) {
     }
 
     let username = (typeof req.body.user.username !== 'undefined' ? req.body.user.username : '');
-    let email = (typeof req.body.user.email !== 'undefined' ? req.body.user.email : '');
+    let email = (typeof req.body.user.email !== 'undefFpined' ? req.body.user.email : '');
     let firstname = (typeof req.body.user.firstname !== 'undefined' ? req.body.user.firstname : '');
     let lastname = (typeof req.body.user.lastname !== 'undefined' ? req.body.user.lastname : '');
     let password = (typeof req.body.user.password !== 'undefined' ? req.body.user.password : '');
@@ -137,8 +137,8 @@ userDriver.use(`/:username/quote`, quoteDriver);
 userDriver.get(`/:username/stats/squealPopularity`, async function (req, res) {
     let username = req.params['username'];
 
-    let fromTimestamp = (typeof req.body.fromTimestamp !== 'undefined' ? parseInt(req.body.fromTimestamp) : 0);
-    let toTimestamp = (typeof req.body.toTimestamp !== 'undefined' ? parseInt(req.body.toTimestamp) : 0);
+    let fromTimestamp = (typeof req.query.fromTimestamp !== 'undefined' ? parseInt(req.query.fromTimestamp) : 0);
+    let toTimestamp = (typeof req.query.toTimestamp !== 'undefined' ? parseInt(req.query.toTimestamp) : 0);
 
     let ctrl = await controller.getPopularityStats(username, fromTimestamp, toTimestamp);
     if (ctrl.code === 200)

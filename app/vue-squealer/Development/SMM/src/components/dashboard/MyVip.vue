@@ -10,7 +10,7 @@
         aria-expanded="false"
     >
       <i class="fs-4 bi-person-circle mx-sm-auto icon-small"></i>   <!--qui deve prendere icona da db-->
-      <span class="ms-1 d-none d-sm-inline">{{vipName}}</span>
+      <span class="ms-1 d-none d-lg-inline">{{vipName}}</span>
     </a>
     <!-- Sottomenu -->
     <ul
@@ -19,28 +19,26 @@
         data-bs-parent="#menu"
     >
       <li class="w-100">
-        <router-link to="/dashboard/graphs" class="nav-link px-0">
+        <router-link :to="{ name:'Chart', params: {vip: vipName} }">
           <i class="fs-4 bi-file-bar-graph"></i>
-          <span class="d-none d-sm-inline">Charts</span>
+          <span class="d-none d-lg-inline">Charts</span>
         </router-link>
       </li>
       <li>
         <a href="#" class="nav-link px-0">
-          <i class="fs-4 bi-send"></i
-          ><span class="d-none d-sm-inline">Squeal</span></a
+          <i class="fs-4 bi-currency-euro"></i
+          ><span class="d-none d-lg-inline">Quote</span></a
         >
       </li>
       <li>
-        <a href="#" class="nav-link px-0">
-          <i class="fs-4 bi-currency-euro"></i
-          ><span class="d-none d-sm-inline">Quote</span></a
-        >
+          <Squeal />
       </li>
     </ul>
   </li>
 </template>
 
 <script setup>
+  import Squeal from "@/components/dashboard/Squeal.vue";
   defineProps({
     vipName: String,
   })
