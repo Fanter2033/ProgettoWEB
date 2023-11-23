@@ -16,16 +16,19 @@ const Dest = ({ onDestinatariSubmit }) => {
   const handleDestinatariSubmit = (e) => {
     e.preventDefault();
 
-    // Verifica che l'input inizi con uno dei simboli desiderati
-    if (!/^[@#§]/.test(destinatari)) {
-      setError("L'input deve iniziare con uno dei simboli: #, §, @");
-      return;
-    }
-
     // Suddivide l'input in destinatari separati da virgole
     const destinatariSeparati = destinatari
       .split(",")
       .map((destinatario) => destinatario.trim());
+
+    const isValid = destinatariSeparati.every((destinatario) =>
+      /^[@#§]/.test(destinatario)
+    );
+
+    if (!isValid) {
+      setError("Ogni destinatario deve iniziare con uno dei simboli: #, §, @");
+      return;
+    }
 
     setDestinatariArray(destinatariSeparati);
 

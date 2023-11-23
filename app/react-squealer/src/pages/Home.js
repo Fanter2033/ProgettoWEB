@@ -3,10 +3,13 @@ import { NavLink, Link } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 
 //import Search from "./Search";
-//import Post from "./Post";
 import Footer from "./Footer";
 
-import { Button, Card, Col, Row } from "react-bootstrap";
+import { Container, Card, Col, Row } from "react-bootstrap";
+import "../css/App.css";
+
+//TODO: vai su infoc senza auth?
+//TODO: che squeal faccio vedere?
 
 function Home() {
   //GET /channel    list of channels ------------------------------------------------------------------------------------------------------------
@@ -71,34 +74,25 @@ function Home() {
         </div>
       </div>
 
-      <div className="container-flex pb-5">
-        <div className="row">
-          <div className="col-12">
-            <h2>Lista TUTTI i Canali:</h2>
-            <Row className="ms-4 me-4">
-              {channels.map((channel) => (
-                <Col key={channel.id} lg={6} className="mb-4 ">
-                  <Card>
-                    <Card.Body className="mb-4 d-flex flex-row">
-                      <Card.Title className="ms-4 me-4">
-                        {channel.channel_name}
-                      </Card.Title>
+      <h2>TUTTI i Canali:</h2>
+      <Container fluide className="d-flex flex-column justify-content-center align-items-center p-5 mb-5">
+        {channels.map((channel) => (
+          <Col key={channel.id} lg={6} className="mb-4 ">
+            <Card>
+              <Card.Body className="mb-4  w-100 d-flex flex-column justify-content-center align-items-center">
+                <Card.Title className="ms-4 me-4">
+                  {channel.channel_name}
+                </Card.Title>
 
-                      <Link to="/infoc">
-                        <Button variant="primary" className="ms-4 me-4">
-                          Info
-                        </Button>
-                      </Link>
+                <Link to="/infoc">
+                  <button className="custom-button ms-4 me-4">Info</button>
+                </Link>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
+      </Container>
 
-                      <Button variant="primary">Segui</Button>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              ))}
-            </Row>
-          </div>
-        </div>
-      </div>
       <Footer />
     </div>
   );

@@ -11,6 +11,8 @@ import L from "leaflet";
 
 import { useUserContext } from "../config/UserContext";
 
+import SearchMap from "./SearchMap";
+
 import { SearchControl, OpenStreetMapProvider } from "leaflet-geosearch";
 import "leaflet-control-geocoder/dist/Control.Geocoder.js";
 
@@ -19,7 +21,6 @@ import "leaflet/dist/leaflet.css";
 import "../css/App.css";
 
 const MapComponent = () => {
-  
   const { userGlobal, setUserGlobal } = useUserContext();
 
   const skater = new L.Icon({
@@ -28,12 +29,9 @@ const MapComponent = () => {
   });
 
   //London
-  const latitude = 51.505;
-  const longitude = -0.09;
-
-  const position = [latitude, longitude];
-
-  //const position = userGlobal.location;
+  //const latitude = 51.505;
+  //const longitude = -0.09;
+  //const position = [latitude, longitude];
 
   const [userLocation, setUserLocation] = useState(null);
 
@@ -54,51 +52,27 @@ const MapComponent = () => {
       console.error("Geolocation is not supported by this browser.");
     }
   };
+  
   useEffect(() => {
     getLocation();
-  });
+  }, []);
 
-  const SearchComponent = () => {
-    const map = useMapEvents({
-      click: () => {
-        map.locate();
-      },
-    });
-
-    return (
-      <SearchControl
-        provider={new OpenStreetMapProvider()}
-        showMarker={false}
-        showPopup={false}
-        maxMarkers={1}
-        retainZoomLevel={false}
-        animateZoom={true}
-        autoClose={true}
-        position="topright"
-        keepResult={true}
-        inputPlaceholder="Search for a location"
-      />
-    );
-  };
 
   return (
     <div className="map__container d-flex flex-row justify-content-center">
       <div className="mt-3" style={{ height: "200px", width: "100%" }}>
         <MapContainer
-          //center={userLocation || [0, 0]}
-          center={position}
-          zoom={2}
-          //zoom={userLocation ? 12 : 2}
+          center={userLocation || [0, 0]}
+          //center={position}
+          //zoom={2}
+          zoom={userLocation ? 12 : 2}
           style={{ height: "100%", width: "100%" }}
         >
+
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          <Marker position={position} icon={skater}>
-            <Popup>Here you are.</Popup>
-          </Marker>
-          <SearchComponent />
 
           {userLocation && (
             <Marker position={userLocation} icon={skater}>

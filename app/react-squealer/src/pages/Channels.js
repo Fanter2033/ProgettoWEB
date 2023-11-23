@@ -207,8 +207,9 @@ function Channels() {
       ))}
     </Row>;
   }
+
   let arrayChannel = list.channels;
-  console.log("LISTAAAAAAAA", arrayChannel);
+  //console.log("LISTAAAAAAAA", arrayChannel);
 
   const [functionsCalled, setFunctionsCalled] = useState(false);
 
