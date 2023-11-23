@@ -18,13 +18,14 @@ import ChangePassword from "./ChanegePassword";
 import UserDeleteModal from "./UserDeleteModal";
 import VipModal from "./VipModal";
 import BuyQuoteModal from "./BuyQuoteModal";
+import ConnectSMM from "./ConnectSMM";
+
+import { Button, Card, Col, Row } from "react-bootstrap";
 
 import "../css/App.css";
 import cattyy from "./media/splash.jpeg";
 import pink from "./media/avvoltoioEli.png";
 //import { Modal, Button } from "react-bootstrap";
-
-//TODO:modal for delete user
 
 /*
 col-12 col-md-6
@@ -36,9 +37,9 @@ tutti gli altri (quelli sm e xs) ho 1 col
 obj destructoring, estraggo campi specifici da un obj
 const { firstname, lastname, username, email, password } = userData;
 */
+//TODO:NUM SQUEAL
 
 function Account() {
-
   const { userGlobal, setUserGlobal } = useUserContext();
 
   //per il logout
@@ -75,6 +76,19 @@ function Account() {
   const closeBuyModal = () => {
     setBuyModal(false);
   };
+
+  //SMM modalssssssssss
+  const [connectSMM, setConnectSMM] = useState(false);
+  const openConnect = () => {
+    setConnectSMM(true);
+  };
+  const closeConnect = () => {
+    setConnectSMM(false);
+  };
+
+  //following button
+  const [following, setFollowing] = useState(false);
+  const [created, setCreated] = useState(false);
 
   //GET USER QUOTE-----------------------------------------------------------------------------------------------
   const [userQuote, setUserQuote] = useState("");
@@ -146,10 +160,13 @@ function Account() {
   }
 
   useEffect(() => {
-    const intervalId = setInterval(getUserData, 10000); //10 sec
     getUserData();
+    const intervalId = setInterval(getUserData, 10000); //10 sec
+    const intervalId2 = setInterval(getSmm, 10000); //3 sec
+
     return () => {
       clearInterval(intervalId);
+      clearInterval(intervalId2);
     };
   }, []);
 
@@ -192,23 +209,90 @@ function Account() {
       });
   }
 
-  
   //!channels
+  const [channels, setChannels] = useState([]);
+
   //TODO: PUT: CANALI SEGUITI /user/${username}-----------------------------------------------------------------------------------------------------
   async function followedChannels() {
+    setFollowing(true);
     //GET channels: if followed by user, print
+    try {
+      const uri = `${ReactConfig.base_url_requests}/channel`;
+      const options = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        mode: "cors",
+      };
+
+      let result = await fetch(uri, options);
+
+      if (result.ok) {
+        let json = await result.json();
+        let camp = json.channels;
+        setChannels(camp);
+      } else {
+        console.error("Errore nella richiesta:", result.statusText);
+      }
+    } catch (error) {
+      console.error("Errore nella fetch:", error);
+    }
   }
 
   //TODO: GET: CANALI CREATI -----------------------------------------------------------------------------------------------------
   async function createdChannels() {
+    setCreated(true);
     //GET channels: if user is owner, get
+    try {
+      const uri = `${ReactConfig.base_url_requests}/channel`;
+      const options = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        mode: "cors",
+      };
+
+      let result = await fetch(uri, options);
+
+      if (result.ok) {
+        let json = await result.json();
+        let camp = json.channels;
+        setChannels(camp);
+      } else {
+        console.error("Errore nella richiesta:", result.statusText);
+      }
+    } catch (error) {
+      console.error("Errore nella fetch:", error);
+    }
   }
 
   //!vip
-  //TODO: PUT: ADD SMM /user/${username}----------------------------------------------------------------------------------------------------------
-  async function addSmm() {}
-  //TODO: PUT: REMOVE SMM /user/${username}-----------------------------------------------------------------------------------------------------
-  async function removeSmm() {}
+
+  /*
+  user: string
+  linked_smm: string
+  linked_users: []
+  */
+
+  //TODO: GET /user/{username}/my-smm-----------------------------------------------------------------------------------------------------
+  async function getSmm() {
+    const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}/my-smm`;
+    await fetch(uri)
+      .then((response) => {
+        if (response.ok) {
+          console.log(response);
+        } else {
+          console.error("Authentication failed", response.statusText);
+        }
+      })
+      .catch((error) => {
+        console.error("Network error", error);
+      });
+  }
 
   //----------------------------------------------------------------------------------------------------------------
   const [showVultureAnimation, setShowVultureAnimation] = useState(false);
@@ -253,19 +337,36 @@ function Account() {
                       {userData.first_name} {userData.last_name}
                     </h2>
                     <button
-                      className="user_button box"
-                      style={{ width: "100%" }}
+                      className="user_button box col-6"
                     >
                       N SQUEALS
                     </button>
+                    {userGlobal.vip && (
+                      <div
+                        id="vip_buttons"
+                        className="row d-flex flex-row justify-content-center align-items-center"
+                      >
+                        <button
+                          className="col-6 upgrade-button mb-2 box"
+                          onClick={openConnect}
+                        >
+                          ADD SMM?
+                        </button>
+                        <ConnectSMM
+                          openConnect={connectSMM}
+                          closeConnect={closeConnect}
+                        />
+                      </div>
+                    )}
 
-                    {!userGlobal.vip &&
+                    {!userGlobal.vip && (
                       <button
-                      className="box upgrade-button"
-                      onClick={handleShowModal}
-                    >
-                      UPGRADE
-                    </button>}
+                        className="box upgrade-button"
+                        onClick={handleShowModal}
+                      >
+                        UPGRADE
+                      </button>
+                    )}
 
                     <VipModal
                       showModal={showModal}
@@ -309,9 +410,9 @@ function Account() {
               BUY
             </button>
             <BuyQuoteModal
-            buyModal={buyModal}
-            closeBuyModal={closeBuyModal}
-            userQuote = {userQuote}
+              buyModal={buyModal}
+              closeBuyModal={closeBuyModal}
+              userQuote={userQuote}
             />
             <p>for a year</p>
             <p>MAX 10.000</p>
@@ -320,24 +421,26 @@ function Account() {
           <div className="col-md-6">
             <div className="col-12">
               <h3 className="cool-font-small">Limit</h3>
-                <h4>Daily</h4>
-                <button className="blue-button m-2 box">
-                  {userQuote.limit_daily}
-                </button>
-              </div>
-              <div className="col-12">
-                <h4>Weekly</h4>
-                <button className="blue-button m-2 box">
-                  {userQuote.limit_weekly}
-                </button>
-              </div>
-              <div className="col-12">
-                <h4>Monthly</h4>
-                <button className="blue-button m-2 box">
-                  {userQuote.limit_monthly}
-                </button>
-              </div>
-            <h4 className="mt-4 mb-5 cool-font-small">Email: {userData.email}</h4>
+              <h4>Daily</h4>
+              <button className="blue-button m-2 box">
+                {userQuote.limit_daily}
+              </button>
+            </div>
+            <div className="col-12">
+              <h4>Weekly</h4>
+              <button className="blue-button m-2 box">
+                {userQuote.limit_weekly}
+              </button>
+            </div>
+            <div className="col-12">
+              <h4>Monthly</h4>
+              <button className="blue-button m-2 box">
+                {userQuote.limit_monthly}
+              </button>
+            </div>
+            <h4 className="mt-4 mb-5 cool-font-small">
+              Email: {userData.email}
+            </h4>
           </div>
         </div>
 
@@ -379,21 +482,64 @@ function Account() {
                 ABOUT US:
               </Link>
             </button>
-
           </div>
         </div>
 
-        {userGlobal.vip && (
-          <div
-            id="vip_buttons"
-            className="row d-flex flex-row justify-content-center align-items-center"
-          >
-            <button className="upgrade-button mb-2 box" onClick={addSmm}>
-              ADD SMM?
-            </button>
-            <button className="upgrade-button mb-2 box" onClick={removeSmm}>
-              NO MORE SMM!
-            </button>
+        {following && (
+          <div className="container-flex pb-5">
+            <div className="row">
+              <div className="col-12">
+                <h2>Lista TUTTI i Canali:</h2>
+                <Row className="ms-4 me-4">
+                  {channels.map((channel) => (
+                    <Col key={channel.id} lg={6} className="mb-4 ">
+                      <Card>
+                        <Card.Body className="mb-4 d-flex flex-row">
+                          <Card.Title className="ms-4 me-4">
+                            {channel.channel_name}
+                          </Card.Title>
+
+                          <Link to="/infoc">
+                            <Button variant="primary" className="ms-4 me-4">
+                              Info
+                            </Button>
+                          </Link>
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                  ))}
+                </Row>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {created && (
+          <div className="container-flex pb-5">
+            <div className="row">
+              <div className="col-12">
+                <h2>Lista TUTTI i Canali:</h2>
+                <Row className="ms-4 me-4">
+                  {channels.map((channel) => (
+                    <Col key={channel.id} lg={6} className="mb-4 ">
+                      <Card>
+                        <Card.Body className="mb-4 d-flex flex-row">
+                          <Card.Title className="ms-4 me-4">
+                            {channel.channel_name}
+                          </Card.Title>
+
+                          <Link to="/infoc">
+                            <Button variant="primary" className="ms-4 me-4">
+                              Info
+                            </Button>
+                          </Link>
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                  ))}
+                </Row>
+              </div>
+            </div>
           </div>
         )}
       </div>

@@ -7,7 +7,7 @@ import { Card, Col, Container, Row } from "react-bootstrap";
 import "../css/App.css";
 
 //TODO: se non esiste: NOT FOUND
-//GET /channel    list of channels ------------------------------------------------------------------------------------------------------------
+//GET /channel  list of channels ------------------------------------------------------------------------------------------------------------
 function Search() {
   const [inputValue, setInputValue] = useState("");
   const [channels, setChannels] = useState([]);

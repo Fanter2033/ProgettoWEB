@@ -1,14 +1,17 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import ReactConfig from "../config/ReactConfig";
-import { useNavigate
- } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../config/UserContext";
 
 import CurrentDateTime from "./CurrentDateTime";
 import Dest from "./Dest";
 //import LegendaDest from "./LegendaDest";
 import MapComponent from "./MapComponent";
+import MapWithSearch from "./MapWithSearch";
+
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import "../css/App.css";
 import cat from "./media/miau.png";
@@ -17,7 +20,32 @@ import cat from "./media/miau.png";
 
 function Squeal() {
   const { userGlobal } = useUserContext();
-  console.log(userGlobal);
+  //console.log(userGlobal);
+
+  const notify = () =>
+  toast.error("Manca desinatario. Riprovare", {
+    position: "bottom-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
+  });
+
+  const notify2 = () =>
+  toast.error("Manca il contenuto? L'utente esiste?", {
+    position: "bottom-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
+  });
+
 
   const navigate = useNavigate();
   //DEST INPUT-----------------------------------------------------------------------------------
@@ -142,7 +170,8 @@ function Squeal() {
       <div className="mb-3">
         <b>Geolocalizzazione</b>
         <p>API:Leaflet</p>
-        <MapComponent />
+        <MapWithSearch/>
+
       </div>
     );
   } else if (inputType === "TEXT_AUTO") {
@@ -153,23 +182,27 @@ function Squeal() {
         </label>
 
         <div className="">
-          <label htmlFor="numero1" className="me-2">Quante ripetizioni?</label>
+          <label htmlFor="numero1" className="me-2">
+            Quante ripetizioni?
+          </label>
           <input
             type="number"
             id="numero1"
             value={numero1}
-            style={{ width: '20%' }}
+            style={{ width: "20%" }}
             onChange={handleNumero1Change}
           />
         </div>
 
         <div className="">
-          <label htmlFor="numero2"className="me-2">Ogni quanti secondi?</label>
+          <label htmlFor="numero2" className="me-2">
+            Ogni quanti secondi?
+          </label>
           <input
             type="number"
             id="numero2"
             value={numero2}
-            style={{ width: '20%' }}
+            style={{ width: "20%" }}
             onChange={handleNumero2Change}
           />
         </div>
@@ -247,12 +280,8 @@ function Squeal() {
   //TODO POST SQUEAL /squeal/------------------------------------------------------------------------------------------------------------
   const [fetchDataFlag, setFetchDataFlag] = useState(false);
 
-  async function postSqueal() {
-    if (isValidLink) {
-      console.log("Link YouTube valido:", youtubeLink);
-    } else {
-      console.log("Il link YouTube non è valido.");
-    }
+  async function postSqueal(e) {
+    e.preventDefault();
     /*
     squeal:{
       destinations
@@ -266,68 +295,79 @@ function Squeal() {
     }
     */
 
-    let data = {};
-    if (inputType === "TEXT_AUTO") {
-      //messaggi automatizzati
-      let selectedValues = {};
-      for (const option in selectedOptions) {
-        if (selectedOptions[option]) {
-          selectedValues[option] = `{${option}}`;
+    console.log(destinatariFromDest);
+    if (destinatariFromDest.length !== 0) {
+      let data = {};
+      if (inputType === "TEXT_AUTO") {
+        //messaggi automatizzati
+        let selectedValues = {};
+        for (const option in selectedOptions) {
+          if (selectedOptions[option]) {
+            selectedValues[option] = `{${option}}`;
+          }
         }
+        console.log("Valori selezionati:", selectedValues);
+        //const concatenatedOptions = selectedOptions.map((option) => `{${option}}`).join(" ");
+
+        const concatenatedString = Object.entries(selectedOptions)
+          .filter(([key, value]) => value === true)
+          .map(([key]) => `{${key}}`)
+          .join(" ");
+
+        const finalMessage = `${userInput} ${concatenatedString}`;
+
+        data = {
+          squeal: {
+            destinations: destinatariFromDest,
+            sender: userGlobal.username,
+            message_type: inputType,
+            content: finalMessage,
+            auto_iterations: numero1,
+            auto_seconds_delay: numero2,
+          },
+        };
+      } else {
+        data = {
+          squeal: {
+            destinations: destinatariFromDest,
+            sender: userGlobal.username,
+            message_type: inputType,
+            content: userInput,
+          },
+        };
       }
-      console.log("Valori selezionati:", selectedValues);
-      //const concatenatedOptions = selectedOptions.map((option) => `{${option}}`).join(" ");
 
-      const concatenatedString = Object.entries(selectedOptions)
-        .filter(([key, value]) => value === true)
-        .map(([key]) => `{${key}}`)
-        .join(" ");
-
-      const finalMessage = `${userInput} ${concatenatedString}`;
-
-      data = {
-        squeal: {
-          destinations: destinatariFromDest,
-          sender: userGlobal.username,
-          message_type: inputType,
-          content: finalMessage,
-          auto_iterations: numero1,
-          auto_seconds_delay: numero2,
+      const uri = `${ReactConfig.base_url_requests}/squeal/`;
+      const options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
+        credentials: "include",
+        mode: "cors",
+        body: JSON.stringify(data),
       };
-    } else {
-      data = {
-        squeal: {
-          destinations: destinatariFromDest,
-          sender: userGlobal.username,
-          message_type: inputType,
-          content: userInput,
-        },
-      };
+
+      fetch(uri, options)
+        .then((response) => {
+          if (response.ok) {
+            console.log("POST Squeal riuscita con successo");
+            navigate("/post");
+          } else {
+            console.error(
+              "Errore durante la POST, riprova",
+              response.statusText
+            );
+            notify2();
+          }
+        })
+        .catch((error) => {
+          console.error("Network error", error);
+        });
     }
-
-    const uri = `${ReactConfig.base_url_requests}/squeal/`;
-    const options = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      mode: "cors",
-      body: JSON.stringify(data),
-    };
-
-    fetch(uri, options)
-      .then((response) => {
-        if (response.ok) {
-          console.log("POST Squeal riuscita con successo");
-        } else {
-          console.error("Errore durante la POST, riprova", response.statusText);
-        }
-      })
-      .catch((error) => {
-        console.error("Network error", error);
-      });
+    else{
+      notify();
+    }
   }
 
   /*
@@ -403,7 +443,6 @@ function Squeal() {
             </div>
 
             <div className="mb-3 mt-3">
-
               <div
                 className="btn-group"
                 role="group"
@@ -551,6 +590,7 @@ function Squeal() {
                 >
                   SQUEAL
                 </button>
+                <ToastContainer />
               </div>
               <div className="col-3">
                 {" "}

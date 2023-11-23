@@ -36,9 +36,6 @@ function LoginForm() {
     //URI: where I want ot send the POST
     //according to Swagger specifics, the username is sent in path, with the requested role.
 
-    //console.log(userGlobal.password );
-    //console.log(userGlobal.username );
-
     const data = { password: userGlobal.password };
     const uri = `${ReactConfig.base_url_requests}/auth/${userGlobal.username}/0`;
     const options = {
@@ -78,7 +75,6 @@ function LoginForm() {
   };
 
   //premi invio per muoverti
-
   const input1Ref = useRef(null);
   const input2Ref = useRef(null);
 
@@ -92,7 +88,6 @@ function LoginForm() {
 
   const   handleKeyFinal= (event) => {
     if (event.key === "Enter") {
-      // Esegui la tua logica quando viene premuto il tasto "Invio"
       console.log("Tasto Invio premuto!");
     }
   };
@@ -197,16 +192,3 @@ function LoginForm() {
 }
 
 export default LoginForm;
-
-// Funzione generica per aggiornare le proprietà
-/*
-  const updateProperty = (propertyName, newValue) => {
-    setUserGlobal({
-      ...userGlobal,
-      [propertyName]: newValue,
-    });
-  };
-
-
-   */
-//onClick={() => updateProperty('text', 'New text value')}

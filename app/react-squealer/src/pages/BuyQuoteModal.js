@@ -9,6 +9,11 @@ import "../css/App.css";
 
 function VipModal({ buyModal, closeBuyModal, userQuote }) {
   const { userGlobal } = useUserContext();
+  const [selectedCard, setSelectedCard] = useState(null);
+
+  const handleCheckboxChange = (cardId) => {
+    setSelectedCard(cardId);
+  };
 
   const [percentualeAumento, setPercentualeAumento] = useState("");
   const [risultatoG, setRisultatoG] = useState(null);
@@ -20,6 +25,7 @@ function VipModal({ buyModal, closeBuyModal, userQuote }) {
   };
 
   //!quote
+  //! aumento: 10%, 30%, 50%
   //TODO: PATCH USER QUOTE /user/${username}/quote     when BUY is clicked percentageeeee-----------------------------------------------------------------------------------------------
   /*
   const simulatePaymentRequest = () => {
@@ -39,6 +45,13 @@ function VipModal({ buyModal, closeBuyModal, userQuote }) {
   async function buyQuote(e) {
     alert("SIMULA PAGAMENTO CON SUCCESSO");
     e.preventDefault();
+
+    if (selectedCard !== null) {
+      console.log(`Card ${selectedCard} selected!`);
+      // You can do more here with the selected card, e.g., update state, send to server, etc.
+    } else {
+      console.log('Please select a card before performing an action.');
+    }
     /*
     simulatePaymentRequest()
       .then((response) => {
@@ -106,31 +119,35 @@ function VipModal({ buyModal, closeBuyModal, userQuote }) {
               <div class="card-header">PACCHETTO 1</div>
               <div class="card-body">
                 <h5 class="card-title">Aumento del 10%</h5>
-                <p class="card-text">
-                  With supporting text below as a natural lead-in to additional
-                  content.
-                </p>
-                <a href="#" class="btn btn-primary">
-                  Go somewhere
-                </a>
               </div>
-              <div class="card-footer text-muted">2 days ago</div>
+              <div class="card-footer text-muted">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={selectedCard === 1}
+                    onChange={() => handleCheckboxChange(1)}
+                  />
+                  Card 1
+                </label>
+              </div>
             </div>
           </div>
           <div className="m-3">
             <div class="card text-center">
               <div class="card-header">PACCHETTO 2</div>
               <div class="card-body">
-                <h5 class="card-title">Aumento del 25%</h5>
-                <p class="card-text">
-                  With supporting text below as a natural lead-in to additional
-                  content.
-                </p>
-                <a href="#" class="btn btn-primary">
-                  Go somewhere
-                </a>
+                <h5 class="card-title">Aumento del 30%</h5>
               </div>
-              <div class="card-footer text-muted">2 days ago</div>
+              <div class="card-footer text-muted">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={selectedCard === 2}
+                    onChange={() => handleCheckboxChange(2)}
+                  />
+                  Card 2
+                </label>
+              </div>
             </div>
           </div>
           <div className="m-3">
@@ -138,19 +155,24 @@ function VipModal({ buyModal, closeBuyModal, userQuote }) {
               <div class="card-header">PACCHETTO 3</div>
               <div class="card-body">
                 <h5 class="card-title">Aumento del 50%</h5>
-                <p class="card-text">
-                  With supporting text below as a natural lead-in to additional
-                  content.
-                </p>
-                <a href="#" class="btn btn-primary">
-                  Go somewhere
-                </a>
               </div>
-              <div class="card-footer text-muted">2 days ago</div>
+              <div class="card-footer text-muted">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={selectedCard === 3}
+                    onChange={() => handleCheckboxChange(3)}
+                  />
+                  Card 3
+                </label>
+              </div>
             </div>
           </div>
         </Modal.Body>
-        <Modal.Footer className="my-foot" style={footerStyle}>
+        <Modal.Footer
+          className="my-foot d-flex justify-content-center"
+          style={footerStyle}
+        >
           <button className="blue-button box" onClick={closeBuyModal}>
             Annulla
           </button>

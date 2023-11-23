@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 
 import { useUserContext } from "../config/UserContext";
@@ -57,11 +57,10 @@ function Register() {
       firstname: name,
       surname: surname,
       email: email,
-      password: password
+      password: password,
     });
 
-    console.log("GLOBALEEEEEEEEEEEEEEE"+userGlobal);
-
+    console.log("GLOBALEEEEEEEEEEEEEEE" + userGlobal);
 
     //se i campi sono vuoti apri modale
     if (
@@ -259,12 +258,21 @@ function Register() {
 
             <div className="form-group row p-2">
               <button
-                className="col-12 col-md-4 offset-md-4 mb-5 custom-button"
+                className="col-12 col-md-4 offset-md-4 mb-3 custom-button"
                 type="button"
                 onClick={handleRegistration}
               >
                 <ToastContainer />
                 REGISTER
+              </button>
+              <button className="col-12 col-md-4 offset-md-4 mb-5 custom-button">
+                <NavLink
+                  style={{ color: "#b45656" }}
+                  
+                  to={ReactConfig.pathFunction("/")}
+                >
+                  Login
+                </NavLink>
               </button>
             </div>
           </form>
