@@ -101,7 +101,7 @@ function InfoUser() {
               <img
                 src={cattyy}
                 alt="Foto Profilo"
-                className="rounded-circle ms-4"
+                className="rounded-circle ms-4 pfp box mt-4"
               />
               <h1 className="cool-font-medium mt-2 mb-2">
                 Username: {userData.username}
@@ -117,19 +117,19 @@ function InfoUser() {
 
                 <div className="col-12">
                   <h4>Giornaliero</h4>
-                  <button className="blue-button m-2 box">
+                  <button className="yellow-button m-2 box">
                     {userQuote.remaining_daily}
                   </button>
                 </div>
                 <div className="col-12">
                   <h4>Settimanale</h4>
-                  <button className="blue-button m-2 box">
+                  <button className="yellow-button m-2 box">
                     {userQuote.remaining_weekly}
                   </button>
                 </div>
                 <div className="col-12">
                   <h4>Mensile</h4>
-                  <button className="blue-button m-2 box">
+                  <button className="yellow-button m-2 box">
                     {userQuote.remaining_monthly}
                   </button>
                 </div>

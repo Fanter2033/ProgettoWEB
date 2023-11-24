@@ -450,8 +450,8 @@ function Squeal() {
   return (
     <div>
       <div className="container col-12 col-md-6 offset-md-3 ">
-        <div className="card d-felx box">
-          <div className="card-header col-12">
+        <div className="card squeal d-felx box">
+          <div className="card-header squeal col-12">
             <div className="media-head "></div>
             <div className="media-body">
               <CurrentDateTime />
@@ -603,7 +603,7 @@ function Squeal() {
             </div>
 
             <div className="row d-flex flex-row justify-content-evenly align-items-center">
-              <div className="col-9">
+              <div className="col-8">
                 <button
                   className="custom-button"
                   style={{ width: "80%" }}
@@ -613,13 +613,13 @@ function Squeal() {
                 </button>
                 <ToastContainer />
               </div>
-              <div className="col-3">
+              <div className="col-4">
                 {" "}
                 <img
                   src={cat}
-                  className="rounded-circle"
+                  className="rounded-circle pfp-small box"
                   alt="Immagine Profilo"
-                  style={{ width: "40%" }}
+                  style={{ width: "30%" }}
                 />
                 <h5 className="mt-0">{userGlobal.username}</h5>
               </div>

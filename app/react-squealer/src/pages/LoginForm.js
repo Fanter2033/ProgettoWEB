@@ -194,7 +194,7 @@ function LoginForm() {
 
             <div className="form-group row p-2">
               <button
-                className="col-12 col-md-4 offset-md-4 mb-5 custom-button"
+                className="col-12 col-md-4 offset-md-4 mb-3 yellow-button"
                 type="submit"
                 onKeyDown={handleKeyFinal}
               >
@@ -203,7 +203,7 @@ function LoginForm() {
               </button>
             </div>
           </form>
-          <button className="custom-button mb-4" onClick={resetPassword}>
+          <button className="yellow-button mb-4" onClick={resetPassword}>
             Forgor password?
           </button>
 
@@ -222,7 +222,7 @@ function LoginForm() {
                   />
                   <p>È fortemente consigliato il cambio di password</p>
                   <p>a seguito dell'accesso</p>
-                  <button type="submit" className="custom-button box mt-2">
+                  <button type="submit" className="blue-button box mt-2">
                     Accedi
                   </button>
                 </form>
@@ -234,9 +234,9 @@ function LoginForm() {
             </Modal>
           )}
           <div className="row p-2 mb-5">
-            <div className="col-12 mb-5">
+            <div className="col-12 mb-4">
               <NavLink
-                style={{ color: "#072f38" }}
+                style={{ color: "#e0bb76" }}
                 className="cool-font-small"
                 to={ReactConfig.pathFunction("/registration")}
               >
@@ -246,7 +246,7 @@ function LoginForm() {
 
             <div className="col-12 mb-5">
               <NavLink
-                style={{ color: "#072f38" }}
+                style={{ color: "#e0bb76" }}
                 className="cool-font-small"
                 to={ReactConfig.pathFunction("/home")}
               >

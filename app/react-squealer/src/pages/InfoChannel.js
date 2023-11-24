@@ -18,23 +18,6 @@ function InfoChannel() {
   const { userGlobal, setUserGlobal } = useUserContext();
 
   //!{type}/{channel_name}
-  /*
-  //GET /channel/{type}/{channel_name}    channel info PRENDO LE INFO da useLocation
-  const [info, setInfo] = useState([]);
-  const getChTypeName = () => {
-    const url = `${ReactConfig.base_url_requests}/channel/${channel.type}/${channel.channel_name}`;
-    fetch(url)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Channel info:", data);
-        setInfo(data);
-      })
-      .catch((error) => {
-        console.error("Failed to get channel info, errore:", error);
-      });
-  };
-*/
-
   //GET /channel/{type}/{channel_name}/users/     list of following
   const [following, setFollowing] = useState([]);
   const getChTypeNameUsers = () => {
@@ -199,7 +182,7 @@ function InfoChannel() {
           <Row>
             {following.map((user) => (
               <Col lg={12} key={user.id} className="mb-4">
-                <Card className="w-100">
+                <Card className="w-100 squeal">
                   {" "}
                   <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
                     <div>{user}</div>
@@ -226,7 +209,7 @@ function InfoChannel() {
           <Row>
             {roles.map((user) => (
               <Col lg={12} key={user.id} className="mb-4">
-                <Card className="w-100">
+                <Card className="w-100 squeal">
                   {" "}
                   <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
                     <div>{user}</div>
@@ -247,3 +230,21 @@ function InfoChannel() {
 }
 
 export default InfoChannel;
+
+
+/*
+  //GET /channel/{type}/{channel_name}    channel info PRENDO LE INFO da useLocation
+  const [info, setInfo] = useState([]);
+  const getChTypeName = () => {
+    const url = `${ReactConfig.base_url_requests}/channel/${channel.type}/${channel.channel_name}`;
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Channel info:", data);
+        setInfo(data);
+      })
+      .catch((error) => {
+        console.error("Failed to get channel info, errore:", error);
+      });
+  };
+*/

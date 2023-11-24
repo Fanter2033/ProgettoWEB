@@ -23,8 +23,8 @@
 /* ------------ ATTENZIONE AGLI ALTRI FILE CSS -------------*/
 html {
   text-align: center;
-  background-color: var(--squeal-yellow);
-  color: var(--squeal-blue);
+  background-color: var(--squeal-blue);
+  color: var(--squeal-yellow);
 
   margin: 0;
   padding: 0;
@@ -37,8 +37,8 @@ html {
 }
 .App {
   text-align: center;
-  background-color: var(--squeal-yellow);
-  color: var(--squeal-blue);
+  background-color: var(--squeal-blue);
+  color: var(--squeal-yellow);
 }
 #elemento-espanso {
   position: absolute; /* Posizionamento assoluto rispetto alla view*/
@@ -48,6 +48,12 @@ html {
   left: 0; /* Inizia da sinistra della viewport */
   width: 100vw;
   background-color: var(--squeal-yellow);
+}
+
+/* -----------------SQUEAL STUFF------------------ */
+.squeal{
+  background-color: var(--squeal-yellow) !important;
+  color: var(--squeal-green) !important;
 }
 
 /* -----------------FONT STUFF------------------ */
@@ -67,6 +73,8 @@ html {
   font-family: "Cool-Font";
   src: url("../../public/ArchivoBlack-Regular.ttf");
 }
+
+/* -----------------FONT STUFF------------------ */
 .list:hover {
   background-color: var(--squeal-blue);
   color: #c78181;
@@ -85,6 +93,19 @@ html {
   background-color: var(--squeal-green);
 }
 
+.custom-button-yellow {
+  background-color: var(--squeal-yellow);
+  color: var(--squeal-blue);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.custom-button:hover {
+  background-color: var(--squeal-green);
+}
+
+
 /*emoji*/
 .bottoni_omologati {
   width: 3em;
@@ -96,8 +117,8 @@ html {
 }
 
 .user_button {
-  background-color: var(--squeal-blue);
-  color: var(--squeal-yellow);
+  background-color: var(--squeal-yellow);
+  color: var(--squeal-blue);
   width: 60vw;
   margin: 1em;
   border: none;
@@ -283,7 +304,7 @@ img {
 
 /* -------------------- 3D EFFECT ------------------*/
 .box {
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 1);
 }
 
 /* --------------------VOLTURE ------------------*/
@@ -392,9 +413,9 @@ img {
   color: #ecf0f1;
 }
 
-/* -------------------- TOGGLE ------------------*/
+/* -------------------- TOGGLE SMM------------------*/
 .toggle-button {
-  color: white;
+  color: var(--squeal-blue);
   padding: 1em;
   margin: 1em;
   cursor: pointer;
@@ -427,12 +448,18 @@ img {
 }
 
 /* -------------------- PFP CORNICE img ------------------*/
+.pfp {
+  border:1rem solid var(--squeal-green);
+}
+.pfp-small {
+  border:0.2rem solid var(--squeal-green);
+}
+
+/*
 .profile-picture-container {
-  border: 3px solid #3498db;
+  border: 1rem solid var(--squeal-green);
   border-radius: 50%;
-  overflow: hidden; /* Assicura che l'immagine non fuoriesca dalla cornice */
-  width: 150px;
-  height: 150px;
+  overflow: hidden; // immagine non fuoriesce dalla cornice
   display: flex;
   align-items: center;
   justify-content: center;
@@ -441,9 +468,10 @@ img {
 .profile-picture {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Assicura che l'immagine si adatti alla cornice */
-  border-radius: 50%; /* Mantieni la stessa forma circolare */
+  object-fit: cover; //immagine si adatta alla cornice
+  border-radius: 50%; //stessa forma circolare
 }
+*/
 
 /* -------------------- ESPERIMENTI PAZZI  img ------------------*/
 /*

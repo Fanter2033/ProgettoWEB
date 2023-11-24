@@ -67,7 +67,7 @@ function Reactions() {
         </button>
         {hateMe}
       </div>
-      <button className="user_button" onClick={reset}>
+      <button className="yellow-button" onClick={reset}>
         RESET REAZIONI
       </button>
     </div>

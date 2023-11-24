@@ -330,19 +330,19 @@ function Account() {
     <div className="container-flex">
       <div className="row" onLoad={getUserData}>
         <div className="row mb-5 mt-4">
-          <div className="col-12 col-md-4">
+          <div className="col-12 col-md-6 d-flex flex-col align-items-center justify-content-center">
             <img
               src={cattyy}
               alt="Foto Profilo"
-              className="rounded-circle ms-4"
+              className="rounded-circle ms-4 pfp box"
               onMouseOver={showVulture}
               onMouseLeave={hideVulture}
             />
 
-            {showVultureAnimation && <VultureAnimation />}
           </div>
+          {showVultureAnimation && <VultureAnimation />}
 
-          <div className="col-12 col-md-8">
+          <div className="col-12 col-md-6">
             <div className="row">
               <div className="col-12 col-md d-flex align-items-center justify-content-center ">
                 <div className="d-md-flex flex-md-row flex-column">
@@ -356,7 +356,7 @@ function Account() {
                     <h2>
                       {userData.first_name} {userData.last_name}
                     </h2>
-                    <button className="user_button box col-6">N SQUEALS</button>
+                    <button className="yellow-button box col-6">N SQUEALS</button>
                     {userGlobal.vip && (
                       <div
                         id="vip_buttons"
@@ -418,19 +418,19 @@ function Account() {
             <div className="row d-flex align-items-center justify-content-evenly mb-4">
               <div className="col-12">
                 <h4>Giornaliero</h4>
-                <button className="blue-button m-2 box">
+                <button className="yellow-button m-2 box">
                   {userQuote.remaining_daily}
                 </button>
               </div>
               <div className="col-12">
                 <h4>Settimanale</h4>
-                <button className="blue-button m-2 box">
+                <button className="yellow-button m-2 box">
                   {userQuote.remaining_weekly}
                 </button>
               </div>
               <div className="col-12">
                 <h4>Mensile</h4>
-                <button className="blue-button m-2 box">
+                <button className="yellow-button m-2 box">
                   {userQuote.remaining_monthly}
                 </button>
               </div>
@@ -448,19 +448,19 @@ function Account() {
             <div className="col-12">
               <h3 className="cool-font-small">Limiti</h3>
               <h4>Giornaliero</h4>
-              <button className="blue-button m-2 box">
+              <button className="yellow-button m-2 box">
                 {userQuote.limit_daily}
               </button>
             </div>
             <div className="col-12">
               <h4>Settimanale</h4>
-              <button className="blue-button m-2 box">
+              <button className="yellow-button m-2 box">
                 {userQuote.limit_weekly}
               </button>
             </div>
             <div className="col-12">
               <h4>Mensile</h4>
-              <button className="blue-button m-2 box">
+              <button className="yellow-button m-2 box">
                 {userQuote.limit_monthly}
               </button>
             </div>

@@ -8,8 +8,8 @@
 /* ------------ ATTENZIONE AGLI ALTRI FILE CSS -------------*/
 html {
   text-align: center;
-  background-color: var(--squeal-yellow);
-  color: var(--squeal-blue);
+  background-color: var(--squeal-blue);
+  color: var(--squeal-yellow);
   width: 100%;
   height: 100%;
   top: 0;
