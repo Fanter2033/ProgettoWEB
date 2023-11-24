@@ -15,6 +15,7 @@
 }
 .my-blu {
   background-color: var(--squeal-blue);
+  color: var(--squeal-green)
 }
 .no-bg {
   background-color: transparent;

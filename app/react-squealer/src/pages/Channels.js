@@ -77,7 +77,10 @@ function Channels() {
             <div className="row d-flex justify-content-center ms-1 me-1 mb-5">
               <h3>TODO:</h3>
               <ul className="list-group col-md-4">
-                <li className="list-group-item list">GET /channel/type</li>
+                <li className="list-group-item list">follow button</li>
+                <li className="list-group-item list">pfp channels</li>
+                <li className="list-group-item list">GET #</li>
+                <li className="list-group-item list">popolarità</li>
                 <li className="list-group-item list">silenziabili</li>
                 <li className="list-group-item list">popolarità</li>
               </ul>

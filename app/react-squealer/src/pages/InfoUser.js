@@ -95,7 +95,13 @@ function InfoUser() {
   return (
     <>
       <div className="container">
-        <div className="col-12 col-md-8">
+        <div className="col-12">
+          <button
+            className="red-button box"
+            onClick={() => window.history.back()}
+          >
+            Torna Indietro
+          </button>
           <div className="row">
             <div className="col-12 d-flex flex-column align-items-center">
               <img
@@ -134,8 +140,6 @@ function InfoUser() {
                   </button>
                 </div>
               </div>
-
-              
             </div>
           </div>
         </div>

@@ -10,7 +10,6 @@ import "../css/App.css";
 import { Container, Card, Col, Row } from "react-bootstrap";
 
 //! PUT dei canali???
-
 function InfoChannel() {
   const location = useLocation();
   const channel = location.state;
@@ -136,12 +135,11 @@ function InfoChannel() {
   return (
     <div>
       <div>
-        <button className="user_button box" onClick={follow}>
+        <button className="green-button box" onClick={follow}>
           Segui
         </button>
         <button
-          id="logout-button"
-          className="box"
+          className="red-button box"
           onClick={() => window.history.back()}
         >
           Torna Indietro

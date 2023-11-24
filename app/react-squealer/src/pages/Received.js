@@ -25,7 +25,7 @@ function Received() {
 
   async function getDashboard() {
     try {
-      const uri = `${ReactConfig.base_url_requests}/dashboard/`;
+      const uri = `${ReactConfig.base_url_requests}/utils/dashboard/`;
       const options = {
         method: "GET",
         headers: {
@@ -60,6 +60,7 @@ function Received() {
     };
   }, []);
 
+  //TODO: ADD REACTIONS
   return (
     <>
       <Navbar />
@@ -67,16 +68,16 @@ function Received() {
       <div className="container-flex">
         <div className="row">
           <div className="col-12 col-md-8">
-            <h1>Squeals canali seguiti:</h1>
-            <h2>Pubblici</h2>
-            <h2>Privati</h2>
+            <h1>Squeals CANALI seguiti</h1>
+            <h2>- pubblici</h2>
+            <h2>- privati</h2>
 
             {dash.length > 0 && (
               <Container className="">
                 <Row className="w-100">
                   {dash.map((squeal) => (
                     <Col lg={12} key={squeal.id} className="mb-4">
-                      <Card style={{ height: "100%" }}>
+                      <Card style={{ height: "100%" }} className="squeal">
                         <Card.Header className="d-flex flex-col justify-content-center align-items-center">
                           {" "}
                           <b>{squeal.sender}</b>

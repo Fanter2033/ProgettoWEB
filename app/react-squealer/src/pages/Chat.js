@@ -6,7 +6,6 @@ import "../css/App.css";
 import { Container, Card, Col, Row } from "react-bootstrap";
 
 //GET utils/chat/ all private post----------------------------------------------------------------
-
 function Chat() {
   const [squeals, setSqueals] = useState([]);
 
@@ -66,7 +65,7 @@ function Chat() {
                           </button>
                         </Link>
                       </Card.Header>
-                      <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
+                      <Card.Body className="mb-4  text-truncate d-flex flex-col justify-content-center align-items-center">
                         <div>{squeal.content}</div>
                       </Card.Body>
                       <Card.Footer>

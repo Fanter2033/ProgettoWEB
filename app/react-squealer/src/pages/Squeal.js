@@ -17,7 +17,6 @@ import "../css/App.css";
 import cat from "./media/miau.png";
 
 //offset mi tenere centrata la colonna
-
 function Squeal() {
   const { userGlobal } = useUserContext();
   //console.log(userGlobal);
