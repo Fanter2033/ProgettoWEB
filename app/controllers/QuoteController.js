@@ -255,4 +255,27 @@ module.exports = class QuoteController extends Controller {
         return output;
     }
 
+    /**
+     * @param userAuth {UserDto}
+     * @param username {string}
+     * @return {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async refillQuote(userAuth, username){
+        let output = this.getDefaultOutput();
+
+        let quoteRes = await this.getQuote(username);
+
+        if (quoteRes.code !== 200) {
+            output['code'] = 404;
+            output['msg'] = 'Not found.';
+            return output;
+        }
+        quoteRes = new QuoteDto(quoteRes.content);
+
+
+
+
+        return output;
+    }
+
 };
