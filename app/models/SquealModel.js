@@ -218,4 +218,21 @@ module.exports = class SquealModel extends Model {
         return out;
     }
 
+    /**
+     * @param {string} sender
+     * @return {Promise<SquealDto[]>}
+     */
+    async getSquealsFromSender(sender){
+        await this.checkMongoose("Squeal", Squeal);
+        sender = this.mongo_escape(sender);
+        let filter = {
+            sender: sender
+        };
+        let out = [];
+        let result = await this.entityMongooseModel.find(filter).sort({_id: -1});
+        for (const resultElement of result)
+            out.push(new SquealDto(resultElement._doc));
+        return out;
+    }
+
 }

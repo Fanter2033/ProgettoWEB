@@ -18,10 +18,10 @@ module.exports = class UtilsController extends Controller {
      * @param sessionId {string}
      * @return {Promise<{msg: string, code: number, sub_code: number,content: {}}>}
      */
-    async getSquealsToUser(authUser, excludeFrom, excludeTo, sessionId){
+    async getSquealsToUser(authUser, excludeFrom, excludeTo, sessionId) {
         let output = this.getDefaultOutput();
 
-        if(this.isAuthenticatedUser(authUser) === false){
+        if (this.isAuthenticatedUser(authUser) === false) {
             output["code"] = 403;
             output["msg"] = "Forbidden";
             return output;
@@ -36,7 +36,7 @@ module.exports = class UtilsController extends Controller {
         promises = await Promise.all(promises);
         let content = [];
         for (const promiseResult of promises)
-            if(promiseResult.code === 200)
+            if (promiseResult.code === 200)
                 content.push(promiseResult.content);
         output.content = content;
         return output;
@@ -49,10 +49,10 @@ module.exports = class UtilsController extends Controller {
      * @param sessionId {string}
      * @return {Promise<{msg: string, code: number, sub_code: number,content: {}}>}
      */
-    async getSquealsToChannelsOfUser(authUser, excludeFrom, excludeTo, sessionId){
+    async getSquealsToChannelsOfUser(authUser, excludeFrom, excludeTo, sessionId) {
         let output = this.getDefaultOutput();
 
-        if(this.isAuthenticatedUser(authUser) === false){
+        if (this.isAuthenticatedUser(authUser) === false) {
             output["code"] = 403;
             output["msg"] = "Forbidden";
             return output;
@@ -64,7 +64,7 @@ module.exports = class UtilsController extends Controller {
         let roles = await channelRolesModel.getAllRolesOfUser(authUser.username);
         let rolesRead = [];
         for (const role of roles)
-            if(role.role >= autoload.config._CHANNEL_ROLE_READ)
+            if (role.role >= autoload.config._CHANNEL_ROLE_READ)
                 rolesRead.push(role.getChannelDto());
         let squealToChannels = new SquealToChannelModel();
         let squealsIds = await squealToChannels.getAllSquealsToChannels(rolesRead, excludeFrom, excludeTo, autoload.config._LIMIT_RETURN_POSTS);
@@ -74,11 +74,21 @@ module.exports = class UtilsController extends Controller {
         promises = await Promise.all(promises);
         let content = [];
         for (const promiseResult of promises)
-            if(promiseResult.code === 200)
+            if (promiseResult.code === 200)
                 content.push(promiseResult.content);
         output.content = content;
         return output;
     }
 
+    /**
+     * @param username
+     * @return {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async getSentSquealsFromUser(username){
+        const SquealController = require('../controllers/SquealController');
+        const SquealModel = require('../models/SquealModel');
+        let ctrl = new SquealController(new SquealModel());
+        return await ctrl.getSentSquealsByUser(username);
+    }
 
 };

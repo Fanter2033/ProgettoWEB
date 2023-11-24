@@ -96,6 +96,31 @@ paths:
             type: array
             maxLength: 10
             $ref: '#/definitions/Squeal'
+  /utils/squeals/{username}:
+    get:
+      tags:
+        - utils
+      summary: Returns all the public squeals of a user.
+      responses:
+        '200':
+          description: returns an array of Squeals
+          schema:
+            type: array
+            maxLength: 10
+            $ref: '#/definitions/Squeal'
+  /utils/squeals/{channel_type}/{channel_name}:
+    get:
+      tags:
+        - utils
+      summary: Returns all the squeals of a channel.
+      description: Returns all the squeals of a channel, if the channel is public. Or if the user has authorization to see content
+      responses:
+        '200':
+          description: returns an array of Squeals
+          schema:
+            type: array
+            maxLength: 10
+            $ref: '#/definitions/Squeal'
   /user/{username}:
     put:
       tags:

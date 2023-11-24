@@ -495,7 +495,7 @@ module.exports = class SquealController extends Controller {
      * @param amount {number}
      * @param positiveValue {boolean}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
-     * THIS DO NOT EXECUTE CONTROLS. SHOULD BE IMPLEMENTED VIA ANTOHER CONTROLLER OR WITH A VARIABLE
+     * THIS DO NOT EXECUTE CONTROLS. SHOULD BE CALLED VIA ANOTHER CONTROLLER OR WITH A VARIABLE
      */
     async incrementValue(squeal_id, amount, positiveValue = true) {
         let output = this.getDefaultOutput();
@@ -692,6 +692,22 @@ module.exports = class SquealController extends Controller {
         }
 
         return true;
+    }
+
+    /**
+     * @param user {string}
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async getSentSquealsByUser(user) {
+        let output = this.getDefaultOutput();
+
+        //No controls to do here
+        let squeals = await this._model.getSquealsFromSender(user);
+        output.content = [];
+        for (const squeal of squeals)
+            if(await this.isSquealPublic(squeal.id))
+                output.content.push(squeal.getDocument());
+        return output;
     }
 
     /**
