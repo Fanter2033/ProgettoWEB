@@ -33,7 +33,7 @@ quoteDriver.patch("/buy/", async function (req, res) {
   else res.status(ctrlOut.code).send(ctrlOut);
 });
 
-quoteDriver.patch("/refill/", async function (req, res) {
+quoteDriver.put("/refill/", async function (req, res) {
   let userAuth = await authController.getAuthenticatedUser(req);
   let username = typeof req.params["username"] !== "undefined" ? req.params["username"] : "";
   let ctrlOut = await controller.refillQuote(userAuth, username);
