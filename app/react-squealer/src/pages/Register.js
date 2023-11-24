@@ -9,6 +9,8 @@ import "react-toastify/dist/ReactToastify.css";
 
 import "../css/LoginForm.css";
 
+//TODO: se campo vuoto aggiungi al notify()
+//TODO: campo vip lo passo nella POST?
 /*
 accessibilità:
 1. htmlFor nella label
@@ -34,6 +36,7 @@ function Register() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [reset, setReset] = useState("");
 
   const notify = () =>
     toast.error("Errore. Compila tutti i campi.", {
@@ -60,7 +63,7 @@ function Register() {
       password: password,
     });
 
-    console.log("GLOBALEEEEEEEEEEEEEEE" + userGlobal);
+    //console.log("GLOBALEEEEEEEEEEEEEEE" + userGlobal);
 
     //se i campi sono vuoti apri modale
     if (
@@ -84,6 +87,8 @@ function Register() {
             isMod: false,
             isSmm: false,
             isUser: true,
+            vip:false,
+            reset: reset,
           },
         };
 
@@ -251,9 +256,32 @@ function Register() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
-              <div id="passwordHelpBlock" className="form-text p-2 mb-5">
+              <div id="passwordHelpBlock" className="form-text p-2 mb-2">
                 Vincoli sulla password
               </div>
+            </div>
+
+            <div className="form-group row p-2 mb-5">
+              <label htmlFor="inputPassword5" className="form-label">
+                <span className="cool-font-small">
+                  Qual è il tuo passatempo preferito?
+                </span>
+                <br></br>
+                Questa risposta  per il reset password
+                <br></br>
+                Presta attenzione!
+                <br></br>
+                Con amore, i creatori
+              </label>
+              <input
+                type="text"
+                name="reset"
+                className="form-control"
+                id="inputReset"
+                value={reset}
+                onChange={(e) => setReset(e.target.value)}
+                required
+              />
             </div>
 
             <div className="form-group row p-2">
@@ -268,7 +296,6 @@ function Register() {
               <button className="col-12 col-md-4 offset-md-4 mb-5 custom-button">
                 <NavLink
                   style={{ color: "#b45656" }}
-                  
                   to={ReactConfig.pathFunction("/")}
                 >
                   Login

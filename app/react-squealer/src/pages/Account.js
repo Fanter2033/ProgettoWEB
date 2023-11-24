@@ -13,19 +13,22 @@ import Geo from "./Geo";
 import VultureAnimation from "./VoltureAnimation";
 
 import ChangeUsername from "./ChangeUsername";
-import ChangePassword from "./ChanegePassword";
+import ChangePassword from "./ChangePassword.js";
 
 import UserDeleteModal from "./UserDeleteModal";
-import VipModal from "./VipModal";
 import BuyQuoteModal from "./BuyQuoteModal";
+
+import VipModal from "./VipModal";
+import DowngradeModal from "./DowngradeModal.js";
+
 import ConnectSMM from "./ConnectSMM";
+import ToggleSMM from "./ToggleSMM";
 
 import { Button, Card, Col, Row } from "react-bootstrap";
 
 import "../css/App.css";
 import cattyy from "./media/splash.jpeg";
 import pink from "./media/avvoltoioEli.png";
-//import { Modal, Button } from "react-bootstrap";
 
 /*
 col-12 col-md-6
@@ -37,10 +40,12 @@ tutti gli altri (quelli sm e xs) ho 1 col
 obj destructoring, estraggo campi specifici da un obj
 const { firstname, lastname, username, email, password } = userData;
 */
-//TODO:NUM SQUEAL
 
+//TODO: GET /user/{username}/roles/
+//TODO:NUM SQUEAL
 function Account() {
   const { userGlobal, setUserGlobal } = useUserContext();
+  console.log(userGlobal.vip, "viiiiip");
 
   //per il logout
   const navigate = useNavigate();
@@ -57,6 +62,15 @@ function Account() {
   };
   const handleCloseModal = () => {
     setShowModal(false);
+  };
+
+  //Downgrade modalssssssssss
+  const [downgrade, setDowngrade] = useState(false);
+  const openDowngrade = () => {
+    setDowngrade(true);
+  };
+  const closeDowngrade = () => {
+    setDowngrade(false);
   };
 
   //DELETE modalssssssss
@@ -77,7 +91,7 @@ function Account() {
     setBuyModal(false);
   };
 
-  //SMM modalssssssssss
+  //SMM connect modalssssssssss
   const [connectSMM, setConnectSMM] = useState(false);
   const openConnect = () => {
     setConnectSMM(true);
@@ -86,6 +100,12 @@ function Account() {
     setConnectSMM(false);
   };
 
+  //toggle SMM
+  const [isCliccato, setIsCliccato] = useState(true);
+  const handleCliccatoChange = (val) => {
+    setIsCliccato(val);
+    //console.log(isCliccato, "cccccccccccccccccclick")
+  };
   //following button
   const [following, setFollowing] = useState(false);
   const [created, setCreated] = useState(false);
@@ -336,29 +356,39 @@ function Account() {
                     <h2>
                       {userData.first_name} {userData.last_name}
                     </h2>
-                    <button
-                      className="user_button box col-6"
-                    >
-                      N SQUEALS
-                    </button>
+                    <button className="user_button box col-6">N SQUEALS</button>
                     {userGlobal.vip && (
                       <div
                         id="vip_buttons"
                         className="row d-flex flex-row justify-content-center align-items-center"
                       >
-                        <button
-                          className="col-6 upgrade-button mb-2 box"
-                          onClick={openConnect}
-                        >
-                          ADD SMM?
-                        </button>
+                        <ToggleSMM onCliccato={handleCliccatoChange} />
+
+                        {isCliccato ? (
+                          <button
+                            className="col-6 upgrade-button mb-2 box"
+                            onClick={openConnect}
+                          >
+                            MANAGE SMM
+                          </button>
+                        ) : null}
                         <ConnectSMM
                           openConnect={connectSMM}
                           closeConnect={closeConnect}
                         />
+
+                        <button
+                          className="col-6 upgrade-button mb-2 box"
+                          onClick={openDowngrade}
+                        >
+                          DOWNGRADE
+                        </button>
                       </div>
                     )}
-
+                    <DowngradeModal
+                      downgrade={downgrade}
+                      closeDowngrade={closeDowngrade}
+                    />
                     {!userGlobal.vip && (
                       <button
                         className="box upgrade-button"
@@ -387,19 +417,19 @@ function Account() {
 
             <div className="row d-flex align-items-center justify-content-evenly mb-4">
               <div className="col-12">
-                <h4>Daily</h4>
+                <h4>Giornaliero</h4>
                 <button className="blue-button m-2 box">
                   {userQuote.remaining_daily}
                 </button>
               </div>
               <div className="col-12">
-                <h4>Weekly</h4>
+                <h4>Settimanale</h4>
                 <button className="blue-button m-2 box">
                   {userQuote.remaining_weekly}
                 </button>
               </div>
               <div className="col-12">
-                <h4>Monthly</h4>
+                <h4>Mensile</h4>
                 <button className="blue-button m-2 box">
                   {userQuote.remaining_monthly}
                 </button>
@@ -409,31 +439,27 @@ function Account() {
             <button id="buy-button" className="box" onClick={openBuyModal}>
               BUY
             </button>
-            <BuyQuoteModal
-              buyModal={buyModal}
-              closeBuyModal={closeBuyModal}
-              userQuote={userQuote}
-            />
-            <p>for a year</p>
-            <p>MAX 10.000</p>
+            <BuyQuoteModal buyModal={buyModal} closeBuyModal={closeBuyModal} />
+            <p>per un anno????????</p>
+            <p>MAX 10.000???</p>
           </div>
 
           <div className="col-md-6">
             <div className="col-12">
-              <h3 className="cool-font-small">Limit</h3>
-              <h4>Daily</h4>
+              <h3 className="cool-font-small">Limiti</h3>
+              <h4>Giornaliero</h4>
               <button className="blue-button m-2 box">
                 {userQuote.limit_daily}
               </button>
             </div>
             <div className="col-12">
-              <h4>Weekly</h4>
+              <h4>Settimanale</h4>
               <button className="blue-button m-2 box">
                 {userQuote.limit_weekly}
               </button>
             </div>
             <div className="col-12">
-              <h4>Monthly</h4>
+              <h4>Mensile</h4>
               <button className="blue-button m-2 box">
                 {userQuote.limit_monthly}
               </button>
@@ -453,7 +479,7 @@ function Account() {
               CANALI SEGUITI
             </button>
 
-            <ChangeUsername />
+            {!userGlobal.vip && <ChangeUsername />}
             <ChangePassword />
 
             <button
@@ -470,7 +496,7 @@ function Account() {
               className=" mb-2 box"
               onClick={handleOpenDeleteModal}
             >
-              DELETE ACCOUNT
+              CANCELLA ACCOUNT
             </button>
             <UserDeleteModal
               showDeleteModal={showDeleteModal}

@@ -89,7 +89,7 @@ function Squeal() {
     setUserInput(e.target.value);
   };
 
-  //TEXT_AUTO
+  //TEXT_AUTO------------------------------------------------------------------------------------------
   const [selectedOptions, setSelectedOptions] = useState({
     NUMERO: false,
     ORA: false,
@@ -105,7 +105,7 @@ function Squeal() {
     }));
   };
 
-  //AUTO-TEXT--------------------------------------------------------------
+  //TEXT_AUTO domande per utente--------------------------------------------------------------
   const [numero1, setNumero1] = useState("");
   const [numero2, setNumero2] = useState("");
   const handleNumero1Change = (e) => {
@@ -115,8 +115,8 @@ function Squeal() {
   const handleNumero2Change = (e) => {
     setNumero2(e.target.value);
   };
-  //MSG TEMP---------------
 
+  //MSG TEMP---------------
   const [postText, setPostText] = useState("");
   const [clickedButtons, setClickedButtons] = useState([]);
 
@@ -126,13 +126,6 @@ function Squeal() {
 
     // Aggiungi il testo del bottone alla lista dei bottoni cliccati
     setClickedButtons((prevButtons) => [...prevButtons, buttonText]);
-  };
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Esegui le operazioni desiderate con il testo del post e i bottoni cliccati
-    console.log("Testo del post:", postText);
-    console.log("Bottoni cliccati:", clickedButtons);
-    // Puoi inviare i dati al server o eseguire altre azioni qui
   };
 
   //TYPE INPUT--------------------------------------------------------------
@@ -198,6 +191,7 @@ function Squeal() {
         <b>Geolocalizzazione</b>
         <p>API:Leaflet</p>
         <MapWithSearch onMarkerAdded={handleMarkerAdded} />
+        <MapComponent/>
       </div>
     );
   } else if (inputType === "TEXT_AUTO") {
@@ -205,119 +199,78 @@ function Squeal() {
       <div className="mb-3">
         <label htmlFor="userInput" className="form-label">
           <b>Messaggio temporizzato</b>
-        </label>
-        <form onSubmit={handleSubmit}>
-          <textarea
-            rows="4"
-            cols="50"
-            placeholder="Inserisci il testo del post..."
-            value={postText}
-            onChange={(e) => setPostText(e.target.value)}
-          ></textarea>
-          <div>
-            <button type="button" onClick={() => handleButtonClick("Button 1")}>
-              Button 1
-            </button>
-            <button type="button" onClick={() => handleButtonClick("Button 2")}>
-              Button 2
-            </button>
-            <button type="button" onClick={() => handleButtonClick("Button 3")}>
-              Button 3
-            </button>
-            <button type="button" onClick={() => handleButtonClick("Button 4")}>
-              Button 4
-            </button>
-            <button type="button" onClick={() => handleButtonClick("Button 5")}>
-              Button 5
-            </button>
+          <div className="">
+            <label htmlFor="numero1" className="me-2">
+              Quante ripetizioni?
+            </label>
+            <input
+              type="number"
+              id="numero1"
+              value={numero1}
+              style={{ width: "20%" }}
+              onChange={handleNumero1Change}
+            />
           </div>
-          <button type="submit">Pubblica</button>
-        </form>
-        <div className="">
-          <label htmlFor="numero1" className="me-2">
-            Quante ripetizioni?
-          </label>
-          <input
-            type="number"
-            id="numero1"
-            value={numero1}
-            style={{ width: "20%" }}
-            onChange={handleNumero1Change}
-          />
-        </div>
-
-        <div className="">
-          <label htmlFor="numero2" className="me-2">
-            Ogni quanti secondi?
-          </label>
-          <input
-            type="number"
-            id="numero2"
-            value={numero2}
-            style={{ width: "20%" }}
-            onChange={handleNumero2Change}
-          />
-        </div>
+          <div className="">
+            <label htmlFor="numero2" className="me-2">
+              Ogni quanti secondi?
+            </label>
+            <input
+              type="number"
+              id="numero2"
+              value={numero2}
+              style={{ width: "20%" }}
+              onChange={handleNumero2Change}
+            />
+          </div>
+        </label>
 
         <textarea
           id="userInput"
           name="userInput"
-          value={userInput}
-          onChange={handleInputChange}
           rows="4"
           cols="50"
+          placeholder="Inserisci il testo del post..."
+          value={postText}
           className="form-control"
+          onChange={(e) => setPostText(e.target.value)}
         ></textarea>
-
         <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={selectedOptions.NUMERO}
-              onChange={() => handleCheckboxChange("NUMERO")}
-            />
+          <button
+            type="button"
+            className="custom-button"
+            onClick={() => handleButtonClick("{NUMERO}")}
+          >
             NUMERO
-          </label>
-        </div>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={selectedOptions.ORA}
-              onChange={() => handleCheckboxChange("ORA")}
-            />
+          </button>
+          <button
+            type="button"
+            className="custom-button"
+            onClick={() => handleButtonClick("{ORA}")}
+          >
             ORA
-          </label>
-        </div>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={selectedOptions.MINUTO}
-              onChange={() => handleCheckboxChange("MINUTO")}
-            />
+          </button>
+          <button
+            type="button"
+            className="custom-button"
+            onClick={() => handleButtonClick("{MINUTO}")}
+          >
             MINUTO
-          </label>
-        </div>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={selectedOptions.SECONDO}
-              onChange={() => handleCheckboxChange("SECONDO")}
-            />
+          </button>
+          <button
+            type="button"
+            className="custom-button"
+            onClick={() => handleButtonClick("{SECONDO}")}
+          >
             SECONDO
-          </label>
-        </div>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={selectedOptions.DATA}
-              onChange={() => handleCheckboxChange("DATA")}
-            />
+          </button>
+          <button
+            type="button"
+            className="custom-button"
+            onClick={() => handleButtonClick("{DATA}")}
+          >
             DATA
-          </label>
+          </button>
         </div>
       </div>
     );
@@ -351,6 +304,10 @@ function Squeal() {
     if (destinatariFromDest.length !== 0) {
       let data = {};
       if (inputType === "TEXT_AUTO") {
+        // Esegui le operazioni desiderate con il testo del post e i bottoni cliccati
+        console.log("Testo del post:", postText);
+        console.log("Bottoni cliccati:", clickedButtons);
+
         //messaggi automatizzati
         let selectedValues = {};
         for (const option in selectedOptions) {
@@ -373,7 +330,7 @@ function Squeal() {
             destinations: destinatariFromDest,
             sender: userGlobal.username,
             message_type: inputType,
-            content: finalMessage,
+            content: postText,
             auto_iterations: numero1,
             auto_seconds_delay: numero2,
           },

@@ -29,7 +29,8 @@ function Reactions() {
     setHate(0);
   }
 
-  //TODO: implement ON CLICK
+  
+  //TODO: implement ON CLIK PATCH /squeal/{itentifier_id}/rections/{reaction}
   return (
     <div className="mt-2">
       <div className="card-footer d-flex justify-content-center ">
@@ -67,7 +68,7 @@ function Reactions() {
         {hateMe}
       </div>
       <button className="user_button" onClick={reset}>
-        RESET REACTION
+        RESET REAZIONI
       </button>
     </div>
   );

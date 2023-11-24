@@ -73,7 +73,7 @@ function ConnectSMM({ openConnect, closeConnect }) {
     <div>
       <Modal show={openConnect} onHide={closeConnect} centered>
         <Modal.Header closeButton className="custom-modal-header">
-          <Modal.Title className="">Manage SMM here</Modal.Title>
+          <Modal.Title className="">Manage SMM qui</Modal.Title>
         </Modal.Header>
         <Modal.Body className="custom-modal-body">
           <div className="row d-flex justify-content-center">
@@ -84,13 +84,13 @@ function ConnectSMM({ openConnect, closeConnect }) {
                 </label>
                 <input type="text" value={smm} onChange={handleInputChange} />
 
-                <button type="submit" className="custom-button box mt-2">
-                  SÌ, SMM
+                <button type="submit" className="green-button box mt-2">
+                  SÌ SMM
                 </button>
               </form>
             </div>
-            <p className="mt-4">Remove SMM</p>
-            <button className="custom-button mb-2 box w-25" onClick={removeSmm}>
+            <p className="mt-4">Rimuovi SMM</p>
+            <button className="red-button mb-2 box w-25" onClick={removeSmm}>
               NO SMM
             </button>
           </div>

@@ -2,8 +2,8 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
-import { Card, Col, Container, Row } from "react-bootstrap";
 
+import { Card, Col, Container } from "react-bootstrap";
 import "../css/App.css";
 
 //TODO: se non esiste: NOT FOUND

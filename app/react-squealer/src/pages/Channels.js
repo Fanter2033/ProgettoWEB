@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-//import { useCallback } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
 import ReactConfig from "../config/ReactConfig";
 import { useUserContext } from "../config/UserContext";
-import { useNavigate } from "react-router-dom";
 
 import Search from "./Search";
 import Footer from "./Footer";
@@ -12,7 +11,7 @@ import ChannelForm from "./ChannelForm";
 import "../css/LoginForm.css";
 import "react-toastify/dist/ReactToastify.css";
 
-import { Container, Card, Col, Row } from "react-bootstrap";
+import { Card, Col, Row } from "react-bootstrap";
 import "../css/App.css";
 
 function Channels() {
@@ -26,37 +25,7 @@ function Channels() {
   }
 
   //TODO: IMPLEMENT FILTER: user, channels: official, user, tag
-  //TODO: GET /dashboard/ ------------------------------------------------------------------------------------------------------------
-  /*
-  const [dash, setDash] = useState({});
-
-  async function getDashboard() {
-    try {
-      const uri = `${ReactConfig.base_url_requests}/dashboard/`;
-      const options = {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        mode: "cors",
-      };
-
-      let result = await fetch(uri, options);
-
-      if (result.ok) {
-        let json = await result.json();
-        console.log("MMMMMMMMMMMMMMMMMMMMMMMH", json);
-        setDash(json);
-      } else {
-        console.error("Errore nella richiesta:", result.statusText);
-      }
-    } catch (error) {
-      console.error("Errore nella fetch:", error);
-    }
-  }
-  */
-
+  
   //GET USER INFO ------------------------------------------------------
   async function getUserData() {
     try {
@@ -75,7 +44,6 @@ function Channels() {
         let data = await result.json();
 
         console.log("INFO UTENTE", data);
-        //console.log("cercataaaaaaaaaaaaaaaaaaa", userGlobal.username);
 
         setUserGlobal(data);
       } else {

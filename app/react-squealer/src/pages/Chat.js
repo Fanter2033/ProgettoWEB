@@ -26,11 +26,6 @@ function Chat() {
 
       if (result.ok) {
         let json = await result.json();
-        /*
-        for (let s of json) {
-          squeals.push(s);
-        }
-        */
         setSqueals(json);
       } else {
         console.error("Errore nella richiesta:", result.statusText);
@@ -65,7 +60,7 @@ function Chat() {
                       <Card.Header className="d-flex flex-col justify-content-center align-items-center">
                         {" "}
                         <b>{squeal.sender}</b>
-                        <Link to="/infou">
+                        <Link to="/infou" state={squeal.sender}>
                           <button className="ms-4 me-4 custom-button box">
                             Info
                           </button>

@@ -198,7 +198,7 @@ html {
   margin: 1em;
   padding: 1em;
   border: none;
-  
+
   border-radius: 0.5rem;
   cursor: pointer;
 }
@@ -320,8 +320,6 @@ img {
 
 /* -------------------- MODAL STUFF ------------------*/
 
-/* YourModalStyles.css */
-
 .custom-modal-header {
   background-color: var(--squeal-pink);
   color: #ecf0f1;
@@ -380,7 +378,6 @@ img {
   color: #ecf0f1;
 }
 
-
 .modal-delete-header {
   background-color: var(--squeal-red);
   color: #ecf0f1;
@@ -394,6 +391,68 @@ img {
   );
   color: #ecf0f1;
 }
+
+/* -------------------- TOGGLE ------------------*/
+.toggle-button {
+  color: white;
+  padding: 1em;
+  margin: 1em;
+  cursor: pointer;
+  border: none;
+  border-radius: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: linear-gradient(to right, #528b57, #b45656);
+  background-size: 200% 100%;
+  transition: background-position 0.3s ease;
+}
+
+.toggle-button.toggled {
+  background-position: -100% 0;
+}
+
+.slider {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  height: calc(100% - 4px);
+  background-image: linear-gradient(to right, #528b57, #b45656);
+  background-size: 200% 100%;
+  transition: transform 0.3s ease;
+}
+
+.toggle-button.toggled .slider {
+  transform: translateX(100%);
+}
+
+/* -------------------- PFP CORNICE img ------------------*/
+.profile-picture-container {
+  border: 3px solid #3498db;
+  border-radius: 50%;
+  overflow: hidden; /* Assicura che l'immagine non fuoriesca dalla cornice */
+  width: 150px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-picture {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Assicura che l'immagine si adatti alla cornice */
+  border-radius: 50%; /* Mantieni la stessa forma circolare */
+}
+
+/* -------------------- ESPERIMENTI PAZZI  img ------------------*/
+/*
+.background-image {
+  background-color: red;
+  background-size: cover;
+  background-position: center;
+}
+*/
 
 /* -------------------- MADE BY REACT STUFF ------------------*/
 /*
@@ -415,14 +474,5 @@ img {
   to {
     transform: rotate(360deg);
   }
-}
-*/
-
-/* -------------------- ESPERIMENTI PAZZI  img ------------------*/
-/*
-.background-image {
-  background-color: red;
-  background-size: cover;
-  background-position: center;
 }
 */
