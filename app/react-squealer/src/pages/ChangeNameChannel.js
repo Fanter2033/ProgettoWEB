@@ -67,7 +67,7 @@ function ChangeNameChannel() {
           channel: {
             name: newName,
             type: "CHANNEL_USERS",
-            private: false
+            private: false,
           },
         };
 
@@ -111,7 +111,7 @@ function ChangeNameChannel() {
   };
 
   return (
-    <div>
+    <>
       <button className="blue-button mb-2 box" onClick={handleShow}>
         CAMBIO NOME CANALE
       </button>
@@ -150,7 +150,7 @@ function ChangeNameChannel() {
           <ToastContainer />
         </Modal.Footer>
       </Modal>
-    </div>
+    </>
   );
 }
 

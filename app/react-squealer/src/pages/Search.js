@@ -45,14 +45,56 @@ function Search() {
     return () => clearTimeout(delayTimer);
   }, [inputValue]);
 
-  //TODO: follow a channel
-  const follow = () => {
-    alert("il follow è da implementare :)");
-  };
+  const [myRole, setMyRole] = useState([]);
+  //PATCH /channel/{type}/{channel_name}  follow channel
+  async function follow(channel) {
+    const url = `${ReactConfig.base_url_requests}/channel/${channel.type}/${channel.channel_name}`;
+    const options = {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      mode: "cors",
+    };
+
+    fetch(url, options)
+      .then((res) => {
+        console.log(res);
+        if (res.ok) {
+          return res.json();
+        }
+      })
+      .then((data) => {
+        console.log("Subscribe went good", data);
+      })
+      .catch((error) => {
+        console.error("Subscribe failed, error:", error);
+      });
+
+    const url2 = `${ReactConfig.base_url_requests}/channel/${channel.type}/${channel.channel_name}/users/${userGlobal.username}`;
+    fetch(url2)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Get the role of the user:", data);
+        setMyRole(data);
+      })
+      .catch((error) => {
+        console.error("Faillllllll, errore:", error);
+      });
+
+    console.log(
+      "per il canale",
+      channel.channel_name,
+      "il mio ruolo è:",
+      myRole
+    );
+  }
 
   //TODO: IMPLEMENT FILTER: user, channels: official, user, tag
   //GET /channel/{type} list of channel------------------------------------------------------------------------------------------------------------
   //types: CHANNEL_OFFICIAL, CHANNEL_USERS, CHANNEL_HASHTAG
+
   /*
   const response = {
     "channels": [
@@ -186,7 +228,12 @@ function Search() {
                     <button className="red-button">your channel</button>
                   )}
                   {channel.owner !== userGlobal.username && (
-                    <button className="custom-button mb-2" onClick={follow}>
+                    <button
+                      className="custom-button mb-2"
+                      onClick={() => {
+                        follow(channel);
+                      }}
+                    >
                       Segui
                     </button>
                   )}
@@ -270,7 +317,7 @@ function Search() {
         <>
           <Row className="">
             {list.map((channel) => (
-              <Col key={channel.id} lg={12} >
+              <Col key={channel.id} lg={12}>
                 {channel.private === true && (
                   <>
                     <Card className="squeal mb-3">
@@ -309,7 +356,7 @@ function Search() {
         <>
           <Row className="">
             {list.map((channel) => (
-              <Col key={channel.id} lg={12} >
+              <Col key={channel.id} lg={12}>
                 {channel.private === false && (
                   <>
                     <Card className="squeal mb-3">

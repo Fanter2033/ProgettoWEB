@@ -6,6 +6,7 @@ import ReactConfig from "../config/ReactConfig";
 import Chat from "./Chat";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
+import Reactions from "./Reactions";
 
 import { Container, Card, Col, Row } from "react-bootstrap";
 import "../css/App.css";
@@ -23,7 +24,9 @@ function Received() {
   //GET /dashboard/ ------------------------------------------------------------------------------------------------------------
   const [dash, setDash] = useState([]);
 
+  //TODO: impedire che crashi
   async function getDashboard() {
+    /*
     try {
       const uri = `${ReactConfig.base_url_requests}/utils/dashboard/`;
       const options = {
@@ -47,14 +50,14 @@ function Received() {
     } catch (error) {
       console.error("Errore nella fetch:", error);
     }
+    */
   }
 
   console.log("DDDDDDDDDDDDDASH", dash);
 
   useEffect(() => {
+    //getDashboard();
     const intervalId1 = setInterval(getDashboard, 10000); //10 sec
-    getDashboard();
-
     return () => {
       clearInterval(intervalId1);
     };
@@ -74,11 +77,11 @@ function Received() {
 
             {dash.length > 0 && (
               <Container className="">
-                <Row className="w-100">
+                <Row className=" ">
                   {dash.map((squeal) => (
-                    <Col lg={12} key={squeal.id} className="mb-4">
-                      <Card style={{ height: "100%" }} className="squeal">
-                        <Card.Header className="d-flex flex-col justify-content-center align-items-center">
+                    <Col lg={12} key={squeal.id} className="mb-4 d-flex justify-content-center align-items-center">
+                      <Card style={{ width: "60%" }} className="squeal d-flex flex-col align-items-center">
+                        <Card.Header className="w-100 d-flex flex-col justify-content-center align-items-center">
                           {" "}
                           <b>{squeal.sender}</b>
                           <Link to="/infou" state={squeal.sender}>
@@ -86,12 +89,13 @@ function Received() {
                               Info
                             </button>
                           </Link>
+                          <div>Id: {squeal._id}</div>
                         </Card.Header>
                         <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
                           <div>{squeal.content}</div>
                         </Card.Body>
-                        <Card.Footer>
-                          <div>Id: {squeal._id}</div>
+                        <Card.Footer className="w-100">
+                          <Reactions squeal={squeal._id}/>
                         </Card.Footer>
                       </Card>
                     </Col>

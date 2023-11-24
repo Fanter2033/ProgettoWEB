@@ -25,6 +25,7 @@ const ChannelDeleteModal = () => {
 
   //TODO: DELETE /channel/{type}/{channel_name}
   const handleDeleteChannel = () => {
+    
     const uri = `${ReactConfig.base_url_requests}/channel/${channel.type}/${channel.channel_name}`;
     const options = {
       method: "DELETE",

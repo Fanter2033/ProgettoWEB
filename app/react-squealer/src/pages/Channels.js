@@ -15,7 +15,6 @@ import { Card, Col, Row } from "react-bootstrap";
 import "../css/App.css";
 
 function Channels() {
-
   const { userGlobal, setUserGlobal } = useUserContext();
   console.log("cercatooooooooooooo", userGlobal.username);
   console.log("viiiiiiiiiiiiiiiiiiiiiiiiiiiip", userGlobal.vip);
@@ -24,7 +23,7 @@ function Channels() {
   if (userGlobal.username === undefined) {
     navigate("/");
   }
-  
+
   //GET USER INFO ------------------------------------------------------
   async function getUserData() {
     try {
@@ -53,7 +52,6 @@ function Channels() {
     }
   }
 
-  
   const [functionsCalled, setFunctionsCalled] = useState(false);
 
   useEffect(() => {
@@ -66,26 +64,39 @@ function Channels() {
   return (
     <div>
       <div className="container-flex">
+        
         <div className="row" onLoad={getUserData}>
           <div className="col-12 mt-5">
-            
             <div>
               <ChannelForm />
               <Search />
             </div>
-
-            <div className="row d-flex justify-content-center ms-1 me-1 mb-5">
-              <h3>TODO:</h3>
-              <ul className="list-group col-md-4">
-                <li className="list-group-item list">follow button</li>
-                <li className="list-group-item list">pfp channels</li>
-                <li className="list-group-item list">GET #</li>
-                <li className="list-group-item list">popolarità</li>
-                <li className="list-group-item list">silenziabili</li>
-                <li className="list-group-item list">popolarità</li>
-              </ul>
-            </div>
           </div>
+        </div>
+
+        <div className="row d-flex justify-content-center ms-1 me-1 mb-5 w-100">
+          <h3>TODO:</h3>
+          <ul className="list-group col-md-4">
+            <li className="list-group-item list">follow button</li>
+            <li className="list-group-item list">se seguo cambia a seguito</li>
+            <li className="list-group-item list">channel blocked</li>
+            <li className="list-group-item list">PATCH new_role</li>
+            <li className="list-group-item list">
+              QUERY GET /channel e /channel/$type
+            </li>
+            <li className="list-group-item list">limit</li>
+            <li className="list-group-item list">offset</li>
+            <li className="list-group-item list">search:</li>
+            <li className="list-group-item list">orerBy</li>
+            <li className="list-group-item list">
+              orderDir='ORDER_ASC' || 'ORDER_DESC'
+            </li>
+            <li className="list-group-item list">pfp channels</li>
+            <li className="list-group-item list">GET #</li>
+            <li className="list-group-item list">popolarità</li>
+            <li className="list-group-item list">silenziabili</li>
+            <li className="list-group-item list">popolarità</li>
+          </ul>
         </div>
       </div>
       <Footer />

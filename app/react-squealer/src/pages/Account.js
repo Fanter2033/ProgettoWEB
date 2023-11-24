@@ -338,7 +338,7 @@ function Account() {
               onMouseOver={showVulture}
               onMouseLeave={hideVulture}
             />
-            {(userGlobal.isAdmin === true) && (
+            {userGlobal.isAdmin === true && (
               <>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -587,6 +587,19 @@ function Account() {
             </div>
           </div>
         )}
+      </div>
+      <div className="row d-flex justify-content-center ms-1 me-1 mb-5">
+        <h3>TODO:</h3>
+        <ul className="list-group col-md-4">
+          <li className="list-group-item list">utente bloccato</li>
+          <li className="list-group-item list">TEST DELETE</li>
+          <li className="list-group-item list">TEST connect SMM</li>
+          <li className="list-group-item list">PUT cambio: mail, nome, cognome??</li>
+          <li className="list-group-item list">
+            PATCH squeal, per le reacctions
+          </li>
+          <li className="list-group-item list">LIVE QUOTA</li>
+        </ul>
       </div>
     </div>
   );
