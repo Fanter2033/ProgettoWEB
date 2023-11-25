@@ -4,13 +4,14 @@ import ReactConfig from "../config/ReactConfig";
 
 import { useUserContext } from "../config/UserContext";
 
+import { Modal } from "react-bootstrap";
+
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import "../css/LoginForm.css";
 
 //TODO: PUT: RESET PSW /user/${username}-----------------------------------------------------------------------------------------------------
-//async function resetPassword() {}
 
 function LoginForm() {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ function LoginForm() {
 
   const [usernameForm, setUsernameForm] = useState("");
   const [passwordForm, setPasswordForm] = useState("");
+  const [reset, setReset] = useState("");
 
   const notify = () =>
     toast.error("Errore di autenticazione. Riprovare", {
@@ -62,6 +64,49 @@ function LoginForm() {
       });
   };
 
+  //*reset password: domanda utente
+  const [showReset, setShowReset] = useState(false);
+  const openReset = () => {
+    setShowReset(true);
+  };
+  const closeReset = () => {
+    setShowReset(false);
+  };
+
+  const handleInputChange = (event) => {
+    setReset(event.target.value);
+  };
+
+  const resetPassword = async () => {
+    openReset();
+    /*
+    const data = { reset: reset };
+    const uri = `${ReactConfig.base_url_requests}/auth/${userGlobal.username}/0`;
+    const options = {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(data),
+    };
+
+    await fetch(uri, options)
+      .then((response) => {
+        if (response.ok) {
+          navigate(`/received`);
+        } else {
+          notify();
+          console.error("Reset failed", response.statusText);
+        }
+      })
+      .catch((error) => {
+        console.error("Network error", error);
+      });
+    */
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -74,25 +119,22 @@ function LoginForm() {
     await login();
   };
 
-  //premi invio per muoverti
+  //*MUOVITI CON I TASTI
   const input1Ref = useRef(null);
   const input2Ref = useRef(null);
-
-
   const handleKeyPress = (event, nextInputRef) => {
     if (event.key === "Enter") {
       event.preventDefault();
       nextInputRef.current.focus();
     }
   };
-
-  const   handleKeyFinal= (event) => {
+  const handleKeyFinal = (event) => {
     if (event.key === "Enter") {
       console.log("Tasto Invio premuto!");
     }
   };
 
-  //reminder: input tag in React <input/>
+  //*reminder: input tag in React <input/>
   return (
     <div className="container">
       <div className="col-12 text-center pt-5 animated-title-container">
@@ -152,7 +194,7 @@ function LoginForm() {
 
             <div className="form-group row p-2">
               <button
-                className="col-12 col-md-4 offset-md-4 mb-5 custom-button"
+                className="col-12 col-md-4 offset-md-4 mb-3 yellow-button"
                 type="submit"
                 onKeyDown={handleKeyFinal}
               >
@@ -161,13 +203,40 @@ function LoginForm() {
               </button>
             </div>
           </form>
-          <button className="custom-button mb-4" type="submit">
+          <button className="yellow-button mb-4" onClick={resetPassword}>
             Forgor password?
           </button>
+
+          {showReset && (
+            <Modal show={showReset} onHide={closeReset} centered>
+              <Modal.Header closeButton className="modal-delete-header">
+                <Modal.Title>Recupero Password</Modal.Title>
+              </Modal.Header>
+              <Modal.Body className="modal-delete-body">
+                <form onSubmit={resetPassword}>
+                  <label className="">Qual è il tuo hobby preferito?</label>
+                  <input
+                    type="text"
+                    value={reset}
+                    onChange={handleInputChange}
+                  />
+                  <p>È fortemente consigliato il cambio di password</p>
+                  <p>a seguito dell'accesso</p>
+                  <button type="submit" className="blue-button box mt-2">
+                    Accedi
+                  </button>
+                </form>
+
+                <button className="red-button box" onClick={closeReset}>
+                  Annulla
+                </button>
+              </Modal.Body>
+            </Modal>
+          )}
           <div className="row p-2 mb-5">
-            <div className="col-12 mb-5">
+            <div className="col-12 mb-4">
               <NavLink
-                style={{ color: "#072f38" }}
+                style={{ color: "#e0bb76" }}
                 className="cool-font-small"
                 to={ReactConfig.pathFunction("/registration")}
               >
@@ -177,7 +246,7 @@ function LoginForm() {
 
             <div className="col-12 mb-5">
               <NavLink
-                style={{ color: "#072f38" }}
+                style={{ color: "#e0bb76" }}
                 className="cool-font-small"
                 to={ReactConfig.pathFunction("/home")}
               >

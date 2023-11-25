@@ -65,7 +65,7 @@ const MapComponent = () => {
           center={userLocation || [0, 0]}
           //center={position}
           //zoom={2}
-          zoom={userLocation ? 12 : 2}
+          zoom={5}
           style={{ height: "100%", width: "100%" }}
         >
 

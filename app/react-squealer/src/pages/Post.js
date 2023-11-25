@@ -26,6 +26,18 @@ function Post() {
         <Reactions />
         <Comment />
       </div>
+      <div className="row d-flex justify-content-center ms-1 me-1 mb-5">
+        <h3>TODO:</h3>
+        <ul className="list-group col-md-4">
+          <li className="list-group-item list">popolarità</li>
+          <li className="list-group-item list">GET past squeals</li>
+          <li className="list-group-item list">PUT squeal</li>
+          <li className="list-group-item list">
+            PATCH squeal, per le reacctions
+          </li>
+          <li className="list-group-item list">LIVE QUOTA</li>
+        </ul>
+      </div>
     </>
   );
 }

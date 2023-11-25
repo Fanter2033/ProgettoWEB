@@ -15,6 +15,7 @@
 }
 .my-blu {
   background-color: var(--squeal-blue);
+  color: var(--squeal-green)
 }
 .no-bg {
   background-color: transparent;
@@ -23,8 +24,8 @@
 /* ------------ ATTENZIONE AGLI ALTRI FILE CSS -------------*/
 html {
   text-align: center;
-  background-color: var(--squeal-yellow);
-  color: var(--squeal-blue);
+  background-color: var(--squeal-blue);
+  color: var(--squeal-yellow);
 
   margin: 0;
   padding: 0;
@@ -37,8 +38,8 @@ html {
 }
 .App {
   text-align: center;
-  background-color: var(--squeal-yellow);
-  color: var(--squeal-blue);
+  background-color: var(--squeal-blue);
+  color: var(--squeal-yellow);
 }
 #elemento-espanso {
   position: absolute; /* Posizionamento assoluto rispetto alla view*/
@@ -48,6 +49,12 @@ html {
   left: 0; /* Inizia da sinistra della viewport */
   width: 100vw;
   background-color: var(--squeal-yellow);
+}
+
+/* -----------------SQUEAL STUFF------------------ */
+.squeal{
+  background-color: var(--squeal-yellow) !important;
+  color: var(--squeal-green) !important;
 }
 
 /* -----------------FONT STUFF------------------ */
@@ -67,6 +74,8 @@ html {
   font-family: "Cool-Font";
   src: url("../../public/ArchivoBlack-Regular.ttf");
 }
+
+/* -----------------FONT STUFF------------------ */
 .list:hover {
   background-color: var(--squeal-blue);
   color: #c78181;
@@ -85,6 +94,19 @@ html {
   background-color: var(--squeal-green);
 }
 
+.custom-button-yellow {
+  background-color: var(--squeal-yellow);
+  color: var(--squeal-blue);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.custom-button:hover {
+  background-color: var(--squeal-green);
+}
+
+
 /*emoji*/
 .bottoni_omologati {
   width: 3em;
@@ -96,8 +118,8 @@ html {
 }
 
 .user_button {
-  background-color: var(--squeal-blue);
-  color: var(--squeal-yellow);
+  background-color: var(--squeal-yellow);
+  color: var(--squeal-blue);
   width: 60vw;
   margin: 1em;
   border: none;
@@ -198,7 +220,7 @@ html {
   margin: 1em;
   padding: 1em;
   border: none;
-  
+
   border-radius: 0.5rem;
   cursor: pointer;
 }
@@ -283,7 +305,7 @@ img {
 
 /* -------------------- 3D EFFECT ------------------*/
 .box {
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 1);
 }
 
 /* --------------------VOLTURE ------------------*/
@@ -319,8 +341,6 @@ img {
 }
 
 /* -------------------- MODAL STUFF ------------------*/
-
-/* YourModalStyles.css */
 
 .custom-modal-header {
   background-color: var(--squeal-pink);
@@ -380,7 +400,6 @@ img {
   color: #ecf0f1;
 }
 
-
 .modal-delete-header {
   background-color: var(--squeal-red);
   color: #ecf0f1;
@@ -394,6 +413,75 @@ img {
   );
   color: #ecf0f1;
 }
+
+/* -------------------- TOGGLE SMM------------------*/
+.toggle-button {
+  color: var(--squeal-blue);
+  padding: 1em;
+  margin: 1em;
+  cursor: pointer;
+  border: none;
+  border-radius: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: linear-gradient(to right, #528b57, #b45656);
+  background-size: 200% 100%;
+  transition: background-position 0.3s ease;
+}
+
+.toggle-button.toggled {
+  background-position: -100% 0;
+}
+
+.slider {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  height: calc(100% - 4px);
+  background-image: linear-gradient(to right, #528b57, #b45656);
+  background-size: 200% 100%;
+  transition: transform 0.3s ease;
+}
+
+.toggle-button.toggled .slider {
+  transform: translateX(100%);
+}
+
+/* -------------------- PFP CORNICE img ------------------*/
+.pfp {
+  border:1rem solid var(--squeal-green);
+}
+.pfp-small {
+  border:0.2rem solid var(--squeal-green);
+}
+
+/*
+.profile-picture-container {
+  border: 1rem solid var(--squeal-green);
+  border-radius: 50%;
+  overflow: hidden; // immagine non fuoriesce dalla cornice
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-picture {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; //immagine si adatta alla cornice
+  border-radius: 50%; //stessa forma circolare
+}
+*/
+
+/* -------------------- ESPERIMENTI PAZZI  img ------------------*/
+/*
+.background-image {
+  background-color: red;
+  background-size: cover;
+  background-position: center;
+}
+*/
 
 /* -------------------- MADE BY REACT STUFF ------------------*/
 /*
@@ -415,14 +503,5 @@ img {
   to {
     transform: rotate(360deg);
   }
-}
-*/
-
-/* -------------------- ESPERIMENTI PAZZI  img ------------------*/
-/*
-.background-image {
-  background-color: red;
-  background-size: cover;
-  background-position: center;
 }
 */
