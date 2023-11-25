@@ -37,4 +37,11 @@ utilsDriver.get("/dashboard", async function (req, res) {
     else res.status(ctrlOut.code).send(ctrlOut);
 });
 
+utilsDriver.get("/squeals/:username", async function(req, res) {
+    let username = (typeof req.params.username !== 'undefined' ? req.params.username.trim() : "");
+    let ctrlOut = await controller.getSentSquealsFromUser(username);
+    if (ctrlOut.code === 200) res.status(200).send(ctrlOut.content);
+    else res.status(ctrlOut.code).send(ctrlOut);
+});
+
 module.exports = utilsDriver;

@@ -255,4 +255,64 @@ module.exports = class QuoteController extends Controller {
         return output;
     }
 
+    /**
+     * @param userAuth {UserDto}
+     * @param username {string}
+     * @return {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async refillQuote(userAuth, username) {
+        //Dangerous zone
+        const UserController = require('../controllers/UserController');
+        const UserModel = require('../models/UserModel');
+        let userCtrl = new UserController(new UserModel());
+        let output = this.getDefaultOutput();
+
+        let quoteRes = await this.getQuote(username);
+
+        if (quoteRes.code !== 200) {
+            output['code'] = 404;
+            output['msg'] = 'Not found.';
+            return output;
+        }
+
+        if (this.isAuthenticatedUser(userAuth) === false) {
+            output['code'] = 403;
+            output['msg'] = 'Not authenticated.';
+            return output;
+        }
+
+        let smm = await userCtrl.getSmm(username);
+        if (smm.code !== 200 && userAuth.isAdmin === false) {
+            output['code'] = 401;
+            output['msg'] = 'Not authorized - 1';
+            return output;
+        }
+        let linkedUser = smm.content;
+        if (linkedUser.trim() === '' && userAuth.isAdmin === false) {
+            output['code'] = 401;
+            output['msg'] = 'Not authorized - 2';
+            return output;
+        }
+
+        if (linkedUser.trim() !== userAuth.username && userAuth.isAdmin === false) {
+            output['code'] = 401;
+            output['msg'] = 'Not authorized - 3';
+            return output;
+        }
+
+        quoteRes = new QuoteDto(quoteRes.content);
+        quoteRes.remaining_daily = quoteRes.limit_daily;
+        quoteRes.remaining_weekly = quoteRes.limit_weekly;
+        quoteRes.remaining_monthly = quoteRes.limit_monthly;
+
+        let response = await this._model.patchQuote(quoteRes);
+        if (response === false) {
+            output['code'] = 500;
+            output['msg'] = 'Internal server error';
+            return output;
+        }
+
+        return output;
+    }
+
 };
