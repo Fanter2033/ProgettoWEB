@@ -138,7 +138,7 @@ function Register() {
                 }
               })
               .then((dataAuth) => {
-                navigate(`/received`);
+                navigate(`./received`);
                 setUsername("");
                 setPassword("");
                 console.log("Authentication successful", dataAuth);

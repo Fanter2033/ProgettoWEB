@@ -218,7 +218,7 @@ function Account() {
       .then((response) => {
         if (response.ok) {
           console.log("logout riuscito con successo");
-          navigate(`/`);
+          navigate(`./`);
         } else {
           notify();
           console.error("Logout failed", response.statusText);

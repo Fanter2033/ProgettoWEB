@@ -90,6 +90,13 @@ export default defineComponent({
   },
 
 });
+/*
+* TODO:
+* - chart con ogni squeal dell'utente e un grafico a torta per analisi statistiche
+* - pagina responsive
+* -
+*
+* */
 </script>
 
 <style></style>

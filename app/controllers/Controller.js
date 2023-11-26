@@ -212,5 +212,23 @@ module.exports = class Controller {
         return string.startsWith("https://www.youtube.com/watch");
     }
 
+    /**
+     * @param string
+     * @return {boolean}
+     */
+    containsOneLetter(string){
+        return string.match(/[a-zA-Z]/) !== null;
+    }
+
+    /**
+     * @param string
+     * @return {boolean}
+     */
+    containsWhiteSpace(string){
+        return string.indexOf(' ') >= 0;
+    }
+
+
+
 
 }

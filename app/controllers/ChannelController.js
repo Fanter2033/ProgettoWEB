@@ -51,6 +51,13 @@ module.exports = class ChannelController extends Controller {
             channelDto.channel_name = channelDto.channel_name.toLowerCase();
         }
 
+        if(this.containsOneLetter(channelDto.channel_name) === false
+            || this.containsWhiteSpace(channelDto.channel_name)) {
+            output['code'] = 400;
+            output['msg'] = 'Invalid channel name.';
+            return output;
+        }
+
         let channelExists = await this.channelExists(channelDto);
         if (channelExists === true) {
             //Channel found. Cannot create
@@ -223,6 +230,13 @@ module.exports = class ChannelController extends Controller {
             newChannel.channel_name = newChannel.channel_name.toUpperCase();
         else  //unofficial
             newChannel.channel_name = newChannel.channel_name.toLowerCase();
+
+        if(this.containsOneLetter(newChannel.channel_name) === false
+            || this.containsWhiteSpace(newChannel.channel_name)) {
+            output['code'] = 400;
+            output['msg'] = 'Invalid channel name.';
+            return output;
+        }
 
         if (newChannel.type !== oldChannel.type || oldChannel.type !== newChannel.type) {
             //Now, let's check if the new channel do not exists.

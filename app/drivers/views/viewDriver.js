@@ -18,7 +18,7 @@ viewDriver.get('/userView*', async (req, res) => {
         return;
     }
     if(authController.isAuthLogged(req) && req.path === '/userView/'){
-        res.redirect('./home');
+        res.redirect('./');
         return;
     }
     const path = require("path")
@@ -30,7 +30,7 @@ viewDriver.get('/userView*', async (req, res) => {
 
 //view di smm
 viewDriver.get('/smm/', (req, res) => {
-    res.send('HELLO! Cambiare qui (2)');
+    res.send('../../vue-squealer/Development/SMM/index.html');
 });
 
 viewDriver.use('/admin', viewAdminDriver);

@@ -378,6 +378,9 @@ module.exports = class UserController extends Controller {
         if(userObj.isSmm !== true && userObj.isSmm !== false) return -3;
         if(userObj.isAdmin !== true && userObj.isAdmin !== false) return -3;
 
+        if(this.containsWhiteSpace(username)) return -4;
+        if(this.containsOneLetter(username) === false) return -5;
+
         userObj.username = username;
         userObj.psw_shadow = password;
         userObj.first_name = firstname;

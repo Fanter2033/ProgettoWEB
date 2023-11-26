@@ -93,7 +93,7 @@ function ChangeNameChannel() {
           .then((data) => {
             notify();
             console.log("Cambio username went good", data);
-            navigate("/");
+            navigate("./");
           })
           .catch((error) => {
             console.error("Cambio username failed, error:", error);

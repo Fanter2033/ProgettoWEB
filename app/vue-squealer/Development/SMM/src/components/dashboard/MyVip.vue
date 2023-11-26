@@ -30,7 +30,8 @@
       </li>
       <li>
         <div>
-          <Squeal />
+
+            <Squeal :vip="vipName" />
         </div>
       </li>
     </ul>
@@ -39,7 +40,6 @@
 
 <script setup>
   import Squeal from "@/components/dashboard/Squeal.vue";
-  import * as constants from "constants";
   import {ref} from "vue";
   defineProps({
     vipName: String,

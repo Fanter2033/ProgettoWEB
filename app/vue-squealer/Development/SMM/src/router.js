@@ -10,22 +10,21 @@ const routes = [
     name: "Login",
     component: Login,
   },
-
-  {
-    path: "/dashboard",
-    name: "Smm-DashBoard",
-    component: DashBoard,
-  },
-  {
-    path: "/dashboard/charts/:vip",
-    name: "Chart",
-    component: Chart
-  },
-  {
-    path: "/dashboard/quote/:vip",
-    name: "Quote",
-    component: Quote
-  }
+      {
+        path: "/dashboard",
+        name: "Smm-DashBoard",
+        component: DashBoard,
+      },
+          {
+            path: "/dashboard/charts/:vip",
+            name: "Chart",
+            component: Chart
+          },
+          {
+            path: "/dashboard/quote/:vip",
+            name: "Quote",
+            component: Quote
+          },
 ];
 
 const router = createRouter({

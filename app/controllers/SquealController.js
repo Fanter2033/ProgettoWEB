@@ -205,10 +205,23 @@ module.exports = class SquealController extends Controller {
         }
 
 
-        if (squealDto.message_type === 'IMAGE' && this.isBase64(squealDto.content) === false) {
-            output['code'] = 400;
-            output['msg'] = 'Content is not base64';
-            return output;
+        if (squealDto.message_type === 'IMAGE') {
+            let base64 = squealDto.content;
+            let split = base64.split(',');
+            let str = '';
+            for (let i = 0; i < split.length; i++) {
+                if(i === 0)
+                    continue;
+                if(str !== '')
+                    str = str + ',';
+                str = str + split[i];
+            }
+            squealDto.content = str;
+            if (this.isBase64(squealDto.content) === false) {
+                output['code'] = 400;
+                output['msg'] = 'Content is not base64';
+                return output;
+            }
         }
 
         if (squealDto.message_type === 'VIDEO_URL' && this.isYoutubeVideo(squealDto.content) === false) {
@@ -227,7 +240,7 @@ module.exports = class SquealController extends Controller {
             return output;
         }
 
-        if(authenticatedUser.isAdmin === false) {
+        if (authenticatedUser.isAdmin === false) {
             checkResult = await this.checkDestinationsAuthorizations(squealDto.destinations, authenticatedUser.username);
             if (!checkResult) {
                 output['code'] = 401;
@@ -495,7 +508,7 @@ module.exports = class SquealController extends Controller {
      * @param amount {number}
      * @param positiveValue {boolean}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
-     * THIS DO NOT EXECUTE CONTROLS. SHOULD BE IMPLEMENTED VIA ANTOHER CONTROLLER OR WITH A VARIABLE
+     * THIS DO NOT EXECUTE CONTROLS. SHOULD BE CALLED VIA ANOTHER CONTROLLER OR WITH A VARIABLE
      */
     async incrementValue(squeal_id, amount, positiveValue = true) {
         let output = this.getDefaultOutput();
@@ -686,12 +699,28 @@ module.exports = class SquealController extends Controller {
                 return false;
             }
             let tmpRole = new ChannelRoleDto(result.content);
-            if(tmpRole.role < autoload.config._CHANNEL_ROLE_WRITE){
+            if (tmpRole.role < autoload.config._CHANNEL_ROLE_WRITE) {
                 return false;
             }
         }
 
         return true;
+    }
+
+    /**
+     * @param user {string}
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async getSentSquealsByUser(user) {
+        let output = this.getDefaultOutput();
+
+        //No controls to do here
+        let squeals = await this._model.getSquealsFromSender(user);
+        output.content = [];
+        for (const squeal of squeals)
+            if (await this.isSquealPublic(squeal.id))
+                output.content.push(squeal.getDocument());
+        return output;
     }
 
     /**
