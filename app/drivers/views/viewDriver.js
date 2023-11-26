@@ -29,8 +29,20 @@ viewDriver.get('/userView*', async (req, res) => {
 });
 
 //view di smm
-viewDriver.get('/smm/', (req, res) => {
-    res.send('../../vue-squealer/Development/SMM/index.html');
+viewDriver.get('/smmView*', (req, res) => {
+    if(authController.isAuthLogged(req) === false && req.path !== '/smmView/'){
+        res.redirect('/smmView/');
+        return
+    }
+    if(authController.isAuthLogged(req) && req.path === '/smmView/'){
+        res.redirect('./dashboard');
+        return
+    }
+
+    const path = require("path");
+    const vueDir = path.join(__dirname, '../../vue-squealer/Development/SMM/dist');
+    viewDriver.use(express.static(vueDir));
+    res.sendFile(path.join(vueDir, '/index.html'));
 });
 
 viewDriver.use('/admin', viewAdminDriver);
