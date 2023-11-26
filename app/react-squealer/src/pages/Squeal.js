@@ -468,7 +468,7 @@ function Squeal() {
         .then((response) => {
           if (response.ok) {
             console.log("POST Squeal riuscita con successo");
-            navigate("/post");
+            navigate("./post");
           } else {
             console.error(
               "Errore durante la POST, riprova",

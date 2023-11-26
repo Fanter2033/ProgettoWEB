@@ -12,7 +12,7 @@ function Post() {
 
   const navigate = useNavigate();
   if (userGlobal.username === undefined || userGlobal.username === "") {
-    navigate("/");
+    navigate("./");
   }
   console.log(userGlobal.username);
 

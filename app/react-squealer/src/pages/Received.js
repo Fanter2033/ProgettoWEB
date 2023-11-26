@@ -18,7 +18,7 @@ function Received() {
   const navigate = useNavigate();
 
   if (userGlobal.username === undefined || userGlobal.username === "") {
-    navigate("/");
+    navigate("./");
   }
 
   //GET /dashboard/ ------------------------------------------------------------------------------------------------------------

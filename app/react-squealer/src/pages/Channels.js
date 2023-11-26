@@ -21,7 +21,7 @@ function Channels() {
 
   const navigate = useNavigate();
   if (userGlobal.username === undefined) {
-    navigate("/");
+    navigate("./");
   }
 
   //GET USER INFO ------------------------------------------------------

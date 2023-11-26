@@ -99,7 +99,7 @@ function ChangePassword() {
           .then((data) => {
             notify();
             console.log("Cambio password went good", data);
-            navigate("/");
+            navigate("./");
           })
           .catch((error) => {
             console.error("Cambio password failed, error:", error);

@@ -40,7 +40,7 @@ const ChannelDeleteModal = () => {
       .then((response) => {
         if (response.ok) {
           console.log("Cancellazione riuscita con successo");
-          navigate(`/channels`);
+          navigate(`./channels`);
         } else {
           console.error("Delete failed", response.statusText);
         }
