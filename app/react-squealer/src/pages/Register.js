@@ -138,7 +138,7 @@ function Register() {
                 }
               })
               .then((dataAuth) => {
-                navigate(`/channels`);
+                navigate(`./received`);
                 setUsername("");
                 setPassword("");
                 console.log("Authentication successful", dataAuth);
@@ -286,14 +286,14 @@ function Register() {
 
             <div className="form-group row p-2">
               <button
-                className="col-12 col-md-4 offset-md-4 mb-3 custom-button"
+                className="col-12 col-md-4 offset-md-4 mb-3 yellow-button"
                 type="button"
                 onClick={handleRegistration}
               >
                 <ToastContainer />
                 REGISTER
               </button>
-              <button className="col-12 col-md-4 offset-md-4 mb-5 custom-button">
+              <button className="col-12 col-md-4 offset-md-4 mb-5 yellow-button">
                 <NavLink
                   style={{ color: "#b45656" }}
                   to={ReactConfig.pathFunction("/")}

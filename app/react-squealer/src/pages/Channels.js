@@ -21,7 +21,7 @@ function Channels() {
 
   const navigate = useNavigate();
   if (userGlobal.username === undefined) {
-    navigate("/");
+    navigate("./");
   }
 
   //GET USER INFO ------------------------------------------------------
@@ -64,7 +64,6 @@ function Channels() {
   return (
     <div>
       <div className="container-flex">
-        
         <div className="row" onLoad={getUserData}>
           <div className="col-12 mt-5">
             <div>
@@ -93,9 +92,8 @@ function Channels() {
             </li>
             <li className="list-group-item list">pfp channels</li>
             <li className="list-group-item list">GET #</li>
-            <li className="list-group-item list">popolarità</li>
-            <li className="list-group-item list">silenziabili</li>
-            <li className="list-group-item list">popolarità</li>
+            <li className="list-group-item list">popolarità??</li>
+            <li className="list-group-item list">silenziabili??</li>
           </ul>
         </div>
       </div>

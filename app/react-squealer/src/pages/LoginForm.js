@@ -53,7 +53,7 @@ function LoginForm() {
     await fetch(uri, options)
       .then((response) => {
         if (response.ok) {
-          navigate(`/received`);
+          navigate(`./received`);
         } else {
           notify();
           console.error("Authentication failed", response.statusText);
@@ -95,7 +95,7 @@ function LoginForm() {
     await fetch(uri, options)
       .then((response) => {
         if (response.ok) {
-          navigate(`/received`);
+          navigate(`./received`);
         } else {
           notify();
           console.error("Reset failed", response.statusText);

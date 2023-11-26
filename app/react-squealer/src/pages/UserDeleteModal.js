@@ -27,7 +27,7 @@ const UserDeleteModal = ({ showDeleteModal, handleCloseDeleteModal }) => {
       .then((response) => {
         if (response.ok) {
           console.log("Cancellazione riuscita con successo");
-          navigate(`/registration`);
+          navigate(`./registration`);
         } else {
           console.error("Delete failed", response.statusText);
         }

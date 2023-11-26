@@ -218,7 +218,7 @@ function Account() {
       .then((response) => {
         if (response.ok) {
           console.log("logout riuscito con successo");
-          navigate(`/`);
+          navigate(`./`);
         } else {
           notify();
           console.error("Logout failed", response.statusText);
@@ -594,11 +594,13 @@ function Account() {
           <li className="list-group-item list">utente bloccato</li>
           <li className="list-group-item list">TEST DELETE</li>
           <li className="list-group-item list">TEST connect SMM</li>
-          <li className="list-group-item list">PUT cambio: mail, nome, cognome??</li>
+          <li className="list-group-item list">if owner of ch toast</li>
+          <li className="list-group-item list">
+            PUT cambio: mail, nome, cognome??
+          </li>
           <li className="list-group-item list">
             PATCH squeal, per le reacctions
           </li>
-          <li className="list-group-item list">LIVE QUOTA</li>
         </ul>
       </div>
     </div>
