@@ -140,6 +140,7 @@ function Received() {
             PATCH squeal, per le reacctions
           </li>
           <li className="list-group-item list">impedire crash dashboard :/</li>
+          <li className="list-group-item list">offset/</li>
         </ul>
       </div>
       <Footer />
