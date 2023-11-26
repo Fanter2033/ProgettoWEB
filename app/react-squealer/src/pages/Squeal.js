@@ -138,7 +138,7 @@ function Squeal() {
       setNewDay(remainingLimitD);
       setNewWeek(remainingLimitW);
       setNewMonth(remainingLimitM);
-    } else if (inputType === "IMAGE") {
+    } else if (inputType === "IMAGE" || inputType === "POSITION") {
       setUserInput(e.target.value);
     } else if (inputType === "VIDEO_URL") {
       setUserInput(e.target.value);
