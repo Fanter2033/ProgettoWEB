@@ -17,7 +17,7 @@ function Received() {
   const { userGlobal } = useUserContext();
   const navigate = useNavigate();
 
-  if (userGlobal.username === undefined) {
+  if (userGlobal.username === undefined || userGlobal.username === "") {
     navigate("/");
   }
 
@@ -56,7 +56,7 @@ function Received() {
   console.log("DDDDDDDDDDDDDASH", dash);
 
   useEffect(() => {
-    //getDashboard();
+    getDashboard();
     const intervalId1 = setInterval(getDashboard, 10000); //10 sec
     return () => {
       clearInterval(intervalId1);
@@ -79,8 +79,15 @@ function Received() {
               <Container className="">
                 <Row className=" ">
                   {dash.map((squeal) => (
-                    <Col lg={12} key={squeal.id} className="mb-4 d-flex justify-content-center align-items-center">
-                      <Card style={{ width: "60%" }} className="squeal d-flex flex-col align-items-center">
+                    <Col
+                      lg={12}
+                      key={squeal.id}
+                      className="mb-4 d-flex justify-content-center align-items-center"
+                    >
+                      <Card
+                        style={{ width: "60%" }}
+                        className="squeal d-flex flex-col align-items-center"
+                      >
                         <Card.Header className="w-100 d-flex flex-col justify-content-center align-items-center">
                           {" "}
                           <b>{squeal.sender}</b>
@@ -95,7 +102,7 @@ function Received() {
                           <div>{squeal.content}</div>
                         </Card.Body>
                         <Card.Footer className="w-100">
-                          <Reactions squeal={squeal._id}/>
+                          <Reactions squeal={squeal._id} />
                         </Card.Footer>
                       </Card>
                     </Col>
@@ -126,6 +133,15 @@ function Received() {
         </div>
       </div>
 
+      <div className="row d-flex justify-content-center ms-1 me-1 mb-5">
+        <h3>TODO:</h3>
+        <ul className="list-group col-md-4">
+          <li className="list-group-item list">
+            PATCH squeal, per le reacctions
+          </li>
+          <li className="list-group-item list">impedire crash dashboard :/</li>
+        </ul>
+      </div>
       <Footer />
     </>
   );

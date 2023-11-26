@@ -1,25 +1,30 @@
 import React from "react";
-import { useEffect, useState } from "react";
-import ReactConfig from "../config/ReactConfig";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+
+import ReactConfig from "../config/ReactConfig";
 import { useUserContext } from "../config/UserContext";
 
 import CurrentDateTime from "./CurrentDateTime";
 import Dest from "./Dest";
-//import LegendaDest from "./LegendaDest";
 import MapComponent from "./MapComponent";
-import MapWithSearch from "./MapWithSearch";
+//import MapWithSearch from "./MapWithSearch";
+
+import imageCompression from "browser-image-compression";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import "../css/App.css";
 import cat from "./media/miau.png";
-
+/*
+l'aggiunta di flex-wrap consente agli elementi figlio 
+di andare a capo su più righe se lo spazio orizzontale è limitato. 
+*/
 //offset mi tenere centrata la colonna
 function Squeal() {
   const { userGlobal } = useUserContext();
-  //console.log(userGlobal);
+  const navigate = useNavigate();
 
   const notify = () =>
     toast.error("Manca desinatario. Riprovare", {
@@ -45,16 +50,62 @@ function Squeal() {
       theme: "colored",
     });
 
-  //LOCATION STUFF
-  const [markerCoordinates, setMarkerCoordinates] = useState(null);
-  const handleMarkerAdded = (position) => {
-    setMarkerCoordinates(position);
-    // Questa funzione verrà chiamata quando l'utente aggiunge un marker
-    console.log("Posizione del marker aggiunta:", position);
-    // Puoi fare ulteriori elaborazioni o passare le informazioni ad altri componenti qui
-  };
+  const notify3 = () =>
+    toast.error("Riempi tutti i campi", {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
 
-  const navigate = useNavigate();
+  //GET QUOTE-----------------------------------------------------------------------------------------------
+  const [userQuote, setUserQuote] = useState("");
+
+  async function getUserQuote() {
+    try {
+      const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}/quote`;
+
+      const options = {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      };
+
+      let result = await fetch(uri, options);
+
+      if (result.ok) {
+        let quote = await result.json();
+        console.log(quote);
+        setUserQuote(quote);
+        return quote;
+      } else {
+        console.error("Errore nella richiesta:", result.statusText);
+      }
+    } catch (error) {
+      console.error("Errore nella fetch:", error);
+    }
+  }
+
+  useEffect(() => {
+    const intervalId = setInterval(getUserQuote, 30000); //30 sec
+    getUserQuote();
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+
+  //LIVE QUOTA-----------------------------------------------------------------------------------
+  const liveDay = userQuote.remaining_daily;
+  const liveWeek = userQuote.remaining_weekly;
+  const liveMonth = userQuote.remaining_monthly;
+
   //DEST INPUT-----------------------------------------------------------------------------------
   const [destinatariFromDest, setDestinatariFromDest] = useState([]);
 
@@ -66,7 +117,71 @@ function Squeal() {
     setDestinatariFromDest(destinatariArray);
   };
 
-  //DEST INPUT-----------------------------------------------------------------------------------
+  //VALUE INPUT-----------------------------------------------------------------------------------
+  //message_value depends on input_type
+  const [userInput, setUserInput] = useState("");
+  const [newDay, setNewDay] = useState(liveDay);
+  const [newWeek, setNewWeek] = useState(liveWeek);
+  const [newMonth, setNewMonth] = useState(liveMonth);
+
+  const handleInputChange = (e) => {
+    if (inputType === "MESSAGE_TEXT") {
+      const inputText = e.target.value;
+      const inputLength = inputText.length;
+
+      // quota rimanente dopo il post
+      const remainingLimitD = liveDay - inputLength;
+      const remainingLimitW = liveWeek - inputLength;
+      const remainingLimitM = liveMonth - inputLength;
+
+      setUserInput(inputText);
+      setNewDay(remainingLimitD);
+      setNewWeek(remainingLimitW);
+      setNewMonth(remainingLimitM);
+    } else if (inputType === "IMAGE_URL") {
+      setUserInput(e.target.value);
+    } else if (inputType === "VIDEO_URL") {
+      setUserInput(e.target.value);
+    } else if (inputType === "TEXT-AUTO") {
+      setUserInput(e.target.value);
+    } else if (inputType === "POSITION_AUTO") {
+      setUserInput(e.target.value);
+    }
+  };
+
+  //IMAGE_URL-----------------------------------------------------------------------------------
+  const [base64Image, setBase64Image] = useState("");
+
+  const handleImageUpload = useCallback(async (e) => {
+    const imageFile = e.target.files[0];
+
+    try {
+      // compressione
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 100,
+        useWebWorker: true,
+      };
+      const compressedFile = await imageCompression(imageFile, options);
+
+      // conversione in Base64
+      const compressedBase64 = await getBase64(compressedFile);
+      setBase64Image(compressedBase64);
+    } catch (error) {
+      console.error("Errore durante la gestione dell'immagine:", error);
+    }
+  }, []);
+
+  const getBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
+  //VIDEO_URL TYPE-----------------------------------------------------------------------------------
   const [youtubeLink, setYoutubeLink] = useState("");
   const [isValidLink, setIsValidLink] = useState(true);
 
@@ -75,34 +190,21 @@ function Squeal() {
     setYoutubeLink(link);
     setUserInput(link);
 
-    // Validazione del link
+    // validazione del link
     const regex =
       /^(https?:\/\/)?(www\.)?(youtube\.com\/(channel\/|user\/|c\/)?[a-zA-Z0-9_-]{1,})|(youtu\.be\/[a-zA-Z0-9_-]{1,})/;
     setIsValidLink(regex.test(link));
   };
 
-  //VALUE INPUT-----------------------------------------------------------------------------------
-  //message_value depends on input_type
-  const [userInput, setUserInput] = useState("");
-  const handleInputChange = (e) => {
-    setUserInput(e.target.value);
+  //POSITION -------------------------------------------------------------------------------------------
+  const [markerCoordinates, setMarkerCoordinates] = useState(null);
+  const handleMarkerAdded = (position) => {
+    setMarkerCoordinates(position);
+    // Questa funzione verrà chiamata quando l'utente aggiunge un marker
+    console.log("Coordinate utente:", position);
+    // Puoi fare ulteriori elaborazioni o passare le informazioni ad altri componenti qui
   };
-
-  //TEXT_AUTO------------------------------------------------------------------------------------------
-  const [selectedOptions, setSelectedOptions] = useState({
-    NUMERO: false,
-    ORA: false,
-    MINUTO: false,
-    SECONDO: false,
-    DATA: false,
-  });
-
-  const handleCheckboxChange = (option) => {
-    setSelectedOptions((prevOptions) => ({
-      ...prevOptions,
-      [option]: !prevOptions[option],
-    }));
-  };
+  //<MapWithSearch onMarkerAdded={handleMarkerAdded} />
 
   //TEXT_AUTO domande per utente--------------------------------------------------------------
   const [numero1, setNumero1] = useState("");
@@ -115,15 +217,15 @@ function Squeal() {
     setNumero2(e.target.value);
   };
 
-  //MSG TEMP---------------
+  //TEXT_AUTO bottoni ------------------------------------
   const [postText, setPostText] = useState("");
   const [clickedButtons, setClickedButtons] = useState([]);
 
   const handleButtonClick = (buttonText) => {
-    // Aggiungi il testo del bottone cliccato al testo del post
+    // aggiungi il testo del bottone cliccato al testo del post
     setPostText((prevText) => prevText + buttonText);
 
-    // Aggiungi il testo del bottone alla lista dei bottoni cliccati
+    // aggiungi il testo del bottone alla lista dei bottoni cliccati
     setClickedButtons((prevButtons) => [...prevButtons, buttonText]);
   };
 
@@ -143,6 +245,7 @@ function Squeal() {
           name="userInput"
           value={userInput}
           onChange={handleInputChange}
+          placeholder="Squeal time"
           rows="4"
           cols="50"
           className="form-control"
@@ -160,9 +263,10 @@ function Squeal() {
           id="imageInput"
           name="imageInput"
           accept="image/*"
-          onChange={handleInputChange}
+          onChange={handleImageUpload}
           className="form-control"
         />
+        {base64Image && <img src={base64Image} alt="Selected" />}
       </div>
     );
   } else if (inputType === "VIDEO_URL") {
@@ -188,9 +292,7 @@ function Squeal() {
     inputElement = (
       <div className="mb-3">
         <b>Geolocalizzazione</b>
-        <p>API:Leaflet</p>
-        <MapWithSearch onMarkerAdded={handleMarkerAdded} />
-        <MapComponent/>
+        <MapComponent onLocationChange={handleMarkerAdded} />
       </div>
     );
   } else if (inputType === "TEXT_AUTO") {
@@ -299,30 +401,33 @@ function Squeal() {
     }
     */
 
-    console.log(destinatariFromDest);
+    //console.log(destinatariFromDest);
     if (destinatariFromDest.length !== 0) {
       let data = {};
-      if (inputType === "TEXT_AUTO") {
+      if (inputType === "IMAGE_URL") {
+        data = {
+          squeal: {
+            destinations: destinatariFromDest,
+            sender: userGlobal.username,
+            message_type: inputType,
+            content: base64Image,
+          },
+        };
+      } else if (inputType === "POSITION") {
+        data = {
+          squeal: {
+            destinations: destinatariFromDest,
+            sender: userGlobal.username,
+            message_type: inputType,
+            content: markerCoordinates,
+          },
+        };
+
+        //console.log("aaaaaaaaaaaaaaaaaaaa", markerCoordinates);
+      } else if (inputType === "TEXT_AUTO") {
         // Esegui le operazioni desiderate con il testo del post e i bottoni cliccati
         console.log("Testo del post:", postText);
         console.log("Bottoni cliccati:", clickedButtons);
-
-        //messaggi automatizzati
-        let selectedValues = {};
-        for (const option in selectedOptions) {
-          if (selectedOptions[option]) {
-            selectedValues[option] = `{${option}}`;
-          }
-        }
-        console.log("Valori selezionati:", selectedValues);
-        //const concatenatedOptions = selectedOptions.map((option) => `{${option}}`).join(" ");
-
-        const concatenatedString = Object.entries(selectedOptions)
-          .filter(([key, value]) => value === true)
-          .map(([key]) => `{${key}}`)
-          .join(" ");
-
-        const finalMessage = `${userInput} ${concatenatedString}`;
 
         data = {
           squeal: {
@@ -334,19 +439,9 @@ function Squeal() {
             auto_seconds_delay: numero2,
           },
         };
-      } else if (inputType === "POSITION") {
-        data = {
-          squeal: {
-            destinations: destinatariFromDest,
-            sender: userGlobal.username,
-            message_type: inputType,
-            content: markerCoordinates,
-            auto_iterations: numero1,
-            auto_seconds_delay: numero2,
-          },
-        };
-
-        console.log("aaaaaaaaaaaaaaaaaaaa", markerCoordinates);
+        if (numero1 === "" || numero2 === "") {
+          notify3();
+        }
       } else {
         data = {
           squeal: {
@@ -379,6 +474,7 @@ function Squeal() {
               "Errore durante la POST, riprova",
               response.statusText
             );
+            //console.log(response);
             notify2();
           }
         })
@@ -390,24 +486,11 @@ function Squeal() {
     }
   }
 
-  /*
-    squeal:{
-      destinations
-      § CHANNEL, # CHANNEL_TAG, @ USER
-        dest_type:§ CHANNEL (CHANNEL_OFFICIAL/ CHANNEL_USERS)
-                  # CHANNEL_TAG
-                  @ USER
-        identifier: string
-      message_type: MESSAGE_TEXT || IMAGE_URL || VIDEO_URL || POSITION 
-      content: txt || img || link || map(img)
-    }
-    */
-
   //!squeal
+  //TODO GET SQUEAL /squeal/   -------------logger dei vecchi squeal------------------------------------------------------------------------------------------------------------
   //TODO PUT SQUEAL /squeal/{identifier_id} ------------------------------------------------------------------------------------------------------------
   //TODO DELETE SQUEAL /squeal/{identifier_id} ------------------------------------------------------------------------------------------------------------
 
-  //TODO GET SQUEAL /squeal/   -------------logger dei vecchi squeal------------------------------------------------------------------------------------------------------------
   //! mi serve l'id?
   /*
   const [squeal, setSqueal] = useState([]);
@@ -621,6 +704,43 @@ function Squeal() {
                   style={{ width: "30%" }}
                 />
                 <h5 className="mt-0">{userGlobal.username}</h5>
+              </div>
+            </div>
+          </div>
+          <div className="card-footer text-body-secondary">
+            <div className="row d-flex flex-col align-items-center justify-content-evenly mb-4 flex-xs-wrap">
+              <div className="">
+                <h4>Giornaliero</h4>
+                <button className="yellow-button m-2 box">
+                  <h4>prima</h4>
+                  {userQuote.remaining_daily}
+                </button>
+                <button className="yellow-button m-2 box">
+                  <h4>dopo</h4>
+                  {newDay}
+                </button>
+              </div>
+              <div className="">
+                <h4>Settimanale</h4>
+                <button className="yellow-button m-2 box">
+                  <h4>prima</h4>
+                  {userQuote.remaining_weekly}
+                </button>
+                <button className="yellow-button m-2 box">
+                  <h4>dopo</h4>
+                  {newWeek}{" "}
+                </button>
+              </div>
+              <div className="">
+                <h4>Mensile</h4>
+                <button className="yellow-button m-2 box">
+                  <h4>prima</h4>
+                  {userQuote.remaining_monthly}
+                </button>
+                <button className="yellow-button m-2 box">
+                  <h4>dopo</h4>
+                  {newMonth}{" "}
+                </button>
               </div>
             </div>
           </div>
