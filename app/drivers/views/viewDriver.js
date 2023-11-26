@@ -18,7 +18,7 @@ viewDriver.get('/userView*', async (req, res) => {
         return;
     }
     if(authController.isAuthLogged(req) && req.path === '/userView/'){
-        res.redirect('./home');
+        res.redirect('./');
         return;
     }
     const path = require("path")
