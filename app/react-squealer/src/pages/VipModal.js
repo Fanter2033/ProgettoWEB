@@ -5,40 +5,36 @@ import { useUserContext } from "../config/UserContext";
 
 import { Modal } from "react-bootstrap";
 
-
 function VipModal({ showModal, handleClose }) {
-
   const { userGlobal } = useUserContext();
 
+  const simulatePaymentRequest = () => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const success = Math.random() > 0; // pagamento riuscito il 100% delle volte
+        if (success) {
+          resolve("Pagamento riuscito");
+        } else {
+          reject("Pagamento fallito");
+        }
+      }, 1000);
+    });
+  };
+
   const handleUpgrade = () => {
-    // Simulazione di una richiesta al server per il pagamento
     simulatePaymentRequest()
       .then((response) => {
         alert("Pagamento effettuato con successo!");
-        handleClose(); 
-        const data = {
-          user: {
-            username: userGlobal.name,
-            email: userGlobal.email,
-            firstname: userGlobal.first_name,
-            lastname: userGlobal.last_name,
-            password: userGlobal.password,
-            isMod: false,
-            isSmm: false,
-            isUser: true,
-            vip: true,
-          },
-        };
+        handleClose();
 
-        const url = `${ReactConfig.base_url_requests}/user/${userGlobal.username}`;
+        const url = `${ReactConfig.base_url_requests}/user/${userGlobal.username}/toggle/vip`;
         const options = {
-          method: "PUT",
+          method: "PATCH",
           headers: {
             "Content-Type": "application/json",
           },
           credentials: "include",
           mode: "cors",
-          body: JSON.stringify(data),
         };
 
         fetch(url, options)
@@ -55,25 +51,12 @@ function VipModal({ showModal, handleClose }) {
           .catch((error) => {
             console.error("Upgrade failed, error:", error);
           });
-        userGlobal.vip=true;
+        userGlobal.vip = true;
       })
       .catch((error) => {
         //non si verifca MAI: server di migliore qualità
         alert("Errore durante il pagamento. Riprova più tardi.");
       });
-  };
-
-  const simulatePaymentRequest = () => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const success = Math.random() > 0; // pagamento riuscito il 100% delle volte
-        if (success) {
-          resolve("Pagamento riuscito");
-        } else {
-          reject("Pagamento fallito");
-        }
-      }, 1000);
-    });
   };
 
   const footerStyle = {
@@ -90,15 +73,22 @@ function VipModal({ showModal, handleClose }) {
           <p className="custom-modal-text cool-font-medium">
             Diventa <span class="luminescent-word">VIP</span>
           </p>
-          <ul className="custom-modal-list cool-font-small">
-            <li>Funzioni extra di geolocazione.</li>
-            <li>Managment della quota avanzato.</li>
+          <ul className="custom-modal-list">
+            <li>Cosa ottieni?</li>
+            <br></br>
             <li>Squealer badge.</li>
             <li>Il tuo nome è per sempre.</li>
+            <li>Funzioni extra di geolocazione.</li>
+            <li>Managment della quota avanzato.</li>
+            <li>Potrai collegarti a un Social Media Manager</li>
+            <li>che si occuper della gestione del tuo profilo</li>
+            <li>OPPURE</li>
+            <li>Diventa tu stesso un SMM</li>
+            <li>NB:i ruoli non possono coesistere per lo stesso account</li>
           </ul>
         </Modal.Body>
         <Modal.Footer className="my-foot" style={footerStyle}>
-          <button className="user_button" onClick={handleClose}>
+          <button className="custom-button w-100" onClick={handleClose}>
             Chiudi
           </button>
           <button className="upgrade-button" onClick={handleUpgrade}>

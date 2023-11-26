@@ -1,11 +1,14 @@
 import { Routes, Route } from "react-router-dom";
 
-import Channels from "./Channels";
 import Navbar from "./Navbar";
+
+import Channels from "./Channels";
 import Account from "./Account";
 import Post from "./Post";
 import Chat from "./Chat";
+
 import InfoChannel from "./InfoChannel";
+import DetailsChannel from "./DetailsChannel";
 import InfoUser from "./InfoUser";
 
 function HomeRoutes() {
@@ -19,6 +22,7 @@ function HomeRoutes() {
         <Route path="/account" element={<Account />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/infoc" element={<InfoChannel />} />
+        <Route path="/details" element={<DetailsChannel />} />
         <Route path="/infou" element={<InfoUser />} />
       </Routes>
     </>

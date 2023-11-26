@@ -1,8 +1,8 @@
 /* ------------ ATTENZIONE AGLI ALTRI FILE CSS -------------*/
 html {
   text-align: center;
-  background-color: var(--squeal-yellow);
-  color: var(--squeal-blue);
+  background-color: var(--squeal-blue);
+  color: var(--squeal-yellow);
   min-height: 100vh;
 }
 
@@ -14,7 +14,7 @@ html {
   --squeal-red: rgb(180, 86, 86);
 }
 .my-green {
-  background-color: var(--squeal-green);
+  background-color: var(--squeal-blue);
 }
 .my-yellow {
   background-color: var(--squeal-yellow);
@@ -26,14 +26,19 @@ html {
 /* ------------ FONT STUFF -------------*/
 .cool-font {
   font-family: "Cool-Font", sans-serif;
+  color: var(--squeal-yellow);
   font-size: 10vw;
 }
 .cool-font-small {
   font-family: "Cool-Font", sans-serif;
+  color: var(--squeal-yellow);
+
   font-size: 3vw;
 }
 .cool-font-medium {
   font-family: "Cool-Font", sans-serif;
+  color: var(--squeal-yellow);
+
   font-size: 5vw;
 }
 @font-face {

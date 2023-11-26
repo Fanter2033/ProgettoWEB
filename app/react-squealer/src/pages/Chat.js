@@ -6,7 +6,6 @@ import "../css/App.css";
 import { Container, Card, Col, Row } from "react-bootstrap";
 
 //GET utils/chat/ all private post----------------------------------------------------------------
-
 function Chat() {
   const [squeals, setSqueals] = useState([]);
 
@@ -26,11 +25,6 @@ function Chat() {
 
       if (result.ok) {
         let json = await result.json();
-        /*
-        for (let s of json) {
-          squeals.push(s);
-        }
-        */
         setSqueals(json);
       } else {
         console.error("Errore nella richiesta:", result.statusText);
@@ -61,17 +55,17 @@ function Chat() {
               <Row className="w-100">
                 {squeals.map((squeal) => (
                   <Col lg={12} key={squeal.id} className="mb-4">
-                    <Card style={{ height: "100%" }}>
+                    <Card style={{ height: "100%" }} className="squeal">
                       <Card.Header className="d-flex flex-col justify-content-center align-items-center">
                         {" "}
                         <b>{squeal.sender}</b>
-                        <Link to="/infou">
+                        <Link to="/infou" state={squeal.sender}>
                           <button className="ms-4 me-4 custom-button box">
                             Info
                           </button>
                         </Link>
                       </Card.Header>
-                      <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
+                      <Card.Body className="mb-4  text-truncate d-flex flex-col justify-content-center align-items-center">
                         <div>{squeal.content}</div>
                       </Card.Body>
                       <Card.Footer>

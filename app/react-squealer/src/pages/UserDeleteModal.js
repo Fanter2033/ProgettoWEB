@@ -7,6 +7,7 @@ import { useUserContext } from "../config/UserContext";
 import { Modal } from "react-bootstrap";
 import "../css/App.css";
 
+//TODO: se è owner di canali, impedisci delete
 const UserDeleteModal = ({ showDeleteModal, handleCloseDeleteModal }) => {
   const { userGlobal, setUserGlobal } = useUserContext();
   const navigate = useNavigate();
@@ -49,6 +50,8 @@ const UserDeleteModal = ({ showDeleteModal, handleCloseDeleteModal }) => {
         Sei sicuro di voler eliminare questo utente?
         <br></br>
         Questa azione è <span className="cool-font-small">IRREVERSIBILE</span>
+        Prima di eliminare verifica di non essere il proprietario di nessun
+        canale!
       </Modal.Body>
       <Modal.Footer style={footerStyle}>
         <button className="red-button box" onClick={handleCloseDeleteModal}>
