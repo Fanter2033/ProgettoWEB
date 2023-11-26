@@ -44,7 +44,6 @@ viewDriver.get('/smmView*', (req, res) => {
     viewDriver.use(express.static(vueDir));
     res.sendFile(path.join(vueDir, '/index.html'));
 });
-
 viewDriver.use('/admin', viewAdminDriver);
 
 module.exports = viewDriver;
