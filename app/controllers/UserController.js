@@ -277,6 +277,7 @@ module.exports = class UserController extends Controller {
         newUser.registration_timestamp = oldUserObj.registration_timestamp;
         newUser.vip = oldUserObj.vip
         newUser.locked = oldUserObj.locked;
+        newUser.reset = oldUserObj.reset;
 
         if(newUser.psw_shadow !== '') //if password isn't set, save the old password
             newUser.psw_shadow = await this.crypt(newUser.psw_shadow);

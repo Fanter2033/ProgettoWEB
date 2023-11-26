@@ -13,9 +13,10 @@ module.exports = class UserDto {
     #locked;
     #verbalized_popularity;
     #verbalized_unpopularity;
+    #reset;
 
     constructor(documentFromMongoose = null) {
-        if(documentFromMongoose === null) {
+        if (documentFromMongoose === null) {
             this.#username = null;
             this.#email = null;
             this.#first_name = null;
@@ -29,6 +30,7 @@ module.exports = class UserDto {
             this.#locked = null;
             this.#verbalized_popularity = 0;
             this.#verbalized_unpopularity = 0;
+            this.#reset = '';
         } else {
             this.#username = documentFromMongoose.username;
             this.#email = documentFromMongoose.email;
@@ -43,6 +45,7 @@ module.exports = class UserDto {
             this.#locked = documentFromMongoose.locked;
             this.#verbalized_popularity = documentFromMongoose.verbalized_popularity;
             this.#verbalized_unpopularity = documentFromMongoose.verbalized_popularity;
+            this.#reset = documentFromMongoose.reset;
         }
 
     }
@@ -155,8 +158,19 @@ module.exports = class UserDto {
         this.#verbalized_unpopularity = value;
     }
 
-    getDocument() {
-        return {
+    get reset() {
+        return this.#reset;
+    }
+
+    set reset(value) {
+        this.#reset = value;
+    }
+
+    /**
+     * @param {boolean} returnReset
+     */
+    getDocument(returnReset = false) {
+        let out = {
             username: this.#username,
             email: this.#email,
             first_name: this.#first_name,
@@ -166,11 +180,15 @@ module.exports = class UserDto {
             isAdmin: this.#isAdmin,
             isSmm: this.#isSmm,
             isUser: this.#isUser,
-            vip: this.#vip ,
+            vip: this.#vip,
             locked: this.#locked,
             verbalized_popularity: this.#verbalized_popularity,
-            verbalized_unpopularity: this.#verbalized_unpopularity,
+            verbalized_unpopularity: this.#verbalized_unpopularity
         }
+        if (returnReset === true)
+            out['reset'] = this.#reset;
+
+        return out;
     }
 
 }
