@@ -153,11 +153,14 @@ const props = defineProps({
   vip: String,
 });
 const vipName = ref("");
-const inputType = ref("MESSAGE_TEXT");
 const viewTips = ref("");
 const state = reactive({
   modal_demo: null,
 });
+const inputType = ref("MESSAGE_TEXT");
+const inputDest = ref([]);
+const inputOneField = ref("");
+
 
 onMounted(() => {
   vipName.value = props.vip;
@@ -176,6 +179,13 @@ function closeModal() {
 }
 
 /*queries*/
+function assembleBody(){
+  switch (inputType) {
+    case 'MESSAGE_TEXT':
+
+  }
+}
+
 function postSqueal(squeal){
   const uri =
       VueConfig.base_url_requests +

@@ -1,12 +1,12 @@
 <template>
-    
+
   <div id = "app">
     <nav class="navbar navbar-expand-sm navbar-dark ">
         <div class="container-fluid">
             <div class="navbar-header">
               <div class="navbar-brand">
                 <img src="../../public/media/Nav_logo.png" alt="Logo" width="60" >
-                <span class="mx-3"> <b>Squealer</b> </span>
+                <span class="mx-3"> Squealer <b>Smm</b> </span>
               </div>
             </div>
             <ul class="navbar-nav">
