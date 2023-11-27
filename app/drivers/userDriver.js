@@ -159,6 +159,20 @@ userDriver.get(`/:username/roles`, async function (req, res) {
         res.status(ctrl.code).send(ctrl);
 });
 
+userDriver.put('/:username/resetPassword', async function (req, res) {
+    let username = req.params['username'];
+    let reset = (typeof req.body.reset !== 'undefined' ? (req.body.reset) : '');
+    let password = (typeof req.body.password !== 'undefined' ? (req.body.password) : '');
+
+    let ctrl = await controller.resetPasswd(username, reset, password);
+    if (ctrl.code === 200)
+        res.status(ctrl.code).send(ctrl.content);
+    else
+        res.status(ctrl.code).send(ctrl);
+});
+
+// ---------------- SOTTO FUNZIONI DI SAMI, SOPRA QUELLE DI ROMANELLA --------------------------
+
 userDriver.patch("/:username/toggle/vip", async function(req, res){
     let username = req.params['username'];
     let ctrl = await controller.toggleVip(username, await authController.getAuthenticatedUser(req));
@@ -216,7 +230,7 @@ userDriver.get("/:username/my-users/", async function(req, res){
         res.status(ctrl['code']).send(ctrl['content']);
     else
         res.status(ctrl['code']).send(ctrl);
-})
+});
 
 
 

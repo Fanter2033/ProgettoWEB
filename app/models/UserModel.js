@@ -257,4 +257,14 @@ module.exports = class UserModel extends Model {
         }
         return true;
     }
+
+    /**
+     * @param {string} username
+     * @param {string} password
+     * @return {Promise<boolean>}
+     */
+    async updatePassword(username, password){
+        return await this.updateUserField(username, 'psw_shadow', password);
+    }
+
 }

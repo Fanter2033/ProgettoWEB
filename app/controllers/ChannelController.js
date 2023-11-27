@@ -32,6 +32,7 @@ module.exports = class ChannelController extends Controller {
      */
     async createChannel(channelDto, authenticatedUser) {
         let output = this.getDefaultOutput();
+        channelDto.channel_name = channelDto.channel_name.replace(' ', '_');
         if (this.checkChannelType(channelDto.type) === false) {
             output['code'] = 400;
             output['msg'] = 'Invalid type of channel. Bad request.';
@@ -174,6 +175,7 @@ module.exports = class ChannelController extends Controller {
     async updateChannel(oldChannel, newChannel, authUser) {
         let output = this.getDefaultOutput();
         let exists = await this.channelExists(oldChannel);
+        newChannel.channel_name = newChannel.channel_name.replace(' ', '_');
         let new_exists = await this.channelExists(newChannel);
 
         if (oldChannel.type === autoload.config._CHANNEL_TYPE_HASHTAG || newChannel.type === autoload.config._CHANNEL_TYPE_HASHTAG) {

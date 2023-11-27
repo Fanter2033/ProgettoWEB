@@ -4,6 +4,7 @@ module.exports = class ChannelDto {
     #type;
     #private;
     #locked;
+    #description;
 
     constructor(documentFromMongoose = null) {
         if (documentFromMongoose === null) {
@@ -11,11 +12,16 @@ module.exports = class ChannelDto {
             this.#type = null;
             this.#private = null;
             this.#locked = null;
+            this.#description = '';
         } else {
             this.#channel_name = documentFromMongoose.channel_name;
             this.#type = documentFromMongoose.type;
             this.#private = documentFromMongoose.private;
             this.#locked = documentFromMongoose.locked;
+            if(typeof documentFromMongoose.description !== 'undefined')
+                this.#description = documentFromMongoose.description;
+            else
+                this.#description = '';this.#description = '';
         }
     }
 
@@ -29,6 +35,9 @@ module.exports = class ChannelDto {
     }
 
 
+    /**
+     * @return {string}
+     */
     get channel_name() {
         return this.#channel_name;
     }
@@ -59,6 +68,17 @@ module.exports = class ChannelDto {
 
     set locked(value) {
         this.#locked = value;
+    }
+
+    /**
+     * @return {string}
+     */
+    get description() {
+        return this.#description;
+    }
+
+    set description(value) {
+        this.#description = value;
     }
 
     /**

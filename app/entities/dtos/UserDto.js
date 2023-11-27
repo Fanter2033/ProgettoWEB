@@ -45,7 +45,10 @@ module.exports = class UserDto {
             this.#locked = documentFromMongoose.locked;
             this.#verbalized_popularity = documentFromMongoose.verbalized_popularity;
             this.#verbalized_unpopularity = documentFromMongoose.verbalized_popularity;
-            this.#reset = documentFromMongoose.reset;
+            if(typeof documentFromMongoose.verbalized_popularity !== 'undefined')
+                this.#reset = documentFromMongoose.reset;
+            else
+                this.#reset = '';
         }
 
     }

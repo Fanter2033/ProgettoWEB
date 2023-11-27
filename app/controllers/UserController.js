@@ -545,6 +545,56 @@ module.exports = class UserController extends Controller {
 
 
     /**
+     * @param {string} username
+     * @param {string} reset
+     * @param {string} password
+     * @return {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async resetPasswd(username, reset, password) {
+        let output = this.getDefaultOutput();
+
+        let user = await this._model.getUser(username);
+        if (!this.isInstanceOfClass(user, 'UserDto')) {
+            //User not found!
+            output['code'] = 404;
+            output['msg'] = 'User not found.';
+            return output;
+        }
+
+        if(reset === ''){
+            output['code'] = 403;
+            output['msg'] = 'Reset string does not match. - 1';
+            return output;
+        }
+
+        if(password === '' || user.reset === null || user.reset === ''){
+            output['code'] = 400;
+            output['msg'] = 'Missing password.';
+            return output;
+        }
+
+        if(user.reset !== reset){
+            output['code'] = 403;
+            output['msg'] = 'Reset string does not match. - 2';
+            return output;
+        }
+
+        //Ok update the user.
+        let psw_shadow = await this.crypt(password);
+        let result = this._model.updatePassword(username, psw_shadow);
+
+        if(result === false){
+            output['code'] = 500;
+            output['msg'] = 'Internal server error';
+            return output;
+        }
+
+
+        return output;
+    }
+
+
+    /**
      * Given an username enable or disable his/her vip status
      * @param username {String}
      * @param authenticatedUser {{}|UserDto}

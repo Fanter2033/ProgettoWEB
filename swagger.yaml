@@ -415,6 +415,35 @@ paths:
           description: 'User not found'
         '500':
           description: 'Internal server error'
+  /user/{username}/resetPassword/:
+    put:
+      tags:
+        - user
+      summary: Reset password with reset password string if exists, is not null and not void
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+        - name: reset
+          in: formData
+          required: true
+          type: string
+        - name: password
+          in: formData
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'OK'
+        '400':
+          description: 'Bad Request.'
+        '403':
+          description: 'Reset str error.'
+        '404':
+          description: 'User not found'
+        '500':
+          description: 'Internal server error'
   /channel:
     post:
       tags:
@@ -909,7 +938,7 @@ paths:
             description: 'More information about the error'
         '404':
           description: 'The specified squeal in URL path is not found'
-  /squeal/{identifier_id}/reactions/{reaction}:
+  /squeal/{identifier_id}/reaction/{reaction}:
     patch:
       tags:
         - squeal
