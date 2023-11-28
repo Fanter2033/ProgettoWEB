@@ -52,61 +52,9 @@ function Channels() {
     }
   }
 
-  const [functionsCalled, setFunctionsCalled] = useState(false);
+  //!uso in Search e in Home la GET /channels
+  //GET /channel    list of channels ------------------------------------------------------------------------------------------------------------
 
-  useEffect(() => {
-    if (!functionsCalled) {
-      getUserData();
-      setFunctionsCalled(true);
-    }
-  }, [functionsCalled]);
-
-  return (
-    <div>
-      <div className="container-flex">
-        <div className="row" onLoad={getUserData}>
-          <div className="col-12 mt-5">
-            <div>
-              <ChannelForm />
-              <Search />
-            </div>
-          </div>
-        </div>
-
-        <div className="row d-flex justify-content-center ms-1 me-1 mb-5 w-100">
-          <h3>TODO:</h3>
-          <ul className="list-group col-md-4">
-            <li className="list-group-item list">follow button</li>
-            <li className="list-group-item list">se seguo cambia a seguito</li>
-            <li className="list-group-item list">channel blocked</li>
-            <li className="list-group-item list">PATCH new_role</li>
-            <li className="list-group-item list">
-              QUERY GET /channel e /channel/$type
-            </li>
-            <li className="list-group-item list">limit</li>
-            <li className="list-group-item list">offset</li>
-            <li className="list-group-item list">search:</li>
-            <li className="list-group-item list">orerBy</li>
-            <li className="list-group-item list">
-              orderDir='ORDER_ASC' || 'ORDER_DESC'
-            </li>
-            <li className="list-group-item list">pfp channels</li>
-            <li className="list-group-item list">GET #</li>
-            <li className="list-group-item list">popolarità??</li>
-            <li className="list-group-item list">silenziabili??</li>
-          </ul>
-        </div>
-      </div>
-      <Footer />
-    </div>
-  );
-}
-
-export default Channels;
-
-//!uso in Search e in Home la GET /channels
-//GET /channel    list of channels ------------------------------------------------------------------------------------------------------------
-/*
   const [channels, setChannels] = useState([]);
 
   async function getChannels() {
@@ -127,8 +75,7 @@ export default Channels;
         let json = await result.json();
         let camp = json.channels;
         setChannels(camp);
-      } 
-      else {
+      } else {
         console.error("Errore nella richiesta:", result.statusText);
       }
     } catch (error) {
@@ -138,31 +85,55 @@ export default Channels;
 
   console.log("LISTA CANALI", channels);
 
-  -----------------------------------------------------
+  const [functionsCalled, setFunctionsCalled] = useState(false);
 
-  <h2>Lista TUTTI i Canali:</h2>
-            <Row className="ms-4 me-4">
-              {channels.map((channel) => (
-                <Col key={channel.id} lg={6} className="mb-4 ">
-                  <Card>
-                    <Card.Body className="mb-4 d-flex flex-row">
-                     
-                      <Card.Title className="ms-4 me-4">
-                        {channel.channel_name}
-                      </Card.Title>
+  useEffect(() => {
+    if (!functionsCalled) {
+      getUserData();
+      getChannels();
+      setFunctionsCalled(true);
+    }
+  }, [functionsCalled]);
 
-                      <Link to="/infoc" >
-                        <Button variant="primary" className="ms-4 me-4">
-                          Info
-                        </Button>
-                      </Link>
+  return (
+    <div>
+      <div className="container-flex">
+        <div className="row" onLoad={getUserData}>
+          <div className="col-12 mt-5">
+            <div>
+              <ChannelForm />
+              <Search />
+            </div>
+          </div>
+        </div>
 
-                      <Button variant="primary">Segui</Button>
-                    
-                    </Card.Body>
-                  </Card>
-                </Col>
-              ))}
-            </Row>
-            
-*/
+        <div className="row d-flex justify-content-center ms-1 me-1 mb-5 w-100">
+          <h3>TODO:</h3>
+          <ul className="list-group col-md-4">
+            <li className="list-group-item list">FOLLOW NON VA</li>
+            <li className="list-group-item list">
+              GESTIONE RUOLI: PATCH new_role
+            </li>
+            <li className="list-group-item list">CREARE CANALI UFFICIALI</li>
+            <li className="list-group-item list">CREARE 3 CANALI API</li>
+            <li className="list-group-item list">
+              URL: limit, offset, search, orerBy, orderDir
+            </li>
+            <li className="list-group-item list">GET #</li>
+            <li className="list-group-item list">PFP CANALI</li>
+            <li className="list-group-item list">
+              criterio squeals appartenenza canale
+            </li>
+            <li className="list-group-item list">suono!</li>
+            <li className="list-group-item list">canali bloccati???</li>
+            <li className="list-group-item list">canali popolarità??</li>
+            <li className="list-group-item list">canali silenziabili??</li>
+          </ul>
+        </div>
+      </div>
+      <Footer />
+    </div>
+  );
+}
+
+export default Channels;

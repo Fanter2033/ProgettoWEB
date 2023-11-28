@@ -19,8 +19,8 @@ function InfoChannel() {
     const data = {
       channel: {
         name: channel.channel_name,
-        type: "CHANNEL_USERS",
-        private: false,
+        type: channel.channel_type,
+        private: channel.private,
       },
     };
 
@@ -37,9 +37,7 @@ function InfoChannel() {
 
     fetch(url, options)
       .then((res) => {
-        console.log(res);
         if (res.ok) {
-          //creation ok
           return res.json();
         }
       })
@@ -51,6 +49,48 @@ function InfoChannel() {
       });
   };
 
+  //TODO: GET /utils/squeals/{channel_type}/{channel_name}--------------------------------------------------------------
+  const [squealsLogger, setSquealsLogger] = useState([]);
+
+  async function logPast() {
+    /*
+    console.log("aaaaaaaaaaaaaaaa",channel.channel_name);
+    console.log(channel.type);
+    try {
+      const url = `${ReactConfig.base_url_requests}/utils/squeals/${channel.type}/${channel.channel_name}`;
+      const options = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        mode: "cors",
+      };
+
+      let result = await fetch(url, options);
+
+      if (result.ok) {
+        let json = await result.json();
+        setSquealsLogger(json);
+      } else {
+        console.error("Errore nella richiesta:", result.statusText);
+      }
+    } catch (error) {
+      console.error("Errore nella fetch:", error);
+    }
+    */
+  }
+
+  console.log("LOGGERRRRRRRRRRRRRR", squealsLogger);
+
+  useEffect(() => {
+    const intervalId1 = setInterval(logPast, 10000); //10 sec
+    logPast();
+    return () => {
+      clearInterval(intervalId1);
+    };
+  }, []);
+
   return (
     <div>
       <div>
@@ -58,7 +98,7 @@ function InfoChannel() {
           Nome Canale: {channel.channel_name}
         </h3>
         <Link to="/details" state={channel}>
-          <button className="yellow-button bot">Info</button>
+          <button className="yellow-button box">INFO</button>
         </Link>
 
         <button
@@ -67,11 +107,36 @@ function InfoChannel() {
         >
           &lt;-
         </button>
+        <button className="green-button" onClick={follow}>
+          SEGUI
+        </button>
       </div>
 
       <div>
         <h1 className="cool-font">Squeals</h1>
         <br></br>
+        <Container className="">
+          <Row className="w-100">
+            {squealsLogger.map((squeal) => (
+              <Col lg={12} key={squeal.id} className="mb-4">
+                <Card style={{ height: "100%" }} className="squeal">
+                  <Card.Header className="d-flex flex-col justify-content-center align-items-center">
+                    {" "}
+                    <b>{squeal.sender}</b>
+                  </Card.Header>
+                  <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
+                    <div>{squeal.content}</div>
+                  </Card.Body>
+                  <Card.Footer>
+                    <div>Id: {squeal._id}</div>
+
+                    <div className="row"> </div>
+                  </Card.Footer>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        </Container>
       </div>
     </div>
   );

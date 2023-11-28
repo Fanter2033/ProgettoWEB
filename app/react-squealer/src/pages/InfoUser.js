@@ -7,10 +7,6 @@ import pink from "./media/avvoltoioEli.png";
 import cattyy from "./media/splash.jpeg";
 import "../css/App.css";
 
-//TIPO DI UTENTE
-//TUTTI I DATI DELGLI ALTRI UTENTI
-//TANTE GET
-
 function InfoUser() {
   const location = useLocation();
   const username = location.state;

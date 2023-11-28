@@ -15,6 +15,7 @@ export const UserProvider = ({ children }) => {
     isMod: false,
     isSmm: false,
     isUser: true,
+    reset: "",
   });
 
   return (

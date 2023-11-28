@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Modal } from "react-bootstrap";
 import "../css/App.css";
 
+//TODO:CHECK NAVIGATE!!!!!!!!!!!!!!!!!!!! NO ./, SI /
 const ChannelDeleteModal = () => {
   const location = useLocation();
   const channel = location.state;
@@ -23,9 +24,8 @@ const ChannelDeleteModal = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  //TODO: DELETE /channel/{type}/{channel_name}
+  //DELETE /channel/{type}/{channel_name}
   const handleDeleteChannel = () => {
-    
     const uri = `${ReactConfig.base_url_requests}/channel/${channel.type}/${channel.channel_name}`;
     const options = {
       method: "DELETE",
@@ -40,7 +40,7 @@ const ChannelDeleteModal = () => {
       .then((response) => {
         if (response.ok) {
           console.log("Cancellazione riuscita con successo");
-          navigate(`./channels`);
+          navigate("/channels");
         } else {
           console.error("Delete failed", response.statusText);
         }
@@ -48,6 +48,7 @@ const ChannelDeleteModal = () => {
       .catch((error) => {
         console.error("Network error", error);
       });
+    handleClose();
   };
 
   const footerStyle = {
@@ -57,7 +58,7 @@ const ChannelDeleteModal = () => {
   return (
     <>
       <button className="red-button box" onClick={handleShow}>
-        DELETE CHANNEL
+        CANCELLA CHANNEL
       </button>
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton className="modal-delete-header">
@@ -69,10 +70,10 @@ const ChannelDeleteModal = () => {
           Questa azione è <span className="cool-font-small">IRREVERSIBILE</span>
         </Modal.Body>
         <Modal.Footer style={footerStyle}>
-          <button className="red-button box" onClick={handleClose}>
+          <button className="blue-button box" onClick={handleClose}>
             Annulla
           </button>
-          <button className="blue-button box" onClick={handleDeleteChannel}>
+          <button className="red-button box" onClick={handleDeleteChannel}>
             Elimina Canale
           </button>
         </Modal.Footer>

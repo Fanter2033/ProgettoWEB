@@ -50,8 +50,9 @@ const UserDeleteModal = ({ showDeleteModal, handleCloseDeleteModal }) => {
         Sei sicuro di voler eliminare questo utente?
         <br></br>
         Questa azione è <span className="cool-font-small">IRREVERSIBILE</span>
-        Prima di eliminare verifica di non essere il proprietario di nessun
-        canale!
+        <br></br>
+        Assicurati di <span className="cool-font-small">NON</span> essere il
+        proprietario di una canale.
       </Modal.Body>
       <Modal.Footer style={footerStyle}>
         <button className="red-button box" onClick={handleCloseDeleteModal}>

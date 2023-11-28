@@ -4,31 +4,27 @@ import ReactConfig from "../config/ReactConfig";
 
 import "../css/App.css";
 
-function Reactions({squeal}) {
-
+function Reactions({ squeal }) {
   const [loveMe, setLove] = useState(0);
   const [likeMe, setLike] = useState(0);
   const [doNotLikeMe, setDoNotLike] = useState(0);
   const [hateMe, setHate] = useState(0);
 
-  
-
   function love() {
     //setLove(loveMe + 1);
-    reactionEffect("LIKE_A_LOT")
+    reactionEffect("LIKE_A_LOT");
   }
   function like() {
     //setLike(likeMe + 1);
-    reactionEffect("LIKE")
+    reactionEffect("LIKE");
   }
   function doNotLike() {
     //setDoNotLike(doNotLikeMe + 1);
-    reactionEffect("DO_NOT_LIKE")
-
+    reactionEffect("DO_NOT_LIKE");
   }
   function hate() {
     //setHate(hateMe + 1);
-    reactionEffect("DISGUSTED")
+    reactionEffect("DISGUSTED");
   }
 
   //!da togliere
@@ -44,9 +40,30 @@ function Reactions({squeal}) {
       </button>
   */
 
-  //TODO: implement ON CLIK PATCH /squeal/{itentifier_id}/rections/{reaction}
+  //PATCH /squeal/{itentifier_id}/rections/{reaction}
   async function reactionEffect(reactionType) {
-const uri = `${ReactConfig.base_url_requests}/squeal/${squeal}/reactions/${reactionType}`
+    const uri = `${ReactConfig.base_url_requests}/squeal/${squeal}/reaction/${reactionType}`;
+
+    const options = {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      mode: "cors",
+    };
+
+    fetch(uri, options)
+      .then((response) => {
+        if (response.ok) {
+          console.log("Reaction riuscita con successo");
+        } else {
+          console.error("Reaction fallito", response.statusText);
+        }
+      })
+      .catch((error) => {
+        console.error("Network error", error);
+      });
   }
 
   return (
@@ -59,7 +76,7 @@ const uri = `${ReactConfig.base_url_requests}/squeal/${squeal}/reactions/${react
         >
           😍
         </button>
-        {loveMe}
+
         <button
           id="bottone2"
           className=" my-blu  bottoni_omologati m-1"
@@ -67,7 +84,7 @@ const uri = `${ReactConfig.base_url_requests}/squeal/${squeal}/reactions/${react
         >
           🙂
         </button>
-        {likeMe}
+
         <button
           id="bottone4"
           className="my-blu bottoni_omologati m-1"
@@ -75,7 +92,6 @@ const uri = `${ReactConfig.base_url_requests}/squeal/${squeal}/reactions/${react
         >
           ☹️
         </button>
-        {doNotLikeMe}
         <button
           id="bottone5"
           className="my-blu bottoni_omologati m-1"
@@ -83,7 +99,6 @@ const uri = `${ReactConfig.base_url_requests}/squeal/${squeal}/reactions/${react
         >
           😡
         </button>
-        {hateMe}
       </div>
     </div>
   );

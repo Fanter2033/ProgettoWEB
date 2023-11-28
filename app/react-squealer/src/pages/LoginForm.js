@@ -20,6 +20,7 @@ function LoginForm() {
   const [usernameForm, setUsernameForm] = useState("");
   const [passwordForm, setPasswordForm] = useState("");
   const [reset, setReset] = useState("");
+  const [newPassword, setNewPassword] = useState("");
 
   const notify = () =>
     toast.error("Errore di autenticazione. Riprovare", {
@@ -77,13 +78,36 @@ function LoginForm() {
     setReset(event.target.value);
   };
 
+  const notify2 = () =>
+    toast.error("Errore. Compila tutti i campi.", {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
   const resetPassword = async () => {
     openReset();
-    /*
+
+    if (newPassword.trim() === "" || reset.trim() === "") {
+      //notify2();
+    } else {
+      /*
     const data = { reset: reset };
-    const uri = `${ReactConfig.base_url_requests}/auth/${userGlobal.username}/0`;
+    const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}/resetPassword`;
+    const data = {
+      user: {
+        username: username,
+        password: password,
+        reset: reset,
+      },
+    }
     const options = {
-      method: "POST",
+      method: "PUT",
       mode: "cors",
       headers: {
         "Content-Type": "application/json",
@@ -96,6 +120,7 @@ function LoginForm() {
       .then((response) => {
         if (response.ok) {
           navigate(`./received`);
+          console.error("Reset successful", response.statusText);
         } else {
           notify();
           console.error("Reset failed", response.statusText);
@@ -105,6 +130,7 @@ function LoginForm() {
         console.error("Network error", error);
       });
     */
+    }
   };
 
   const handleLogin = async (e) => {
@@ -214,15 +240,33 @@ function LoginForm() {
               </Modal.Header>
               <Modal.Body className="modal-delete-body">
                 <form onSubmit={resetPassword}>
-                  <label className="">Qual è il tuo hobby preferito?</label>
+                  <label className="form-label cool-font-small">
+                    Qual è il tuo hobby preferito?
+                  </label>
                   <input
                     type="text"
                     value={reset}
                     onChange={handleInputChange}
                   />
-                  <p>È fortemente consigliato il cambio di password</p>
-                  <p>a seguito dell'accesso</p>
-                  <button type="submit" className="blue-button box mt-2">
+                  <label
+                    htmlFor="inputPassword5"
+                    className="form-label cool-font-small"
+                  >
+                    Nuova password:
+                  </label>
+                  <input
+                    type="password"
+                    name="password"
+                    className="form-control"
+                    id="inputPassword"
+                    value={newPassword}
+                    aria-describedby="passwordHelpBlock"
+                    placeholder="Password"
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    required
+                  />
+
+                  <button type="submit" className="blue-button box mt-5">
                     Accedi
                   </button>
                 </form>

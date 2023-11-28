@@ -67,9 +67,31 @@ function DetailsChannel() {
   };
 
   //TODO: PATCH /channel/{type}/{channel_name}/{username}   change role user
-  const changeRoles = () => {
-    alert("da farrrrrrrrrrrrrrrrrr PT2");
-  };
+  async function changeRoles() {
+    const uri = `${ReactConfig.base_url_requests}/channel/${channel.channel_name}/${userGlobal.username}`;
+    const options = {
+      method: "PATCH",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    };
+
+    await fetch(uri, options)
+      .then((response) => {
+        if (response.ok) {
+          console.log(response);
+          console.log("PATCH OK");
+        } else {
+          console.error("PATCH ROLE ERROR", response.statusText);
+        }
+      })
+      .catch((error) => {
+        console.error("Network error", error);
+      });
+  }
+  //console.log();
 
   useEffect(() => {
     //const intervalId1 = setInterval(getChTypeName, 5000);

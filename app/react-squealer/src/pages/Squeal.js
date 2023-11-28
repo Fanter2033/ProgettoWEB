@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import ReactConfig from "../config/ReactConfig";
 import { useUserContext } from "../config/UserContext";
@@ -9,12 +9,14 @@ import CurrentDateTime from "./CurrentDateTime";
 import Dest from "./Dest";
 import MapComponent from "./MapComponent";
 //import MapWithSearch from "./MapWithSearch";
+import TextLink from "./TextLink";
 
 import imageCompression from "browser-image-compression";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import { Container, Card, Col, Row } from "react-bootstrap";
 import "../css/App.css";
 import cat from "./media/miau.png";
 /*
@@ -22,9 +24,15 @@ l'aggiunta di flex-wrap consente agli elementi figlio
 di andare a capo su più righe se lo spazio orizzontale è limitato. 
 */
 //offset mi tenere centrata la colonna
+
+//TODO PUT SQUEAL /squeal/{identifier_id}  SOLO mappeeeeeeeee------------------------------------------------------------------------------------------------------------
 function Squeal() {
   const { userGlobal } = useUserContext();
+
   const navigate = useNavigate();
+  if (userGlobal.username === undefined || userGlobal.username === "") {
+    navigate("./");
+  }
 
   const notify = () =>
     toast.error("Manca desinatario. Riprovare", {
@@ -93,18 +101,14 @@ function Squeal() {
     }
   }
 
-  useEffect(() => {
-    const intervalId = setInterval(getUserQuote, 30000); //30 sec
-    getUserQuote();
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
-
   //LIVE QUOTA-----------------------------------------------------------------------------------
   const liveDay = userQuote.remaining_daily;
   const liveWeek = userQuote.remaining_weekly;
   const liveMonth = userQuote.remaining_monthly;
+
+  const [newDay, setNewDay] = useState(0);
+  const [newWeek, setNewWeek] = useState(0);
+  const [newMonth, setNewMonth] = useState(0);
 
   //DEST INPUT-----------------------------------------------------------------------------------
   const [destinatariFromDest, setDestinatariFromDest] = useState([]);
@@ -120,33 +124,22 @@ function Squeal() {
   //VALUE INPUT-----------------------------------------------------------------------------------
   //message_value depends on input_type
   const [userInput, setUserInput] = useState("");
-  const [newDay, setNewDay] = useState(liveDay);
-  const [newWeek, setNewWeek] = useState(liveWeek);
-  const [newMonth, setNewMonth] = useState(liveMonth);
 
   const handleInputChange = (e) => {
-    if (inputType === "MESSAGE_TEXT") {
-      const inputText = e.target.value;
-      const inputLength = inputText.length;
+    const inputText = e.target.value;
+    //<TextLink text={inputText} />;
 
-      // quota rimanente dopo il post
-      const remainingLimitD = liveDay - inputLength;
-      const remainingLimitW = liveWeek - inputLength;
-      const remainingLimitM = liveMonth - inputLength;
+    const inputLength = inputText.length;
 
-      setUserInput(inputText);
-      setNewDay(remainingLimitD);
-      setNewWeek(remainingLimitW);
-      setNewMonth(remainingLimitM);
-    } else if (inputType === "IMAGE" || inputType === "POSITION") {
-      setUserInput(e.target.value);
-    } else if (inputType === "VIDEO_URL") {
-      setUserInput(e.target.value);
-    } else if (inputType === "TEXT-AUTO") {
-      setUserInput(e.target.value);
-    } else if (inputType === "POSITION_AUTO") {
-      setUserInput(e.target.value);
-    }
+    // quota rimanente dopo il post
+    const remainingLimitD = liveDay - inputLength;
+    const remainingLimitW = liveWeek - inputLength;
+    const remainingLimitM = liveMonth - inputLength;
+
+    setUserInput(inputText);
+    setNewDay(remainingLimitD);
+    setNewWeek(remainingLimitW);
+    setNewMonth(remainingLimitM);
   };
 
   //IMAGE-----------------------------------------------------------------------------------
@@ -155,11 +148,17 @@ function Squeal() {
   const handleImageUpload = useCallback(async (e) => {
     const imageFile = e.target.files[0];
 
+    const remainingLimitD = liveDay - 125;
+    const remainingLimitW = liveWeek - 125;
+    const remainingLimitM = liveMonth - 125;
+    setNewDay(remainingLimitD);
+    setNewWeek(remainingLimitW);
+    setNewMonth(remainingLimitM);
     try {
       // compressione
       const options = {
-        maxSizeMB: 1,
-        maxWidthOrHeight: 100,
+        maxSizeMB: 2,
+        maxWidthOrHeight: 400,
         useWebWorker: true,
       };
       const compressedFile = await imageCompression(imageFile, options);
@@ -187,6 +186,15 @@ function Squeal() {
 
   const handleYoutubeLinkChange = (e) => {
     const link = e.target.value;
+    const linkLength = link.length;
+
+    const remainingLimitD = liveDay - linkLength;
+    const remainingLimitW = liveWeek - linkLength;
+    const remainingLimitM = liveMonth - linkLength;
+    setNewDay(remainingLimitD);
+    setNewWeek(remainingLimitW);
+    setNewMonth(remainingLimitM);
+
     setYoutubeLink(link);
     setUserInput(link);
 
@@ -200,9 +208,13 @@ function Squeal() {
   const [markerCoordinates, setMarkerCoordinates] = useState(null);
   const handleMarkerAdded = (position) => {
     setMarkerCoordinates(position);
-    // Questa funzione verrà chiamata quando l'utente aggiunge un marker
-    console.log("Coordinate utente:", position);
-    // Puoi fare ulteriori elaborazioni o passare le informazioni ad altri componenti qui
+    const remainingLimitD = liveDay - 125;
+    const remainingLimitW = liveWeek - 125;
+    const remainingLimitM = liveMonth - 125;
+    setNewDay(remainingLimitD);
+    setNewWeek(remainingLimitW);
+    setNewMonth(remainingLimitM);
+    //console.log("Coordinate utente:", position);
   };
   //<MapWithSearch onMarkerAdded={handleMarkerAdded} />
 
@@ -230,7 +242,7 @@ function Squeal() {
   };
 
   //TYPE INPUT--------------------------------------------------------------
-  //inputType = MESSAGE_TEXT, IMAGE, VIDEO_URL, POSITION
+  //inputType = MESSAGE_TEXT, IMAGE, VIDEO_URL, POSITION, POSITION_AUTO
   const [inputType, setInputType] = useState("");
   let inputElement = null;
 
@@ -249,7 +261,7 @@ function Squeal() {
           rows="4"
           cols="50"
           className="form-control"
-        ></textarea>
+        />
       </div>
     );
   } else if (inputType === "IMAGE") {
@@ -383,7 +395,7 @@ function Squeal() {
     );
   }
 
-  //TODO POST SQUEAL /squeal/------------------------------------------------------------------------------------------------------------
+  //TODO POST SQUEAL /squeal/ MANCANO MAPPE E MAPPE TEMPORIZZATE------------------------------------------------------------------------------------------------------------
   const [fetchDataFlag, setFetchDataFlag] = useState(false);
 
   async function postSqueal(e) {
@@ -396,7 +408,7 @@ function Squeal() {
                   # CHANNEL_TAG
                   @ USER
         identifier: string
-      message_type: MESSAGE_TEXT || IMAGE || VIDEO_URL || POSITION 
+      message_type: MESSAGE_TEXT || IMAGE || VIDEO_URL || POSITION || TEXT_AUTO || POSITION_AUTO
       content: txt || img || link || map(img)
     }
     */
@@ -414,16 +426,18 @@ function Squeal() {
           },
         };
       } else if (inputType === "POSITION") {
+        const coordinates = markerCoordinates;
+        console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbb", coordinates);
         data = {
           squeal: {
             destinations: destinatariFromDest,
             sender: userGlobal.username,
             message_type: inputType,
-            content: markerCoordinates,
+            content: coordinates,
           },
         };
 
-        //console.log("aaaaaaaaaaaaaaaaaaaa", markerCoordinates);
+        console.log("aaaaaaaaaaaaaaaaaaaa", markerCoordinates);
       } else if (inputType === "TEXT_AUTO") {
         // Esegui le operazioni desiderate con il testo del post e i bottoni cliccati
         console.log("Testo del post:", postText);
@@ -468,7 +482,8 @@ function Squeal() {
         .then((response) => {
           if (response.ok) {
             console.log("POST Squeal riuscita con successo");
-            navigate("./post");
+
+            navigate("./");
           } else {
             console.error(
               "Errore durante la POST, riprova",
@@ -484,28 +499,31 @@ function Squeal() {
     } else {
       notify();
     }
+    setTimeout(() => {
+      window.location.reload();
+    }, 3000); // 3000 millisecondi = 3 secondi
   }
 
-  //!squeal
-  //TODO GET SQUEAL /squeal/   -------------logger dei vecchi squeal------------------------------------------------------------------------------------------------------------
-  //TODO PUT SQUEAL /squeal/{identifier_id} ------------------------------------------------------------------------------------------------------------
-  //TODO DELETE SQUEAL /squeal/{identifier_id} ------------------------------------------------------------------------------------------------------------
+  //GET LOG SQUEALS VECCHI--------------------------------------------------------------
+  const [squealsLogger, setSquealsLogger] = useState([]);
 
-  //! mi serve l'id?
-  /*
-  const [squeal, setSqueal] = useState([]);
-
-  async function getSqueals() {
+  async function log() {
     try {
-      const uri = `${ReactConfig.base_url_requests}/squeal/`;
-      let result = await fetch(uri);
+      const url = `${ReactConfig.base_url_requests}/utils/squeals/${userGlobal.username}`;
+      const options = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        mode: "cors",
+      };
+
+      let result = await fetch(url, options);
 
       if (result.ok) {
         let json = await result.json();
-        console.log(json);
-        let camp = json.channels;
-        setSqueal(camp);
-        return camp;
+        setSquealsLogger(json);
       } else {
         console.error("Errore nella richiesta:", result.statusText);
       }
@@ -514,19 +532,21 @@ function Squeal() {
     }
   }
 
-  console.log(squeal);
-
-  //const channelsArray = Object.values(channels.channels);
-  //console.log(channelsArray);
+  console.log("LOGGERRRRRRRRRRRRRR", squealsLogger);
 
   useEffect(() => {
-    const intervalId = setInterval(getSqueals, 10000);
-    getSqueals()
+    const intervalId = setInterval(getUserQuote, 30000); //30 sec
+    getUserQuote();
+
+    const intervalId1 = setInterval(log, 10000); //10 sec
+    log();
+
+    console.log(newDay);
     return () => {
+      clearInterval(intervalId1);
       clearInterval(intervalId);
     };
-  });
-*/
+  }, []);
 
   //-------------------------------------------------------------------
   return (
@@ -715,10 +735,14 @@ function Squeal() {
                   <h4>prima</h4>
                   {userQuote.remaining_daily}
                 </button>
-                <button className="yellow-button m-2 box">
-                  <h4>dopo</h4>
-                  {newDay}
-                </button>
+                {newMonth !== 0 && (
+                  <>
+                    <button className="yellow-button m-2 box">
+                      <h4>dopo</h4>
+                      {newDay}{" "}
+                    </button>
+                  </>
+                )}
               </div>
               <div className="">
                 <h4>Settimanale</h4>
@@ -726,10 +750,14 @@ function Squeal() {
                   <h4>prima</h4>
                   {userQuote.remaining_weekly}
                 </button>
-                <button className="yellow-button m-2 box">
-                  <h4>dopo</h4>
-                  {newWeek}{" "}
-                </button>
+                {newMonth !== 0 && (
+                  <>
+                    <button className="yellow-button m-2 box">
+                      <h4>dopo</h4>
+                      {newWeek}{" "}
+                    </button>
+                  </>
+                )}
               </div>
               <div className="">
                 <h4>Mensile</h4>
@@ -737,13 +765,43 @@ function Squeal() {
                   <h4>prima</h4>
                   {userQuote.remaining_monthly}
                 </button>
-                <button className="yellow-button m-2 box">
-                  <h4>dopo</h4>
-                  {newMonth}{" "}
-                </button>
+                {newMonth !== 0 && (
+                  <>
+                    <button className="yellow-button m-2 box">
+                      <h4>dopo</h4>
+                      {newMonth}{" "}
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           </div>
+        </div>
+        <div className="col-12">
+          <h2>Squeals Passati: {squealsLogger.length}</h2>
+
+          <Container className="">
+            <Row className="w-100">
+              {squealsLogger.map((squeal) => (
+                <Col lg={12} key={squeal.id} className="mb-4">
+                  <Card style={{ height: "100%" }} className="squeal">
+                    <Card.Header className="d-flex flex-col justify-content-center align-items-center">
+                      {" "}
+                      <b>{squeal.sender}</b>
+                    </Card.Header>
+                    <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
+                      <div>{squeal.content}</div>
+                    </Card.Body>
+                    <Card.Footer>
+                      <div>Id: {squeal._id}</div>
+
+                      <div className="row"> </div>
+                    </Card.Footer>
+                  </Card>
+                </Col>
+              ))}
+            </Row>
+          </Container>
         </div>
       </div>
     </div>
