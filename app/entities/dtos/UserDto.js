@@ -13,9 +13,11 @@ module.exports = class UserDto {
     #locked;
     #verbalized_popularity;
     #verbalized_unpopularity;
+    #reset;
+    #pfp;
 
     constructor(documentFromMongoose = null) {
-        if(documentFromMongoose === null) {
+        if (documentFromMongoose === null) {
             this.#username = null;
             this.#email = null;
             this.#first_name = null;
@@ -29,6 +31,8 @@ module.exports = class UserDto {
             this.#locked = null;
             this.#verbalized_popularity = 0;
             this.#verbalized_unpopularity = 0;
+            this.#reset = '';
+            this.#pfp = '';
         } else {
             this.#username = documentFromMongoose.username;
             this.#email = documentFromMongoose.email;
@@ -43,6 +47,11 @@ module.exports = class UserDto {
             this.#locked = documentFromMongoose.locked;
             this.#verbalized_popularity = documentFromMongoose.verbalized_popularity;
             this.#verbalized_unpopularity = documentFromMongoose.verbalized_popularity;
+            if(typeof documentFromMongoose.verbalized_popularity !== 'undefined')
+                this.#reset = documentFromMongoose.reset;
+            else
+                this.#reset = '';
+            this.#pfp = documentFromMongoose.pfp;
         }
 
     }
@@ -155,8 +164,27 @@ module.exports = class UserDto {
         this.#verbalized_unpopularity = value;
     }
 
-    getDocument() {
-        return {
+    get reset() {
+        return this.#reset;
+    }
+
+    set reset(value) {
+        this.#reset = value;
+    }
+
+    get pfp() {
+        return this.#pfp;
+    }
+
+    set pfp(value) {
+        this.#pfp = value;
+    }
+
+    /**
+     * @param {boolean} returnReset
+     */
+    getDocument(returnReset = false) {
+        let out = {
             username: this.#username,
             email: this.#email,
             first_name: this.#first_name,
@@ -166,11 +194,16 @@ module.exports = class UserDto {
             isAdmin: this.#isAdmin,
             isSmm: this.#isSmm,
             isUser: this.#isUser,
-            vip: this.#vip ,
+            vip: this.#vip,
             locked: this.#locked,
             verbalized_popularity: this.#verbalized_popularity,
             verbalized_unpopularity: this.#verbalized_unpopularity,
+            pfp: this.#pfp
         }
+        if (returnReset === true)
+            out['reset'] = this.#reset;
+
+        return out;
     }
 
 }

@@ -52,6 +52,16 @@ paths:
           description: Failed authentication due server error
         '404':
           description: No user to de-authenticate found.
+  /auth/whoami/:
+    get:
+      tags:
+        - auth
+      summary: Returns the object of the authenticated user
+      responses:
+        '200':
+          description: Returns what told in the summary.
+        '403':
+          description: Not authenticated
   /utils/dashboard/:
     get:
       tags:
@@ -411,6 +421,35 @@ paths:
           description: 'OK'
         '400':
           description: 'Bad Request.'
+        '404':
+          description: 'User not found'
+        '500':
+          description: 'Internal server error'
+  /user/{username}/resetPassword/:
+    put:
+      tags:
+        - user
+      summary: Reset password with reset password string if exists, is not null and not void
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+        - name: reset
+          in: formData
+          required: true
+          type: string
+        - name: password
+          in: formData
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'OK'
+        '400':
+          description: 'Bad Request.'
+        '403':
+          description: 'Reset str error.'
         '404':
           description: 'User not found'
         '500':
@@ -909,7 +948,7 @@ paths:
             description: 'More information about the error'
         '404':
           description: 'The specified squeal in URL path is not found'
-  /squeal/{identifier_id}/reactions/{reaction}:
+  /squeal/{identifier_id}/reaction/{reaction}:
     patch:
       tags:
         - squeal

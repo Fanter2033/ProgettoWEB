@@ -7,4 +7,5 @@ module.exports = new Schema({
     type: {type: String},
     private: {type: Boolean, default: false},
     locked: {type: Boolean, default: false},
+    description: {String}
 });

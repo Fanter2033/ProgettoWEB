@@ -35,4 +35,12 @@ authDriver.post('/logout', async function(req, res){
         res.status(ctrlOutput.code).send(ctrlOutput);
 });
 
+authDriver.get('/whoami', async function(req, res) {
+    let ctrlOutput = await authController.whoAmI(req);
+    if (ctrlOutput.code === 200)
+        res.status(ctrlOutput.code).send(ctrlOutput.content);
+    else
+        res.status(ctrlOutput.code).send(ctrlOutput);
+});
+
 module.exports = authDriver;
