@@ -3,6 +3,7 @@ const UserController = require("./UserController");
 const UserModel = require("../models/UserModel");
 const AuthenticationAttemptDto = require("../entities/dtos/AuthenticationAttemptDto");
 const {config} = require("../autoload/autoload");
+const UserDto = require("../entities/dtos/UserDto");
 module.exports = class AuthController extends Controller {
     constructor(model) {
         super();
@@ -167,4 +168,24 @@ module.exports = class AuthController extends Controller {
             }
         }
     }
+
+    /**
+     * Given request param returns the
+     * @param req
+     * @return {Promise<{msg: string, code: number, sub_code: number,content: {}}>}
+     */
+    async whoAmI(req){
+        let output = this.getDefaultOutput();
+
+        let ctrlOut = await this.getAuthenticatedUser(req);
+        if(!(this.isAuthenticatedUser(ctrlOut))){
+            output.code = 403;
+            output.msg = 'Not authenticated.';
+            return output;
+        }
+
+        output.content = ctrlOut;
+        return output;
+    }
+
 }

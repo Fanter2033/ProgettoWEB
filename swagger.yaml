@@ -52,6 +52,16 @@ paths:
           description: Failed authentication due server error
         '404':
           description: No user to de-authenticate found.
+  /auth/whoami/:
+    get:
+      tags:
+        - auth
+      summary: Returns the object of the authenticated user
+      responses:
+        '200':
+          description: Returns what told in the summary.
+        '403':
+          description: Not authenticated
   /utils/dashboard/:
     get:
       tags:
