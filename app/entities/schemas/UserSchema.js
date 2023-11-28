@@ -16,5 +16,6 @@ module.exports = new Schema({
     locked: {type: Boolean, required: true},
     verbalized_popularity: {type: Number, default: 0},
     verbalized_unpopularity: {type: Number, default: 0},
-    reset: String
+    reset: String,
+    pfp: String,
 });

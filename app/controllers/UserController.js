@@ -192,6 +192,7 @@ module.exports = class UserController extends Controller {
         userObj.psw_shadow = await this.crypt(userObj.psw_shadow);
         userObj.vip = false;
         userObj.locked = false;
+        userObj.pfp = autoload.defaultImageBase64;
 
         let databaseResponse = await this._model.createUser(userObj);
         if (databaseResponse)
@@ -278,6 +279,7 @@ module.exports = class UserController extends Controller {
         newUser.vip = oldUserObj.vip
         newUser.locked = oldUserObj.locked;
         newUser.reset = oldUserObj.reset;
+        newUser.pfp = oldUserObj.pfp;
 
         if(newUser.psw_shadow !== '') //if password isn't set, save the old password
             newUser.psw_shadow = await this.crypt(newUser.psw_shadow);

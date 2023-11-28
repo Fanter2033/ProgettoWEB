@@ -14,6 +14,7 @@ module.exports = class UserDto {
     #verbalized_popularity;
     #verbalized_unpopularity;
     #reset;
+    #pfp;
 
     constructor(documentFromMongoose = null) {
         if (documentFromMongoose === null) {
@@ -31,6 +32,7 @@ module.exports = class UserDto {
             this.#verbalized_popularity = 0;
             this.#verbalized_unpopularity = 0;
             this.#reset = '';
+            this.#pfp = '';
         } else {
             this.#username = documentFromMongoose.username;
             this.#email = documentFromMongoose.email;
@@ -49,6 +51,7 @@ module.exports = class UserDto {
                 this.#reset = documentFromMongoose.reset;
             else
                 this.#reset = '';
+            this.#pfp = documentFromMongoose.pfp;
         }
 
     }
@@ -167,6 +170,14 @@ module.exports = class UserDto {
 
     set reset(value) {
         this.#reset = value;
+    }
+
+    get pfp() {
+        return this.#pfp;
+    }
+
+    set pfp(value) {
+        this.#pfp = value;
     }
 
     /**
