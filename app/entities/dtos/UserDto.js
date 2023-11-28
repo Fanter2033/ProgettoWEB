@@ -197,7 +197,8 @@ module.exports = class UserDto {
             vip: this.#vip,
             locked: this.#locked,
             verbalized_popularity: this.#verbalized_popularity,
-            verbalized_unpopularity: this.#verbalized_unpopularity
+            verbalized_unpopularity: this.#verbalized_unpopularity,
+            pfp: this.#pfp
         }
         if (returnReset === true)
             out['reset'] = this.#reset;
