@@ -85,6 +85,7 @@ export default {
         .catch((error) => {
           console.error("network error", error);
         });
+      //router.push("/dashboard"); // !!!!!!
     },
   },
 };
@@ -95,3 +96,5 @@ form {
   font-family: Optima, sans-serif;
 }
 </style>
+
+//TODO: add a searchbar

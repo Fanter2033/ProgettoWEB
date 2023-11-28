@@ -12,12 +12,15 @@ export const store = new Vuex.Store({
         LineChartData:{
             squeals:[],
             popularity:[]
-        }
+        },
+        squealInputCoor: []
     },
     getters: {
         getUserZero: (state) => {return state.userZero},
         getVips: (state) => { return state.myVips},
-        getLineChartData: (state) => {return state.LineChartData}
+        getLineChartData: (state) => {return state.LineChartData},
+        getSInCoor: (state) => {return state.squealInputCoor}
+
     },
     mutations:{
         setUserZero(state, user){
@@ -29,6 +32,11 @@ export const store = new Vuex.Store({
         setLineChartData(state, DataObj){
             state.LineChartData = DataObj;
         }
+        setSInCoor(state, newCoor) {
+            state.squealInputCoor = newCoor;
+        }
     },
     plugins:[vuexLocal.plugin]
 });
+
+//TODO: clear data after logout

@@ -10,6 +10,7 @@
 
       <div class="col-10">
         <h1>Welcome Back <b> {{userZero}} </b> :)</h1>
+
       </div>
 
     </div>
