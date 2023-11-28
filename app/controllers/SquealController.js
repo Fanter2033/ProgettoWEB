@@ -187,21 +187,32 @@ module.exports = class SquealController extends Controller {
         let quoteRes = await quoteCtrl.getQuote(authenticatedUser.username)
         quoteRes = new QuoteDto(quoteRes.content);
 
-        squealDto.content = squealDto.content.trim();
-        squealDto.quote_cost = squealDto.content.length;
+        if(squealDto.content === null || squealDto.content === 'null') {
+            output['code'] = 400;
+            output['msg'] = 'Missing content';
+            return output;
+        }
+
+        if(squealDto.message_type === 'MESSAGE_TEXT' ||
+            squealDto.message_type === 'TEXT_AUTO'){
+            squealDto.content = squealDto.content.trim();
+            squealDto.quote_cost = squealDto.content.length;
+        } else if (squealDto.message_type === 'IMAGE' ||
+            squealDto.message_type === 'VIDEO_URL' ||
+            squealDto.message_type === 'POSITION' ||
+            squealDto.message_type === 'POSITION_AUTO') {
+            squealDto.quote_cost = 125;
+        } else {
+            output['code'] = 500;
+            output['msg'] = 'Internal server error.';
+            return output;
+        }
 
         //Let's check if the destinations exists all
         if (Array.isArray(squealDto.destinations) === false || squealDto.destinations.length === 0) {
             output['code'] = 400;
             output['msg'] = 'Invalid destinations';
             return output;
-        }
-
-        if (squealDto.message_type === 'IMAGE' ||
-            squealDto.message_type === 'VIDEO_URL' ||
-            squealDto.message_type === 'POSITION' ||
-            squealDto.message_type === 'POSITION_AUTO') {
-            squealDto.quote_cost = 125;
         }
 
 
@@ -296,6 +307,13 @@ module.exports = class SquealController extends Controller {
         squealDto.critical_mass = 0;
         squealDto.negative_value = 0;
         squealDto.positive_value = 0;
+
+        if(squealDto.message_type === 'POSITION'){
+            let tmp = squealDto.content.join(',');
+            tmp = `[${tmp}]`;
+            squealDto.content = tmp;
+            //TODO MAKE FOR UPDATE AUTO_SQUEAL
+        }
 
         let modelOutput = await this._model.postSqueal(squealDto);
 

@@ -499,9 +499,13 @@ function Squeal() {
     } else {
       notify();
     }
+
+    /*
+    TODO: THIS IS CALLED ONLY ON RESPONSE OK. HANDLE BE ERRORS
     setTimeout(() => {
       window.location.reload();
     }, 3000); // 3000 millisecondi = 3 secondi
+     */
   }
 
   //GET LOG SQUEALS VECCHI--------------------------------------------------------------
@@ -532,18 +536,14 @@ function Squeal() {
     }
   }
 
-  console.log("LOGGERRRRRRRRRRRRRR", squealsLogger);
-
   useEffect(() => {
     const intervalId = setInterval(getUserQuote, 30000); //30 sec
     getUserQuote();
 
-    const intervalId1 = setInterval(log, 10000); //10 sec
     log();
 
     console.log(newDay);
     return () => {
-      clearInterval(intervalId1);
       clearInterval(intervalId);
     };
   }, []);
