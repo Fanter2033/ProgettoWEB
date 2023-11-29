@@ -84,7 +84,7 @@ function Home() {
                   {channel.channel_name}
                 </Card.Title>
 
-                <Link to="/infoc">
+                <Link to="/infoc" state={channel}>
                   <button className="custom-button ms-4 me-4">Info</button>
                 </Link>
               </Card.Body>

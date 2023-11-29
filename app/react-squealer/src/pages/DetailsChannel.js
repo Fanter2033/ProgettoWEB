@@ -6,6 +6,7 @@ import ReactConfig from "../config/ReactConfig";
 
 import ChangeNameChannel from "./ChangeNameChannel";
 import ChannelDeleteModal from "./ChannelDeleteModal";
+import ChangeRoleModal from "./ChangeRoleModal";
 
 import { Container, Card, Col, Row } from "react-bootstrap";
 import "../css/App.css";
@@ -43,6 +44,7 @@ function DetailsChannel() {
   const [roles4, setRoles4] = useState([]);
 
   useEffect(() => {
+    /*
     const fetchData = async (channelType, channelName, roleNumber) => {
       const url = `${ReactConfig.base_url_requests}/channel/${channelType}/${channelName}/roles/${roleNumber}`;
 
@@ -75,8 +77,7 @@ function DetailsChannel() {
     fetchData(channel.type, channel.channel_name, 2);
     fetchData(channel.type, channel.channel_name, 3);
     fetchData(channel.type, channel.channel_name, 4);
-
-    // Nota: Puoi aggiungere altri numeri se necessario
+    */
   }, [channel.type, channel.channel_name]);
 
   console.log(
@@ -92,6 +93,7 @@ function DetailsChannel() {
     "4",
     roles4
   );
+
   //GET /channel/{type}/{channel_name}/roles/0 || 1 || 2 || 3 || 4    roles following a ch
   const [roles, setRoles] = useState([]);
   const getAllRoles = () => {
@@ -106,69 +108,33 @@ function DetailsChannel() {
         console.error("Failed to get all the roles, errore:", error);
       });
   };
-  console.log(roles, "AAAAAAAAAAAAAA");
-
-  //!se iscritto
-  //TODO: GET /channel/{type}/{channel_name}/users/{username}/     role of user
-  const [myRole, setMyRole] = useState([]);
-  const getMyRole = () => {
-    const url = `${ReactConfig.base_url_requests}/channel/${channel.type}/${channel.channel_name}/users/${userGlobal.username}`;
-    fetch(url)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Get the role of the user:", data);
-        setMyRole(data);
-      })
-      .catch((error) => {
-        console.error("Faillllllll, errore:", error);
-      });
-  };
-
-  //TODO: PATCH /channel/{type}/{channel_name}/{username}   change role user
-  async function changeRoles() {
-    const uri = `${ReactConfig.base_url_requests}/channel/${channel.channel_name}/${userGlobal.username}`;
-    const options = {
-      method: "PATCH",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    };
-
-    await fetch(uri, options)
-      .then((response) => {
-        if (response.ok) {
-          console.log(response);
-          console.log("PATCH OK");
-        } else {
-          console.error("PATCH ROLE ERROR", response.statusText);
-        }
-      })
-      .catch((error) => {
-        console.error("Network error", error);
-      });
-  }
-  //console.log();
+  //console.log(roles, "AAAAAAAAAAAAAA");
 
   useEffect(() => {
     //const intervalId1 = setInterval(getChTypeName, 5000);
-    const intervalId2 = setInterval(getChTypeNameUsers, 5000);
+    //const intervalId2 = setInterval(getChTypeNameUsers, 5000);
     const intervalId4 = setInterval(getAllRoles, 5000);
 
     //getChTypeName();
     getChTypeNameUsers();
     getAllRoles();
     //se iscritto
-    const intervalId3 = setInterval(getMyRole, 5000);
 
     //clearInterval(intervalId1);
     return () => {
-      clearInterval(intervalId2);
-      clearInterval(intervalId3);
+      //clearInterval(intervalId2);
       clearInterval(intervalId4);
     };
   }, []);
+
+  //Role modalssssssss
+  const [newRoleModal, setNewRoleModal] = useState(false);
+  const openRoleModal = () => {
+    setNewRoleModal(true);
+  };
+  const closeRoleModal = () => {
+    setNewRoleModal(false);
+  };
 
   return (
     <>
@@ -194,55 +160,7 @@ function DetailsChannel() {
             </svg>
           </button>
         </div>
-        {isOwner && (
-          <div className="row">
-            <h2>Per il creatore del canale</h2>
 
-            <div className="row">
-              <ChangeNameChannel />{" "}
-            </div>
-            <div className="row">
-              {" "}
-              <ChannelDeleteModal />
-            </div>
-            <div>
-              <button className="user_button box" onClick={changeRoles}>
-                Cambia ruoli follower?
-              </button>
-              <div className="row d-flex justify-content-center ms-1 me-1 mb-5">
-                <h3>CHANNEL ROLES:</h3>
-                <ul className="list-group col-md-4">
-                  <li className="list-group-item list">OWNER = 4</li>
-                  <li className="list-group-item list">ADMIN = 3</li>
-                  <li className="list-group-item list">WRITE = 2</li>
-                  <li className="list-group-item list">READ = 1</li>
-                  <li className="list-group-item list">WAITING_ACCEPT = 0</li>
-                </ul>
-              </div>
-
-              <h3>Roles?????</h3>
-              <Container>
-                <Row>
-                  {roles.map((user) => (
-                    <Col lg={12} key={user.id} className="mb-4">
-                      <Card className="w-100 squeal">
-                        {" "}
-                        <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
-                          <div>{user}</div>
-                          <Link to="/infou" state={user}>
-                            <button className="ms-4 me-4 custom-button box">
-                              Info
-                            </button>
-                          </Link>
-                        </Card.Body>
-                      </Card>
-                    </Col>
-                  ))}
-                </Row>
-              </Container>
-            </div>
-          </div>
-        )}
         <div
           style={{
             padding: "3em",
@@ -372,6 +290,55 @@ function DetailsChannel() {
         <p>Ruoli per il numero 3: ADMIN{JSON.stringify(roles3)}</p>
         <p>Ruoli per il numero 4: CREATORE{JSON.stringify(roles4)}</p>
 
+        {channel.owner === userGlobal.username && (
+          <div className="row">
+            <h2>Per il creatore del canale</h2>
+
+            <div className="row">
+              <ChangeNameChannel />{" "}
+            </div>
+            <div className="row">
+              {" "}
+              <ChannelDeleteModal />
+            </div>
+            <div>
+              <button className="user_button box">
+                Cambia ruoli follower?
+              </button>
+              <div className="row d-flex justify-content-center ms-1 me-1 mb-5">
+                <h3>CHANNEL ROLES:</h3>
+                <ul className="list-group col-md-4">
+                  <li className="list-group-item list">OWNER = 4</li>
+                  <li className="list-group-item list">ADMIN = 3</li>
+                  <li className="list-group-item list">WRITE = 2</li>
+                  <li className="list-group-item list">READ = 1</li>
+                  <li className="list-group-item list">WAITING_ACCEPT = 0</li>
+                </ul>
+              </div>
+
+              <h3>Roles?????</h3>
+              <Container>
+                <Row>
+                  {roles.map((user) => (
+                    <Col lg={12} key={user.id} className="mb-4">
+                      <Card className="w-100 squeal">
+                        {" "}
+                        <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
+                          <div>{user}</div>
+                          <Link to="/infou" state={user}>
+                            <button className="ms-4 me-4 custom-button box">
+                              Info
+                            </button>
+                          </Link>
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                  ))}
+                </Row>
+              </Container>
+            </div>
+          </div>
+        )}
         <div className="mt-3">
           <h3>ISCRITTI: {channel.subscribers}</h3>
 
@@ -388,8 +355,26 @@ function DetailsChannel() {
                           Info
                         </button>
                       </Link>
+                      {isOwner && (
+                        <>
+                          <div>
+                            <button
+                              className="custom-button box"
+                              onClick={openRoleModal}
+                            >
+                              RUOLO
+                            </button>
+                          </div>
+                        </>
+                      )}
                     </Card.Body>
                   </Card>
+                  <ChangeRoleModal
+                    closeRole={closeRoleModal}
+                    newRoleModel={newRoleModal}
+                    username={user}
+                    channel={channel.type}
+                  />
                 </Col>
               ))}
             </Row>

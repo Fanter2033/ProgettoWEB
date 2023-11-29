@@ -103,7 +103,7 @@ function ChangePfp() {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-        },
+        },  
         credentials: "include",
         mode: "cors",
         body: JSON.stringify(data),
