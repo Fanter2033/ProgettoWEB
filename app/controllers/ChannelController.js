@@ -124,6 +124,34 @@ module.exports = class ChannelController extends Controller {
     }
 
     /**
+     * @param {ChannelDto} channelDto
+     * @return {Promise<{msg: string, code: number, content: {}}>}
+     */
+    async createChannelHashtag(channelDto) {
+        let output = this.getDefaultOutput();
+        channelDto.channel_name = channelDto.channel_name.replace(' ', '_');
+        channelDto.channel_name = channelDto.channel_name.toLowerCase();
+        channelDto.type = autoload.config._CHANNEL_TYPE_HASHTAG;
+        channelDto.locked = false;
+        channelDto.private = false;
+        channelDto.description = '';
+
+        //if we are here al checks is OK!
+        //Let's create channel into database.
+        let modelOutput = await this.#_model.createChannel(channelDto);
+
+        if (modelOutput === false) {
+            output['code'] = 500;
+            output['msg'] = 'Internal server error.';
+            return output;
+        }
+
+        //channel official do not require any relationship.
+        output['content'] = channelDto.getDocument();
+        return output;
+    }
+
+    /**
      * @param {UserDto | {}} requestingUser
      * @param {number} offset
      * @param {number} limit
@@ -295,12 +323,13 @@ module.exports = class ChannelController extends Controller {
 
     /**
      * @param {ChannelDto} channelDto
+     * @param {boolean} searchHashtags
      * @return {Promise<{msg: string, code: number, content: {object}}>}
      * Given a channel returns the channel object.
      * It is used to check if a channel exists.
      * No checks on authenticated user is required.
      */
-    async getChannel(channelDto) {
+    async getChannel(channelDto, searchHashtags = false) {
         let output = this.getDefaultOutput();
 
         if (this.checkChannelType(channelDto.type) === false) {
@@ -317,7 +346,7 @@ module.exports = class ChannelController extends Controller {
             return output;
         }
 
-        if (channelDto.type === 'CHANNEL_HASHTAG') {
+        if (channelDto.type === 'CHANNEL_HASHTAG' && searchHashtags === false) {
             let tmp = new ChannelDto();
             tmp.channel_name = channelDto.channel_name;
             tmp.type = 'CHANNEL_HASHTAG';

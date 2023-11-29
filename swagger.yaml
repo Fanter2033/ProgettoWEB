@@ -118,7 +118,7 @@ paths:
             type: array
             maxLength: 10
             $ref: '#/definitions/Squeal'
-  /utils/squeals/{channel_type}/{channel_name}:
+  /utils/squeals/{channel_type}/{name}:
     get:
       tags:
         - utils
@@ -573,14 +573,14 @@ paths:
                   $ref: '#/definitions/Channel'
               totalCount:
                 type: integer
-  /channel/{type}/{channel_name}:
+  /channel/{type}/{name}:
     put:
       tags:
         - channel
       summary: Update the channel
       description: Update the channel with his name in path with the passed Channel object in the body. If the password is not passed the system handle old password. Registration timestamp do not be changed. Cannot update TAG channels
       parameters:
-        - name: channel_name
+        - name: name
           in: path
           required: true
           type: string
@@ -614,7 +614,7 @@ paths:
         - channel
       summary: Delete the channel
       parameters:
-        - name: channel_name
+        - name: name
           in: path
           required: true
           type: string
@@ -637,7 +637,7 @@ paths:
         - channel
       summary: Get channel information
       parameters:
-        - name: channel_name
+        - name: name
           in: path
           required: true
           type: string
@@ -668,7 +668,7 @@ paths:
         - channel
       summary: Follow channel
       parameters:
-        - name: channel_name
+        - name: name
           in: path
           required: true
           type: string
@@ -693,14 +693,14 @@ paths:
           description: 'Not logged'
         '404':
           description: 'The specified channel in URL path is not found'
-  /channel/{type}/{channel_name}/users/{username}/:
+  /channel/{type}/{name}/users/{username}/:
     delete:
       tags:
         - channel
       summary: Delete the user role.
       description: Delete the user role from the channel, used to handle unfollow.
       parameters:
-        - name: channel_name
+        - name: name
           in: path
           required: true
           type: string
@@ -727,7 +727,7 @@ paths:
         - channel
       summary: Get the role of the user in the channel.
       parameters:
-        - name: channel_name
+        - name: name
           in: path
           required: true
           type: string
@@ -754,13 +754,13 @@ paths:
           description: 'User not logged'
         '500':
           description: 'Internal server error'
-  /channel/{type}/{channel_name}/{username}/:
+  /channel/{type}/{name}/{username}/:
     patch:
       tags:
         - channel
       summary: Change the role of the user.
       parameters:
-        - name: channel_name
+        - name: name
           in: path
           required: true
           type: string
@@ -793,14 +793,14 @@ paths:
           description: 'User not found'
         '500':
           description: 'Internal server error'
-  /channel/{type}/{channel_name}/toggle/lock:
+  /channel/{type}/{name}/toggle/lock:
     patch:
       tags:
         - channel
       summary: Toggle the lock of a channel.
       description: Toggle the lock of a channel. If the channel is locked unlock it, if is unlocked lock it.
       parameters:
-        - name: channel_name
+        - name: name
           in: path
           required: true
           type: string
@@ -825,13 +825,13 @@ paths:
           description: 'Channel not found'
         '500':
           description: 'Internal server error'
-  /channel/{type}/{channel_name}/users/:
+  /channel/{type}/{name}/users/:
     get:
       tags:
         - channel
       summary: Get the users following a channel.
       parameters:
-        - name: channel_name
+        - name: name
           in: path
           required: true
           type: string
@@ -858,13 +858,13 @@ paths:
           description: 'User not logged'
         '500':
           description: 'Internal server error'
-  /channel/{type}/{channel_name}/roles/{role}:
+  /channel/{type}/{name}/roles/{role}:
     get:
       tags:
         - channel
       summary: Get the users following a channel.
       parameters:
-        - name: channel_name
+        - name: name
           in: path
           required: true
           type: string

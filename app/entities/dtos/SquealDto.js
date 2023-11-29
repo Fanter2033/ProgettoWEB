@@ -72,6 +72,9 @@ module.exports = class SquealDto {
         this.#sender = value;
     }
 
+    /**
+     * @return {string}
+     */
     get message_type() {
         return this.#message_type;
     }
