@@ -71,14 +71,16 @@ function Squeal() {
     });
 
   //GET WHO AM I
-  /*
+
   async function whoAmI() {
     const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
-    fetch(uri)
+    fetch(uri, {
+      mode: "cors",
+      credentials: "include",
+    })
       .then((res) => {
         console.log("aaaaaaaaaaaaaaaaaa", res);
         if (res.ok) {
-
           return res.json();
         }
       })
@@ -89,7 +91,7 @@ function Squeal() {
         console.error(error);
       });
   }
-  */
+
   //GET USER DATA-----------------------------------------------------------------------------------------------
   const [userData, setUserData] = useState("");
 
@@ -588,7 +590,7 @@ function Squeal() {
 
   useEffect(() => {
     getUserQuote();
-    //whoAmI();
+    whoAmI();
     log();
 
     const intervalId = setInterval(getUserQuote, 30000); //30 sec
@@ -839,7 +841,11 @@ function Squeal() {
             <Row className="w-100">
               {squealsLogger.map((squeal) => (
                 <Col lg={12} className="mb-4">
-                  <Card style={{ height: "100%" }}  key={squeal.id} className="squeal">
+                  <Card
+                    style={{ height: "100%" }}
+                    key={squeal.id}
+                    className="squeal"
+                  >
                     <Card.Header className="d-flex flex-col justify-content-center align-items-center">
                       {" "}
                       <b>{squeal.sender}</b>

@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useUserContext } from "../config/UserContext";
 import { useNavigate } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
+import { useCallback } from "react";
+
+import imageCompression from "browser-image-compression";
 
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
@@ -16,7 +19,7 @@ import "../css/App.css";
 //PUT: CHANGE USERNAME /user/${username}-----------------------------------------------------------------------------------------------------
 function ChangePfp() {
   const { userGlobal, setUserGlobal } = useUserContext();
-  const [newPhoto, setNewPhoto] = useState();
+  console.log("mlmlmllmlmlmlml", userGlobal);
 
   const navigate = useNavigate();
 
@@ -24,93 +27,108 @@ function ChangePfp() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const notify = () =>
-    toast.success("🦄 Completato con successo!", {
-      position: "top-right",
-      autoClose: 4000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-    });
-  const nofity_error = () =>
-    toast.error("⚠️ Manca la foto!", {
-      position: "top-right",
-      autoClose: 4000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-    });
+  const [base64Image, setBase64Image] = useState("");
 
-  const cambioPhoto = (e) => {
+  const handleImageUpload = useCallback(async (e) => {
+    const imageFile = e.target.files[0];
+
+    try {
+      // compressione
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 200,
+        useWebWorker: true,
+      };
+      const compressedFile = await imageCompression(imageFile, options);
+
+      // conversione in Base64
+      const compressedBase64 = await getBase64(compressedFile);
+      setBase64Image(compressedBase64);
+    } catch (error) {
+      console.error("Errore durante la gestione dell'immagine:", error);
+    }
+  }, []);
+
+  const getBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
+  async function cambioPhoto(e) {
     e.preventDefault();
 
-    if (newPhoto.trim() === "") {
-      //TODO: se il campo è vuoto apri toast, non funge
-      nofity_error();
-    } else {
-      try {
-        handleClose();
-        const data = {
-          user: {
-            username: userGlobal.username,
-            email: userGlobal.email,
-            firstname: userGlobal.first_name,
-            lastname: userGlobal.last_name,
-            password: userGlobal.password,
-            isMod: false,
-            isSmm: false,
-            isUser: true,
-            pfp: newPhoto,
-          },
-        };
+    //TODO: se il campo è vuoto apri toast, non funge
 
-        const url = `${ReactConfig.base_url_requests}/user/${userGlobal.username}`;
-        const options = {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          mode: "cors",
-          body: JSON.stringify(data),
-        };
-
-        fetch(url, options)
-          .then((res) => {
-            console.log(res);
-            if (res.ok) {
-              //creation ok
-              return res.json();
-            }
-          })
-          .then((data) => {
-            notify();
-            console.log("Cambio pfp went good", data);
-            navigate("./");
-          })
-          .catch((error) => {
-            console.error("Cambio pfp failed, error:", error);
-          });
-      } catch (error) {
+    const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
+    fetch(uri, {
+      mode: "cors",
+      credentials: "include",
+    })
+      .then((res) => {
+        console.log("aaaaaaaaaaaaaaaaaa", res);
+        if (res.ok) {
+          return res.json();
+        }
+      })
+      .then((data) => {
+        console.log("Tutto ok, io sono:", data);
+        setUserGlobal(data);
+      })
+      .catch((error) => {
         console.error(error);
-      }
+      });
+
+    try {
+      handleClose();
+      const data = {
+        user: {
+          username: userGlobal.username,
+          email: userGlobal.email,
+          firstname: userGlobal.first_name,
+          lastname: userGlobal.last_name,
+          password: userGlobal.password,
+          isAdmin: false,
+          isSmm: false,
+          isUser: true,
+          pfp: base64Image,
+        },
+      };
+      console.log("zzzzzzzzzzzzzzzzzzzzzz", userGlobal);
+      const url = `${ReactConfig.base_url_requests}/user/${userGlobal.username}`;
+      const options = {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        mode: "cors",
+        body: JSON.stringify(data),
+      };
+
+      fetch(url, options)
+        .then((res) => {
+          console.log(res);
+          if (res.ok) {
+            //creation ok
+            return res.json();
+          }   
+        })
+        .then((data) => {
+          console.log("Cambio pfp went good", data);
+        })
+        .catch((error) => {
+          console.error("Cambio pfp failed, error:", error);
+        });
+    } catch (error) {
+      console.error(error);
     }
-  };
+  }
 
-  const handleImageChange = (newImage) => {
-    // Implement your logic to change the current image with the selected one
-    console.log("Changing image to:", newImage);
-    // Close the modal after changing the image
-    //setIsModalOpen(false);
-  };
-
-  //console.log("nomeeeeeeeeeeeeeeeeeeee", userGlobal.username);
+  //console.log("nomeeeeeeeeeeeeeeeeeeee", );
 
   const footerStyle = {
     backgroundColor: "#e0bb76",
@@ -123,24 +141,16 @@ function ChangePfp() {
           <Modal.Title style={{ textAlign: "center" }}>Cambia foto</Modal.Title>
         </Modal.Header>
         <Modal.Body className="modal-change-body">
-          <Form>
-            <Form.Group
-              as={Row}
-              className="mb-4"
-              controlId="exampleForm.ControlInput1"
-            >
-              <Form.Label>Nuova foto</Form.Label>
-              <Form.Control
-                type="file"
-                placeholder="inserisci qui"
-                name="nuovaPfp"
-                value={newPhoto}
-                onChange={(e) => {
-                  handleImageChange(e.target.files[0]);
-                }}
-              />
-            </Form.Group>
-          </Form>
+          <form>
+            <label>Nuova foto</label>
+            <input
+              type="file"
+              placeholder="inserisci qui"
+              name="nuovaPfp"
+              onChange={handleImageUpload}
+            />
+          </form>
+          {base64Image && <img src={base64Image} alt="Selected" />}
         </Modal.Body>
 
         <Modal.Footer style={footerStyle}>
@@ -152,10 +162,9 @@ function ChangePfp() {
               ANNULLA
             </button>
           </div>
-
-          <ToastContainer />
         </Modal.Footer>
       </Modal>
+      <ToastContainer />
     </div>
   );
 }
