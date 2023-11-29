@@ -31,7 +31,7 @@ function Squeal() {
 
   const navigate = useNavigate();
   if (userGlobal.username === undefined || userGlobal.username === "") {
-    navigate("./");
+    navigate("/");
   }
 
   const notify = () =>
@@ -70,6 +70,56 @@ function Squeal() {
       theme: "colored",
     });
 
+  //GET WHO AM I
+  /*
+  async function whoAmI() {
+    const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
+    fetch(uri)
+      .then((res) => {
+        console.log("aaaaaaaaaaaaaaaaaa", res);
+        if (res.ok) {
+
+          return res.json();
+        }
+      })
+      .then((data) => {
+        console.log("Tutto ok, io sono:", data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+  */
+  //GET USER DATA-----------------------------------------------------------------------------------------------
+  const [userData, setUserData] = useState("");
+
+  async function getUserData() {
+    try {
+      const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}`;
+      const options = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        mode: "cors",
+        credentials: "include",
+      };
+
+      let result = await fetch(uri, options);
+
+      if (result.ok) {
+        let data = await result.json();
+        //console.log(data);
+        setUserData(data);
+        return data;
+      } else {
+        console.error("Errore nella richiesta:", result.statusText);
+      }
+    } catch (error) {
+      console.error("Errore nella fetch:", error);
+    }
+  }
+
   //GET QUOTE-----------------------------------------------------------------------------------------------
   const [userQuote, setUserQuote] = useState("");
 
@@ -90,7 +140,7 @@ function Squeal() {
 
       if (result.ok) {
         let quote = await result.json();
-        console.log(quote);
+        //console.log(quote);
         setUserQuote(quote);
         return quote;
       } else {
@@ -437,7 +487,7 @@ function Squeal() {
           },
         };
 
-        console.log("aaaaaaaaaaaaaaaaaaaa", markerCoordinates);
+        //console.log("aaaaaaaaaaaaaaaaaaaa", markerCoordinates);
       } else if (inputType === "TEXT_AUTO") {
         // Esegui le operazioni desiderate con il testo del post e i bottoni cliccati
         console.log("Testo del post:", postText);
@@ -537,14 +587,19 @@ function Squeal() {
   }
 
   useEffect(() => {
-    const intervalId = setInterval(getUserQuote, 30000); //30 sec
     getUserQuote();
-
+    //whoAmI();
     log();
 
-    console.log(newDay);
+    const intervalId = setInterval(getUserQuote, 30000); //30 sec
+    //const intervalId1 = setInterval(whoAmI, 30000); //30 sec
+    const intervalId2 = setInterval(getUserData, 5000); //10 sec
+
+    //console.log(newDay);
     return () => {
       clearInterval(intervalId);
+      //clearInterval(intervalId1);
+      clearInterval(intervalId2);
     };
   }, []);
 
@@ -783,8 +838,8 @@ function Squeal() {
           <Container className="">
             <Row className="w-100">
               {squealsLogger.map((squeal) => (
-                <Col lg={12} key={squeal.id} className="mb-4">
-                  <Card style={{ height: "100%" }} className="squeal">
+                <Col lg={12} className="mb-4">
+                  <Card style={{ height: "100%" }}  key={squeal.id} className="squeal">
                     <Card.Header className="d-flex flex-col justify-content-center align-items-center">
                       {" "}
                       <b>{squeal.sender}</b>
