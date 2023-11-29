@@ -63,12 +63,18 @@ module.exports = class SquealToChannelModel extends Model {
 
     /**
      * @param channels {ChannelDto[]}
+     * @param excludeFrom
+     * @param excludeTo
+     * @param limit
      * @return {Promise<number[]>}
      */
     async getAllSquealsToChannels(channels, excludeFrom, excludeTo, limit) {
         await this.checkMongoose("squeal_to_channels", SquealChannel);
         let ids = [];
         let filterOr = [];
+        if(channels.length === 0)
+            return ids;
+
         for (const channel of channels) {
             filterOr.push({
                 channel_name: channel.channel_name,
