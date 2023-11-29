@@ -54,7 +54,7 @@ module.exports = class SquealToChannelModel extends Model {
         for (const result of results) {
             let tmp = new ChannelDto();
             tmp.channel_name = result._doc['channel_name'];
-            tmp.channel_type = result._doc['channel_type'];
+            tmp.type = result._doc['channel_type'];
             output.push(tmp);
         }
         return output;

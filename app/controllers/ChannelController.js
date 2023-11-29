@@ -632,6 +632,30 @@ module.exports = class ChannelController extends Controller {
                 response.username = username;
                 output['content'] = response.getDocument();
                 return output;
+            } else if(user.isAdmin) {
+                let response = new ChannelRoleDto();
+                response.role = autoload.config._CHANNEL_ROLE_ADMIN;
+                response.type = channelDto.type;
+                response.channel_name = channelDto.channel_name;
+                response.role_since = 0;
+                response.username = username;
+                output['content'] = response.getDocument();
+                return output;
+            } else if (channelDto.type === autoload.config._CHANNEL_TYPE_USER){
+                let channelTmp = await this.getChannel(channelDto);
+                if(channelTmp.code === 200){
+                    channelTmp = new ChannelDto(channelTmp.content);
+                    if(channelTmp.private === false){
+                        let response = new ChannelRoleDto();
+                        response.role = autoload.config._CHANNEL_ROLE_WRITE;
+                        response.type = channelDto.type;
+                        response.channel_name = channelDto.channel_name;
+                        response.role_since = 0;
+                        response.username = username;
+                        output['content'] = response.getDocument();
+                        return output;
+                    }
+                }
             }
             output['code'] = 404;
             output['msg'] = 'Not found. (2)';

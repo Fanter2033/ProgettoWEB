@@ -2,6 +2,7 @@ const express = require("express");
 const AuthController = require("../controllers/AuthController");
 const AuthModel = require("../models/AuthModel");
 const UtilsController = require("../controllers/UtilsController");
+const ChannelDto = require("../entities/dtos/ChannelDto");
 
 const utilsDriver = express.Router({ mergeParams: true });
 let controller = new UtilsController();
@@ -40,6 +41,17 @@ utilsDriver.get("/dashboard", async function (req, res) {
 utilsDriver.get("/squeals/:username", async function(req, res) {
     let username = (typeof req.params.username !== 'undefined' ? req.params.username.trim() : "");
     let ctrlOut = await controller.getSentSquealsFromUser(username);
+    if (ctrlOut.code === 200) res.status(200).send(ctrlOut.content);
+    else res.status(ctrlOut.code).send(ctrlOut);
+});
+
+utilsDriver.get('/squeals/:type/:name', async function (req, res) {
+    let authUser = authController.getAuthenticatedUser(req);
+    let channelDto = new ChannelDto();
+    channelDto.type = (typeof req.params['type'] !== 'undefined' ? req.params['type']: null);
+    channelDto.channel_name = (typeof req.params['name'] !== 'undefined' ? req.params['name']: null);
+    authUser = await authUser;
+    let ctrlOut = await controller.getSentSquealsToChannels(authUser, channelDto);
     if (ctrlOut.code === 200) res.status(200).send(ctrlOut.content);
     else res.status(ctrlOut.code).send(ctrlOut);
 });
