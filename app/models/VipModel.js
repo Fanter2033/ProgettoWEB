@@ -21,6 +21,7 @@ module.exports = class VipModel extends Model {
     }
 
     /**
+     * create a vip entity from the db
      * @param VipUserObj {VipDto}
      * @returns {Promise<boolean>}
      */
@@ -38,7 +39,7 @@ module.exports = class VipModel extends Model {
     }
 
     /**
-     *
+     * just delete a vip entity from the db
      * @param username {String}
      * @returns {Promise<boolean>}
      */
@@ -55,7 +56,7 @@ module.exports = class VipModel extends Model {
     }
 
     /**
-     *
+     * clear the linked
      * @param vipDto {VipDto}
      * @returns {Promise<boolean>}
      */
@@ -74,8 +75,8 @@ module.exports = class VipModel extends Model {
     }
 
     /**
-     * in this model the vip will have a linkedSmm and
-     * the smm wive  have a user added in his list of linkedAccounts
+     * - the vip will have a linkedSmm and
+     * - the smm will have a user added in his list of linkedAccounts
      * @param vipDto {VipDto}
      * @param SmmDto {VipDto}
      * @returns {Promise<boolean>}
@@ -102,8 +103,8 @@ module.exports = class VipModel extends Model {
     }
 
     /**
-     * in this model the vip will have his linkedSmm set to null and
-     * the smm will have a user removed from his list of linkedAccounts
+     * - the vip will have his linkedSmm set to null and
+     * - the smm will have a user removed from his list of linkedAccounts
      * @param vipDto {VipDto}
      * @param smmDto {VipDto}
      * @returns {Promise<boolean>}

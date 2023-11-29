@@ -17,7 +17,7 @@
               <label for="recipient-name" class="col-form-label"
                 >Destinatari:</label
               >
-              <input type="text" class="form-control" id="dest" />
+              <input type="text" class="form-control" id="dest" v-model="inputDest" />
             </div>
 
             <!--input type-->
@@ -79,6 +79,7 @@
                   class="form-control"
                   id="message-text"
                   name="message-text"
+                  v-model="inputContent"
                 ></textarea>
               </div>
 
@@ -91,6 +92,7 @@
                   name="message-image"
                   accept="image/png, image/jpeg"
                   class="col-form-label"
+                  @change="handelImage"
                 />
               </div>
 
@@ -99,18 +101,12 @@
                   >Share a YouTube video</label
                 >
                 <br />
-                <input type="url" id="message-video" name="message-video" />
+                <input type="url" id="message-video" name="message-video"
+                v-model="inputContent"/>
               </div>
 
               <div v-else-if="inputType === 'POSITION'">
-                <h3>
-                  WORK IN PROGRESS...
-                  <img
-                    src="../../../public/media/k.gif"
-                    alt="work in progress"
-                    style="width: 50px"
-                  />
-                </h3>
+                <Map/>
               </div>
 
               <div v-else-if="inputType === 'TEXT_AUTO'">
@@ -134,7 +130,7 @@
             >
               Close
             </button>
-            <button type="button" class="btn btn-primary">
+            <button type="button" class="btn btn-primary" @click="postSqueal">
               Post from {{ vipName }}
             </button>
           </div>
@@ -146,20 +142,26 @@
 
 <script setup>
 import VueConfig from "@/config/VueConfig";
-import { reactive, onMounted } from "vue";
+import {reactive, onMounted, watch, defineComponent} from "vue";
 import { ref } from "vue";
+import Map from "@/components/dashboard/Map.vue";
 
+const components = defineComponent({
+  Map
+})
 const props = defineProps({
   vip: String,
 });
 const vipName = ref("");
-const viewTips = ref("");
+const viewTips = ref("message text");
 const state = reactive({
   modal_demo: null,
 });
 const inputType = ref("MESSAGE_TEXT");
 const inputDest = ref([]);
-const inputOneField = ref("");
+const inputContent = ref("");
+const reader = new FileReader();
+
 
 
 onMounted(() => {
@@ -178,32 +180,71 @@ function closeModal() {
   state.modal_demo.hide();
 }
 
-/*queries*/
-function assembleBody(){
-  switch (inputType) {
-    case 'MESSAGE_TEXT':
-
+/*check dei destinatari*/
+function checkDest() {
+  // Suddivide l'input in destinatari separati da virgole
+  const destSep = inputDest.value.toString()
+      .split(",")
+      .map((dest) => dest.trim());
+  const isValid = destSep.every((dest) =>
+      /^[@#§]/.test(dest)
+  );
+  if (!isValid) {
+    alert("Ogni destinatario deve iniziare con uno dei simboli: #, §, @");
+    return null;
   }
+  return destSep;
 }
 
-function postSqueal(squeal){
+const inputImg = ref(null);
+function handelImage(){
+  const file = document.querySelector('input[type=file]').files[0]
+  const reader = new FileReader()
+
+  reader.onloadend = () => {
+    inputImg.value = reader.result;
+  }
+  reader.readAsDataURL(file);
+}
+
+function checkVideo(){
+  const regex =
+      /^(https?:\/\/)?(www\.)?(youtube\.com\/(channel\/|user\/|c\/)?[a-zA-Z0-9_-]{1,})|(youtu\.be\/[a-zA-Z0-9_-]{1,})/;
+  return regex.test(inputContent.value);
+}
+// create the request body
+function assembleBody(){
+  let body = "";
+  switch (inputType.value) {
+    case 'MESSAGE_TEXT':
+      body = inputContent.value;
+      break;
+    case 'IMAGE':
+      body = inputImg.value;
+      break;
+    case 'VIDEO_URL':
+      console.log(checkVideo());
+      if (checkVideo())
+        body = inputContent.value;
+      else
+        body = null;
+
+
+  }
+  console.log(body);
+  return body;
+}
+
+// validation and fetch of the squeal
+function postSqueal(){
   const uri =
       VueConfig.base_url_requests +
       "/squeal/from-smm/" +
       vipName;
   const squealBody = {}
-  //TODO: validazione dati inseriti
-  fetch(uri, {
-    method:'POST',
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    mode: "cors",
-  })
-
-
-
+  if(checkDest() === null)
+    console.log(inputDest)
+  assembleBody();
 }
 </script>
 
@@ -238,4 +279,5 @@ function postSqueal(squeal){
 #closeBtn {
   background-color: #ff1500;
 }
+
 </style>

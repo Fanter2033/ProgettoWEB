@@ -46,7 +46,7 @@ module.exports = class VipController extends Controller {
     }
 
     /**
-     *
+     * delete a vip, resolve eventually smm connections (deleting it)
      * @param username {String}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
@@ -59,6 +59,16 @@ module.exports = class VipController extends Controller {
             return output;
         }
 
+        //check if she/he has a smm
+        if(vipObj['content'].linkedSmm !== ""){
+            let smmRemoved = await this._model.removeSmm(new VipDto(vipObj.content));
+            if(!smmRemoved){
+                output['code'] = 500
+                output['msg'] = 'Server error, cannot remove the smm'
+                return output;
+            }
+        }
+
         let res = await this._model.deleteVip(username);
         if (res === false) {
             output['code'] = 500;
@@ -68,18 +78,22 @@ module.exports = class VipController extends Controller {
     }
 
     /**
-     * delete all the entities in the linked accounts' array
+     * - delete all the entities in the linked accounts' array
+     *
      * @param username {String}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
     async disableSmm(username){
         let output = this.getDefaultOutput();
         let vipObj = await this.getVip(username);
-        let vipDto = new VipDto(vipObj['content'])
+        let vipDto = new VipDto(vipObj['content']);
+
+
+        //clear the smm list
         let res = await this._model.disableSmm(vipDto);
         if(res === false){
             output['code'] = 500;
-            output['msg'] = 'Server error in deleting vip'
+            output['msg'] = 'Server error in deleting vip';
         }
         return output;
     }
