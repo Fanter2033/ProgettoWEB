@@ -153,9 +153,10 @@ function ChangePassword() {
           >
             CAMBIA
           </button>
-          <ToastContainer />
         </Modal.Footer>
       </Modal>
+      <ToastContainer />
+
     </div>
   );
 }

@@ -26,7 +26,7 @@ function Received() {
   const [dash, setDash] = useState([]);
 
   async function getDashboard() {
-    /*
+    
     try {
       const uri = `${ReactConfig.base_url_requests}/utils/dashboard/`;
       const options = {
@@ -51,7 +51,7 @@ function Received() {
     } catch (error) {
       console.error("Errore nella fetch:", error);
     }
-    */
+    
   }
 
   //console.log("DDDDDDDDDDDDDASH", dash);

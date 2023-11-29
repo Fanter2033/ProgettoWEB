@@ -150,15 +150,12 @@ function ChangeUsername() {
         </Modal.Body>
 
         <Modal.Footer style={footerStyle}>
-          <button
-            className="blue-button box"
-            onClick={cambioU}
-          >
+          <button className="blue-button box" onClick={cambioU}>
             CAMBIA
           </button>
-          <ToastContainer />
         </Modal.Footer>
       </Modal>
+      <ToastContainer />
     </div>
   );
 }
