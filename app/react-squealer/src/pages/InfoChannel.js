@@ -6,6 +6,7 @@ import { useUserContext } from "../config/UserContext";
 
 import { Container, Card, Col, Row } from "react-bootstrap";
 import "../css/App.css";
+import squeal_logo from "./media/icone/Nav_logo.png";
 
 //! PUT dei canali???
 function InfoChannel() {
@@ -53,8 +54,7 @@ function InfoChannel() {
   const [squealsLogger, setSquealsLogger] = useState([]);
 
   async function logPast() {
-    /*
-    console.log("aaaaaaaaaaaaaaaa",channel.channel_name);
+    console.log("aaaaaaaaaaaaaaaa", channel.channel_name);
     console.log(channel.type);
     try {
       const url = `${ReactConfig.base_url_requests}/utils/squeals/${channel.type}/${channel.channel_name}`;
@@ -69,6 +69,7 @@ function InfoChannel() {
 
       let result = await fetch(url, options);
 
+      console.log(result);
       if (result.ok) {
         let json = await result.json();
         setSquealsLogger(json);
@@ -78,16 +79,16 @@ function InfoChannel() {
     } catch (error) {
       console.error("Errore nella fetch:", error);
     }
-    */
   }
 
   console.log("LOGGERRRRRRRRRRRRRR", squealsLogger);
 
   useEffect(() => {
-    const intervalId1 = setInterval(logPast, 10000); //10 sec
+    //const intervalId1 = setInterval(logPast, 10000); //10 sec
     logPast();
+
     return () => {
-      clearInterval(intervalId1);
+      //clearInterval(intervalId1);
     };
   }, []);
 
@@ -95,7 +96,7 @@ function InfoChannel() {
     <div>
       <div className="">
         <h3 className="cool-font-medium">
-          Nome Canale: {channel.channel_name} 
+          Nome Canale: {channel.channel_name}
         </h3>
         <Link to="/details" state={channel}>
           <button className="yellow-button box ">
@@ -104,7 +105,7 @@ function InfoChannel() {
               width="16"
               height="16"
               fill="currentColor"
-              class="bi bi-info-circle-fill"
+              className="bi bi-info-circle-fill"
               viewBox="0 0 16 16"
             >
               <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
@@ -121,7 +122,7 @@ function InfoChannel() {
             width="16"
             height="16"
             fill="currentColor"
-            class="bi bi-arrow-left"
+            className="bi bi-arrow-left"
             viewBox="0 0 16 16"
           >
             <path
@@ -136,7 +137,7 @@ function InfoChannel() {
             width="16"
             height="16"
             fill="currentColor"
-            class="bi bi-plus-lg"
+            className="bi bi-plus-lg"
             viewBox="0 0 16 16"
           >
             <path

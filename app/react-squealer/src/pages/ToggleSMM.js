@@ -28,7 +28,7 @@ const ToggleSMM = ({ mongoData }) => {
 
       if (result.ok) {
         let data = await result.json();
-        console.log(data);
+        //console.log(data);
         setUserData(data);
         return data;
       } else {

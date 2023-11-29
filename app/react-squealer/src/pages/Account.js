@@ -12,6 +12,7 @@ import { useUserContext } from "../config/UserContext";
 import Geo from "./Geo";
 import VultureAnimation from "./VoltureAnimation";
 
+import ChangePfp from "./ChangePfp.js";
 import ChangeUsername from "./ChangeUsername";
 import ChangePassword from "./ChangePassword.js";
 
@@ -45,7 +46,7 @@ const { firstname, lastname, username, email, password } = userData;
 
 function Account() {
   const { userGlobal, setUserGlobal } = useUserContext();
-  console.log(userGlobal.vip, "viiiiip");
+  //console.log(userGlobal.vip, "viiiiip");
 
   //per il logout
   const navigate = useNavigate();
@@ -126,7 +127,7 @@ function Account() {
 
       if (result.ok) {
         let data = await result.json();
-        console.log(data);
+        //console.log(data);
         setUserData(data);
         return data;
       } else {
@@ -158,7 +159,7 @@ function Account() {
 
       if (result.ok) {
         let quote = await result.json();
-        console.log(quote);
+        //console.log("GET quote:", quote);
         setUserQuote(quote);
         return quote;
       } else {
@@ -198,7 +199,6 @@ function Account() {
   }
 
   //console.log("LOGGERRRRRRRRRRRRRR", squealsLogger);
-  
 
   //GET /user/{username}/roles/
   const [roleUser, setRoleUser] = useState(0);
@@ -219,8 +219,7 @@ function Account() {
 
       if (result.ok) {
         let data = await result.json();
-        console.log("BBBBBBBBBBBBBBBBBBBBBBB", data);
-        console.error("Successo nella richiesta dei ruoli");
+        //console.log("Successo nella richiesta dei ruoli", data);
         setRoleUser(data);
         return data;
       } else {
@@ -251,7 +250,6 @@ function Account() {
       clearInterval(intervalId4);
     };
   }, []);
-  
 
   //LOGOUT  USER------------------------------------------------------------------------------
   const notify = () =>
@@ -299,7 +297,7 @@ function Account() {
     setFollowing(true);
   }
 
-  //----------------------------------------------------------------------------------------------------------------
+  //ANIMATION----------------------------------------------------------------------------------------------------------------
   const [showVultureAnimation, setShowVultureAnimation] = useState(false);
 
   const showVulture = () => {
@@ -308,6 +306,14 @@ function Account() {
 
   const hideVulture = () => {
     setShowVultureAnimation(false);
+  };
+
+  //PFP----------------------------------------------------------------------------------------------------------------
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const handleImageClick = () => {
+    setIsModalOpen(!isModalOpen);
   };
 
   //----------------------------------------------------------------------------------------------------------------
@@ -322,7 +328,11 @@ function Account() {
               className="rounded-circle ms-4 pfp box"
               onMouseOver={showVulture}
               onMouseLeave={hideVulture}
+              onClick={() => handleImageClick({ cattyy })}
             />
+
+            {isModalOpen && <ChangePfp />}
+
             {userData.isAdmin && (
               <>
                 <svg
@@ -373,7 +383,7 @@ function Account() {
                       >
                         <ToggleSMM mongoData={userData.isSmm} />
 
-                        {isCliccato ? (
+                        {!userData.isSmm ? (
                           <button
                             className="col-6 upgrade-button mb-2 box"
                             onClick={openConnect}
@@ -652,10 +662,6 @@ function Account() {
           <li className="list-group-item list">
             if owner of ch toast for DELETE
           </li>
-          <li className="list-group-item list">
-            PUT cambio: mail, nome, cognome??
-          </li>
-
           <li className="list-group-item list">quota per un anno</li>
         </ul>
       </div>
