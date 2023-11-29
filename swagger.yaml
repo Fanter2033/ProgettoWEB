@@ -52,6 +52,16 @@ paths:
           description: Failed authentication due server error
         '404':
           description: No user to de-authenticate found.
+  /auth/whoami/:
+    get:
+      tags:
+        - auth
+      summary: Returns the object of the authenticated user
+      responses:
+        '200':
+          description: Returns what told in the summary.
+        '403':
+          description: Not authenticated
   /utils/dashboard/:
     get:
       tags:
@@ -108,7 +118,7 @@ paths:
             type: array
             maxLength: 10
             $ref: '#/definitions/Squeal'
-  /utils/squeals/{channel_type}/{channel_name}:
+  /utils/squeals/{channel_type}/{name}:
     get:
       tags:
         - utils
@@ -415,6 +425,35 @@ paths:
           description: 'User not found'
         '500':
           description: 'Internal server error'
+  /user/{username}/resetPassword/:
+    put:
+      tags:
+        - user
+      summary: Reset password with reset password string if exists, is not null and not void
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+        - name: reset
+          in: formData
+          required: true
+          type: string
+        - name: password
+          in: formData
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'OK'
+        '400':
+          description: 'Bad Request.'
+        '403':
+          description: 'Reset str error.'
+        '404':
+          description: 'User not found'
+        '500':
+          description: 'Internal server error'
   /channel:
     post:
       tags:
@@ -534,14 +573,14 @@ paths:
                   $ref: '#/definitions/Channel'
               totalCount:
                 type: integer
-  /channel/{type}/{channel_name}:
+  /channel/{type}/{name}:
     put:
       tags:
         - channel
       summary: Update the channel
       description: Update the channel with his name in path with the passed Channel object in the body. If the password is not passed the system handle old password. Registration timestamp do not be changed. Cannot update TAG channels
       parameters:
-        - name: channel_name
+        - name: name
           in: path
           required: true
           type: string
@@ -575,7 +614,7 @@ paths:
         - channel
       summary: Delete the channel
       parameters:
-        - name: channel_name
+        - name: name
           in: path
           required: true
           type: string
@@ -598,7 +637,7 @@ paths:
         - channel
       summary: Get channel information
       parameters:
-        - name: channel_name
+        - name: name
           in: path
           required: true
           type: string
@@ -629,7 +668,7 @@ paths:
         - channel
       summary: Follow channel
       parameters:
-        - name: channel_name
+        - name: name
           in: path
           required: true
           type: string
@@ -646,19 +685,82 @@ paths:
           schema:
             type: number
           description: 'Returns the role assoc'
+        '208':
+          description: 'Already following'
         '400':
           description: 'Bad Request.'
         '403':
           description: 'Not logged'
         '404':
           description: 'The specified channel in URL path is not found'
-  /channel/{type}/{channel_name}/{username}/:
+  /channel/{type}/{name}/users/{username}/:
+    delete:
+      tags:
+        - channel
+      summary: Delete the user role.
+      description: Delete the user role from the channel, used to handle unfollow.
+      parameters:
+        - name: name
+          in: path
+          required: true
+          type: string
+        - name: type
+          in: path
+          required: true
+          type: string
+        - name: username
+          type: string
+          required: true
+          in: path
+      responses:
+        '200':
+          description: 'Deleted channel'
+        '403':
+          description: 'Unable to delete channel due low privileges or tired to delete tag channel. For Public channels only administrators can execute delete. For user channels only admins can execute delete'
+          schema:
+            type: string
+            description: 'More information about the error'
+        '404':
+          description: 'The specified channel in URL path is not found'
+    get:
+      tags:
+        - channel
+      summary: Get the role of the user in the channel.
+      parameters:
+        - name: name
+          in: path
+          required: true
+          type: string
+        - name: type
+          in: path
+          required: true
+          type: string
+          enum:
+            - CHANNEL_OFFICIAL
+            - CHANNEL_USERS
+            - CHANNEL_HASHTAG
+        - name: username
+          type: string
+          required: true
+          in: path
+      responses:
+        '200':
+          description: 'Everything is ok'
+        '400':
+          description: 'Bad Request.'
+        '401':
+          description: 'User logged but not authorized to execute the operation'
+        '403':
+          description: 'User not logged'
+        '500':
+          description: 'Internal server error'
+  /channel/{type}/{name}/{username}/:
     patch:
       tags:
         - channel
       summary: Change the role of the user.
       parameters:
-        - name: channel_name
+        - name: name
           in: path
           required: true
           type: string
@@ -691,14 +793,14 @@ paths:
           description: 'User not found'
         '500':
           description: 'Internal server error'
-  /channel/{type}/{channel_name}/toggle/lock:
+  /channel/{type}/{name}/toggle/lock:
     patch:
       tags:
         - channel
       summary: Toggle the lock of a channel.
       description: Toggle the lock of a channel. If the channel is locked unlock it, if is unlocked lock it.
       parameters:
-        - name: channel_name
+        - name: name
           in: path
           required: true
           type: string
@@ -723,13 +825,13 @@ paths:
           description: 'Channel not found'
         '500':
           description: 'Internal server error'
-  /channel/{type}/{channel_name}/users/:
+  /channel/{type}/{name}/users/:
     get:
       tags:
         - channel
       summary: Get the users following a channel.
       parameters:
-        - name: channel_name
+        - name: name
           in: path
           required: true
           type: string
@@ -756,46 +858,13 @@ paths:
           description: 'User not logged'
         '500':
           description: 'Internal server error'
-  /channel/{type}/{channel_name}/users/{username}/:
-    get:
-      tags:
-        - channel
-      summary: Get the role of the user in the channel.
-      parameters:
-        - name: channel_name
-          in: path
-          required: true
-          type: string
-        - name: type
-          in: path
-          required: true
-          type: string
-          enum:
-            - CHANNEL_OFFICIAL
-            - CHANNEL_USERS
-            - CHANNEL_HASHTAG
-        - name: username
-          type: string
-          required: true
-          in: path
-      responses:
-        '200':
-          description: 'Everything is ok'
-        '400':
-          description: 'Bad Request.'
-        '401':
-          description: 'User logged but not authorized to execute the operation'
-        '403':
-          description: 'User not logged'
-        '500':
-          description: 'Internal server error'
-  /channel/{type}/{channel_name}/roles/{role}:
+  /channel/{type}/{name}/roles/{role}:
     get:
       tags:
         - channel
       summary: Get the users following a channel.
       parameters:
-        - name: channel_name
+        - name: name
           in: path
           required: true
           type: string
@@ -909,7 +978,7 @@ paths:
             description: 'More information about the error'
         '404':
           description: 'The specified squeal in URL path is not found'
-  /squeal/{identifier_id}/reactions/{reaction}:
+  /squeal/{identifier_id}/reaction/{reaction}:
     patch:
       tags:
         - squeal

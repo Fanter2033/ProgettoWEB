@@ -24,12 +24,14 @@ import DowngradeModal from "./DowngradeModal.js";
 import ConnectSMM from "./ConnectSMM";
 import ToggleSMM from "./ToggleSMM";
 
-import { Button, Card, Col, Row } from "react-bootstrap";
+import { Card, Col, Row } from "react-bootstrap";
 
 import "../css/App.css";
 import cattyy from "./media/splash.jpeg";
 import pink from "./media/avvoltoioEli.png";
 
+//TODO: check navigateeeeeeeeeeeeeee ho tolto il . davanti al /
+//TODO: PFP
 /*
 col-12 col-md-6
 su schermi md e più grandi ho due colonne
@@ -41,8 +43,6 @@ obj destructoring, estraggo campi specifici da un obj
 const { firstname, lastname, username, email, password } = userData;
 */
 
-//TODO: GET /user/{username}/roles/
-//TODO:NUM SQUEAL
 function Account() {
   const { userGlobal, setUserGlobal } = useUserContext();
   console.log(userGlobal.vip, "viiiiip");
@@ -106,9 +106,37 @@ function Account() {
     setIsCliccato(val);
     //console.log(isCliccato, "cccccccccccccccccclick")
   };
-  //following button
-  const [following, setFollowing] = useState(false);
-  const [created, setCreated] = useState(false);
+
+  //GET USER DATA-----------------------------------------------------------------------------------------------
+  const [userData, setUserData] = useState("");
+
+  async function getUserData() {
+    try {
+      const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}`;
+      const options = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        mode: "cors",
+        credentials: "include",
+      };
+
+      let result = await fetch(uri, options);
+
+      if (result.ok) {
+        let data = await result.json();
+        console.log(data);
+        setUserData(data);
+        return data;
+      } else {
+        console.error("Errore nella richiesta:", result.statusText);
+      }
+    } catch (error) {
+      console.error("Errore nella fetch:", error);
+    }
+  }
+  //console.log(userData);
 
   //GET USER QUOTE-----------------------------------------------------------------------------------------------
   const [userQuote, setUserQuote] = useState("");
@@ -141,20 +169,43 @@ function Account() {
     }
   }
 
-  useEffect(() => {
-    const intervalId = setInterval(getUserQuote, 10000); //10 sec
-    getUserQuote();
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
+  //GET LOG SQUEALS VECCHI--------------------------------------------------------------
+  const [squealsLogger, setSquealsLogger] = useState([]);
 
-  //GET USER DATA-----------------------------------------------------------------------------------------------
-  const [userData, setUserData] = useState("");
-
-  async function getUserData() {
+  async function log() {
     try {
-      const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}`;
+      const url = `${ReactConfig.base_url_requests}/utils/squeals/${userGlobal.username}`;
+      const options = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        mode: "cors",
+      };
+
+      let result = await fetch(url, options);
+
+      if (result.ok) {
+        let json = await result.json();
+        setSquealsLogger(json);
+      } else {
+        console.error("Errore nella richiesta:", result.statusText);
+      }
+    } catch (error) {
+      console.error("Errore nella fetch:", error);
+    }
+  }
+
+  //console.log("LOGGERRRRRRRRRRRRRR", squealsLogger);
+  
+
+  //GET /user/{username}/roles/
+  const [roleUser, setRoleUser] = useState(0);
+
+  async function getRoles() {
+    try {
+      const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}/roles`;
       const options = {
         method: "GET",
         headers: {
@@ -168,8 +219,9 @@ function Account() {
 
       if (result.ok) {
         let data = await result.json();
-        console.log(data);
-        setUserData(data);
+        console.log("BBBBBBBBBBBBBBBBBBBBBBB", data);
+        console.error("Successo nella richiesta dei ruoli");
+        setRoleUser(data);
         return data;
       } else {
         console.error("Errore nella richiesta:", result.statusText);
@@ -179,16 +231,27 @@ function Account() {
     }
   }
 
+  //console.log("RRRRRRRRRRRRROLE", roleUser);
+
   useEffect(() => {
+    log();
     getUserData();
-    const intervalId = setInterval(getUserData, 10000); //10 sec
-    const intervalId2 = setInterval(getSmm, 10000); //3 sec
+    getRoles();
+    getUserQuote();
+
+    const intervalId = setInterval(getUserData, 5000); //10 sec
+    //const intervalId2 = setInterval(getSmm, 10000); //10 sec
+    const intervalId3 = setInterval(getRoles, 10000); //10 sec
+    const intervalId4 = setInterval(getUserQuote, 10000); //10 sec
 
     return () => {
       clearInterval(intervalId);
-      clearInterval(intervalId2);
+      //clearInterval(intervalId2);
+      clearInterval(intervalId3);
+      clearInterval(intervalId4);
     };
   }, []);
+  
 
   //LOGOUT  USER------------------------------------------------------------------------------
   const notify = () =>
@@ -218,7 +281,7 @@ function Account() {
       .then((response) => {
         if (response.ok) {
           console.log("logout riuscito con successo");
-          navigate(`./`);
+          navigate(`/`);
         } else {
           notify();
           console.error("Logout failed", response.statusText);
@@ -230,88 +293,10 @@ function Account() {
   }
 
   //!channels
-  const [channels, setChannels] = useState([]);
-
-  //TODO: PUT: CANALI SEGUITI /user/${username}-----------------------------------------------------------------------------------------------------
+  const [following, setFollowing] = useState(false);
+  //OPEN CANALI SETTINGS -----------------------------------------------------------------------------------------------------
   async function followedChannels() {
     setFollowing(true);
-    //GET channels: if followed by user, print
-    try {
-      const uri = `${ReactConfig.base_url_requests}/channel`;
-      const options = {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        mode: "cors",
-      };
-
-      let result = await fetch(uri, options);
-
-      if (result.ok) {
-        let json = await result.json();
-        let camp = json.channels;
-        setChannels(camp);
-      } else {
-        console.error("Errore nella richiesta:", result.statusText);
-      }
-    } catch (error) {
-      console.error("Errore nella fetch:", error);
-    }
-  }
-
-  //TODO: GET: CANALI CREATI -----------------------------------------------------------------------------------------------------
-  async function createdChannels() {
-    setCreated(true);
-    //GET channels: if user is owner, get
-    try {
-      const uri = `${ReactConfig.base_url_requests}/channel`;
-      const options = {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        mode: "cors",
-      };
-
-      let result = await fetch(uri, options);
-
-      if (result.ok) {
-        let json = await result.json();
-        let camp = json.channels;
-        setChannels(camp);
-      } else {
-        console.error("Errore nella richiesta:", result.statusText);
-      }
-    } catch (error) {
-      console.error("Errore nella fetch:", error);
-    }
-  }
-
-  //!vip
-
-  /*
-  user: string
-  linked_smm: string
-  linked_users: []
-  */
-
-  //TODO: GET /user/{username}/my-smm-----------------------------------------------------------------------------------------------------
-  async function getSmm() {
-    const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}/my-smm`;
-    await fetch(uri)
-      .then((response) => {
-        if (response.ok) {
-          console.log(response);
-        } else {
-          console.error("Authentication failed", response.statusText);
-        }
-      })
-      .catch((error) => {
-        console.error("Network error", error);
-      });
   }
 
   //----------------------------------------------------------------------------------------------------------------
@@ -338,14 +323,14 @@ function Account() {
               onMouseOver={showVulture}
               onMouseLeave={hideVulture}
             />
-            {userGlobal.isAdmin === true && (
+            {userData.isAdmin && (
               <>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="40"
                   height="40"
                   fill="#528b57"
-                  class="bi bi-fingerprint"
+                  className="bi bi-fingerprint"
                   viewBox="0 0 16 16"
                 >
                   <path d="M8.06 6.5a.5.5 0 0 1 .5.5v.776a11.5 11.5 0 0 1-.552 3.519l-1.331 4.14a.5.5 0 0 1-.952-.305l1.33-4.141a10.5 10.5 0 0 0 .504-3.213V7a.5.5 0 0 1 .5-.5Z" />
@@ -365,23 +350,28 @@ function Account() {
                 <div className="d-md-flex flex-md-row flex-column">
                   <div className="col-12">
                     <h1 className="d-flex flex-col align-items-center justify-content-center cool-font-medium mt-2 mb-2">
-                      {userGlobal.username}
-                      {userGlobal.vip && (
+                      {userData.username}
+                      {userData.vip && (
                         <img src={pink} style={{ width: "10%" }} />
                       )}
                     </h1>
+                    {userData.locked && (
+                      <>
+                        <p>BLOCCATO</p>
+                      </>
+                    )}
                     <h2>
                       {userData.first_name} {userData.last_name}
                     </h2>
-                    <button className="yellow-button box col-6">
-                      N SQUEALS
+                    <button className="yellow-button box col-12">
+                      N SQUEALS: {squealsLogger.length}
                     </button>
-                    {userGlobal.vip && (
+                    {userData.vip && (
                       <div
                         id="vip_buttons"
                         className="row d-flex flex-row justify-content-center align-items-center"
                       >
-                        <ToggleSMM onCliccato={handleCliccatoChange} />
+                        <ToggleSMM mongoData={userData.isSmm} />
 
                         {isCliccato ? (
                           <button
@@ -408,7 +398,7 @@ function Account() {
                       downgrade={downgrade}
                       closeDowngrade={closeDowngrade}
                     />
-                    {!userGlobal.vip && (
+                    {!userData.vip && (
                       <button
                         className="box upgrade-button"
                         onClick={handleShowModal}
@@ -459,8 +449,6 @@ function Account() {
               COMPRA
             </button>
             <BuyQuoteModal buyModal={buyModal} closeBuyModal={closeBuyModal} />
-            <p>per un anno????????</p>
-            <p>MAX 10.000???</p>
           </div>
 
           <div className="col-md-6">
@@ -491,14 +479,140 @@ function Account() {
 
         <div className=" mb-5">
           <div className=" d-flex flex-column justify-content-center align-items-center ">
-            <button className="user_button mb-2 box" onClick={createdChannels}>
-              CANALI CREATI
-            </button>
             <button className="user_button mb-2 box" onClick={followedChannels}>
-              CANALI SEGUITI
+              SITUAZIONE CANALI
             </button>
+            {following && (
+              <div className="container-flex pb-5">
+                <div className="row">
+                  <div className="col-12">
+                    <h2>Situazione Canali</h2>
+                    <Row className="ms-4 me-4">
+                      {roleUser.map((channel) => (
+                        <Col
+                          key={channel.id}
+                          lg={12}
+                          className="mb-4 d-flex justify-content-center align-items-center"
+                        >
+                          {channel.role === 0 && (
+                            <>
+                              <Card className="w-50 squeal">
+                                <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
+                                  <p>Nome: {channel.channel_name}</p>
+                                  <Link to="/infoc">
+                                    <button className="custom-button box">
+                                      Info
+                                    </button>
+                                  </Link>
+                                </Card.Header>
+                                <Card.Body className=" d-flex flex-row justify-content-evenly">
+                                  <Card.Title className="ms-4 me-4">
+                                    RUOLO: IN ATTESA
+                                  </Card.Title>
+                                </Card.Body>
+                                <Card.Footer>
+                                  <p>Tipo: {channel.type}</p>
+                                </Card.Footer>
+                              </Card>
+                            </>
+                          )}
+                          {channel.role === 1 && (
+                            <>
+                              <Card className="w-50 squeal">
+                                <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
+                                  <p>Nome: {channel.channel_name}</p>
+                                  <Link to="/infoc">
+                                    <button className="custom-button box">
+                                      Info
+                                    </button>
+                                  </Link>
+                                </Card.Header>
+                                <Card.Body className=" d-flex flex-row justify-content-evenly">
+                                  <Card.Title className="ms-4 me-4">
+                                    RUOLO: LETTORE
+                                  </Card.Title>
+                                </Card.Body>
+                                <Card.Footer>
+                                  <p>Tipo: {channel.type}</p>
+                                </Card.Footer>
+                              </Card>
+                            </>
+                          )}
+                          {channel.role === 2 && (
+                            <>
+                              <Card className="w-50 squeal">
+                                <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
+                                  <p>Nome: {channel.channel_name}</p>
+                                  <Link to="/infoc">
+                                    <button className="custom-button box">
+                                      Info
+                                    </button>
+                                  </Link>
+                                </Card.Header>
+                                <Card.Body className=" d-flex flex-row justify-content-evenly">
+                                  <Card.Title className="ms-4 me-4">
+                                    RUOLO: SCRITTORE
+                                  </Card.Title>
+                                </Card.Body>
+                                <Card.Footer>
+                                  <p>Tipo: {channel.type}</p>
+                                </Card.Footer>
+                              </Card>
+                            </>
+                          )}
+                          {channel.role === 3 && (
+                            <>
+                              <Card className="w-50 squeal">
+                                <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
+                                  <p>Nome: {channel.channel_name}</p>
+                                  <Link to="/infoc">
+                                    <button className="custom-button box">
+                                      Info
+                                    </button>
+                                  </Link>
+                                </Card.Header>
+                                <Card.Body className=" d-flex flex-row justify-content-evenly">
+                                  <Card.Title className="ms-4 me-4">
+                                    RUOLO: ADMIN
+                                  </Card.Title>
+                                </Card.Body>
+                                <Card.Footer>
+                                  <p>Tipo: {channel.type}</p>
+                                </Card.Footer>
+                              </Card>
+                            </>
+                          )}
+                          {channel.role === 4 && (
+                            <>
+                              <Card className="w-50 squeal">
+                                <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
+                                  <p>Nome: {channel.channel_name}</p>
+                                  <Link to="/infoc">
+                                    <button className="custom-button box">
+                                      Info
+                                    </button>
+                                  </Link>
+                                </Card.Header>
+                                <Card.Body className=" d-flex flex-row justify-content-evenly">
+                                  <Card.Title className="ms-4 me-4">
+                                    RUOLO: CREATORE
+                                  </Card.Title>
+                                </Card.Body>
+                                <Card.Footer>
+                                  <p>Tipo: {channel.type}</p>
+                                </Card.Footer>
+                              </Card>
+                            </>
+                          )}
+                        </Col>
+                      ))}
+                    </Row>
+                  </div>
+                </div>
+              </div>
+            )}
 
-            {!userGlobal.vip && <ChangeUsername />}
+            {!userData.vip && <ChangeUsername />}
             <ChangePassword />
 
             <button
@@ -529,78 +643,20 @@ function Account() {
             </button>
           </div>
         </div>
-
-        {following && (
-          <div className="container-flex pb-5">
-            <div className="row">
-              <div className="col-12">
-                <h2>Lista TUTTI i Canali:</h2>
-                <Row className="ms-4 me-4">
-                  {channels.map((channel) => (
-                    <Col key={channel.id} lg={6} className="mb-4 ">
-                      <Card>
-                        <Card.Body className="mb-4 d-flex flex-row">
-                          <Card.Title className="ms-4 me-4">
-                            {channel.channel_name}
-                          </Card.Title>
-
-                          <Link to="/infoc">
-                            <Button variant="primary" className="ms-4 me-4">
-                              Info
-                            </Button>
-                          </Link>
-                        </Card.Body>
-                      </Card>
-                    </Col>
-                  ))}
-                </Row>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {created && (
-          <div className="container-flex pb-5">
-            <div className="row">
-              <div className="col-12">
-                <h2>Lista TUTTI i Canali:</h2>
-                <Row className="ms-4 me-4">
-                  {channels.map((channel) => (
-                    <Col key={channel.id} lg={6} className="mb-4 ">
-                      <Card>
-                        <Card.Body className="mb-4 d-flex flex-row">
-                          <Card.Title className="ms-4 me-4">
-                            {channel.channel_name}
-                          </Card.Title>
-
-                          <Link to="/infoc">
-                            <Button variant="primary" className="ms-4 me-4">
-                              Info
-                            </Button>
-                          </Link>
-                        </Card.Body>
-                      </Card>
-                    </Col>
-                  ))}
-                </Row>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
       <div className="row d-flex justify-content-center ms-1 me-1 mb-5">
         <h3>TODO:</h3>
         <ul className="list-group col-md-4">
-          <li className="list-group-item list">utente bloccato</li>
-          <li className="list-group-item list">TEST DELETE</li>
-          <li className="list-group-item list">TEST connect SMM</li>
-          <li className="list-group-item list">if owner of ch toast</li>
+          <li className="list-group-item list">connect SMM</li>
+          <li className="list-group-item list">PROFILE PICTURES</li>
+          <li className="list-group-item list">
+            if owner of ch toast for DELETE
+          </li>
           <li className="list-group-item list">
             PUT cambio: mail, nome, cognome??
           </li>
-          <li className="list-group-item list">
-            PATCH squeal, per le reacctions
-          </li>
+
+          <li className="list-group-item list">quota per un anno</li>
         </ul>
       </div>
     </div>

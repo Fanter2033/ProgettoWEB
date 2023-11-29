@@ -50,7 +50,7 @@ function DowngradeModal({downgrade, closeDowngrade}) {
         </Modal.Header>
         <Modal.Body className="custom-modal-body">
           <p className="custom-modal-text cool-font-medium">
-            Torna <span class="luminescent-word">USER</span>
+            Torna <span className="luminescent-word">USER</span>
           </p>
           <ul className="custom-modal-list">
             <li>Potrai cambiare nome</li>

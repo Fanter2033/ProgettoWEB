@@ -32,6 +32,7 @@ module.exports = class ChannelController extends Controller {
      */
     async createChannel(channelDto, authenticatedUser) {
         let output = this.getDefaultOutput();
+        channelDto.channel_name = channelDto.channel_name.replace(' ', '_');
         if (this.checkChannelType(channelDto.type) === false) {
             output['code'] = 400;
             output['msg'] = 'Invalid type of channel. Bad request.';
@@ -123,6 +124,34 @@ module.exports = class ChannelController extends Controller {
     }
 
     /**
+     * @param {ChannelDto} channelDto
+     * @return {Promise<{msg: string, code: number, content: {}}>}
+     */
+    async createChannelHashtag(channelDto) {
+        let output = this.getDefaultOutput();
+        channelDto.channel_name = channelDto.channel_name.replace(' ', '_');
+        channelDto.channel_name = channelDto.channel_name.toLowerCase();
+        channelDto.type = autoload.config._CHANNEL_TYPE_HASHTAG;
+        channelDto.locked = false;
+        channelDto.private = false;
+        channelDto.description = '';
+
+        //if we are here al checks is OK!
+        //Let's create channel into database.
+        let modelOutput = await this.#_model.createChannel(channelDto);
+
+        if (modelOutput === false) {
+            output['code'] = 500;
+            output['msg'] = 'Internal server error.';
+            return output;
+        }
+
+        //channel official do not require any relationship.
+        output['content'] = channelDto.getDocument();
+        return output;
+    }
+
+    /**
      * @param {UserDto | {}} requestingUser
      * @param {number} offset
      * @param {number} limit
@@ -135,10 +164,6 @@ module.exports = class ChannelController extends Controller {
     async getChannelList(requestingUser, offset, limit, search, orderBy, orderDir, type) {
         let output = this.getDefaultOutput();
         let s2c = new SquealToChannelModel();
-
-        let isAdmin = false;
-        if (this.isObjectVoid(requestingUser) === false)
-            isAdmin = requestingUser.isAdmin;
 
         offset = parseInt(offset);
         limit = parseInt(limit);
@@ -174,6 +199,7 @@ module.exports = class ChannelController extends Controller {
     async updateChannel(oldChannel, newChannel, authUser) {
         let output = this.getDefaultOutput();
         let exists = await this.channelExists(oldChannel);
+        newChannel.channel_name = newChannel.channel_name.replace(' ', '_');
         let new_exists = await this.channelExists(newChannel);
 
         if (oldChannel.type === autoload.config._CHANNEL_TYPE_HASHTAG || newChannel.type === autoload.config._CHANNEL_TYPE_HASHTAG) {
@@ -297,12 +323,13 @@ module.exports = class ChannelController extends Controller {
 
     /**
      * @param {ChannelDto} channelDto
+     * @param {boolean} searchHashtags
      * @return {Promise<{msg: string, code: number, content: {object}}>}
      * Given a channel returns the channel object.
      * It is used to check if a channel exists.
      * No checks on authenticated user is required.
      */
-    async getChannel(channelDto) {
+    async getChannel(channelDto, searchHashtags = false) {
         let output = this.getDefaultOutput();
 
         if (this.checkChannelType(channelDto.type) === false) {
@@ -319,7 +346,7 @@ module.exports = class ChannelController extends Controller {
             return output;
         }
 
-        if (channelDto.type === 'CHANNEL_HASHTAG') {
+        if (channelDto.type === 'CHANNEL_HASHTAG' && searchHashtags === false) {
             let tmp = new ChannelDto();
             tmp.channel_name = channelDto.channel_name;
             tmp.type = 'CHANNEL_HASHTAG';
@@ -614,6 +641,55 @@ module.exports = class ChannelController extends Controller {
         return output;
     }
 
+    /**
+     * @param {ChannelDto} channelDto
+     * @param {string} username
+     * @param {UserDto} authUser
+     * @return {Promise<{msg: string, code: number, content: {}}>}
+     */
+    async unfollowChannel(channelDto, username, authUser){
+        let output = this.getDefaultOutput();
+
+        let deletingRole = await this.getChannelUserRole(channelDto, username);
+        if(deletingRole.code !== 200){
+            return deletingRole;
+        }
+        deletingRole = new ChannelRoleDto(deletingRole.content);
+
+        if(deletingRole.role === autoload.config._CHANNEL_ROLE_OWNER){
+            output['code'] = 400;
+            output['msg'] = 'Cannot delete the owner role. Delete the channel or choose another owner';
+            return output;
+        }
+
+        if(authUser.isAdmin === false && authUser.username !== username){
+            //Not an admin we should get the user role and check if is an admin or owner
+            let authUserRole = await this.getChannelUserRole(channelDto, authUser.username);
+            if(authUserRole.code !== 200){
+                output['code'] = 401;
+                output['msg'] = 'Unauthorized - 1';
+                return output;
+            }
+
+            authUserRole = new ChannelRoleDto(authUserRole.content);
+            if(authUserRole.role !== autoload.config._CHANNEL_ROLE_OWNER
+                && authUserRole.role !== autoload.config._CHANNEL_ROLE_ADMIN) {
+                output['code'] = 401;
+                output['msg'] = 'Unauthorized - 2';
+                return output;
+            }
+        }
+
+        let result = await this.#channelRolesController.deleteUserRoleFromChannel(deletingRole);
+        if(result === false){
+            output['code'] = 500;
+            output['msg'] = 'Internal server error';
+            return output;
+        }
+
+        return output;
+    }
+
 
     /**
      * @param {string} type
@@ -673,6 +749,16 @@ module.exports = class ChannelController extends Controller {
             return output;
         }
 
+        let roleDto = new ChannelRoleDto();
+        roleDto.channel_name = dto.channel_name;
+        roleDto.type = dto.type;
+        roleDto.username = authUser.username;
+        let currentRole = await this.#channelRolesController.getChannelRoleOfUser(roleDto);
+        if(currentRole.code === 200){
+            output.code = 208;
+            output.msg = 'Already following';
+            return output;
+        }
 
         let role = 0;
         if (dto.type === autoload.config._CHANNEL_TYPE_HASHTAG)

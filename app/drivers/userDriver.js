@@ -49,6 +49,7 @@ userDriver.post('/', async function (req, res) {
     let isUser = (typeof req.body.user.isUser !== 'undefined' ? req.body.user.isUser : null);
     let isSmm = (typeof req.body.user.isSmm !== 'undefined' ? req.body.user.isSmm : null);
     let isMod = (typeof req.body.user.isMod !== 'undefined' ? req.body.user.isMod : null);
+    let reset = (typeof req.body.user.reset !== 'undefined' ? req.body.user.reset : null);
 
     let user = new UserDto();
     user.username = username
@@ -59,6 +60,7 @@ userDriver.post('/', async function (req, res) {
     user.isUser = isUser;
     user.isSmm = isSmm;
     user.isAdmin = isMod;
+    user.reset = reset;
     let ctrl = await controller.createUser(user, await authUser);
     if (ctrl.code === 200)
         res.status(ctrl.code).send(ctrl.content);
@@ -157,6 +159,20 @@ userDriver.get(`/:username/roles`, async function (req, res) {
         res.status(ctrl.code).send(ctrl);
 });
 
+userDriver.put('/:username/resetPassword', async function (req, res) {
+    let username = req.params['username'];
+    let reset = (typeof req.body.reset !== 'undefined' ? (req.body.reset) : '');
+    let password = (typeof req.body.password !== 'undefined' ? (req.body.password) : '');
+
+    let ctrl = await controller.resetPasswd(username, reset, password);
+    if (ctrl.code === 200)
+        res.status(ctrl.code).send(ctrl.content);
+    else
+        res.status(ctrl.code).send(ctrl);
+});
+
+// ---------------- SOTTO FUNZIONI DI SAMI, SOPRA QUELLE DI ROMANELLA --------------------------
+
 userDriver.patch("/:username/toggle/vip", async function(req, res){
     let username = req.params['username'];
     let ctrl = await controller.toggleVip(username, await authController.getAuthenticatedUser(req));
@@ -214,7 +230,7 @@ userDriver.get("/:username/my-users/", async function(req, res){
         res.status(ctrl['code']).send(ctrl['content']);
     else
         res.status(ctrl['code']).send(ctrl);
-})
+});
 
 
 

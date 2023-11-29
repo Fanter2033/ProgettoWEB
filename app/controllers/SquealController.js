@@ -187,8 +187,26 @@ module.exports = class SquealController extends Controller {
         let quoteRes = await quoteCtrl.getQuote(authenticatedUser.username)
         quoteRes = new QuoteDto(quoteRes.content);
 
-        squealDto.content = squealDto.content.trim();
-        squealDto.quote_cost = squealDto.content.length;
+        if (squealDto.content === null || squealDto.content === 'null') {
+            output['code'] = 400;
+            output['msg'] = 'Missing content';
+            return output;
+        }
+
+        if (squealDto.message_type === 'MESSAGE_TEXT' ||
+            squealDto.message_type === 'TEXT_AUTO') {
+            squealDto.content = squealDto.content.trim();
+            squealDto.quote_cost = squealDto.content.length;
+        } else if (squealDto.message_type === 'IMAGE' ||
+            squealDto.message_type === 'VIDEO_URL' ||
+            squealDto.message_type === 'POSITION' ||
+            squealDto.message_type === 'POSITION_AUTO') {
+            squealDto.quote_cost = 125;
+        } else {
+            output['code'] = 500;
+            output['msg'] = 'Internal server error.';
+            return output;
+        }
 
         //Let's check if the destinations exists all
         if (Array.isArray(squealDto.destinations) === false || squealDto.destinations.length === 0) {
@@ -197,22 +215,15 @@ module.exports = class SquealController extends Controller {
             return output;
         }
 
-        if (squealDto.message_type === 'IMAGE' ||
-            squealDto.message_type === 'VIDEO_URL' ||
-            squealDto.message_type === 'POSITION' ||
-            squealDto.message_type === 'POSITION_AUTO') {
-            squealDto.quote_cost = 125;
-        }
-
 
         if (squealDto.message_type === 'IMAGE') {
             let base64 = squealDto.content;
             let split = base64.split(',');
             let str = '';
             for (let i = 0; i < split.length; i++) {
-                if(i === 0)
+                if (i === 0)
                     continue;
-                if(str !== '')
+                if (str !== '')
                     str = str + ',';
                 str = str + split[i];
             }
@@ -230,9 +241,9 @@ module.exports = class SquealController extends Controller {
             return output;
         }
 
-        //TODO FARE CONTROLLI SU POSIZIONE ETC ETC
-
         let checkResult = await this.checkDestinations(squealDto.destinations);
+
+        await this.createHashtagChannels(squealDto.destinations);
 
         if (!checkResult) {
             output['code'] = 404;
@@ -296,6 +307,13 @@ module.exports = class SquealController extends Controller {
         squealDto.critical_mass = 0;
         squealDto.negative_value = 0;
         squealDto.positive_value = 0;
+
+        if (squealDto.message_type === 'POSITION') {
+            let tmp = squealDto.content.join(',');
+            tmp = `[${tmp}]`;
+            squealDto.content = tmp;
+            //TODO MAKE FOR UPDATE AUTO_SQUEAL
+        }
 
         let modelOutput = await this._model.postSqueal(squealDto);
 
@@ -362,6 +380,40 @@ module.exports = class SquealController extends Controller {
 
         output['content'] = squealDto.getDocument();
         return output;
+    }
+
+    /**
+     * @param destinations {String[]}
+     * @return {Promise<void>}
+     */
+    async createHashtagChannels(destinations) {
+        let promises = [];
+        let channels = [];
+        for (let dest of destinations) {
+            dest = dest.trim();
+            if (typeof dest !== "string" || dest.length < 2)
+                return;
+            let promise;
+            let classChannelChar = dest.charAt(0);
+            let searchValue = dest.substring(1);
+            switch (classChannelChar) {
+                case '#':
+                    searchValue = searchValue.toLowerCase();
+                    let cd = new ChannelDto();
+                    cd.channel_name = searchValue;
+                    cd.type = autoload.config._CHANNEL_TYPE_HASHTAG;
+                    promise = this.#channelController.getChannel(cd, true);
+                    promises.push(promise);
+                    channels.push(cd);
+                    break;
+            }
+        }
+        let results = await Promise.all(promises);
+        promises = [];
+        for (let i = 0; i < results.length; i++) {
+            promises.push(this.#channelController.createChannelHashtag(channels[i]));
+        }
+        await Promise.all(promises);
     }
 
     /**

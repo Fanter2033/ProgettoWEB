@@ -9,8 +9,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 import "../css/LoginForm.css";
 
-//TODO: se campo vuoto aggiungi al notify()
-//TODO: campo vip lo passo nella POST?
 /*
 accessibilità:
 1. htmlFor nella label
@@ -61,6 +59,7 @@ function Register() {
       surname: surname,
       email: email,
       password: password,
+      reset: reset,
     });
 
     //console.log("GLOBALEEEEEEEEEEEEEEE" + userGlobal);
@@ -71,7 +70,8 @@ function Register() {
       surname.trim() === "" ||
       username.trim() === "" ||
       email.trim() === "" ||
-      password.trim() === ""
+      password.trim() === "" ||
+      reset.trim() === ""
     ) {
       notify();
     } else {
@@ -87,7 +87,6 @@ function Register() {
             isMod: false,
             isSmm: false,
             isUser: true,
-            vip:false,
             reset: reset,
           },
         };
@@ -267,7 +266,7 @@ function Register() {
                   Qual è il tuo passatempo preferito?
                 </span>
                 <br></br>
-                Questa risposta  per il reset password
+                Questa risposta per il reset password
                 <br></br>
                 Presta attenzione!
                 <br></br>

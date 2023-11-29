@@ -1,5 +1,6 @@
 import React from "react";
-import "../css/Home.css"
+import "../css/Home.css";
+
 /* non visibile negli schermi sm e + piccoli*/
 function Footer() {
   return (

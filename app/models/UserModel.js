@@ -87,7 +87,7 @@ module.exports = class UserModel extends Model {
      */
     async createUser(userObj) {
         await this.checkMongoose("User", User);
-        userObj = this.mongo_escape(userObj.getDocument());
+        userObj = this.mongo_escape(userObj.getDocument(true));
         let userInserting = new this.entityMongooseModel(userObj);
         try {
             await userInserting.save();
@@ -106,7 +106,7 @@ module.exports = class UserModel extends Model {
         await this.checkMongoose("User", User);
         let filter = {"username": `${username}`};
         filter = this.mongo_escape(filter);
-        userObj = this.mongo_escape(userObj.getDocument());
+        userObj = this.mongo_escape(userObj.getDocument(true));
         try {
             await this.entityMongooseModel.replaceOne(filter, userObj);
         } catch (ignored) {
@@ -198,7 +198,7 @@ module.exports = class UserModel extends Model {
         let filter = {"username": `${userObj.username}`};
         filter = this.mongo_escape(filter);
         userObj.locked = newLock;
-        userObj = this.mongo_escape(userObj.getDocument());
+        userObj = this.mongo_escape(userObj.getDocument(true));
         try {
             await this.entityMongooseModel.updateOne(filter, userObj);
         } catch (ignored) {
@@ -212,7 +212,7 @@ module.exports = class UserModel extends Model {
         let filter = {"username": `${userDto.username}`};
         filter = this.mongo_escape(filter);
         userDto.vip = newVipStat;
-        userDto = this.mongo_escape(userDto.getDocument());
+        userDto = this.mongo_escape(userDto.getDocument(true));
         try {
             await this.entityMongooseModel.updateOne(filter, userDto);
         } catch (ignored) {
@@ -249,7 +249,7 @@ module.exports = class UserModel extends Model {
         let filter = {"username": `${userDto.username}`};
         filter = this.mongo_escape(filter);
         userDto.isSmm = newSmmStat;
-        userDto = this.mongo_escape(userDto.getDocument());
+        userDto = this.mongo_escape(userDto.getDocument(true));
         try {
             await this.entityMongooseModel.updateOne(filter, userDto);
         } catch (ignored) {
@@ -257,4 +257,14 @@ module.exports = class UserModel extends Model {
         }
         return true;
     }
+
+    /**
+     * @param {string} username
+     * @param {string} password
+     * @return {Promise<boolean>}
+     */
+    async updatePassword(username, password){
+        return await this.updateUserField(username, 'psw_shadow', password);
+    }
+
 }

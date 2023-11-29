@@ -71,7 +71,7 @@ function VipModal({ showModal, handleClose }) {
         </Modal.Header>
         <Modal.Body className="custom-modal-body">
           <p className="custom-modal-text cool-font-medium">
-            Diventa <span class="luminescent-word">VIP</span>
+            Diventa <span className="luminescent-word">VIP</span>
           </p>
           <ul className="custom-modal-list">
             <li>Cosa ottieni?</li>
