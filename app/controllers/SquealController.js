@@ -71,6 +71,10 @@ module.exports = class SquealController extends Controller {
             }
         }
 
+        if(squeal.message_type === 'POSITION') {
+            squeal.content = JSON.parse(squeal.content);
+        }
+
         if (escapeAddImpression) {
             output['content'] = squeal.getDocument();
             return output;
