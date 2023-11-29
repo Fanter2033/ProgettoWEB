@@ -137,10 +137,6 @@ module.exports = class ChannelController extends Controller {
         let output = this.getDefaultOutput();
         let s2c = new SquealToChannelModel();
 
-        let isAdmin = false;
-        if (this.isObjectVoid(requestingUser) === false)
-            isAdmin = requestingUser.isAdmin;
-
         offset = parseInt(offset);
         limit = parseInt(limit);
         search = search.trim();
@@ -675,6 +671,16 @@ module.exports = class ChannelController extends Controller {
             return output;
         }
 
+        let roleDto = new ChannelRoleDto();
+        roleDto.channel_name = dto.channel_name;
+        roleDto.type = dto.type;
+        roleDto.username = authUser.username;
+        let currentRole = await this.#channelRolesController.getChannelRoleOfUser(roleDto);
+        if(currentRole.code === 200){
+            output.code = 208;
+            output.msg = 'Already following';
+            return output;
+        }
 
         let role = 0;
         if (dto.type === autoload.config._CHANNEL_TYPE_HASHTAG)

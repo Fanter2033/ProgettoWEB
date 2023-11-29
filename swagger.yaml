@@ -685,6 +685,8 @@ paths:
           schema:
             type: number
           description: 'Returns the role assoc'
+        '208':
+          description: 'Already following'
         '400':
           description: 'Bad Request.'
         '403':
