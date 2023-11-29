@@ -72,7 +72,12 @@ module.exports = class SquealController extends Controller {
         }
 
         if(squeal.message_type === 'POSITION') {
-            squeal.content = JSON.parse(squeal.content);
+            try {
+                squeal.content = JSON.parse(squeal.content);
+            } catch (ignored) {
+                squeal.content = [0,0];
+            }
+
         }
 
         if (escapeAddImpression) {
