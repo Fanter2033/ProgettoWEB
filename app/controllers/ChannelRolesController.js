@@ -114,6 +114,15 @@ module.exports = class ChannelRolesController extends Controller {
     }
 
     /**
+     * @param channelRole {ChannelRoleDto}
+     * @return {Promise<boolean>}
+     */
+    async deleteUserRoleFromChannel(channelRole){
+        //No controls to execute here
+        return await this.#_model.deleteUserRole(channelRole);
+    }
+
+    /**
      *
      * @param {ChannelDto} channelDto
      * @return {Promise<{msg: string, code: number, sub_code: number,content: {}}>}

@@ -198,6 +198,20 @@ channelDriver.get('/:type/:channel/users/:username', async function(req, res){
         res.status(ctrlOut.code).send(ctrlOut);
 });
 
+channelDriver.delete('/:type/:channel/users/:username', async function(req, res){
+    let authUser = authController.getAuthenticatedUser(req);
+    let channelDto = new ChannelDto();
+    channelDto.type = (typeof req.params['type'] !== 'undefined' ? req.params['type']: null);
+    channelDto.channel_name = (typeof req.params['channel'] !== 'undefined' ? req.params['channel']: null);
+    let username = (typeof req.params['username'] !== 'undefined' ? req.params['username']: null);
+
+    let ctrlOut = await controller.unfollowChannel(channelDto, username, await authUser);
+    if (ctrlOut.code === 200)
+        res.status(ctrlOut.code).send(ctrlOut.content);
+    else
+        res.status(ctrlOut.code).send(ctrlOut);
+});
+
 channelDriver.get('/:type/:channel/roles/:role', async function(req, res){
     let channelDto = new ChannelDto();
     channelDto.type = (typeof req.params['type'] !== 'undefined' ? req.params['type']: null);

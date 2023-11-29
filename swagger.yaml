@@ -693,6 +693,67 @@ paths:
           description: 'Not logged'
         '404':
           description: 'The specified channel in URL path is not found'
+  /channel/{type}/{channel_name}/users/{username}/:
+    delete:
+      tags:
+        - channel
+      summary: Delete the user role.
+      description: Delete the user role from the channel, used to handle unfollow.
+      parameters:
+        - name: channel_name
+          in: path
+          required: true
+          type: string
+        - name: type
+          in: path
+          required: true
+          type: string
+        - name: username
+          type: string
+          required: true
+          in: path
+      responses:
+        '200':
+          description: 'Deleted channel'
+        '403':
+          description: 'Unable to delete channel due low privileges or tired to delete tag channel. For Public channels only administrators can execute delete. For user channels only admins can execute delete'
+          schema:
+            type: string
+            description: 'More information about the error'
+        '404':
+          description: 'The specified channel in URL path is not found'
+    get:
+      tags:
+        - channel
+      summary: Get the role of the user in the channel.
+      parameters:
+        - name: channel_name
+          in: path
+          required: true
+          type: string
+        - name: type
+          in: path
+          required: true
+          type: string
+          enum:
+            - CHANNEL_OFFICIAL
+            - CHANNEL_USERS
+            - CHANNEL_HASHTAG
+        - name: username
+          type: string
+          required: true
+          in: path
+      responses:
+        '200':
+          description: 'Everything is ok'
+        '400':
+          description: 'Bad Request.'
+        '401':
+          description: 'User logged but not authorized to execute the operation'
+        '403':
+          description: 'User not logged'
+        '500':
+          description: 'Internal server error'
   /channel/{type}/{channel_name}/{username}/:
     patch:
       tags:
@@ -789,39 +850,6 @@ paths:
             type: array
             items:
               $ref: '#/definitions/User'
-        '400':
-          description: 'Bad Request.'
-        '401':
-          description: 'User logged but not authorized to execute the operation'
-        '403':
-          description: 'User not logged'
-        '500':
-          description: 'Internal server error'
-  /channel/{type}/{channel_name}/users/{username}/:
-    get:
-      tags:
-        - channel
-      summary: Get the role of the user in the channel.
-      parameters:
-        - name: channel_name
-          in: path
-          required: true
-          type: string
-        - name: type
-          in: path
-          required: true
-          type: string
-          enum:
-            - CHANNEL_OFFICIAL
-            - CHANNEL_USERS
-            - CHANNEL_HASHTAG
-        - name: username
-          type: string
-          required: true
-          in: path
-      responses:
-        '200':
-          description: 'Everything is ok'
         '400':
           description: 'Bad Request.'
         '401':

@@ -612,6 +612,55 @@ module.exports = class ChannelController extends Controller {
         return output;
     }
 
+    /**
+     * @param {ChannelDto} channelDto
+     * @param {string} username
+     * @param {UserDto} authUser
+     * @return {Promise<{msg: string, code: number, content: {}}>}
+     */
+    async unfollowChannel(channelDto, username, authUser){
+        let output = this.getDefaultOutput();
+
+        let deletingRole = await this.getChannelUserRole(channelDto, username);
+        if(deletingRole.code !== 200){
+            return deletingRole;
+        }
+        deletingRole = new ChannelRoleDto(deletingRole.content);
+
+        if(deletingRole.role === autoload.config._CHANNEL_ROLE_OWNER){
+            output['code'] = 400;
+            output['msg'] = 'Cannot delete the owner role. Delete the channel or choose another owner';
+            return output;
+        }
+
+        if(authUser.isAdmin === false && authUser.username !== username){
+            //Not an admin we should get the user role and check if is an admin or owner
+            let authUserRole = await this.getChannelUserRole(channelDto, authUser.username);
+            if(authUserRole.code !== 200){
+                output['code'] = 401;
+                output['msg'] = 'Unauthorized - 1';
+                return output;
+            }
+
+            authUserRole = new ChannelRoleDto(authUserRole.content);
+            if(authUserRole.role !== autoload.config._CHANNEL_ROLE_OWNER
+                && authUserRole.role !== autoload.config._CHANNEL_ROLE_ADMIN) {
+                output['code'] = 401;
+                output['msg'] = 'Unauthorized - 2';
+                return output;
+            }
+        }
+
+        let result = await this.#channelRolesController.deleteUserRoleFromChannel(deletingRole);
+        if(result === false){
+            output['code'] = 500;
+            output['msg'] = 'Internal server error';
+            return output;
+        }
+
+        return output;
+    }
+
 
     /**
      * @param {string} type

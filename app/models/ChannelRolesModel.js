@@ -165,6 +165,27 @@ module.exports = class ChannelRolesModel extends Model {
 
     }
 
+    /**
+     * @param roleDto {ChannelRoleDto}
+     * @return {Promise<boolean>}
+     */
+    async deleteUserRole(roleDto) {
+        await this.checkMongoose("ChannelRole", ChannelRoleSchema);
+
+        let filter = {};
+        filter['username'] = this.mongo_escape(roleDto.username);
+        filter['type'] = this.mongo_escape(roleDto.type);
+        filter['channel_name'] = this.mongo_escape(roleDto.channel_name);
+
+        try {
+            await this.entityMongooseModel.deleteMany(filter);
+        } catch (ignored) {
+            return false;
+        }
+        return true;
+
+    }
+
 
     /**
      * @param {string} username
