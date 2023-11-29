@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="navbar-header">
               <div class="navbar-brand">
-                <img src="../../public/media/Nav_logo.png" alt="Logo" width="60" >
+                <img src="/media/Nav_logo.png" alt="Logo" width="60" >
                 <span class="mx-3"> Squealer <b>Smm</b> </span>
               </div>
             </div>

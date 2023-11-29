@@ -557,7 +557,6 @@ module.exports = class UserController extends Controller {
             output['msg'] = 'User not found.';
             return output;
         }
-
         if (this.isObjectVoid(authenticatedUser) === true) {
             output['code'] = 403;
             output['msg'] = 'User not authenticated';
@@ -573,12 +572,18 @@ module.exports = class UserController extends Controller {
             if(res['code'] !== 200)
                 return res;
         } else {
-            //delete the VIP entity
+            //delete the VIP entity if was not a smm
+            if(userObj.isSmm === true){
+                output['code'] = 403
+                output['msg'] = 'Forbidden, you have some linked accounts, disable smm first'
+                return output;
+            }
             let res = await vipCtrl.deleteVip(username);
             if(res['code'] !== 200)
                 return res;
         }
-        //switch the toggle
+
+        //switch the toggle (true->false or false->true)
         let result = this._model.changeVipStatus(userObj, newVIPStatus);
         if(result === false){
             output['code'] = 500;
@@ -603,7 +608,6 @@ module.exports = class UserController extends Controller {
             output['msg'] = 'User not found.';
             return output;
         }
-
         if (this.isObjectVoid(authenticatedUser) === true) {
             output['code'] = 403;
             output['msg'] = 'User not authenticated';
@@ -621,11 +625,29 @@ module.exports = class UserController extends Controller {
         let userObj = await this._model.getUser(username);
         let newSmmStatus = !userObj.isSmm;
         let vipCtrl = new VipController(new VipModel());
-        if(!newSmmStatus) {
-            //user is NO longer SMM, clear the linked users list
+        if(newSmmStatus === false){
+            //user is NO longer SMM, clear the linked users list,
+
+            //for each account remove the linkedSmm from it
+            let userList = await this.getLinkedUsers(username);
+            userList = userList.content;
+            for(let i=0; i < userList.length; i++){
+                let remSmmFromVip = await vipCtrl.removeSmm(userList[i]);
+                if(remSmmFromVip['code'] !== 200){
+                    return remSmmFromVip;
+                }
+            }
             let clearLinkedUsers = vipCtrl.disableSmm(username);
             if(clearLinkedUsers['code'] === 500){
                 return clearLinkedUsers;
+            }
+        } else if (newSmmStatus === true) {
+            //user is becoming a smm, check if she/he has smm already
+            let vipObj = await vipCtrl.getVip(authenticatedUser.username);
+            if(vipObj['content'].linkedSmm !== ""){
+                output['code'] = 403;
+                output['msg'] = 'Forbidden, warning: you have a linked smm'
+                return output;
             }
         }
 
@@ -678,11 +700,18 @@ module.exports = class UserController extends Controller {
             return output;
         }
 
-        //check the Smm is a Vip
+        //check the Smm is a Vip an a smm
         let SmmObj = await vipCtrl.getVip(SmmUsername);
         if(SmmObj['code'] !== 200){
             output['code'] = 412
             output['msg'] = "Precondition Failed, Smm is not a VIP"
+            return output;
+        }
+        let smmObj = await this.getUser(SmmUsername);
+        smmObj = smmObj['content'];
+        if(smmObj.isSmm === false){
+            output['code'] = 412
+            output['msg'] = "Precondition Failed, the user you select is not a Smm"
             return output;
         }
 
@@ -698,7 +727,6 @@ module.exports = class UserController extends Controller {
         let smmDto = new VipDto(SmmObj.content);
 
         let res = vipCtrl.pickSmm(vipDto, smmDto);
-
         if(res['code'] !== 200){
             return res;
         }
@@ -819,4 +847,6 @@ module.exports = class UserController extends Controller {
 * le relazioni sono associazioni di nomi e non di entita'
 *
 * chiunque puo' vedere chi sono gli smm e chi sono i linkati ma per ora chissenefotte
+*
+*
 * */

@@ -31,7 +31,7 @@ export const store = new Vuex.Store({
         },
         setLineChartData(state, DataObj){
             state.LineChartData = DataObj;
-        }
+        },
         setSInCoor(state, newCoor) {
             state.squealInputCoor = newCoor;
         }
