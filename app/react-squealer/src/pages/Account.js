@@ -323,12 +323,12 @@ function Account() {
         <div className="row mb-5 mt-4">
           <div className="col-12 col-md-6 d-flex flex-col align-items-center justify-content-center">
             <img
-              src={cattyy}
+              src={"data:image/png;base64," + userData.pfp}
               alt="Foto Profilo"
               className="rounded-circle ms-4 pfp box"
               onMouseOver={showVulture}
               onMouseLeave={hideVulture}
-              onClick={() => handleImageClick({ cattyy })}
+              onClick={() => handleImageClick()}
             />
 
             {isModalOpen && <ChangePfp />}

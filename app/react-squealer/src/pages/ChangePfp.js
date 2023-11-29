@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import { useUserContext } from "../config/UserContext";
 import { useNavigate } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
@@ -18,12 +18,33 @@ import "../css/App.css";
 
 //PUT: CHANGE USERNAME /user/${username}-----------------------------------------------------------------------------------------------------
 function ChangePfp() {
+    const [user, setUser] = useState({});
+
+    useEffect(() => {
+        const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
+        fetch(uri, {
+            mode: "cors",
+            credentials: "include",
+        })
+            .then((res) => {
+                if (res.ok) {
+                    return res.json();
+                }
+            })
+            .then(async (data) => {
+                setUser(data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, []);
+
   const { userGlobal, setUserGlobal } = useUserContext();
-  console.log("mlmlmllmlmlmlml", userGlobal);
 
   const navigate = useNavigate();
 
   const [show, setShow] = useState(true);
+
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -60,72 +81,53 @@ function ChangePfp() {
 
   async function cambioPhoto(e) {
     e.preventDefault();
+    changePhoto();
+  }
 
-    //TODO: se il campo è vuoto apri toast, non funge
+  function changePhoto() {
+      try {
+          handleClose();
+          const data = {
+              user: {
+                  username: user.username,
+                  email: user.email,
+                  firstname: user.first_name,
+                  lastname: user.last_name,
+                  password: user.password,
+                  isMod: false,
+                  isSmm: false,
+                  isUser: true,
+                  pfp: base64Image,
+              },
+          };
+          const url = `${ReactConfig.base_url_requests}/user/${user.username}`;
+          const options = {
+              method: "PUT",
+              headers: {
+                  "Content-Type": "application/json",
+              },
+              credentials: "include",
+              mode: "cors",
+              body: JSON.stringify(data),
+          };
 
-    const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
-    fetch(uri, {
-      mode: "cors",
-      credentials: "include",
-    })
-      .then((res) => {
-        console.log("aaaaaaaaaaaaaaaaaa", res);
-        if (res.ok) {
-          return res.json();
-        }
-      })
-      .then((data) => {
-        console.log("Tutto ok, io sono:", data);
-        setUserGlobal(data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-
-    try {
-      handleClose();
-      const data = {
-        user: {
-          username: userGlobal.username,
-          email: userGlobal.email,
-          firstname: userGlobal.first_name,
-          lastname: userGlobal.last_name,
-          password: userGlobal.password,
-          isAdmin: false,
-          isSmm: false,
-          isUser: true,
-          pfp: base64Image,
-        },
-      };
-      console.log("zzzzzzzzzzzzzzzzzzzzzz", userGlobal);
-      const url = `${ReactConfig.base_url_requests}/user/${userGlobal.username}`;
-      const options = {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        mode: "cors",
-        body: JSON.stringify(data),
-      };
-
-      fetch(url, options)
-        .then((res) => {
-          console.log(res);
-          if (res.ok) {
-            //creation ok
-            return res.json();
-          }   
-        })
-        .then((data) => {
-          console.log("Cambio pfp went good", data);
-        })
-        .catch((error) => {
-          console.error("Cambio pfp failed, error:", error);
-        });
-    } catch (error) {
-      console.error(error);
-    }
+          fetch(url, options)
+              .then((res) => {
+                  console.log(res);
+                  if (res.ok) {
+                      //creation ok
+                      return res.json();
+                  }
+              })
+              .then((data) => {
+                  console.log("Cambio pfp went good", data);
+              })
+              .catch((error) => {
+                  console.error("Cambio pfp failed, error:", error);
+              });
+      } catch (error) {
+          console.error(error);
+      }
   }
 
   //console.log("nomeeeeeeeeeeeeeeeeeeee", );
