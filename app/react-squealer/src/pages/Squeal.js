@@ -834,8 +834,11 @@ function Squeal() {
             </div>
           </div>
         </div>
-        <div className="col-12">
-          <h2>Squeals Passati: {squealsLogger.length}</h2>
+        <div className="col-12 mt-3">
+          <h2 className="cool-font-small">Log Squeal Pubblici Passati </h2>
+          <h2 className="cool-font-small">
+            Numero Squeal: {squealsLogger.length}
+          </h2>
 
           <Container className="">
             <Row className="w-100">

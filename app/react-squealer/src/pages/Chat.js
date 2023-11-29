@@ -7,8 +7,6 @@ import TextLink from "./TextLink";
 import "../css/App.css";
 import { Container, Card, Col, Row } from "react-bootstrap";
 
-//TODO GET IMG
-
 //GET utils/chat/ all private post----------------------------------------------------------------
 function Chat() {
   const [squeals, setSqueals] = useState([]);

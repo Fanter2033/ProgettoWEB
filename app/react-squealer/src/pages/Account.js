@@ -374,7 +374,7 @@ function Account() {
                       {userData.first_name} {userData.last_name}
                     </h2>
                     <button className="yellow-button box col-12">
-                      N SQUEALS: {squealsLogger.length}
+                      N SQUEALS PUBBLICI: {squealsLogger.length}
                     </button>
                     {userData.vip && (
                       <div
@@ -509,7 +509,7 @@ function Account() {
                               <Card className="w-50 squeal">
                                 <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
                                   <p>Nome: {channel.channel_name}</p>
-                                  <Link to="/infoc">
+                                  <Link to="/infoc" state={channel}>
                                     <button className="custom-button box">
                                       Info
                                     </button>
@@ -531,7 +531,7 @@ function Account() {
                               <Card className="w-50 squeal">
                                 <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
                                   <p>Nome: {channel.channel_name}</p>
-                                  <Link to="/infoc">
+                                  <Link to="/infoc" state={channel}>
                                     <button className="custom-button box">
                                       Info
                                     </button>
@@ -553,7 +553,7 @@ function Account() {
                               <Card className="w-50 squeal">
                                 <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
                                   <p>Nome: {channel.channel_name}</p>
-                                  <Link to="/infoc">
+                                  <Link to="/infoc" state={channel}>
                                     <button className="custom-button box">
                                       Info
                                     </button>
@@ -575,7 +575,7 @@ function Account() {
                               <Card className="w-50 squeal">
                                 <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
                                   <p>Nome: {channel.channel_name}</p>
-                                  <Link to="/infoc">
+                                  <Link to="/infoc" state={channel}>
                                     <button className="custom-button box">
                                       Info
                                     </button>
@@ -597,7 +597,7 @@ function Account() {
                               <Card className="w-50 squeal">
                                 <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
                                   <p>Nome: {channel.channel_name}</p>
-                                  <Link to="/infoc">
+                                  <Link to="/infoc" state={channel}>
                                     <button className="custom-button box">
                                       Info
                                     </button>
@@ -657,7 +657,6 @@ function Account() {
       <div className="row d-flex justify-content-center ms-1 me-1 mb-5">
         <h3>TODO:</h3>
         <ul className="list-group col-md-4">
-          <li className="list-group-item list">connect SMM</li>
           <li className="list-group-item list">PROFILE PICTURES</li>
           <li className="list-group-item list">
             if owner of ch toast for DELETE
