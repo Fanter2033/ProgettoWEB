@@ -48,6 +48,7 @@ module.exports = class ChannelController extends Controller {
 
         if (channelDto.type === 'CHANNEL_OFFICIAL') {
             channelDto.channel_name = channelDto.channel_name.toUpperCase();
+            channelDto.private = false;
         } else { //unofficial
             channelDto.channel_name = channelDto.channel_name.toLowerCase();
         }
@@ -277,6 +278,7 @@ module.exports = class ChannelController extends Controller {
 
         //Now if is OK! Let's change
         newChannel.locked = oldChannel.locked;
+        newChannel.description = oldChannel.description;
         let result = await this.#_model.updateChannel(oldChannel, newChannel);
         if (result === false) {
             output['code'] = 500;
@@ -807,6 +809,33 @@ module.exports = class ChannelController extends Controller {
         if(ctrlOut.code !== 200){
             output['code'] = 500;
             output['msg'] = 'Internal server error';
+            return output;
+        }
+
+        return output;
+    }
+
+    /**
+     * @param dto {ChannelDto}
+     * @param authUser {UserDto}
+     * @return {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async updateChannelOfficialDescription(dto, authUser){
+        let output = this.getDefaultOutput();
+
+        if(this.isAuthenticatedUser(authUser) === false) {
+            output['code'] = 403;
+            return output;
+        }
+
+        if(authUser.isAdmin === false) {
+            output['code'] = 401;
+            return output;
+        }
+
+        let result = await this.#_model.changeChannelDescription(dto);
+        if(result === false) {
+            output['code'] = 500;
             return output;
         }
 

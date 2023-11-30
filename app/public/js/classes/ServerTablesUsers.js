@@ -173,9 +173,9 @@ class ServerTablesUsers {
                             &nbsp;
                             <button type="button" class="col-4 btn btn-light" onclick="${this.#variableName}.setPage(${this.#page - 1})"><</button>
                             &nbsp;
-                            <button type="button" class="col-3 btn btn-primary">${this.getRealPage()}</button>
+                            <button type="button" class="col-3 btn btn-primary">${this.#page}</button>
                             &nbsp;
-                            <button type="button" class="col-4 btn btn-light" onclick="${this.#variableName}.setPage(${this.#page})">></button>
+                            <button type="button" class="col-4 btn btn-light" onclick="${this.#variableName}.setPage(${this.#page + 1})">></button>
                             &nbsp;
                             <button type="button" class="col-4 btn btn-light" onclick="${this.#variableName}.setPage(${this.getMaxPage()})">>>></button>           
                         </div>
