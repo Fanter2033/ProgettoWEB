@@ -741,7 +741,7 @@ module.exports = class ChannelController extends Controller {
      */
     async thereIsPublicChannel(dtos) {
         for (const dto of dtos)
-            if (this.checkChannelPublicType(dto.channel_type))
+            if (this.checkChannelPublicType(dto.type))
                 return true;
         //mmm we should scan every channel
         for (const dto of dtos) {
