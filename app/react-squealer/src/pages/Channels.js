@@ -16,8 +16,8 @@ import "../css/App.css";
 
 function Channels() {
   const { userGlobal, setUserGlobal } = useUserContext();
-  console.log("cercatooooooooooooo", userGlobal.username);
-  console.log("viiiiiiiiiiiiiiiiiiiiiiiiiiiip", userGlobal.vip);
+  //console.log("cercatooooooooooooo", userGlobal.username);
+  //console.log("viiiiiiiiiiiiiiiiiiiiiiiiiiiip", userGlobal.vip);
 
   const navigate = useNavigate();
   if (userGlobal.username === undefined) {
@@ -110,17 +110,16 @@ function Channels() {
         <div className="row d-flex justify-content-center ms-1 me-1 mb-5 w-100">
           <h3>TODO:</h3>
           <ul className="list-group col-md-4">
-            <li className="list-group-item list">FOLLOW NON VA</li>
+            <li className="list-group-item list">cambia bottone quando seguito</li>
             <li className="list-group-item list">
               GESTIONE RUOLI: PATCH new_role
             </li>
             <li className="list-group-item list">CREARE CANALI UFFICIALI</li>
             <li className="list-group-item list">CREARE 3 CANALI API</li>
             <li className="list-group-item list">
-              URL: limit, offset, search, orerBy, orderDir
+              URL: limit, offset, orerBy, orderDir
             </li>
-            <li className="list-group-item list">GET #</li>
-            <li className="list-group-item list">PFP CANALI</li>
+            <li className="list-group-item list">GET #</li>{" "}
             <li className="list-group-item list">
               criterio squeals appartenenza canale
             </li>

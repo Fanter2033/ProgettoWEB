@@ -279,20 +279,37 @@ module.exports = class UserController extends Controller {
         newUser.vip = oldUserObj.vip
         newUser.locked = oldUserObj.locked;
         newUser.reset = oldUserObj.reset;
-        newUser.pfp = oldUserObj.pfp;
+
+        if(authenticatedUser.isAdmin === false){
+            newUser.isAdmin = oldUserObj.isAdmin;
+            newUser.isSmm = oldUserObj.isSmm;
+        }
+
+        if(newUser.pfp === null)
+            newUser.pfp = oldUserObj.pfp;
+        else {
+            let base64 = newUser.pfp;
+            let split = base64.split(',');
+            let str = '';
+            for (let i = 0; i < split.length; i++) {
+                if (i === 0)
+                    continue;
+                if (str !== '')
+                    str = str + ',';
+                str = str + split[i];
+            }
+            newUser.pfp = str;
+            if (this.isBase64(newUser.pfp) === false) {
+                output['code'] = 400;
+                output['msg'] = 'Content is not base64';
+                return output;
+            }
+        }
 
         if(newUser.psw_shadow !== '') //if password isn't set, save the old password
             newUser.psw_shadow = await this.crypt(newUser.psw_shadow);
         else //Password set, save new in the database.
             newUser.psw_shadow = oldUserObj.psw_shadow;
-
-        let isSmm = await this.getVip(oldUsername);
-        if(isSmm.code === 200){
-            output['code'] = 409;
-            output['req_error'] = -6;
-            output['msg'] = 'Vip cannot change their name.';
-            return output;
-        }
 
         let databaseResponse = await this._model.replaceUser(newUser, oldUserObj.username);
         if (databaseResponse)
@@ -304,6 +321,14 @@ module.exports = class UserController extends Controller {
         }
 
         if(newUser.username !== oldUsername){
+
+            let isSmm = await this.getSmm(oldUsername);
+            if(isSmm.code === 200){
+                output['code'] = 409;
+                output['req_error'] = -6;
+                output['msg'] = 'Vip cannot change their name.';
+                return output;
+            }
 
             //Updating references entities. Let's start by quote
             let quoteController = new QuoteController(new QuoteModel())

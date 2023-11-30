@@ -88,6 +88,7 @@ userDriver.put('/:username', async function (req, res) {
     let isUser = (typeof req.body.user.isUser !== 'undefined' ? req.body.user.isUser : null);
     let isSmm = (typeof req.body.user.isSmm !== 'undefined' ? req.body.user.isSmm : null);
     let isMod = (typeof req.body.user.isMod !== 'undefined' ? req.body.user.isMod : null);
+    let pfp = (typeof req.body.user.pfp !== 'undefined' ? req.body.user.pfp : null);
 
     let username_old = req.params['username'];
 
@@ -100,6 +101,7 @@ userDriver.put('/:username', async function (req, res) {
     user.isUser = isUser;
     user.isSmm = isSmm;
     user.isAdmin = isMod;
+    user.pfp = pfp;
     let ctrl = await controller.updateUser(user, username_old, await authController.getAuthenticatedUser(req));
     if (ctrl.code === 200)
         res.status(ctrl.code).send(ctrl.content);

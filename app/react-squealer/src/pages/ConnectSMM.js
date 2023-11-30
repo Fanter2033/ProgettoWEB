@@ -49,7 +49,7 @@ function ConnectSMM({ openConnect, closeConnect }) {
       console.error("Errore nella fetch:", error);
     }
   }
-  console.log(userData);
+  //console.log(userData);
   useEffect(() => {
     getUserData();
     const intervalId = setInterval(getUserData, 30000); //30 sec
@@ -62,6 +62,7 @@ function ConnectSMM({ openConnect, closeConnect }) {
   //TODO: PATCH /user/{username}/pick-smm/{smm} ----------------------------------------------------------------------------------------------------------
   async function addSmm(e) {
     e.preventDefault();
+    console.log("sono vip?", userData.vip);
     const uri = `${ReactConfig.base_url_requests}/user/${userData.username}/pick-smm/${smm}`;
     const options = {
       method: "PATCH",

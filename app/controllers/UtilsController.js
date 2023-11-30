@@ -4,6 +4,7 @@ const SquealController = require("./SquealController");
 const SquealModel = require("../models/SquealModel");
 const ChannelRolesModel = require("../models/ChannelRolesModel");
 const SquealToChannelModel = require("../models/SquealToChannelModel");
+const ChannelRoleDto = require("../entities/dtos/ChannelRoleDto");
 
 
 module.exports = class UtilsController extends Controller {
@@ -89,6 +90,48 @@ module.exports = class UtilsController extends Controller {
         const SquealModel = require('../models/SquealModel');
         let ctrl = new SquealController(new SquealModel());
         return await ctrl.getSentSquealsByUser(username);
+    }
+
+    /**
+     * @param {UserDto} authUser
+     * @param {ChannelDto} channelDto
+     * @return {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async getSentSquealsToChannels(authUser, channelDto){
+        let output = this.getDefaultOutput();
+
+        let squealCtrl = new SquealController(new SquealModel());
+        let squealToChannels = new SquealToChannelModel();
+
+        if(channelDto.type === autoload.config._CHANNEL_TYPE_USER && channelDto.private === true){
+            //Verifico che l'utente sia autenticato ed abbia tutti i privilegi necessari
+            let channelRolesModel = new ChannelRolesModel();
+            if(this.isAuthenticatedUser(authUser) === false) {
+                output.code = 403;
+                return output;
+            }
+            let roleDto = new ChannelRoleDto();
+            roleDto.username = authUser.username;
+            roleDto.channel_name = channelDto.channel_name;
+            roleDto.type = channelDto.type;
+            let role = await channelRolesModel.getUserRole(roleDto);
+            if(role.role < autoload.config._CHANNEL_ROLE_READ && authUser.isAdmin === false) {
+                output.code = 401;
+                return output;
+            }
+        }
+
+        let ids = await squealToChannels.getAllSquealsToChannels([channelDto], 0, 0, 25);
+        let promises = [];
+        for (const id of ids)
+            promises.push(squealCtrl.getSqueal(id, authUser, ''));
+        promises = await Promise.all(promises);
+        let content = [];
+        for (const promiseResult of promises)
+            if (promiseResult.code === 200)
+                content.push(promiseResult.content);
+        output.content = content;
+        return output;
     }
 
 };

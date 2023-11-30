@@ -45,9 +45,45 @@ function Search() {
     return () => clearTimeout(delayTimer);
   }, [inputValue]);
 
+  //GET /user/{username}/roles/
+  const [roleUser, setRoleUser] = useState(0);
+
+  async function getRoles() {
+    try {
+      const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}/roles`;
+      const options = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        mode: "cors",
+        credentials: "include",
+      };
+
+      let result = await fetch(uri, options);
+
+      if (result.ok) {
+        let data = await result.json();
+        //console.log("Successo nella richiesta dei ruoli UTENTE", data);
+        setRoleUser(data);
+        return data;
+      } else {
+        console.error("Errore nella richiesta:", result.statusText);
+      }
+    } catch (error) {
+      console.error("Errore nella fetch:", error);
+    }
+  }
+
+  console.log(roleUser);
+  useEffect(() => {
+    getRoles();
+  }, []);
+
   const [myRole, setMyRole] = useState([]);
   //PATCH /channel/{type}/{channel_name}  follow channel
   async function follow(channel) {
+    setFollowButton(true);
     const url = `${ReactConfig.base_url_requests}/channel/${channel.type}/${channel.channel_name}`;
     const options = {
       method: "PATCH",
@@ -83,12 +119,14 @@ function Search() {
         console.error("Faillllllll, errore:", error);
       });
 
+    /*
     console.log(
       "per il canale",
       channel.channel_name,
       "il mio ruolo è:",
       myRole
     );
+    */
   }
 
   //TODO: IMPLEMENT FILTER: user, channels: official, user, tag
@@ -151,8 +189,8 @@ function Search() {
   const getPublic = () => {
     setPublicChannel(true);
   };
-  console.log(privateChannel);
-  console.log(publicChannel);
+  //console.log(privateChannel);
+  //console.log(publicChannel);
 
   const removeFilter = () => {
     setClick(false);
@@ -160,6 +198,11 @@ function Search() {
     setPublicChannel(false);
     setPrivateChannel(false);
   };
+
+  const [followButton, setFollowButton] = useState(false);
+  function changeFollowButton() {
+    setFollowButton(false);
+  }
 
   return (
     <div id="" className="col-6 offset-3">
@@ -216,8 +259,12 @@ function Search() {
       {!click && (
         <Container fluide>
           {channels.map((channel) => (
-            <Col key={channel.id} lg={12}>
-              <Card style={{ height: "100%" }} className="squeal mb-4">
+            <Col lg={12}>
+              <Card
+                style={{ height: "100%" }}
+                key={channel.id}
+                className="squeal mb-4"
+              >
                 <Card.Header className="d-flex justify-content-center align-items-center">
                   <Link to="/infoc" state={channel}>
                     <button className="custom-button me-2">
@@ -228,7 +275,7 @@ function Search() {
                         width="16"
                         height="16"
                         fill="currentColor"
-                        class="bi bi-info-circle-fill"
+                        className="bi bi-info-circle-fill"
                         viewBox="0 0 16 16"
                       >
                         <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
@@ -238,30 +285,155 @@ function Search() {
                   {channel.owner === userGlobal.username && (
                     <button className="red-button">your channel</button>
                   )}
-                  {channel.owner !== userGlobal.username && (
-                    <button
-                      className="custom-button"
-                      onClick={() => {
-                        follow(channel);
-                      }}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        class="bi bi-plus-lg"
-                        viewBox="0 0 16 16"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"
-                        />
-                      </svg>
-                    </button>
-                  )}
+                  {
+                    <>
+                      {channel.owner !== userGlobal.username &&
+                        !followButton && (
+                          <button
+                            className="custom-button"
+                            onClick={() => {
+                              follow(channel);
+                            }}
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              fill="currentColor"
+                              className="bi bi-plus-lg"
+                              viewBox="0 0 16 16"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"
+                              />
+                            </svg>
+                          </button>
+                        )}
+                    </>
+                  }
+
+                  <div>
+                    {roleUser.map((role) => (
+                      <>
+                        <Row
+                          key={role.id}
+                          lg={12}
+                          className="d-flex justify-content-center align-items-center"
+                        >
+                          {role.role === 0 &&
+                            role.channel_name === channel.channel_name && followButton && (
+                              <>
+                                <div>
+                                  RUOLO: <b>IN ATTESA</b>
+                                  <button className="custom-button ms-2" >
+                                    🕒
+                                  </button>
+                                </div>
+                              </>
+                            )}
+                          {role.role === 1 &&
+                            role.channel_name === channel.channel_name && (
+                              <>
+                                <div>
+                                  RUOLO: <b>LETTORE</b>
+                                  <button className="custom-button ms-2">
+                                    📖
+                                  </button>
+                                </div>
+                              </>
+                            )}
+                          {role.role === 2 &&
+                            role.channel_name === channel.channel_name && (
+                              <>
+                                <div>
+                                  RUOLO: <b>SCRITTORE</b>
+                                  <button className="custom-button ms-2">
+                                    ✒️
+                                  </button>
+                                </div>
+                              </>
+                            )}
+                          {role.role === 3 &&
+                            role.channel_name === channel.channel_name && (
+                              <>
+                                <div>
+                                  RUOLO: <b>ADMIN</b>
+                                  <button className="custom-button ms-2">
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="16"
+                                      height="16"
+                                      fill="currentColor"
+                                      className="bi bi-check2"
+                                      viewBox="0 0 16 16"
+                                    >
+                                      <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+                                    </svg>
+                                  </button>
+                                </div>
+                              </>
+                            )}
+                          {role.role === 4 &&
+                            role.channel_name === channel.channel_name && (
+                              <>
+                                <div>
+                                  RUOLO: <b>OWNER</b>
+                                  <button className="custom-button ms-2">👑</button>
+                                </div>
+                              </>
+                            )}
+                        </Row>
+                      </>
+                    ))}
+                  </div>
                 </Card.Header>
                 <Card.Body className="mb-4  w-100 d-flex flex-column justify-content-center align-items-center">
+                  <div className="d-flex flex-row justify-content-center align-items-center">
+                    {channel.type === "CHANNEL_USERS" && (
+                      <>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          className="bi bi-person-raised-hand"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M6 6.207v9.043a.75.75 0 0 0 1.5 0V10.5a.5.5 0 0 1 1 0v4.75a.75.75 0 0 0 1.5 0v-8.5a.25.25 0 1 1 .5 0v2.5a.75.75 0 0 0 1.5 0V6.5a3 3 0 0 0-3-3H6.236a.998.998 0 0 1-.447-.106l-.33-.165A.83.83 0 0 1 5 2.488V.75a.75.75 0 0 0-1.5 0v2.083c0 .715.404 1.37 1.044 1.689L5.5 5c.32.32.5.754.5 1.207" />
+                          <path d="M8 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3" />
+                        </svg>
+                        <div>&nbsp;CANALE UTENTE</div>
+                      </>
+                    )}
+                    {channel.type === "CHANNEL_OFFICIAL" && (
+                      <>
+                        <img
+                          src={squeal_logo}
+                          alt="logo_squeal"
+                          width="40"
+                          height="40"
+                        />
+                        <div>&nbsp;CANALE UFFICIALE</div>
+                      </>
+                    )}
+                    {channel.type === "CHANNEL_HASHTAG" && (
+                      <>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          className="bi bi-tag-fill"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M2 1a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l4.586-4.586a1 1 0 0 0 0-1.414l-7-7A1 1 0 0 0 6.586 1zm4 3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                        </svg>
+                        <div>&nbsp;CANALE TAG</div>
+                      </>
+                    )}
+                  </div>
+
                   <div className="d-flex flex-row justify-content-center align-items-center">
                     {channel.private === true ? (
                       <>
@@ -275,7 +447,7 @@ function Search() {
                         >
                           <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2" />
                         </svg>
-                        <div> &nbsp;PRIVATE</div>
+                        <div> &nbsp;PRIVATO</div>
                       </>
                     ) : (
                       <>
@@ -289,46 +461,9 @@ function Search() {
                         >
                           <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2" />
                         </svg>
-                        <div> &nbsp;PUBLIC</div>
+                        <div> &nbsp;PUBBLICO</div>
                       </>
                     )}
-                  </div>
-
-                  <div className="d-flex flex-row justify-content-center align-items-center">
-                    {channel.type === "CHANNEL_USERS" && (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        className="bi bi-person-raised-hand"
-                        viewBox="0 0 16 16"
-                      >
-                        <path d="M6 6.207v9.043a.75.75 0 0 0 1.5 0V10.5a.5.5 0 0 1 1 0v4.75a.75.75 0 0 0 1.5 0v-8.5a.25.25 0 1 1 .5 0v2.5a.75.75 0 0 0 1.5 0V6.5a3 3 0 0 0-3-3H6.236a.998.998 0 0 1-.447-.106l-.33-.165A.83.83 0 0 1 5 2.488V.75a.75.75 0 0 0-1.5 0v2.083c0 .715.404 1.37 1.044 1.689L5.5 5c.32.32.5.754.5 1.207" />
-                        <path d="M8 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3" />
-                      </svg>
-                    )}
-                    {channel.type === "CHANNEL_OFFICIAL" && (
-                      <img
-                        src={squeal_logo}
-                        alt="logo_squeal"
-                        width="40"
-                        height="40"
-                      />
-                    )}
-                    {channel.type === "CHANNEL_HASHTAG" && (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        className="bi bi-tag-fill"
-                        viewBox="0 0 16 16"
-                      >
-                        <path d="M2 1a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l4.586-4.586a1 1 0 0 0 0-1.414l-7-7A1 1 0 0 0 6.586 1zm4 3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
-                      </svg>
-                    )}
-                    <div>&nbsp;{channel.type}</div>
                   </div>
 
                   <div className="d-flex flex-row justify-content-center align-items-center">
@@ -339,7 +474,7 @@ function Search() {
                           width="16"
                           height="16"
                           fill="currentColor"
-                          class="bi bi-ban"
+                          className="bi bi-ban"
                           viewBox="0 0 16 16"
                         >
                           <path d="M15 8a6.973 6.973 0 0 0-1.71-4.584l-9.874 9.875A7 7 0 0 0 15 8M2.71 12.584l9.874-9.875a7 7 0 0 0-9.874 9.874ZM16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0" />
@@ -348,11 +483,17 @@ function Search() {
                       </>
                     )}
                   </div>
-                  <div className="d-flex flex-row justify-content-center align-items-center">
+                  <div className="d-flex flex-column justify-content-center align-items-center">
                     <>
-                      <div>SUB:{channel.subscribers}</div>
-                      <div>POSTS{channel.posts}</div>
-                      <div>OWNER:{channel.owner}</div>
+                      <div>
+                        CREATORE: <b>{channel.owner}</b>
+                      </div>
+                      <div>
+                        SQUEAL: <b>{channel.posts}</b>
+                      </div>
+                      <div>
+                        ISCRITTI: <b>{channel.subscribers}</b>
+                      </div>
                     </>
                   </div>
                 </Card.Body>
@@ -366,10 +507,10 @@ function Search() {
         <>
           <Row className="">
             {list.map((channel) => (
-              <Col key={channel.id} lg={12}>
+              <Col lg={12}>
                 {channel.private === true && (
                   <>
-                    <Card className="squeal mb-3">
+                    <Card key={channel.id} className="squeal mb-3">
                       <Card.Body className="mb-4  w-100 d-flex flex-column justify-content-center align-items-center">
                         <Card.Title className="">
                           {channel.channel_name}
@@ -405,10 +546,10 @@ function Search() {
         <>
           <Row className="">
             {list.map((channel) => (
-              <Col key={channel.id} lg={12}>
+              <Col lg={12}>
                 {channel.private === false && (
                   <>
-                    <Card className="squeal mb-3">
+                    <Card key={channel.id} className="squeal mb-3">
                       <Card.Body className="mb-4  w-100 d-flex flex-column justify-content-center align-items-center">
                         <Card.Title className="">
                           {channel.channel_name}

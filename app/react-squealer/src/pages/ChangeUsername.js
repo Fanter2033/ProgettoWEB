@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { useUserContext } from "../config/UserContext";
 import { useNavigate } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
@@ -24,6 +24,27 @@ function ChangeUsername() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+      const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
+      fetch(uri, {
+          mode: "cors",
+          credentials: "include",
+      })
+          .then((res) => {
+              if (res.ok) {
+                  return res.json();
+              }
+          })
+          .then(async (data) => {
+              setUser(data);
+          })
+          .catch((error) => {
+              console.error(error);
+          });
+  }, []);
+
   const notify = () =>
     toast.success("🦄 Completato con successo!", {
       position: "top-right",
@@ -47,6 +68,18 @@ function ChangeUsername() {
       theme: "dark",
     });
 
+    const notify_error_server = () =>
+        toast.error("⚠️ Errore! Nome non valido o già in uso!", {
+            position: "top-right",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+        });
+
   const cambioU = (e) => {
     e.preventDefault();
 
@@ -67,10 +100,10 @@ function ChangeUsername() {
         const data = {
           user: {
             username: newUsername,
-            email: userGlobal.email,
-            firstname: userGlobal.first_name,
-            lastname: userGlobal.last_name,
-            password: userGlobal.password,
+            email: user.email,
+            firstname: user.first_name,
+            lastname: user.last_name,
+            password: user.password,
             isMod: false,
             isSmm: false,
             isUser: true,
@@ -97,9 +130,9 @@ function ChangeUsername() {
             }
           })
           .then((data) => {
-            notify();
-            console.log("Cambio username went good", data);
-            navigate("./");
+                notify();
+                logoutUser();
+                navigate("../");
           })
           .catch((error) => {
             console.error("Cambio username failed, error:", error);
@@ -109,6 +142,32 @@ function ChangeUsername() {
       }
     }
   };
+
+    async function logoutUser() {
+        const uri = `${ReactConfig.base_url_requests}/auth/logout`;
+        const options = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+            mode: "cors",
+        };
+
+        fetch(uri, options)
+            .then((response) => {
+                if (response.ok) {
+                    console.log("logout riuscito con successo");
+                    navigate(`/`);
+                } else {
+                    notify();
+                    console.error("Logout failed", response.statusText);
+                }
+            })
+            .catch((error) => {
+                console.error("Network error", error);
+            });
+    }
 
   //console.log("nomeeeeeeeeeeeeeeeeeeee", userGlobal.username);
 
@@ -145,20 +204,18 @@ function ChangeUsername() {
                   setNewUsername(e.target.value);
                 }}
               />
+              <Form.Label>Dopo l'operazione sarete deautenticati</Form.Label>
             </Form.Group>
           </Form>
         </Modal.Body>
 
         <Modal.Footer style={footerStyle}>
-          <button
-            className="blue-button box"
-            onClick={cambioU}
-          >
+          <button className="blue-button box" onClick={cambioU}>
             CAMBIA
           </button>
-          <ToastContainer />
         </Modal.Footer>
       </Modal>
+      <ToastContainer />
     </div>
   );
 }
