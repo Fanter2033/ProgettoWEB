@@ -142,8 +142,9 @@
 
 <script setup>
 import VueConfig from "@/config/VueConfig";
-import {reactive, onMounted, watch, defineComponent} from "vue";
+import {reactive, onMounted, defineComponent} from "vue";
 import { ref } from "vue";
+import {store} from "@/store";
 import Map from "@/components/dashboard/Map.vue";
 
 const components = defineComponent({
@@ -160,8 +161,6 @@ const state = reactive({
 const inputType = ref("MESSAGE_TEXT");
 const inputDest = ref([]);
 const inputContent = ref("");
-const reader = new FileReader();
-
 
 
 onMounted(() => {
@@ -217,19 +216,30 @@ function assembleBody(){
   let body = "";
   switch (inputType.value) {
     case 'MESSAGE_TEXT':
-      body = inputContent.value;
+      if(inputContent.value.length > 0)
+        body = inputContent.value;
+      else
+        body = null
       break;
     case 'IMAGE':
-      body = inputImg.value;
+      if(inputImg != null)
+        body = inputImg.value;
+      else
+        body = null;
       break;
     case 'VIDEO_URL':
-      console.log(checkVideo());
       if (checkVideo())
         body = inputContent.value;
       else
         body = null;
-
-
+      break;
+    case 'POSITION':
+      if(store.getters.getSInCoor[0]!= null && store.getters.getSInCoor[1]!= null)
+        body = String([ store.getters.getSInCoor[0],store.getters.getSInCoor[1] ]);
+      else
+        body = null;
+      break;
+    case
   }
   console.log(body);
   return body;
