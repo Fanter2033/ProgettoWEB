@@ -3,6 +3,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 function RenderMap({ coordinates }) {
+  /*
   const mapContainerRef = useRef(null);
 
   useEffect(() => {
@@ -24,6 +25,8 @@ function RenderMap({ coordinates }) {
   }, [coordinates]);
 
   return <div ref={mapContainerRef} style={{ height: "400px" }} />;
+   */
+  return <div></div>;
 }
 
 export default RenderMap;

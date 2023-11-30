@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { useUserContext } from "../config/UserContext";
 import { useNavigate } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
@@ -24,6 +24,27 @@ function ChangePassword() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+      const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
+      fetch(uri, {
+          mode: "cors",
+          credentials: "include",
+      })
+          .then((res) => {
+              if (res.ok) {
+                  return res.json();
+              }
+          })
+          .then(async (data) => {
+              setUser(data);
+          })
+          .catch((error) => {
+              console.error(error);
+          });
+  }, []);
+
   const notify = () =>
     toast.success("🦄 Completato con successo!", {
       position: "top-right",
@@ -48,29 +69,37 @@ function ChangePassword() {
       theme: "dark",
     });
 
+    const notify_error_server = () =>
+        toast.error("⚠️ Errore! Modifica password fallita", {
+            position: "top-right",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+        });
+
   const changeP = (e) => {
     e.preventDefault();
 
-    //TODO: se il campo è vuoti apri toast
     setUserGlobal({
-      ...userGlobal,
+      ...user,
       password: newPassword,
     });
 
-    //console.log("mimmooooooooooooooooooooooooooooooooo" + userGlobal.password);
-
     if (newPassword.trim() === "") {
-      //TODO: se il campo è vuoto apri toast, non funge
       nofity_error();
     } else {
       try {
         handleClose();
         const data = {
           user: {
-            username: userGlobal.username,
-            email: userGlobal.email,
-            firstname: userGlobal.first_name,
-            lastname: userGlobal.last_name,
+            username: user.username,
+            email: user.email,
+            firstname: user.first_name,
+            lastname: user.last_name,
             password: newPassword,
             isMod: false,
             isSmm: false,
@@ -91,14 +120,14 @@ function ChangePassword() {
 
         fetch(url, options)
           .then((res) => {
-            console.log(res);
             if (res.ok) {
               return res.json();
             }
           })
           .then((data) => {
-            notify();
-            console.log("Cambio password went good", data);
+              if(data.status === 200){
+                  notify();
+              }
             navigate("./");
           })
           .catch((error) => {

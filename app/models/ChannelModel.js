@@ -176,12 +176,11 @@ module.exports = class ChannelModel extends Model {
                 if(results[i].owner.length === 0){
                     tmp.owner = "";
                     tmp.subscribers = 0;
-                    tmp.posts = 0;
-                    continue;
+                } else {
+                    tmp.owner = results[i].owner[0]['username'];
+                    tmp.subscribers = results[i].subscribers[0]['username'];
                 }
 
-                tmp.owner = results[i].owner[0]['username'];
-                tmp.subscribers = results[i].subscribers[0]['username'];
                 tmp.posts = 0;
                 output.push(tmp);
             }

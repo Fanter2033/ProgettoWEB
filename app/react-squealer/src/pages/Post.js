@@ -27,15 +27,11 @@ function Post() {
           <li className="list-group-item list">
             MAPPE A TEMPO: ogni mappa 125, user mette num rep e num tempo
           </li>
-
           <li className="list-group-item list">
             PUT squeal mappe temporizzare
           </li>
           <li className="list-group-item list">
             POST squeal mappe temporizzare
-          </li>
-          <li className="list-group-item list">
-            POST squeal mappe, CORS STRONZO
           </li>
           <li className="list-group-item list">LIVE QUOTA: temporizzati</li>
           <li className="list-group-item list">PROBLEMA SFONDO?</li>

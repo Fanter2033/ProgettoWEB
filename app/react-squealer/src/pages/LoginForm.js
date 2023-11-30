@@ -11,8 +11,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 import "../css/LoginForm.css";
 
-//TODO: PUT: RESET PSW /user/${username}-----------------------------------------------------------------------------------------------------
-
 function LoginForm() {
   const navigate = useNavigate();
   const { userGlobal, setUserGlobal } = useUserContext();
@@ -20,6 +18,7 @@ function LoginForm() {
   const [usernameForm, setUsernameForm] = useState("");
   const [passwordForm, setPasswordForm] = useState("");
   const [reset, setReset] = useState("");
+  const [usernameReset, setUsernameReset] = useState("");
   const [newPassword, setNewPassword] = useState("");
 
   const notify = () =>
@@ -33,6 +32,17 @@ function LoginForm() {
       progress: undefined,
       theme: "colored",
     });
+  const notify_success = () =>
+      toast.success("Operazione effettuata con successo. Autenticarsi", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
 
   const login = async () => {
     //corrected with love by @romanellas
@@ -90,21 +100,17 @@ function LoginForm() {
       theme: "colored",
     });
 
-  const resetPassword = async () => {
+  const resetPassword = async (e) => {
+    e.preventDefault();
     openReset();
 
     if (newPassword.trim() === "" || reset.trim() === "") {
       //notify2();
     } else {
-      /*
-    const data = { reset: reset };
-    const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}/resetPassword`;
+    const uri = `${ReactConfig.base_url_requests}/user/${usernameReset}/resetPassword`;
     const data = {
-      user: {
-        username: username,
-        password: password,
+        password: newPassword,
         reset: reset,
-      },
     }
     const options = {
       method: "PUT",
@@ -119,8 +125,7 @@ function LoginForm() {
     await fetch(uri, options)
       .then((response) => {
         if (response.ok) {
-          navigate(`./received`);
-          console.error("Reset successful", response.statusText);
+          notify_success();
         } else {
           notify();
           console.error("Reset failed", response.statusText);
@@ -129,7 +134,6 @@ function LoginForm() {
       .catch((error) => {
         console.error("Network error", error);
       });
-    */
     }
   };
 
@@ -240,6 +244,14 @@ function LoginForm() {
               </Modal.Header>
               <Modal.Body className="modal-delete-body">
                 <form onSubmit={resetPassword}>
+                  <label className="form-label cool-font-small">
+                    Username
+                  </label>
+                  <input
+                      type="text"
+                      value={usernameReset}
+                      onChange={(e) => setUsernameReset(e.target.value)}
+                  />
                   <label className="form-label cool-font-small">
                     Qual è il tuo hobby preferito?
                   </label>
