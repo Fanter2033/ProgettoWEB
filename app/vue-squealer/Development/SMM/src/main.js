@@ -5,10 +5,14 @@ import { store } from "./store";
 
 import "bootstrap";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import ToastPlugin from "vue-toast-notification";
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
 
 createApp(App)
     .use(router)
     .use(store)
-    .use(ToastPlugin)
+    .use(Toast, {
+        transition: "Vue-Toastification__bounce",
+        maxToasts: 20,
+        newestOnTop: true})
     .mount("#app");

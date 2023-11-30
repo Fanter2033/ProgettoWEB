@@ -101,6 +101,7 @@ const state = reactive({
   modal_demo: null,
 });
 
+
 onMounted(() => {
   VipName.value = route.params.vip;
   getQuoteInfo();
