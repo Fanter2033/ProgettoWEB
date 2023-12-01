@@ -71,6 +71,8 @@ export default defineComponent({
       console.log("fetching: " + ChartDataUri);
       fetch(ChartDataUri, {
         method: "GET",
+        credentials: 'include',
+        mode: 'cors'
       })
           .then((res) => {
             if(res.ok){

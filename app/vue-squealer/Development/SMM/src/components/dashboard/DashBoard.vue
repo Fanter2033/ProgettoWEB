@@ -39,6 +39,8 @@ export default {
 
       fetch(vipsUri, {
         method: "GET",
+        credentials: 'include',
+        mode: 'cors'
       })
         .then((res) => {
           if (res.ok)

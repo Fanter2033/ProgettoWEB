@@ -328,11 +328,11 @@ function postSqueal() {
   }
   const options = {
     method: 'POST',
-    header: {
-      "Content-Type": "application/json",
-    },
     credentials: 'include',
     mode: 'cors',
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(squealBody)
   }
   console.log(JSON.stringify(squealBody))

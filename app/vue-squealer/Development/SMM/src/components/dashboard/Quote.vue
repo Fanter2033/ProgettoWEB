@@ -134,7 +134,9 @@ async function getQuoteInfo() {
       '/quote';
   console.log(uri);
   fetch(uri, {
-    method: 'GET'
+    method: 'GET',
+    credentials: 'include',
+    mode: 'cors'
   })
       .then((res) => {
         if (res.ok)
@@ -163,7 +165,13 @@ async function refillQuote() {
       VipName.value +
       '/quote/refill/';
   fetch(uri, {
-    method: 'PUT'
+    method: 'PUT',
+    credentials: 'include',
+    mode: 'cors',
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+    },
   })
       .then((res) => {
         if (res.ok) {
