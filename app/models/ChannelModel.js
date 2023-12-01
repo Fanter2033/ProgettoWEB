@@ -203,7 +203,8 @@ module.exports = class ChannelModel extends Model {
             $or: [
                 {channel_name: {$regex: this.mongo_escape(search)}},
                 {owner: {$in: [{username: this.mongo_escape(search)}]}},
-                {posts: {$regex: this.mongo_escape(search)}}
+                {posts: {$regex: this.mongo_escape(search)}},
+                {description: {$regex: this.mongo_escape(search)}}
             ],
         };
 
