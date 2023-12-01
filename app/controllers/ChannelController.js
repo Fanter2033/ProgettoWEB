@@ -53,7 +53,7 @@ module.exports = class ChannelController extends Controller {
             channelDto.channel_name = channelDto.channel_name.toLowerCase();
         }
 
-        if(this.containsOneLetter(channelDto.channel_name) === false
+        if (this.containsOneLetter(channelDto.channel_name) === false
             || this.containsWhiteSpace(channelDto.channel_name)) {
             output['code'] = 400;
             output['msg'] = 'Invalid channel name.';
@@ -253,12 +253,13 @@ module.exports = class ChannelController extends Controller {
             }
         }
 
-        if (newChannel.type === autoload.config._CHANNEL_TYPE_OFFICIAL)
+        if (newChannel.type === autoload.config._CHANNEL_TYPE_OFFICIAL) {
             newChannel.channel_name = newChannel.channel_name.toUpperCase();
-        else  //unofficial
+            newChannel.private = false;
+        } else  //unofficial
             newChannel.channel_name = newChannel.channel_name.toLowerCase();
 
-        if(this.containsOneLetter(newChannel.channel_name) === false
+        if (this.containsOneLetter(newChannel.channel_name) === false
             || this.containsWhiteSpace(newChannel.channel_name)) {
             output['code'] = 400;
             output['msg'] = 'Invalid channel name.';
@@ -297,7 +298,7 @@ module.exports = class ChannelController extends Controller {
 
             //Replace on substitution
             let result = await this.#squealsToChannelModel.substituteChannels(oldChannel, newChannel);
-            if(result === false){
+            if (result === false) {
                 output['code'] = 500;
                 output['msg'] = 'Internal server error (3).';
                 return output;
@@ -634,7 +635,7 @@ module.exports = class ChannelController extends Controller {
                 response.username = username;
                 output['content'] = response.getDocument();
                 return output;
-            } else if(user.isAdmin) {
+            } else if (user.isAdmin) {
                 let response = new ChannelRoleDto();
                 response.role = autoload.config._CHANNEL_ROLE_ADMIN;
                 response.type = channelDto.type;
@@ -643,11 +644,11 @@ module.exports = class ChannelController extends Controller {
                 response.username = username;
                 output['content'] = response.getDocument();
                 return output;
-            } else if (channelDto.type === autoload.config._CHANNEL_TYPE_USER){
+            } else if (channelDto.type === autoload.config._CHANNEL_TYPE_USER) {
                 let channelTmp = await this.getChannel(channelDto);
-                if(channelTmp.code === 200){
+                if (channelTmp.code === 200) {
                     channelTmp = new ChannelDto(channelTmp.content);
-                    if(channelTmp.private === false){
+                    if (channelTmp.private === false) {
                         let response = new ChannelRoleDto();
                         response.role = autoload.config._CHANNEL_ROLE_WRITE;
                         response.type = channelDto.type;
@@ -673,32 +674,32 @@ module.exports = class ChannelController extends Controller {
      * @param {UserDto} authUser
      * @return {Promise<{msg: string, code: number, content: {}}>}
      */
-    async unfollowChannel(channelDto, username, authUser){
+    async unfollowChannel(channelDto, username, authUser) {
         let output = this.getDefaultOutput();
 
         let deletingRole = await this.getChannelUserRole(channelDto, username);
-        if(deletingRole.code !== 200){
+        if (deletingRole.code !== 200) {
             return deletingRole;
         }
         deletingRole = new ChannelRoleDto(deletingRole.content);
 
-        if(deletingRole.role === autoload.config._CHANNEL_ROLE_OWNER){
+        if (deletingRole.role === autoload.config._CHANNEL_ROLE_OWNER) {
             output['code'] = 400;
             output['msg'] = 'Cannot delete the owner role. Delete the channel or choose another owner';
             return output;
         }
 
-        if(authUser.isAdmin === false && authUser.username !== username){
+        if (authUser.isAdmin === false && authUser.username !== username) {
             //Not an admin we should get the user role and check if is an admin or owner
             let authUserRole = await this.getChannelUserRole(channelDto, authUser.username);
-            if(authUserRole.code !== 200){
+            if (authUserRole.code !== 200) {
                 output['code'] = 401;
                 output['msg'] = 'Unauthorized - 1';
                 return output;
             }
 
             authUserRole = new ChannelRoleDto(authUserRole.content);
-            if(authUserRole.role !== autoload.config._CHANNEL_ROLE_OWNER
+            if (authUserRole.role !== autoload.config._CHANNEL_ROLE_OWNER
                 && authUserRole.role !== autoload.config._CHANNEL_ROLE_ADMIN) {
                 output['code'] = 401;
                 output['msg'] = 'Unauthorized - 2';
@@ -707,7 +708,7 @@ module.exports = class ChannelController extends Controller {
         }
 
         let result = await this.#channelRolesController.deleteUserRoleFromChannel(deletingRole);
-        if(result === false){
+        if (result === false) {
             output['code'] = 500;
             output['msg'] = 'Internal server error';
             return output;
@@ -780,7 +781,7 @@ module.exports = class ChannelController extends Controller {
         roleDto.type = dto.type;
         roleDto.username = authUser.username;
         let currentRole = await this.#channelRolesController.getChannelRoleOfUser(roleDto);
-        if(currentRole.code === 200){
+        if (currentRole.code === 200) {
             output.code = 208;
             output.msg = 'Already following';
             return output;
@@ -806,7 +807,7 @@ module.exports = class ChannelController extends Controller {
         newRole.role = role;
 
         let ctrlOut = await this.#channelRolesController.createRole(newRole);
-        if(ctrlOut.code !== 200){
+        if (ctrlOut.code !== 200) {
             output['code'] = 500;
             output['msg'] = 'Internal server error';
             return output;
@@ -820,21 +821,21 @@ module.exports = class ChannelController extends Controller {
      * @param authUser {UserDto}
      * @return {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
-    async updateChannelOfficialDescription(dto, authUser){
+    async updateChannelOfficialDescription(dto, authUser) {
         let output = this.getDefaultOutput();
 
-        if(this.isAuthenticatedUser(authUser) === false) {
+        if (this.isAuthenticatedUser(authUser) === false) {
             output['code'] = 403;
             return output;
         }
 
-        if(authUser.isAdmin === false) {
+        if (authUser.isAdmin === false) {
             output['code'] = 401;
             return output;
         }
 
         let result = await this.#_model.changeChannelDescription(dto);
-        if(result === false) {
+        if (result === false) {
             output['code'] = 500;
             return output;
         }
