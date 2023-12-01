@@ -1,6 +1,9 @@
 module.exports = class SquealDto {
 
     #id;
+
+    #destinations;
+
     #date;
     #sender;
     #message_type;
@@ -46,6 +49,15 @@ module.exports = class SquealDto {
             quote_cost: this.#quote_cost,
             content: this.#content,
         }
+    }
+
+
+    get destinations() {
+        return this.#destinations;
+    }
+
+    set destinations(value) {
+        this.#destinations = value;
     }
 
     get id() {
