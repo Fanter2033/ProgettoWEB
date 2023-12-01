@@ -21,7 +21,7 @@ channelDriver.post('/', async function (req, res) {
         req.body.channel = {};
         req.body.channel.name = '';
         req.body.channel.type = '';
-        req.body.channel.private = true;
+        req.body.channel.private = false;
     }
 
     let channelDto = new ChannelDto();
@@ -220,6 +220,20 @@ channelDriver.get('/:type/:channel/roles/:role', async function(req, res){
     role = parseInt(role);
 
     let ctrlOut = await controller.getChannelSubscribers(channelDto, role);
+    if (ctrlOut.code === 200)
+        res.status(ctrlOut.code).send(ctrlOut.content);
+    else
+        res.status(ctrlOut.code).send(ctrlOut);
+});
+
+channelDriver.put('/CHANNEL_OFFICIAL/:channel/description', async function(req, res) {
+    let authUser = authController.getAuthenticatedUser(req);
+    let channelDto = new ChannelDto();
+    channelDto.type = 'CHANNEL_OFFICIAL';
+    channelDto.channel_name = (typeof req.params['channel'] !== 'undefined' ? req.params['channel']: null);
+    channelDto.description = (typeof req.body['description'] !== 'undefined' ? req.body['description']: '');
+
+    let ctrlOut = await controller.updateChannelOfficialDescription(channelDto, await authUser);
     if (ctrlOut.code === 200)
         res.status(ctrlOut.code).send(ctrlOut.content);
     else

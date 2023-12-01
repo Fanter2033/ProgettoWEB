@@ -891,6 +891,31 @@ paths:
           description: 'User not logged'
         '500':
           description: 'Internal server error'
+  /channel/CHANNEL_OFFICIAL/{name}/desription/:
+    put:
+      tags:
+        - channel
+      summary: Update channel official description
+      parameters:
+        - name: name
+          in: path
+          required: true
+          type: string
+        - name: description
+          in: formData
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Everything is ok'
+        '400':
+          description: 'Bad Request.'
+        '401':
+          description: 'User logged but not authorized to execute the operation'
+        '403':
+          description: 'User not logged'
+        '500':
+          description: 'Internal server error'
   /squeal/:
     post:
       tags:

@@ -179,8 +179,8 @@ import Map from "@/components/dashboard/Map.vue";
 import {useToast} from "vue-toastification";
 
 const toast = useToast()
-function showToast(){
-  toast.success("Squeal posted", {
+function showToast(type){
+  const options = {
     position: "top-right",
     timeout: 5000,
     closeOnClick: true,
@@ -193,7 +193,11 @@ function showToast(){
     closeButton: "button",
     icon: true,
     rtl: false
-  });
+  }
+  if(type === 'success')
+    toast.success("Squeal posted", options);
+  else if (type === 'warning')
+    toast.warning("Ops! Something went wrong", options);
 }
 
 const components = defineComponent({
@@ -311,10 +315,12 @@ function postSqueal() {
     if(squealContent == null)
       return;
   let squealBody = {
-    destination: destination,
-    sender: vipName,
-    message_type: inputType,
-    content: squealContent
+    squeal: {
+      destination: destination,
+      sender: vipName.value,
+      message_type: inputType.value,
+      content: squealContent
+    }
   }
   if(inputType.value === 'TEXT_AUTO'){
     squealBody.auto_iterations = inputNumberRep;
@@ -333,9 +339,10 @@ function postSqueal() {
   fetch(uri, options)
       .then((res)=>{
         if(res.ok){
-          showToast();
+          showToast('success');
         } else {
           console.error("Error during post");
+          showToast('warning');
         }
       })
       .catch((error)=>{
