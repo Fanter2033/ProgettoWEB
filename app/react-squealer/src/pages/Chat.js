@@ -81,7 +81,10 @@ function Chat() {
                           </button>
                         </Link>
                       </Card.Header>
-                      <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
+                      <Card.Body
+                        className="mb-4 d-flex flex-col justify-content-center align-items-center"
+                        style={{ overflowWrap: "break-word" }}
+                      >
                         {squeal.message_type === "MESSAGE_TEXT" && (
                           <>
                             <div>
@@ -103,6 +106,14 @@ function Chat() {
                           </>
                         )}
                         {squeal.message_type === "POSITION" && (
+                          <RenderMap coordinates={squeal.content} />
+                        )}
+                        {squeal.message_type === "TEXT_AUTO" && (
+                          <>
+                            <div>{squeal.content}</div>
+                          </>
+                        )}
+                        {squeal.message_type === "POSITION_AUTO" && (
                           <RenderMap coordinates={squeal.content} />
                         )}
                       </Card.Body>

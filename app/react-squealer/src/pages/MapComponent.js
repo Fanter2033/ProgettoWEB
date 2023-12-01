@@ -60,12 +60,10 @@ const MapComponent = ({ onLocationChange }) => {
   }, []);
 
   return (
-    <div className="map__container d-flex flex-row justify-content-center">
-      <div className="mt-3" style={{ height: "300px", width: "100%" }}>
+    <div className="map__container d-flex flex-row justify-content-center ">
+      <div className="mt-3 borderedImage " style={{ height: "300px", width: "80%" }}>
         <MapContainer
           center={userLocation || [41.8719, 12.5674]}
-          //center={position}
-          //zoom={2}
           zoom={5}
           style={{ height: "100%", width: "100%" }}
         >

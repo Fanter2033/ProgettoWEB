@@ -7,6 +7,7 @@ import { useUserContext } from "../config/UserContext";
 import Search from "./Search";
 import Footer from "./Footer";
 import ChannelForm from "./ChannelForm";
+import AudioPlayer from "./AudioPlayer";
 
 import "../css/LoginForm.css";
 import "react-toastify/dist/ReactToastify.css";
@@ -100,7 +101,34 @@ function Channels() {
       <div className="container-flex">
         <div className="row" onLoad={getUserData}>
           <div className="col-12 mt-5">
+            <AudioPlayer/>
             <div>
+
+              <div>
+                <p>orderBy</p>
+                <div>
+                  <button className="custom-button box">PRIVATI</button>
+                  <button className="custom-button box">PUBBLICI</button>
+                </div>
+                <div>
+                  <button className="custom-button box">NOME</button>
+                  <button className="custom-button box">CREATORE</button>
+                  <button className="custom-button box">BLOCCATI</button>
+                  <button className="custom-button box">POST</button>
+                  <button className="custom-button box">ISCRITTI</button>
+                </div>
+                <div>
+                  <button className="custom-button box">UFFICIALI</button>
+                  <button className="custom-button box">UTENTI</button>
+                  <button className="custom-button box">TAG</button>
+                </div>
+
+                <p>orderBy</p>
+                <div>
+                  <button className="custom-button box">ASC</button>
+                  <button className="custom-button box">DECR</button>
+                </div>
+              </div>
               <ChannelForm />
               <Search />
             </div>
@@ -110,7 +138,9 @@ function Channels() {
         <div className="row d-flex justify-content-center ms-1 me-1 mb-5 w-100">
           <h3>TODO:</h3>
           <ul className="list-group col-md-4">
-            <li className="list-group-item list">cambia bottone quando seguito</li>
+            <li className="list-group-item list">
+              cambia bottone quando seguito
+            </li>
             <li className="list-group-item list">
               GESTIONE RUOLI: PATCH new_role
             </li>

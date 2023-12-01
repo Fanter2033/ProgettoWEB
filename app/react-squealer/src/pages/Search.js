@@ -129,6 +129,32 @@ function Search() {
     */
   }
 
+  //TODO: DELETE /channel/{type}/{name}/users/{username}/ unfollow
+
+  async function unfollow(channel) {
+    const uri = `${ReactConfig.base_url_requests}/channel/${channel.type}/${channel.channel_name}user/${userGlobal.username}`;
+    const options = {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      mode: "cors",
+    };
+
+    fetch(uri, options)
+      .then((response) => {
+        if (response.ok) {
+          console.log("Delete role successful :)");
+        } else {
+          console.error("Delete role failed :(", response.statusText);
+        }
+      })
+      .catch((error) => {
+        console.error("Network error", error);
+      });
+  }
+
   //TODO: IMPLEMENT FILTER: user, channels: official, user, tag
   //GET /channel/{type} list of channel------------------------------------------------------------------------------------------------------------
   //types: CHANNEL_OFFICIAL, CHANNEL_USERS, CHANNEL_HASHTAG
@@ -189,8 +215,6 @@ function Search() {
   const getPublic = () => {
     setPublicChannel(true);
   };
-  //console.log(privateChannel);
-  //console.log(publicChannel);
 
   const removeFilter = () => {
     setClick(false);
@@ -203,6 +227,19 @@ function Search() {
   function changeFollowButton() {
     setFollowButton(false);
   }
+
+  const [isFollowVisible, setIsFollowVisible] = useState(false);
+  const [isUnfollowVisible, setIsUnfollowVisible] = useState(false);
+
+  const handleToggleFollow = () => {
+    setIsFollowVisible(!isFollowVisible);
+    setIsUnfollowVisible(false); // Assicura che l'altra icona sia nascosta
+  };
+
+  const handleToggleUnfollow = () => {
+    setIsUnfollowVisible(!isUnfollowVisible);
+    setIsFollowVisible(false); // Assicura che l'altra icona sia nascosta
+  };
 
   return (
     <div id="" className="col-6 offset-3">
@@ -283,16 +320,104 @@ function Search() {
                     </button>
                   </Link>
                   {channel.owner === userGlobal.username && (
-                    <button className="red-button">your channel</button>
+                    <button className="red-button">TUO</button>
                   )}
+                  <button
+                    className="custom-button"
+                    onClick={() => {
+                      follow(channel);
+                    }}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      className="bi bi-check2"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+                    </svg>
+                  </button>
+
                   {
                     <>
                       {channel.owner !== userGlobal.username &&
+                        channel.type === "CHANNEL_USER" && (
+                          <>
+                            <div>
+                              <button onClick={handleToggleFollow}>
+                                {isFollowVisible ? (
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="16"
+                                    height="16"
+                                    fill="currentColor"
+                                    className="bi bi-check2"
+                                    viewBox="0 0 16 16"
+                                  >
+                                    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+                                  </svg>
+                                ) : null}
+                                <p>mamma</p>
+                              </button>
+                              <button onClick={handleToggleUnfollow}>
+                                {isUnfollowVisible ? (
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="16"
+                                    height="16"
+                                    fill="currentColor"
+                                    className="bi bi-plus-lg"
+                                    viewBox="0 0 16 16"
+                                  >
+                                    <path
+                                      fillRule="evenodd"
+                                      d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"
+                                    />
+                                  </svg>
+                                ) : null}
+                                <p>papa</p>
+                              </button>
+                            </div>
+                          </>
+                        )}
+                      {channel.owner !== userGlobal.username &&
+                        channel.type === "CHANNEL_USER" && <></>}
+                    </>
+                  }
+
+                  {
+                    <>
+                      {channel.owner !== userGlobal.username &&
+                        channel.type === "CHANNEL_USER" && (
+                          <>
+                            <button
+                              className="custom-button"
+                              onClick={() => {
+                                follow(channel);
+                              }}
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                fill="currentColor"
+                                className="bi bi-check2"
+                                viewBox="0 0 16 16"
+                              >
+                                <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+                              </svg>
+                            </button>
+                          </>
+                        )}
+                      {channel.owner !== userGlobal.username &&
+                        channel.type === "CHANNEL_USER" &&
                         !followButton && (
                           <button
                             className="custom-button"
                             onClick={() => {
-                              follow(channel);
+                              unfollow(channel);
                             }}
                           >
                             <svg
@@ -322,11 +447,12 @@ function Search() {
                           className="d-flex justify-content-center align-items-center"
                         >
                           {role.role === 0 &&
-                            role.channel_name === channel.channel_name && followButton && (
+                            role.channel_name === channel.channel_name &&
+                            channel.type === "CHANNEL_USER" && (
                               <>
                                 <div>
                                   RUOLO: <b>IN ATTESA</b>
-                                  <button className="custom-button ms-2" >
+                                  <button className="custom-button ms-2">
                                     🕒
                                   </button>
                                 </div>
@@ -379,7 +505,9 @@ function Search() {
                               <>
                                 <div>
                                   RUOLO: <b>OWNER</b>
-                                  <button className="custom-button ms-2">👑</button>
+                                  <button className="custom-button ms-2">
+                                    👑
+                                  </button>
                                 </div>
                               </>
                             )}
@@ -469,17 +597,19 @@ function Search() {
                   <div className="d-flex flex-row justify-content-center align-items-center">
                     {channel.locked && (
                       <>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          fill="currentColor"
-                          className="bi bi-ban"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M15 8a6.973 6.973 0 0 0-1.71-4.584l-9.874 9.875A7 7 0 0 0 15 8M2.71 12.584l9.874-9.875a7 7 0 0 0-9.874 9.874ZM16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0" />
-                        </svg>
-                        <div> &nbsp;BLOCCATO</div>
+                        <div className="altro d-flex flex-row justify-content-center align-items-center">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            fill="currentColor"
+                            className="bi bi-ban"
+                            viewBox="0 0 16 16"
+                          >
+                            <path d="M15 8a6.973 6.973 0 0 0-1.71-4.584l-9.874 9.875A7 7 0 0 0 15 8M2.71 12.584l9.874-9.875a7 7 0 0 0-9.874 9.874ZM16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0" />
+                          </svg>
+                          <div> &nbsp;BLOCCATO</div>
+                        </div>
                       </>
                     )}
                   </div>

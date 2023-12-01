@@ -147,6 +147,9 @@ function ChangeNameChannel() {
           <button className="blue-button box" onClick={handleChangeChannelName}>
             CAMBIA
           </button>
+          <button className="red-button box" onClick={handleClose}>
+            ANNULLA
+          </button>
           <ToastContainer />
         </Modal.Footer>
       </Modal>

@@ -367,13 +367,13 @@ function Account() {
                     </h1>
                     {userData.locked && (
                       <>
-                        <p>BLOCCATO</p>
+                        <p className="altro">BLOCCATO</p>
                       </>
                     )}
                     <h2>
                       {userData.first_name} {userData.last_name}
                     </h2>
-                    <button className="yellow-button box col-12">
+                    <button className="yellow-button box col-12 ">
                       N SQUEALS PUBBLICI: {squealsLogger.length}
                     </button>
                     {userData.vip && (
@@ -661,7 +661,13 @@ function Account() {
           <li className="list-group-item list">
             if owner of ch toast for DELETE
           </li>
-          <li className="list-group-item list">quota per un anno</li>
+          <li className="list-group-item list">
+            FAI RICOMPARIRE IL BOTTONE COMPRA TRA 1 ANNO
+          </li>
+          <li className="list-group-item list">
+            QUANDO RICLICCI SUL BOTTONE SITUA CANALI: si toglie la lista
+          </li>
+          <li className="list-group-item list">vedi se pubblici</li>
         </ul>
       </div>
     </div>

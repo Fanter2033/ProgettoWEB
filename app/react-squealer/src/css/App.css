@@ -456,6 +456,17 @@ img {
   border:0.2rem solid var(--squeal-green);
 }
 
+/* -------------------- MAP CORNICE ------------------*/
+.borderedImage {
+  border: 1rem solid var(--squeal-blue); 
+  border-radius: 8px; 
+  display: block;
+}
+
+.borderedImage:hover {
+  border-color: var(--squeal-green); 
+}
+
 /*
 .profile-picture-container {
   border: 1rem solid var(--squeal-green);
