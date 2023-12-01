@@ -797,7 +797,7 @@ module.exports = class SquealController extends Controller {
         let output = this.getDefaultOutput();
         squealDto.sender = vipUsername;
 
-        if (false && this.isObjectVoid(authenticatedSmm)) {
+        if (this.isObjectVoid(authenticatedSmm)) {
             output['code'] = 403;
             output['msg'] = 'Please Login.'
             return output;

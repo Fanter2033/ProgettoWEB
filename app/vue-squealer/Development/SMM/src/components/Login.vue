@@ -34,6 +34,7 @@
 <script>
 import VueConfig from "../config/VueConfig";
 import router from "../router";
+import VueCookies from 'vue-cookies'
 
 export default {
   name: "Login",
@@ -78,6 +79,10 @@ export default {
       })
         .then((res) => {
           if (res.ok) {
+
+            const connectSidCookie = res.headers.get('set-cookie');
+            VueCookies.set('connect.sid', connectSidCookie);
+
             this.$store.commit('setUserZero',this.formLoginValues.username);
             router.push("/dashboard");
           } else console.error("Authentication failed", res.statusText);
@@ -89,6 +94,7 @@ export default {
     },
   },
 };
+
 </script>
 
 <style>
