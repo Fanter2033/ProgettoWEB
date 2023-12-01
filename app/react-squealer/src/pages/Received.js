@@ -108,7 +108,7 @@ function Received() {
                               <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
                             </svg>
                           </div>
-                          {squeal.critical_mass/0.25}
+                          {squeal.critical_mass / 0.25}
                         </div>
                       </Card.Header>
                       <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
@@ -277,9 +277,9 @@ function Received() {
       <div className="row d-flex justify-content-center ms-1 me-1 mb-5">
         <h3 className="cool-font-small">TODO:</h3>
         <ul className="list-group col-md-4">
-          <li className="list-group-item list">
-            PATCH squeal, per le reactions
-          </li>
+          <li className="list-group-item list">Link overflow</li>
+          <li className="list-group-item list">Img small</li>
+          <li className="list-group-item list mb-5">Reazioni per sempre???</li>
         </ul>
       </div>
       <Footer />

@@ -4,6 +4,8 @@ import { useLocation, Link } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 import { useUserContext } from "../config/UserContext";
 
+import Reactions from "./Reactions";
+
 import { Container, Card, Col, Row } from "react-bootstrap";
 import "../css/App.css";
 import squeal_logo from "./media/icone/Nav_logo.png";
@@ -50,7 +52,7 @@ function InfoChannel() {
       });
   };
 
-  //TODO: GET /utils/squeals/{channel_type}/{channel_name}--------------------------------------------------------------
+  //GET /utils/squeals/{channel_type}/{channel_name}--------------------------------------------------------------
   const [squealsLogger, setSquealsLogger] = useState([]);
 
   async function logPast() {
@@ -95,9 +97,6 @@ function InfoChannel() {
   return (
     <div>
       <div className="">
-        <h3 className="cool-font-medium">
-          Nome Canale: {channel.channel_name}
-        </h3>
         <Link to="/details" state={channel}>
           <button className="yellow-button box ">
             <svg
@@ -149,24 +148,29 @@ function InfoChannel() {
       </div>
 
       <div>
-        <h1 className="cool-font">Squeals</h1>
+        <h1 className="cool-font-medium">Squeals di {channel.channel_name}</h1>
         <br></br>
         <Container className="">
           <Row className="w-100">
             {squealsLogger.map((squeal) => (
               <Col lg={12} key={squeal.id} className="mb-4">
                 <Card style={{ height: "100%" }} className="squeal">
-                  <Card.Header className="d-flex flex-col justify-content-center align-items-center">
+                  <Card.Header className="d-flex flex-row justify-content-evenly align-items-center">
                     {" "}
-                    <b>{squeal.sender}</b>
+                    <div>
+                      <b>{squeal.sender}</b>
+                    </div>
+                    <div> TIPO: {squeal.message_type}</div>
+
+                    <div> ID: {squeal._id}</div>
                   </Card.Header>
                   <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
                     <div>{squeal.content}</div>
                   </Card.Body>
                   <Card.Footer>
-                    <div>Id: {squeal._id}</div>
-
-                    <div className="row"> </div>
+                    <div>
+                      <Reactions squeal={squeal.id} />
+                    </div>
                   </Card.Footer>
                 </Card>
               </Col>

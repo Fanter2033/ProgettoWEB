@@ -7,6 +7,7 @@ import ReactConfig from "../config/ReactConfig";
 import ChangeNameChannel from "./ChangeNameChannel";
 import ChannelDeleteModal from "./ChannelDeleteModal";
 import ChangeRoleModal from "./ChangeRoleModal";
+import MatchRole from "./MatchRole";
 
 import { Container, Card, Col, Row } from "react-bootstrap";
 import "../css/App.css";
@@ -43,42 +44,43 @@ function DetailsChannel() {
   const [roles3, setRoles3] = useState([]);
   const [roles4, setRoles4] = useState([]);
 
-  useEffect(() => {
-    /*
-    const fetchData = async (channelType, channelName, roleNumber) => {
-      const url = `${ReactConfig.base_url_requests}/channel/${channelType}/${channelName}/roles/${roleNumber}`;
+  const fetchData = async (channelName, roleNumber) => {
+    
+    const url = `${ReactConfig.base_url_requests}/channel/CHANNEL_USERS/${channelName}/roles/${roleNumber}`;
 
-      try {
-        const response = await fetch(url);
-        const data = await response.json();
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
 
-        console.log(`Get roles for number ${roleNumber}:`, data);
+      console.log(`Get roles for number ${roleNumber}:`, data);
 
-        if (roleNumber === 0) {
-          setRoles0(data.content);
-        } else if (roleNumber === 1) {
-          setRoles1(data.content);
-        } else if (roleNumber === 2) {
-          setRoles2(data.content);
-        } else if (roleNumber === 3) {
-          setRoles3(data.content);
-        } else if (roleNumber === 4) {
-          setRoles4(data.content);
-        }
-      } catch (error) {
-        console.error(
-          `Failed to get roles for number ${roleNumber}, error:`,
-          error
-        );
+      if (roleNumber === 0) {
+        setRoles0(data.content);
+      } else if (roleNumber === 1) {
+        setRoles1(data.content);
+      } else if (roleNumber === 2) {
+        setRoles2(data.content);
+      } else if (roleNumber === 3) {
+        setRoles3(data.content);
+      } else if (roleNumber === 4) {
+        setRoles4(data.content);
       }
-    };
-    fetchData(channel.type, channel.channel_name, 0);
-    fetchData(channel.type, channel.channel_name, 1);
-    fetchData(channel.type, channel.channel_name, 2);
-    fetchData(channel.type, channel.channel_name, 3);
-    fetchData(channel.type, channel.channel_name, 4);
-    */
-  }, [channel.type, channel.channel_name]);
+    } catch (error) {
+      console.error(
+        `Failed to get roles for number ${roleNumber}, error:`,
+        error
+      );
+    }
+    
+  };
+
+  useEffect(() => {
+    fetchData(channel.channel_name, 0);
+    fetchData(channel.channel_name, 1);
+    fetchData(channel.channel_name, 2);
+    fetchData(channel.channel_name, 3);
+    fetchData(channel.channel_name, 4);
+  }, []);
 
   console.log(
     "zzzzzzzzzzzzzz",
@@ -97,6 +99,7 @@ function DetailsChannel() {
   //GET /channel/{type}/{channel_name}/roles/0 || 1 || 2 || 3 || 4    roles following a ch
   const [roles, setRoles] = useState([]);
   const getAllRoles = () => {
+    /*
     const url = `${ReactConfig.base_url_requests}/channel/${channel.type}/${channel.channel_name}/roles/4`;
     fetch(url)
       .then((response) => response.json())
@@ -107,23 +110,24 @@ function DetailsChannel() {
       .catch((error) => {
         console.error("Failed to get all the roles, errore:", error);
       });
+      */
   };
   //console.log(roles, "AAAAAAAAAAAAAA");
 
   useEffect(() => {
     //const intervalId1 = setInterval(getChTypeName, 5000);
     //const intervalId2 = setInterval(getChTypeNameUsers, 5000);
-    const intervalId4 = setInterval(getAllRoles, 5000);
+    //const intervalId4 = setInterval(getAllRoles, 5000);
 
     //getChTypeName();
     getChTypeNameUsers();
-    getAllRoles();
+    //getAllRoles();
     //se iscritto
 
-    //clearInterval(intervalId1);
     return () => {
+      //clearInterval(intervalId1);
       //clearInterval(intervalId2);
-      clearInterval(intervalId4);
+      //clearInterval(intervalId4);
     };
   }, []);
 
@@ -136,6 +140,43 @@ function DetailsChannel() {
     setNewRoleModal(false);
   };
 
+  // Funzione per associare gli utenti ai ruoli
+  const associaUtentiARuoli = () => {
+    /*
+    const utentiConRuoli = following.map((user) => {
+      const { id, username } = user;
+      const ruolo =
+        roles0.find((u) => u.id === id) ||
+        roles1.find((u) => u.id === id) ||
+        roles2.find((u) => u.id === id) ||
+        roles3.find((u) => u.id === id) ||
+        roles4.find((u) => u.id === id);
+
+      return { id, username, ruolo };
+    });
+    console.log(utentiConRuoli); // Puoi visualizzare i risultati nella console
+
+*/
+  };
+
+  /*
+  const associaUtenteARuolo = (username) => {
+    const ruolo = roles0.includes(username)
+      ? "IN ATTESA"
+      : roles1.includes(username)
+      ? "LETTORE"
+      : roles2.includes(username)
+      ? "SCRITTORE"
+      : roles3.includes(username)
+      ? "ADMIN"
+      : roles4.includes(username)
+      ? "OWNER"
+      : "elseeeeeee";
+
+    console.log(`Utente: ${username}, Ruolo: ${ruolo}`);
+    // Puoi anche impostare uno stato per conservare gli utenti con i ruoli se necessario
+  };
+*/
   return (
     <>
       <div className="container">
@@ -159,6 +200,26 @@ function DetailsChannel() {
               />
             </svg>
           </button>
+        </div>
+
+        <div className="d-flex flex-row justify-content-center align-items-center">
+          {channel.locked && (
+            <>
+              <div className="altro d-flex flex-row justify-content-center align-items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="30"
+                  height="30"
+                  fill="currentColor"
+                  className="bi bi-ban"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M15 8a6.973 6.973 0 0 0-1.71-4.584l-9.874 9.875A7 7 0 0 0 15 8M2.71 12.584l9.874-9.875a7 7 0 0 0-9.874 9.874ZM16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0" />
+                </svg>
+                <div className="cool-font-medium altro"> &nbsp;BLOCCATO</div>
+              </div>
+            </>
+          )}
         </div>
 
         <div
@@ -251,24 +312,6 @@ function DetailsChannel() {
               </>
             )}
           </div>
-
-          <div className="d-flex flex-row justify-content-center align-items-center">
-            {channel.locked && (
-              <>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  className="bi bi-ban"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M15 8a6.973 6.973 0 0 0-1.71-4.584l-9.874 9.875A7 7 0 0 0 15 8M2.71 12.584l9.874-9.875a7 7 0 0 0-9.874 9.874ZM16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0" />
-                </svg>
-                <div> &nbsp;BLOCCATO</div>
-              </>
-            )}
-          </div>
         </div>
 
         <button className="ms-4 me-4 custom-button box">
@@ -316,26 +359,7 @@ function DetailsChannel() {
                 </ul>
               </div>
 
-              <h3>Roles?????</h3>
-              <Container>
-                <Row>
-                  {roles.map((user) => (
-                    <Col lg={12} key={user.id} className="mb-4">
-                      <Card className="w-100 squeal">
-                        {" "}
-                        <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
-                          <div>{user}</div>
-                          <Link to="/infou" state={user}>
-                            <button className="ms-4 me-4 custom-button box">
-                              Info
-                            </button>
-                          </Link>
-                        </Card.Body>
-                      </Card>
-                    </Col>
-                  ))}
-                </Row>
-              </Container>
+              
             </div>
           </div>
         )}
@@ -355,16 +379,19 @@ function DetailsChannel() {
                           Info
                         </button>
                       </Link>
+
                       {isOwner && (
                         <>
-                          <div>
-                            <button
-                              className="custom-button box"
-                              onClick={openRoleModal}
-                            >
-                              RUOLO
-                            </button>
-                          </div>
+                          <MatchRole
+                            inputString={user}
+                            array1={roles0}
+                            array2={roles1}
+                            array3={roles2}
+                            array4={roles3}
+                            array5={roles4}
+                            name={channel.channel_name}
+                            type={channel.type}
+                          />
                         </>
                       )}
                     </Card.Body>
