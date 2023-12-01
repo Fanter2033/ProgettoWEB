@@ -61,7 +61,7 @@ squealDriver.post('/', async function(req, res){
 
 //DA AGGIUNGERE ALLA SPECIFICA SWAGGER
 squealDriver.post('/from-smm/:username', async function(req, res){
-    let authUser = authController.getAuthenticatedUser(req);
+    let authUser = await authController.getAuthenticatedUser(req);
 
     if (typeof req.body === 'undefined' || typeof req.body.squeal === 'undefined') {
         req.body = {};
@@ -84,7 +84,7 @@ squealDriver.post('/from-smm/:username', async function(req, res){
     autoSqueal.next_scheduled_operation = parseInt(autoSqueal.next_scheduled_operation);
 
     let vipUsername = req.params.username;
-    let ctrlOut = await squealController.postSquealFromSmm(squealDto, await authUser, autoSqueal, vipUsername)
+    let ctrlOut = await squealController.postSquealFromSmm(squealDto, authUser, autoSqueal, vipUsername);
     if (ctrlOut.code === 200)
         res.status(ctrlOut.code).send(ctrlOut.content);
     else
