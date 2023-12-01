@@ -226,10 +226,17 @@ class ServerTablesOC {
                 <button type="button" class="btn btn-warning" onclick="${this.#variableName}.updateChannel('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#modalAggiungiCanale">Modifica</button>
                 &nbsp;
                 <button type="button" class="btn btn-danger" onclick="${this.#variableName}.deleteChannel('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#modalEliminaCanale">Elimina</button>
+                &nbsp;
+                <button type="button" class="btn btn-success" onclick="${this.#variableName}.newSqueal('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#nuovoSqueal">Crea squeal</button>
                 </td>`;
         }
 
         return html;
+    }
+
+    newSqueal(name){
+        $('#channelDest').val('§' + name);
+        $('#squealContent').val('');
     }
 
     /**

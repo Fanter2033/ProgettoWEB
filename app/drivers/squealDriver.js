@@ -52,7 +52,12 @@ squealDriver.post('/', async function(req, res){
     autoSqueal.iteration_end = parseInt(autoSqueal.iteration_end);
     autoSqueal.next_scheduled_operation = parseInt(autoSqueal.next_scheduled_operation);
 
-    let ctrlOut = await squealController.postSqueal(squealDto, await authUser, autoSqueal);
+
+    let fromAdmin = (typeof req.query.fromAdmin !== 'undefined' ? req.query.fromAdmin: false);
+    if(fromAdmin === 'true') fromAdmin = true;
+    else fromAdmin = false;
+
+    let ctrlOut = await squealController.postSqueal(squealDto, await authUser, autoSqueal, fromAdmin);
     if (ctrlOut.code === 200)
         res.status(ctrlOut.code).send(ctrlOut.content);
     else
