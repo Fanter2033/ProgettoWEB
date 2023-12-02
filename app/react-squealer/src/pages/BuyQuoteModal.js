@@ -7,7 +7,7 @@ import { useUserContext } from "../config/UserContext";
 import { Modal } from "react-bootstrap";
 import "../css/App.css";
 
-function VipModal({ buyModal, closeBuyModal }) {
+function VipModal({ onInternalButtonClick, closeBuyModal }) {
   const { userGlobal } = useUserContext();
   const [selectedCard, setSelectedCard] = useState(null);
 
@@ -21,12 +21,13 @@ function VipModal({ buyModal, closeBuyModal }) {
       setTimeout(() => {
         const success = Math.random() > 0;
         closeBuyModal();
+        onInternalButtonClick();
         if (success) {
           alert("Pagamento riuscito");
         } else {
           alert("Pagamento fallito");
         }
-      }, 1000);
+      }, 2000);
     });
   };
 
@@ -88,13 +89,13 @@ function VipModal({ buyModal, closeBuyModal }) {
 
   return (
     <div>
-      <Modal show={buyModal} onHide={closeBuyModal} centered>
-        <Modal.Header closeButton className="modal-buy-header">
+      <Modal show={true} onHide={closeBuyModal} centered>
+        <Modal.Header closeButton className="modal-change-header">
           <Modal.Title className="">Buy Quote</Modal.Title>
         </Modal.Header>
-        <Modal.Body className="modal-buy-body">
+        <Modal.Body className="modal-change-body">
           <div className="m-3">
-            <div className="card text-center">
+            <div className="card text-center offers">
               <div className="card-header">PACCHETTO 1</div>
               <div className="card-body">
                 <h5 className="card-title">Aumento del 10%</h5>
@@ -113,7 +114,7 @@ function VipModal({ buyModal, closeBuyModal }) {
             </div>
           </div>
           <div className="m-3">
-            <div className="card text-center">
+            <div className="card text-center offers">
               <div className="card-header">PACCHETTO 2</div>
               <div className="card-body">
                 <h5 className="card-title">Aumento del 30%</h5>
@@ -132,7 +133,7 @@ function VipModal({ buyModal, closeBuyModal }) {
             </div>
           </div>
           <div className="m-3">
-            <div className="card text-center">
+            <div className="card text-center offers">
               <div className="card-header">PACCHETTO 3</div>
               <div className="card-body">
                 <h5 className="card-title">Aumento del 50%</h5>
@@ -156,7 +157,7 @@ function VipModal({ buyModal, closeBuyModal }) {
           style={footerStyle}
         >
           <button className="green-button box" onClick={buyQuote}>
-            COMPRA
+            PAGA 💸
           </button>
           <button className="blue-button box" onClick={closeBuyModal}>
             ANNULLA

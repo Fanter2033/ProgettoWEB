@@ -47,16 +47,19 @@ function Squeal() {
     });
 
   const notify2 = () =>
-    toast.error("Manca il contenuto? L'utente esiste?", {
-      position: "bottom-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
+    toast.error(
+      "Manca il contenuto? Il dest esiste? Sei iscritta al canale? Sei scrittrice nel canale?",
+      {
+        position: "bottom-right",
+        autoClose: 10000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      }
+    );
 
   const notify3 = () =>
     toast.error("Riempi tutti i campi", {
@@ -175,6 +178,50 @@ function Squeal() {
       console.error("Errore nella fetch:", error);
     }
   }
+  //GET LOG SQUEALS VECCHI--------------------------------------------------------------
+  const [squealsLogger, setSquealsLogger] = useState([]);
+
+  async function log() {
+    try {
+      const url = `${ReactConfig.base_url_requests}/utils/squeals/${userGlobal.username}`;
+      const options = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        mode: "cors",
+      };
+
+      let result = await fetch(url, options);
+
+      if (result.ok) {
+        let json = await result.json();
+        setSquealsLogger(json);
+      } else {
+        console.error("Errore nella richiesta:", result.statusText);
+      }
+    } catch (error) {
+      console.error("Errore nella fetch:", error);
+    }
+  }
+
+  useEffect(() => {
+    getUserQuote();
+    whoAmI();
+    log();
+
+    const intervalId = setInterval(getUserQuote, 30000); //30 sec
+    //const intervalId1 = setInterval(whoAmI, 30000); //30 sec
+    const intervalId2 = setInterval(getUserData, 5000); //10 sec
+
+    //console.log(newDay);
+    return () => {
+      clearInterval(intervalId);
+      //clearInterval(intervalId1);
+      clearInterval(intervalId2);
+    };
+  }, []);
 
   //LIVE QUOTA-----------------------------------------------------------------------------------
   const liveDay = userQuote.remaining_daily;
@@ -531,6 +578,28 @@ function Squeal() {
     );
   }
 
+  function clear() {
+    setNewDay(0);
+    setNewWeek(0);
+    setNewMonth(0);
+    setDestinatariFromDest([]);
+    setUserInput("");
+    setBase64Image("");
+    setYoutubeLink("");
+    setIsValidLink(true);
+    setNumero1(0);
+    setNumero2(0);
+    setPostText("");
+    setClickedButtons([]);
+
+    /*
+    setUserData()
+    setUserQuote()
+    setMarkerCoordinates()
+    setAutoCoordinates()
+    */
+  }
+
   //TODO: POST SQUEAL /squeal/ per MAPPE TEMPORIZZATE------------------------------------------------------------------------------------------------------------
   async function postSqueal(e) {
     e.preventDefault();
@@ -653,8 +722,8 @@ function Squeal() {
         .then((response) => {
           if (response.ok) {
             console.log("POST Squeal riuscita con successo");
-
-            navigate("./");
+            clear();
+            //navigate("/post");
           } else {
             console.error(
               "Errore durante la POST, riprova",
@@ -670,65 +739,13 @@ function Squeal() {
     } else {
       notify();
     }
-
-    //TODO: THIS IS CALLED ONLY ON RESPONSE OK. HANDLE BE ERRORS
-    /*
-    setTimeout(() => {
-      window.location.reload();
-    }, 3000); // 3000 millisecondi = 3 secondi
-    */
   }
-
-  //GET LOG SQUEALS VECCHI--------------------------------------------------------------
-  const [squealsLogger, setSquealsLogger] = useState([]);
-
-  async function log() {
-    try {
-      const url = `${ReactConfig.base_url_requests}/utils/squeals/${userGlobal.username}`;
-      const options = {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        mode: "cors",
-      };
-
-      let result = await fetch(url, options);
-
-      if (result.ok) {
-        let json = await result.json();
-        setSquealsLogger(json);
-      } else {
-        console.error("Errore nella richiesta:", result.statusText);
-      }
-    } catch (error) {
-      console.error("Errore nella fetch:", error);
-    }
-  }
-
-  useEffect(() => {
-    getUserQuote();
-    whoAmI();
-    log();
-
-    const intervalId = setInterval(getUserQuote, 30000); //30 sec
-    //const intervalId1 = setInterval(whoAmI, 30000); //30 sec
-    const intervalId2 = setInterval(getUserData, 5000); //10 sec
-
-    //console.log(newDay);
-    return () => {
-      clearInterval(intervalId);
-      //clearInterval(intervalId1);
-      clearInterval(intervalId2);
-    };
-  }, []);
 
   //-------------------------------------------------------------------
   return (
-    <div>
-      <div className="container col-12 col-md-6 offset-md-3 ">
-        <div className="card squeal d-felx box">
+    <div className="container">
+      <div className="col-12 col-md-6 offset-md-3 ">
+        <div className="card squeal d-flex box p-3">
           <div className="card-header squeal col-12">
             <div className="media-head "></div>
             <div className="media-body">
@@ -895,7 +912,7 @@ function Squeal() {
                 <img
                   src={"data:image/png;base64," + userData.pfp}
                   alt="Foto Profilo"
-                  className="rounded-circle pfp box w-50 "
+                  className="rounded-circle pfp-small box w-50 "
                 />
                 <h5 className="mt-0">{userGlobal.username}</h5>
               </div>

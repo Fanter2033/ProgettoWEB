@@ -42,7 +42,7 @@ function MatchRole({
     ruoloIndex = -1;
   }
   onInputPresenceChange(ruoloIndex !== -1);
-  
+
   const closeModal = () => {
     setModalIsOpen(false);
     setNewValue(0);
@@ -75,7 +75,7 @@ function MatchRole({
       .then((response) => {
         if (response.ok) {
           console.log(response);
-          console.log("PATCH cambio ruolo OK");
+          console.log("PATCH cambio ruolo OK", newValue);
         } else {
           console.error("PATCH cambio ruolo ERROR", response.statusText);
         }
@@ -88,10 +88,6 @@ function MatchRole({
   const footerStyle = {
     backgroundColor: "#e0bb76",
   };
-
-  function manageClick(click) {
-    setNewValue(click);
-  }
 
   function attesa() {
     setNewValue(0);
@@ -110,18 +106,11 @@ function MatchRole({
   }
 
   /*
- {newValue !== -1 &&
-   (newValue === 0
-     ? "ATTESA"
-     : newValue === 1
-     ? "LETTORE"
-     : newValue === 2
-     ? "SCRITTORE"
-     : newValue === 3
-     ? "ADMIN"
-     : newValue === 4
-     ? "CREATORE"
-     : "NOT GOOD")}
+<input
+            type="number"
+            value={newValue}
+            onChange={(e) => setNewValue(e.target.value)}
+          />
   */
 
   return (
@@ -130,7 +119,7 @@ function MatchRole({
         className="custom-button box"
         onClick={() => setModalIsOpen(true)}
       >
-        {(ruoloIndex === 4 || ruoloIndex === 3) && (
+        {
           <>
             {ruoloIndex === 0
               ? "ATTESA"
@@ -144,7 +133,7 @@ function MatchRole({
               ? "CREATORE"
               : "NOT GOOD"}
           </>
-        )}
+        }
         {(ruoloIndex === 2 || ruoloIndex === 1 || ruoloIndex === 0) && <></>}
       </button>
       <Modal show={modalIsOpen} onHide={closeModal}>
@@ -152,25 +141,21 @@ function MatchRole({
           <Modal.Title>Modifica Valore</Modal.Title>
         </Modal.Header>
         <Modal.Body className="modal-change-body">
-          <input
-            type="number"
-            value={newValue}
-            onChange={(e) => setNewValue(e.target.value)}
-          />
+          
           <div className="d-flex flex-column justify-content-center align-items-center">
-            <button className="green-button box" onClick={attesa}>
+            <button className="green-button box" onClick={() => attesa}>
               IN ATTESA
             </button>
-            <button className="green-button box" onClick={lettore}>
+            <button className="green-button box" onClick={() => lettore()}>
               LETTORE
             </button>
-            <button className="green-button box" onClick={scrittore}>
+            <button className="green-button box" onClick={() => scrittore()}>
               SCRITTORE
             </button>
-            <button className="green-button box" onClick={admin}>
+            <button className="green-button box" onClick={() => admin()}>
               ADMIN
             </button>
-            <button className="green-button box" onClick={creatore}>
+            <button className="green-button box" onClick={() => creatore()}>
               CREATORE
             </button>
           </div>

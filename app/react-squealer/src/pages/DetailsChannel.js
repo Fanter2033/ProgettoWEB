@@ -18,11 +18,10 @@ function DetailsChannel() {
   const channel = location.state;
 
   const { userGlobal, setUserGlobal } = useUserContext();
-  //!se sei il proprietario
+
   //una variabile booleana
   const isOwner = channel.owner === userGlobal.username;
 
-  //!{type}/{channel_name} fetch
   //GET /channel/{type}/{channel_name}/users/     list of following
   const [following, setFollowing] = useState([]);
   const subscribersList = () => {
@@ -37,6 +36,35 @@ function DetailsChannel() {
         console.error("Failed to get the following, errore:", error);
       });
   };
+
+  //GET /user/{username}/roles/ LISTA CANALI SEGUITI E IL REALATIVO RUOLO DELL'UTENTE
+  const [roleUser, setRoleUser] = useState([]);
+  async function getRoles() {
+    try {
+      const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}/roles/`;
+      const options = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        mode: "cors",
+        credentials: "include",
+      };
+
+      let result = await fetch(uri, options);
+
+      if (result.ok) {
+        let data = await result.json();
+        //console.log("Successo nella richiesta dei ruoli UTENTE", data);
+        setRoleUser(data);
+      } else {
+        console.error("Errore nella richiesta:", result.statusText);
+      }
+    } catch (error) {
+      console.error("Errore nella fetch:", error);
+    }
+    console.log("Successo nella richiesta dei ruoli UTENTE", roleUser);
+  }
 
   const [roles0, setRoles0] = useState([]);
   const [roles1, setRoles1] = useState([]);
@@ -94,39 +122,9 @@ function DetailsChannel() {
     roles4
   );
 
-  //GET /channel/{type}/{channel_name}/roles/0 || 1 || 2 || 3 || 4    roles following a ch
-  const [roles, setRoles] = useState([]);
-  const getAllRoles = () => {
-    /*
-    const url = `${ReactConfig.base_url_requests}/channel/${channel.type}/${channel.channel_name}/roles/4`;
-    fetch(url)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Get all the roles:", data);
-        setRoles(data.content);
-      })
-      .catch((error) => {
-        console.error("Failed to get all the roles, errore:", error);
-      });
-      */
-  };
-  //console.log(roles, "AAAAAAAAAAAAAA");
-
   useEffect(() => {
-    //const intervalId1 = setInterval(getChTypeName, 5000);
-    //const intervalId2 = setInterval(subscribersList, 5000);
-    //const intervalId4 = setInterval(getAllRoles, 5000);
-
-    //getChTypeName();
+    getRoles();
     subscribersList();
-    //getAllRoles();
-    //se iscritto
-
-    return () => {
-      //clearInterval(intervalId1);
-      //clearInterval(intervalId2);
-      //clearInterval(intervalId4);
-    };
   }, []);
 
   //Role modalssssssss
@@ -138,67 +136,6 @@ function DetailsChannel() {
     setNewRoleModal(false);
   };
 
-  // Funzione per associare gli utenti ai ruoli
-  const associaUtentiARuoli = () => {
-    /*
-    const utentiConRuoli = following.map((user) => {
-      const { id, username } = user;
-      const ruolo =
-        roles0.find((u) => u.id === id) ||
-        roles1.find((u) => u.id === id) ||
-        roles2.find((u) => u.id === id) ||
-        roles3.find((u) => u.id === id) ||
-        roles4.find((u) => u.id === id);
-
-      return { id, username, ruolo };
-    });
-    console.log(utentiConRuoli); // Puoi visualizzare i risultati nella console
-
-*/
-  };
-
-  /*
-  const associaUtenteARuolo = (username) => {
-    const ruolo = roles0.includes(username)
-      ? "IN ATTESA"
-      : roles1.includes(username)
-      ? "LETTORE"
-      : roles2.includes(username)
-      ? "SCRITTORE"
-      : roles3.includes(username)
-      ? "ADMIN"
-      : roles4.includes(username)
-      ? "OWNER"
-      : "elseeeeeee";
-
-    console.log(`Utente: ${username}, Ruolo: ${ruolo}`);
-    // Puoi anche impostare uno stato per conservare gli utenti con i ruoli se necessario
-  };
-*/
-
-  /*
-        <button className="ms-4 me-4 custom-button box">
-          SE OWNER O ADMIN CAMBIA RUOLO UTENTI
-        </button>
-
-        <h3>Roles for TAG_CH: LETTORI</h3>
-        <h3>Roles for OFF_CH: SCRITTORI</h3>
-        <h3>Roles change ONLY for USER_CH</h3>
-        <button className="ms-4 me-4 custom-button box">
-          SE USER PRIVATO: UTENTI IN ATTESA
-        </button>
-        <button className="ms-4 me-4 custom-button box">
-          SE USER PUBBLICO: UTENTE SCRITTORE
-        </button>
-        <p>Ruoli per il numero 0: IN ATTESA {JSON.stringify(roles0)}</p>
-        <p>Ruoli per il numero 1: LETTORI {JSON.stringify(roles1)}</p>
-        <p>Ruoli per il numero 2: SCRITTORI {JSON.stringify(roles2)}</p>
-        <p>Ruoli per il numero 3: ADMIN{JSON.stringify(roles3)}</p>
-        <p>Ruoli per il numero 4: CREATORE{JSON.stringify(roles4)}</p>
-
-
-*/
-
   const [isInputPresent, setIsInputPresent] = useState(false);
 
   // funzione di callback per ricevere il risultato dalla componente figlia
@@ -209,8 +146,7 @@ function DetailsChannel() {
   return (
     <>
       <div className="container">
-        <div className="row d-flex flex-row justify-content-center align-items-content">
-          <p>Dettagli</p>
+        <div className="row d-flex flex-row justify-content-center align-items-content mt-3">
           <button
             className="red-button box w-25"
             onClick={() => window.history.back()}
@@ -251,20 +187,19 @@ function DetailsChannel() {
           )}
         </div>
 
-        <div
-          style={{
-            padding: "3em",
-            margin: "0",
-            borderRadius: "5px",
-          }}
-        >
+        <div>
           <h3 className="cool-font-medium">
             NOME CANALE: {channel.channel_name}
           </h3>
-          <p className="cool-font-small mb-0">CREATORE: {channel.owner}</p>
+
+          {channel.type !== "CHANNEL_HASHTAG" && (
+            <p className="cool-font-small mb-0">CREATORE: {channel.owner}</p>
+          )}
+
           <p className="cool-font-small mb-0">
             NUMERO SQUEALS: {channel.posts}
           </p>
+
           <div className="d-flex flex-row justify-content-center align-items-center cool-font-small">
             {channel.type === "CHANNEL_USERS" && (
               <>
@@ -289,6 +224,7 @@ function DetailsChannel() {
                   alt="logo_squeal"
                   width="40"
                   height="40"
+                  className="my-yellow"
                 />
                 <div>&nbsp;CANALE UFFICIALE</div>
               </>
@@ -343,64 +279,71 @@ function DetailsChannel() {
           </div>
         </div>
 
-        {channel.owner === userGlobal.username && (
-          <div className="row">
-            <h2>Per il creatore del canale</h2>
+        {channel.owner === userGlobal.username &&
+          channel.type !== "CHANNEL_HASHTAG" && (
+            <div className="row">
+              <h2>Per il creatore del canale</h2>
 
-            <div className="row">
-              <ChangeNameChannel />{" "}
+              <div className="row">
+                <ChangeNameChannel />{" "}
+              </div>
+              <div className="row">
+                {" "}
+                <ChannelDeleteModal />
+              </div>
             </div>
-            <div className="row">
-              {" "}
-              <ChannelDeleteModal />
+          )}
+
+        {channel.type === "CHANNEL_USERS" && (
+          <>
+            <div className="mt-3">
+              <h3>ISCRITTI: {channel.subscribers}</h3>
+
+              <Container>
+                <Row>
+                  {following.map((user) => (
+                    <Col lg={12} key={user.id} className="mb-4">
+                      <Card className="w-100 squeal">
+                        {" "}
+                        <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
+                          <div>{user}</div>
+                          <Link to="/infou" state={user}>
+                            <button className="ms-4 me-4 custom-button box">
+                              Info
+                            </button>
+                          </Link>
+
+                          {(roles3.includes(userGlobal.username) ||
+                            roles4.includes(userGlobal.username)) && (
+                            <>
+                              <MatchRole
+                                inputString={user}
+                                array1={roles0}
+                                array2={roles1}
+                                array3={roles2}
+                                array4={roles3}
+                                array5={roles4}
+                                name={channel.channel_name}
+                                type={channel.type}
+                                onInputPresenceChange={handleInputPresence}
+                              />
+                            </>
+                          )}
+                        </Card.Body>
+                      </Card>
+                      <ChangeRoleModal
+                        closeRole={closeRoleModal}
+                        newRoleModel={newRoleModal}
+                        username={user}
+                        channel={channel.type}
+                      />
+                    </Col>
+                  ))}
+                </Row>
+              </Container>
             </div>
-          </div>
+          </>
         )}
-        <div className="mt-3">
-          <h3>ISCRITTI: {channel.subscribers}</h3>
-
-          <Container>
-            <Row>
-              {following.map((user) => (
-                <Col lg={12} key={user.id} className="mb-4">
-                  <Card className="w-100 squeal">
-                    {" "}
-                    <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
-                      <div>{user}</div>
-                      <Link to="/infou" state={user}>
-                        <button className="ms-4 me-4 custom-button box">
-                          Info
-                        </button>
-                      </Link>
-
-                      {isOwner && (
-                        <>
-                          <MatchRole
-                            inputString={user}
-                            array1={roles0}
-                            array2={roles1}
-                            array3={roles2}
-                            array4={roles3}
-                            array5={roles4}
-                            name={channel.channel_name}
-                            type={channel.type}
-                            onInputPresenceChange={handleInputPresence}
-                          />
-                        </>
-                      )}
-                    </Card.Body>
-                  </Card>
-                  <ChangeRoleModal
-                    closeRole={closeRoleModal}
-                    newRoleModel={newRoleModal}
-                    username={user}
-                    channel={channel.type}
-                  />
-                </Col>
-              ))}
-            </Row>
-          </Container>
-        </div>
       </div>
     </>
   );

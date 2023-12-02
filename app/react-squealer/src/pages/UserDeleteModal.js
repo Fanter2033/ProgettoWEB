@@ -55,11 +55,11 @@ const UserDeleteModal = ({ showDeleteModal, handleCloseDeleteModal }) => {
         proprietario di una canale.
       </Modal.Body>
       <Modal.Footer style={footerStyle}>
-        <button className="red-button box" onClick={handleCloseDeleteModal}>
-          Annulla
-        </button>
         <button className="blue-button box" onClick={deleteUser}>
-          Elimina Utente
+          ELIMINA
+        </button>
+        <button className="red-button box" onClick={handleCloseDeleteModal}>
+          ANNULLA
         </button>
       </Modal.Footer>
     </Modal>

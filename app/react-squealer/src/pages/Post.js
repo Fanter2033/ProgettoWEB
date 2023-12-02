@@ -18,24 +18,24 @@ function Post() {
 
   return (
     <>
-      <div className="mt-5 ">
-        <Squeal />
-      </div>
-      <div className="row d-flex justify-content-center ms-1 me-1 mb-5">
-        <h3>TODO:</h3>
-        <ul className="list-group col-md-4">
-          <li className="list-group-item list">
-            MAPPE A TEMPO: ogni mappa 125, user mette num rep e num tempo
-          </li>
-          <li className="list-group-item list">
-            PUT squeal mappe temporizzare
-          </li>
-          <li className="list-group-item list">
-            POST squeal mappe temporizzare
-          </li>
-          <li className="list-group-item list">LIVE QUOTA: temporizzati</li>
-          <li className="list-group-item list">PROBLEMA SFONDO?</li>
-        </ul>
+      <div className="container-flex pt-5">
+        <div className="">
+          <Squeal />
+        </div>
+        <div className="row d-flex justify-content-center ms-1 me-5">
+          <h3>TODO:</h3>
+          <ul className="list-group col-md-4">
+            <li className="list-group-item list">
+              PUT squeal mappe temporizzare
+            </li>
+            <li className="list-group-item list">
+              POST squeal mappe temporizzare
+            </li>
+            <li className="list-group-item list">
+              LIVE QUOTA: mappe temporizzate
+            </li>
+          </ul>
+        </div>
       </div>
     </>
   );

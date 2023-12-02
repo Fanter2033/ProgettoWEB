@@ -6,7 +6,7 @@ import avvoltoio from "./media/images.jpeg";
 
 const VultureAnimation = () => {
   return (
-    <div className="vulture-animation">
+    <div className="">
       <img src={avvoltoio} alt="Avvoltoio" />
     </div>
   );

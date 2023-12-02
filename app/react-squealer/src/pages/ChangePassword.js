@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useUserContext } from "../config/UserContext";
 import { useNavigate } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
@@ -27,22 +27,22 @@ function ChangePassword() {
   const [user, setUser] = useState({});
 
   useEffect(() => {
-      const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
-      fetch(uri, {
-          mode: "cors",
-          credentials: "include",
+    const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
+    fetch(uri, {
+      mode: "cors",
+      credentials: "include",
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
       })
-          .then((res) => {
-              if (res.ok) {
-                  return res.json();
-              }
-          })
-          .then(async (data) => {
-              setUser(data);
-          })
-          .catch((error) => {
-              console.error(error);
-          });
+      .then(async (data) => {
+        setUser(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, []);
 
   const notify = () =>
@@ -69,17 +69,17 @@ function ChangePassword() {
       theme: "dark",
     });
 
-    const notify_error_server = () =>
-        toast.error("⚠️ Errore! Modifica password fallita", {
-            position: "top-right",
-            autoClose: 4000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-        });
+  const notify_error_server = () =>
+    toast.error("⚠️ Errore! Modifica password fallita", {
+      position: "top-right",
+      autoClose: 4000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
 
   const changeP = (e) => {
     e.preventDefault();
@@ -125,9 +125,9 @@ function ChangePassword() {
             }
           })
           .then((data) => {
-              if(data.status === 200){
-                  notify();
-              }
+            if (data.status === 200) {
+              notify();
+            }
             navigate("./");
           })
           .catch((error) => {
@@ -176,16 +176,15 @@ function ChangePassword() {
         </Modal.Body>
 
         <Modal.Footer style={footerStyle}>
-          <button
-            className="blue-button box"
-            onClick={changeP}
-          >
+          <button className="blue-button box" onClick={changeP}>
             CAMBIA
+          </button>
+          <button className="red-button box" onClick={handleClose}>
+            ANNULLA
           </button>
         </Modal.Footer>
       </Modal>
       <ToastContainer />
-
     </div>
   );
 }

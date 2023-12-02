@@ -90,7 +90,7 @@ function InfoUser() {
 
   return (
     <>
-      <div className="container">
+      <div className="container pb-5">
         <div className="col-12">
           <button
             className="red-button box w-25"
@@ -126,7 +126,7 @@ function InfoUser() {
               <h2>Email: {userData.email}</h2>
               <button className="user_button box col-6">N SQUEALS</button>
 
-              <div className="row d-flex align-items-center justify-content-evenly mb-5">
+              <div className="row d-flex align-items-center justify-content-evenly ">
                 <h3 className="mb-4 cool-font-small">Quota rimanente</h3>
 
                 <div className="col-12">
