@@ -316,7 +316,7 @@ function postSqueal() {
       return;
   let squealBody = {
     squeal: {
-      destination: destination,
+      destinations: destination,
       sender: vipName.value,
       message_type: inputType.value,
       content: squealContent

@@ -21,9 +21,8 @@ module.exports = class Controller {
      */
     isObjectVoid(obj) {
         if(obj === undefined || obj === null) return true;
-        if (Object.keys(obj).length === 0)
-            return true;
-        return false;
+        return Object.keys(obj).length === 0;
+
     }
 
     /**
@@ -201,6 +200,15 @@ module.exports = class Controller {
      */
     isBase64(string) {
         if (string.trim().length === 0) return false;
+
+        //roba mia dato che vue ci aggiunge data
+        const base64DataRegex = /^data:[\w\/:]+;base64,/;
+        try{
+            string = string.replace(base64DataRegex, '');
+        } catch (e) {
+            { }
+        }
+
         return Buffer.from(string, 'base64').toString('base64') === string;
     }
 
