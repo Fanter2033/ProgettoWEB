@@ -112,7 +112,7 @@ function ChangeNameChannel() {
 
   return (
     <>
-      <button className="blue-button mb-2 box" onClick={handleShow}>
+      <button className="yellow-button mb-2 box" onClick={handleShow}>
         CAMBIO NOME CANALE
       </button>
 

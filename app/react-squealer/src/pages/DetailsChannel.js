@@ -25,7 +25,7 @@ function DetailsChannel() {
   //!{type}/{channel_name} fetch
   //GET /channel/{type}/{channel_name}/users/     list of following
   const [following, setFollowing] = useState([]);
-  const getChTypeNameUsers = () => {
+  const subscribersList = () => {
     const url = `${ReactConfig.base_url_requests}/channel/${channel.type}/${channel.channel_name}/users/`;
     fetch(url)
       .then((response) => response.json())
@@ -45,7 +45,6 @@ function DetailsChannel() {
   const [roles4, setRoles4] = useState([]);
 
   const fetchData = async (channelName, roleNumber) => {
-    
     const url = `${ReactConfig.base_url_requests}/channel/CHANNEL_USERS/${channelName}/roles/${roleNumber}`;
 
     try {
@@ -71,7 +70,6 @@ function DetailsChannel() {
         error
       );
     }
-    
   };
 
   useEffect(() => {
@@ -116,11 +114,11 @@ function DetailsChannel() {
 
   useEffect(() => {
     //const intervalId1 = setInterval(getChTypeName, 5000);
-    //const intervalId2 = setInterval(getChTypeNameUsers, 5000);
+    //const intervalId2 = setInterval(subscribersList, 5000);
     //const intervalId4 = setInterval(getAllRoles, 5000);
 
     //getChTypeName();
-    getChTypeNameUsers();
+    subscribersList();
     //getAllRoles();
     //se iscritto
 
@@ -177,6 +175,37 @@ function DetailsChannel() {
     // Puoi anche impostare uno stato per conservare gli utenti con i ruoli se necessario
   };
 */
+
+  /*
+        <button className="ms-4 me-4 custom-button box">
+          SE OWNER O ADMIN CAMBIA RUOLO UTENTI
+        </button>
+
+        <h3>Roles for TAG_CH: LETTORI</h3>
+        <h3>Roles for OFF_CH: SCRITTORI</h3>
+        <h3>Roles change ONLY for USER_CH</h3>
+        <button className="ms-4 me-4 custom-button box">
+          SE USER PRIVATO: UTENTI IN ATTESA
+        </button>
+        <button className="ms-4 me-4 custom-button box">
+          SE USER PUBBLICO: UTENTE SCRITTORE
+        </button>
+        <p>Ruoli per il numero 0: IN ATTESA {JSON.stringify(roles0)}</p>
+        <p>Ruoli per il numero 1: LETTORI {JSON.stringify(roles1)}</p>
+        <p>Ruoli per il numero 2: SCRITTORI {JSON.stringify(roles2)}</p>
+        <p>Ruoli per il numero 3: ADMIN{JSON.stringify(roles3)}</p>
+        <p>Ruoli per il numero 4: CREATORE{JSON.stringify(roles4)}</p>
+
+
+*/
+
+  const [isInputPresent, setIsInputPresent] = useState(false);
+
+  // funzione di callback per ricevere il risultato dalla componente figlia
+  const handleInputPresence = (result) => {
+    setIsInputPresent(result);
+  };
+
   return (
     <>
       <div className="container">
@@ -314,25 +343,6 @@ function DetailsChannel() {
           </div>
         </div>
 
-        <button className="ms-4 me-4 custom-button box">
-          SE OWNER O ADMIN CAMBIA RUOLO UTENTI
-        </button>
-
-        <h3>Roles for TAG_CH: LETTORI</h3>
-        <h3>Roles for OFF_CH: SCRITTORI</h3>
-        <h3>Roles change ONLY for USER_CH</h3>
-        <button className="ms-4 me-4 custom-button box">
-          SE USER PRIVATO: UTENTI IN ATTESA
-        </button>
-        <button className="ms-4 me-4 custom-button box">
-          SE USER PUBBLICO: UTENTE SCRITTORE
-        </button>
-        <p>Ruoli per il numero 0: IN ATTESA {JSON.stringify(roles0)}</p>
-        <p>Ruoli per il numero 1: LETTORI {JSON.stringify(roles1)}</p>
-        <p>Ruoli per il numero 2: SCRITTORI {JSON.stringify(roles2)}</p>
-        <p>Ruoli per il numero 3: ADMIN{JSON.stringify(roles3)}</p>
-        <p>Ruoli per il numero 4: CREATORE{JSON.stringify(roles4)}</p>
-
         {channel.owner === userGlobal.username && (
           <div className="row">
             <h2>Per il creatore del canale</h2>
@@ -343,23 +353,6 @@ function DetailsChannel() {
             <div className="row">
               {" "}
               <ChannelDeleteModal />
-            </div>
-            <div>
-              <button className="user_button box">
-                Cambia ruoli follower?
-              </button>
-              <div className="row d-flex justify-content-center ms-1 me-1 mb-5">
-                <h3>CHANNEL ROLES:</h3>
-                <ul className="list-group col-md-4">
-                  <li className="list-group-item list">OWNER = 4</li>
-                  <li className="list-group-item list">ADMIN = 3</li>
-                  <li className="list-group-item list">WRITE = 2</li>
-                  <li className="list-group-item list">READ = 1</li>
-                  <li className="list-group-item list">WAITING_ACCEPT = 0</li>
-                </ul>
-              </div>
-
-              
             </div>
           </div>
         )}
@@ -391,6 +384,7 @@ function DetailsChannel() {
                             array5={roles4}
                             name={channel.channel_name}
                             type={channel.type}
+                            onInputPresenceChange={handleInputPresence}
                           />
                         </>
                       )}

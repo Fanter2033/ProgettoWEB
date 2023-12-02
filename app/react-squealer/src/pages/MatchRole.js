@@ -16,9 +16,10 @@ function MatchRole({
   array5,
   name,
   type,
+  onInputPresenceChange,
 }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [newValue, setNewValue] = useState(0);
+  const [newValue, setNewValue] = useState(-1);
   const [content, setContent] = useState("");
 
   const controllaPresenzaInArray = (stringa, array) => {
@@ -29,30 +30,22 @@ function MatchRole({
 
   if (controllaPresenzaInArray(inputString, array1)) {
     ruoloIndex = 0;
-    setContent("IN ATTESA");
   } else if (controllaPresenzaInArray(inputString, array2)) {
     ruoloIndex = 1;
-    setContent("LETTORE");
-
   } else if (controllaPresenzaInArray(inputString, array3)) {
     ruoloIndex = 2;
-    setContent("SCRITTORE");
-
   } else if (controllaPresenzaInArray(inputString, array4)) {
     ruoloIndex = 3;
-    setContent("ADMIN");
-
   } else if (controllaPresenzaInArray(inputString, array5)) {
     ruoloIndex = 4;
-    setContent("CREATORE");
-
   } else {
-    return <p>NOT GOOD</p>;
+    ruoloIndex = -1;
   }
-
+  onInputPresenceChange(ruoloIndex !== -1);
+  
   const closeModal = () => {
     setModalIsOpen(false);
-    setNewValue(0); // Resetta il valore della modalità di modifica
+    setNewValue(0);
   };
 
   const handleModificaValore = () => {
@@ -60,13 +53,14 @@ function MatchRole({
     closeModal();
   };
 
-  async function changeRoleSub() { 
-    /*
+  async function changeRoleSub() {
     const uri = `${ReactConfig.base_url_requests}/channel/${type}/${name}/${inputString}`;
     const data = {
       new_role: newValue,
     };
+
     console.log("valore", newValue);
+
     const options = {
       method: "PATCH",
       mode: "cors",
@@ -89,12 +83,46 @@ function MatchRole({
       .catch((error) => {
         console.error("Network error", error);
       });
-      */
   }
 
   const footerStyle = {
     backgroundColor: "#e0bb76",
   };
+
+  function manageClick(click) {
+    setNewValue(click);
+  }
+
+  function attesa() {
+    setNewValue(0);
+  }
+  function lettore() {
+    setNewValue(1);
+  }
+  function scrittore() {
+    setNewValue(2);
+  }
+  function admin() {
+    setNewValue(3);
+  }
+  function creatore() {
+    setNewValue(4);
+  }
+
+  /*
+ {newValue !== -1 &&
+   (newValue === 0
+     ? "ATTESA"
+     : newValue === 1
+     ? "LETTORE"
+     : newValue === 2
+     ? "SCRITTORE"
+     : newValue === 3
+     ? "ADMIN"
+     : newValue === 4
+     ? "CREATORE"
+     : "NOT GOOD")}
+  */
 
   return (
     <div>
@@ -102,19 +130,22 @@ function MatchRole({
         className="custom-button box"
         onClick={() => setModalIsOpen(true)}
       >
-        {newValue === 0
-          ? "ATTESA"
-          : newValue === 1
-          ? "LETTORE"
-          : newValue === 2
-          ? "SCRITTORE"
-          : newValue === 3
-          ? "ADMIN"
-          : newValue === 4
-          ? "CREATORE"
-          : "NOT GOOD"}
-        {ruoloIndex}
-        
+        {(ruoloIndex === 4 || ruoloIndex === 3) && (
+          <>
+            {ruoloIndex === 0
+              ? "ATTESA"
+              : ruoloIndex === 1
+              ? "LETTORE"
+              : ruoloIndex === 2
+              ? "SCRITTORE"
+              : ruoloIndex === 3
+              ? "ADMIN"
+              : ruoloIndex === 4
+              ? "CREATORE"
+              : "NOT GOOD"}
+          </>
+        )}
+        {(ruoloIndex === 2 || ruoloIndex === 1 || ruoloIndex === 0) && <></>}
       </button>
       <Modal show={modalIsOpen} onHide={closeModal}>
         <Modal.Header closeButton className="modal-change-header">
@@ -126,6 +157,23 @@ function MatchRole({
             value={newValue}
             onChange={(e) => setNewValue(e.target.value)}
           />
+          <div className="d-flex flex-column justify-content-center align-items-center">
+            <button className="green-button box" onClick={attesa}>
+              IN ATTESA
+            </button>
+            <button className="green-button box" onClick={lettore}>
+              LETTORE
+            </button>
+            <button className="green-button box" onClick={scrittore}>
+              SCRITTORE
+            </button>
+            <button className="green-button box" onClick={admin}>
+              ADMIN
+            </button>
+            <button className="green-button box" onClick={creatore}>
+              CREATORE
+            </button>
+          </div>
         </Modal.Body>
         <Modal.Footer
           className="my-foot d-flex justify-content-center"
@@ -134,7 +182,7 @@ function MatchRole({
           <button className="blue-button box" onClick={handleModificaValore}>
             CAMBIA
           </button>
-          <button variant="secondary" onClick={closeModal}>
+          <button className="red-button box" onClick={closeModal}>
             ANNULLA
           </button>
         </Modal.Footer>
