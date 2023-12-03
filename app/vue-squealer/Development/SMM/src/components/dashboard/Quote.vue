@@ -21,10 +21,6 @@
         <div class="card mt-3">
           <div class="card-body">
             <h4>Daily quote remaining: <b>{{ quote.rem_daily }}</b></h4>
-            <!--            <div style="height: 50px">-->
-            <!--              <Pie :data="data" :options="options"  />-->
-            <!--            </div>-->
-
             <h4>Weekly quote remaining: <b>{{ quote.rem_weekly }}</b></h4>
             <h4>Monthly quote remaining: <b>{{ quote.rem_monthly }}</b></h4>
           </div>
@@ -90,16 +86,12 @@ import {useRoute} from 'vue-router'
 import {onMounted, onUpdated, reactive, watch} from "vue";
 import {ref} from "vue";
 
-import {Chart as ChartJS, ArcElement, Tooltip, Legend} from 'chart.js'
-//import { Pie } from 'vue-chartjs'
-
 const route = useRoute();
 const VipName = ref('');
 const isMouseOver = ref(false);
 const state = reactive({
   modal_demo: null,
 });
-
 
 onMounted(() => {
   VipName.value = route.params.vip;
@@ -126,7 +118,6 @@ watch(VipName, () => {
 })
 
 let quote = ref({});
-
 async function getQuoteInfo() {
   const uri = VueConfig.base_url_requests +
       '/user/' +
@@ -144,7 +135,6 @@ async function getQuoteInfo() {
         console.error("Error fetching quote data");
       })
       .then((data) => {
-        console.log(data);
         quote.value = {
           limit_daily: data.limit_daily,
           limit_weekly: data.limit_weekly,
@@ -182,20 +172,6 @@ async function refillQuote() {
       .catch((error) => {
         console.error("Network error", error)
       })
-}
-
-/*optional chart*/
-ChartJS.register(ArcElement, Tooltip, Legend)
-const data = {
-  datasets: [
-    {
-      backgroundColor: ['#272a27', '#ffffff'],
-      data: [(quote.value.rem_daily) / 10, 50]
-    }
-  ]
-}
-const options = {
-  responsive: true,
 }
 </script>
 

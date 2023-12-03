@@ -1,36 +1,30 @@
 <template>
   <div class="container-fluid mx-0 px-0">
     <div class="row">
-      <Nav />
+      <Nav/>
     </div>
     <div class="row d-flex">
       <div class="col-2">
-        <SideBar />
+        <SideBar/>
       </div>
 
       <div class="col-10">
-        <LineChart />
+        <LineChart/>
         <div class="container border">
           <form class="mx-sm-auto p-2">
             <label for="fromDate">From</label>
-            <input type="date"
-                   id="fromDate"
+            <input id="fromDate"
+                   v-model="fromTimeForm"
                    class="row"
-                   v-model="fromTimeForm">
-            <label for="toDate" class="mt-2">To</label>
-            <input type="date"
-                   id="toDate"
+                   type="date">
+            <label class="mt-2" for="toDate">To</label>
+            <input id="toDate"
+                   v-model="toTimeForm"
                    class="row"
-                   v-model="toTimeForm">
+                   type="date">
           </form>
           <button class="btn mb-3" @click="this.updatePopData(this.$route.params.vip);">click me</button>
-      </div>
-
-      <div class="row">
-
-      </div>
-
-
+        </div>
       </div>
     </div>
   </div>
@@ -42,24 +36,25 @@ import VueConfig from "@/config/VueConfig";
 import SideBar from "@/components/dashboard/SideBar.vue";
 import Nav from "../Nav.vue";
 import LineChart from "@/components/dashboard/LineChart.vue";
+import DoughnutChart from "@/components/dashboard/DoughnutChart.vue";
 
 export default defineComponent({
-  components: { SideBar, Nav, LineChart },
+  components: {SideBar, Nav, LineChart, DoughnutChart},
 
-  data(){
-    return{
+  data() {
+    return {
       fromTimeForm: Number,
       toTimeForm: Number,
     }
   },
 
   methods: {
-    convertToTimeStamp: function (date){
+    convertToTimeStamp: function (date) {
       const newDate = new Date(date);
       return Math.floor(newDate.getTime() / 1000);
     },
 
-    updatePopData: function (vipName){
+    updatePopData: function (vipName) {
       const ChartDataUri = VueConfig.base_url_requests +
           "/user/" +
           vipName +
@@ -75,7 +70,7 @@ export default defineComponent({
         mode: 'cors'
       })
           .then((res) => {
-            if(res.ok){
+            if (res.ok) {
               return res.json();
             }
             console.error("ERROR FETCHING VIP DATAS", res.statusText);
@@ -86,19 +81,39 @@ export default defineComponent({
             console.log("Chart Data: " + this.$store.getters.getLineChartData);
           })
           .catch((error) => {
-            console.error("network error", error);
+            console.error("Network error", error);
+          })
+    },
+
+    updateSquealData(vipName) {
+      const squealDataUri = VueConfig.base_url_requests +
+          "/utils/squeals/" +
+          vipName;
+      fetch(squealDataUri, {
+        method: 'GET',
+        credentials: 'include',
+        mode: 'cors',
+      })
+          .then((res) => {
+            if (res.ok) {
+              return res.json();
+            }
+            console.error("Error fetching data");
+          })
+          .then((data) => {
+            this.$store.commit('setDoughnutChart', data);
+            console.log(data.data);
+          })
+          .catch((error) => {
+            console.error("Network error", error);
           })
     }
   },
+  mounted() {
+    this.updateSquealData(this.$route.params.vip);
+  }
 
 });
-/*
-* TODO:
-* - chart con ogni squeal dell'utente e un grafico a torta per analisi statistiche
-* - pagina responsive
-* -
-*
-* */
 </script>
 
 <style></style>

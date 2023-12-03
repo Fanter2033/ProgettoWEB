@@ -31,7 +31,6 @@ export default {
       for (let i = 0; i < squeals.length; i++) {
         const obj = squeals[i];
         const date = new Date(obj.timestamp * 1000);
-        console.log(date);
         x_labels.push(date.getDate());
         y_labels_pos.push(obj.positive_value);
         y_labels_neg.push(obj.negative_value);
