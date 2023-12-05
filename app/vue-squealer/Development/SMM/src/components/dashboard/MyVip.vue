@@ -30,7 +30,6 @@
       </li>
       <li>
         <div>
-
             <Squeal :vip="vipName" />
         </div>
       </li>

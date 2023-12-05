@@ -9,23 +9,33 @@
       </div>
 
       <div class="col-10">
-        <LineChart/>
-        <div class="container border">
-          <form class="mx-sm-auto p-2">
-            <label for="fromDate">From</label>
-            <input id="fromDate"
-                   v-model="fromTimeForm"
-                   class="row"
-                   type="date">
-            <label class="mt-2" for="toDate">To</label>
-            <input id="toDate"
-                   v-model="toTimeForm"
-                   class="row"
-                   type="date">
-          </form>
-          <button class="btn mb-3" @click="this.updatePopData(this.$route.params.vip);">click me</button>
+        <div class="container-fluid border rounded border-secondary border-2 m-1 p-1" style="background-color: whitesmoke">
+          <LineChart style="background-color: whitesmoke"/>
+          <div class="container border rounded">
+          <div class="d-flex justify-content-center">
+            <form class="mx-sm-auto p-1">
+              <label for="fromDate">From</label>
+              <input id="fromDate"
+                     v-model="fromTimeForm"
+                     class="row border rounded"
+                     type="date">
+              <label class="mt-2" for="toDate">To</label>
+              <input id="toDate"
+                     v-model="toTimeForm"
+                     class="row border rounded"
+                     type="date">
+            </form>
+            <div class="d-flex align-items-center">
+              <button class="btn" @click="this.updatePopData(this.$route.params.vip);">update data</button>
+            </div>
+          </div>
+
+
+          </div>
         </div>
+        <DoughnutChart class="mt-3"></DoughnutChart>
       </div>
+
     </div>
   </div>
 </template>
@@ -77,8 +87,8 @@ export default defineComponent({
           })
           .then((data) => {
             this.$store.commit("setLineChartData", data);
-            console.log(data);
-            console.log("Chart Data: " + this.$store.getters.getLineChartData);
+            //console.log(data);
+            //console.log("Chart Data: " + this.$store.getters.getLineChartData);
           })
           .catch((error) => {
             console.error("Network error", error);
@@ -89,6 +99,7 @@ export default defineComponent({
       const squealDataUri = VueConfig.base_url_requests +
           "/utils/squeals/" +
           vipName;
+      console.log("fetching: " + squealDataUri);
       fetch(squealDataUri, {
         method: 'GET',
         credentials: 'include',
@@ -102,7 +113,7 @@ export default defineComponent({
           })
           .then((data) => {
             this.$store.commit('setDoughnutChart', data);
-            console.log(data.data);
+            console.log(data[0]);
           })
           .catch((error) => {
             console.error("Network error", error);
@@ -110,6 +121,7 @@ export default defineComponent({
     }
   },
   mounted() {
+    this.$store.commit('setLineChartData', {})
     this.updateSquealData(this.$route.params.vip);
   }
 

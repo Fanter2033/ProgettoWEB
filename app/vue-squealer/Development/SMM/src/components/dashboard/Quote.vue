@@ -9,7 +9,7 @@
       </div>
 
       <div class="col-10 pt-sm-5 pt-3">
-        <h1>Quote's situation of <b>{{ VipName }}</b></h1>
+        <h1>Situazione quota di  <b>{{ VipName }}</b></h1>
         <button
             id="greenButton"
             class="btn"
@@ -57,7 +57,8 @@
                 </lord-icon>
               </div>
               <div class="modal-body">
-                <h3>Instant refill of quota {{quote.limit_daily - quote.rem_daily}}</h3>
+                <h3>Riempimento istantanea di quota:  {{quote.limit_daily - quote.rem_daily}}</h3>
+                <h5>prezzo: </h5>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-danger" id="close" @click="closeModal">

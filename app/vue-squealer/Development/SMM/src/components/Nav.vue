@@ -6,7 +6,7 @@
             <div class="navbar-header">
               <div class="navbar-brand">
                 <img src="/media/Nav_logo.png" alt="Logo" width="60" >
-                <span class="mx-3"> Squealer <b>Smm</b> </span>
+                <span class="mx-3 d-none d-lg-inline"> Squealer <b>Smm</b> </span>
               </div>
             </div>
             <ul class="navbar-nav">
