@@ -14,21 +14,11 @@ import squeal_logo from "./media/icone/Nav_logo.png";
 function Search() {
   const { userGlobal, setUserGlobal } = useUserContext();
 
-  //BOTTONI PRIVATI E PUBBLICI
-  const [publicChannel, setPublicChannel] = useState(false);
-  const [privateChannel, setPrivateChannel] = useState(false);
-  const getPrivate = () => {
-    setPrivateChannel(true);
-  };
-  const getPublic = () => {
-    setPublicChannel(true);
-  };
-
   //SEARCH FETCH
   const [inputValue, setInputValue] = useState("");
   const [channels, setChannels] = useState([]);
 
-  const fetchData = () => {
+  const searchChannel = () => {
     const url = `${
       ReactConfig.base_url_requests
     }/channel?search=${encodeURIComponent(inputValue)}`;
@@ -46,12 +36,12 @@ function Search() {
   };
 
   useEffect(() => {
-    // aggiungi un ritardo prima di effettuare la richiesta
+    // aggiungiamo un ritardo prima di effettuare la richiesta
     const delayTimer = setTimeout(() => {
-      fetchData();
+      searchChannel();
     }, 1000); //2sec
 
-    // pulisci il timer precedente se l'utente continua a digitare
+    // puliamo il timer precedente se l'utente continua a digitare
     return () => clearTimeout(delayTimer);
   }, [inputValue]);
 
@@ -155,101 +145,21 @@ function Search() {
   };
   */
 
-  //DROPDOWN MENU TO FILTER
-  const [ty, setTy] = useState("");
-  const [list, setList] = useState([]);
-  const [click, setClick] = useState(false);
-
-  const handleOptionChange = (e) => {
-    const selectedValue = e.target.value;
-    setTy(selectedValue);
-  };
-
-  async function getTypes() {
-    setClick(true);
-    //console.log("TYYYYYYYYYYYYYYPE", ty);
-
-    try {
-      const uri = `${ReactConfig.base_url_requests}/channel/${ty}`;
-
-      let result = await fetch(uri);
-
-      if (result.ok) {
-        let listCH = await result.json();
-        //console.log("WWWWWWWWWWWWWWWWWWEIRD", listCH);
-        setList(listCH.channels);
-        //return list;
-      } else {
-        console.error("Errore nella richiesta:", result.statusText);
-      }
-    } catch (error) {
-      console.error("Errore nella fetch:", error);
-    }
-  }
-
-  //console.log("LISTAAAAAAAA", list);
-
-  const removeFilter = () => {
-    setClick(false);
-    setTy("");
-    setPublicChannel(false);
-    setPrivateChannel(false);
-  };
-
   return (
     <div className="col-10 offset-1">
-      <div className="row mb-2 d-flex flex-column justify-content-center align-items-center">
-        <div className="col-12">
-          <select
-            className="form-select me-2"
-            id="dropdown"
-            value={ty}
-            onChange={handleOptionChange}
-          >
-            <option value="">Filtro</option>
-            <option value="CHANNEL_USERS">§ : Utenti</option>
-            <option value="CHANNEL_OFFICIAL">§ : UFFICIALI</option>
-            <option value="CHANNEL_HASHTAG"># : Tag</option>
-          </select>
-
-          {ty === "CHANNEL_USERS" && (
-            <>
-              <button className="yellow-button box" onClick={getPrivate}>
-                PRIVATI
-              </button>
-              <button className="yellow-button box" onClick={getPublic}>
-                PUBBLICI
-              </button>
-            </>
-          )}
-          {ty !== "" && (
-            <>
-              <button className="green-button box" onClick={getTypes}>
-                FILTRA
-              </button>
-              <button className="red-button box" onClick={removeFilter}>
-                TOGLI FILTRO
-              </button>
-            </>
-          )}
-        </div>
-      </div>
-
       <form className="d-flex mb-3" role="search">
         <input
-          className="form-control ms-2 me-2 p-0"
+          style={{ height: "3rem" }}
+          className="form-control ms-2 me-2 p-0 text-center cool-font-text mt-2"
           type="search"
-          placeholder="   🔍"
+          placeholder="🔍 CERCA"
           aria-label="Search"
           onChange={(e) => setInputValue(e.target.value)}
         />
-        <button className="custom-button-yellow" type="submit">
-          Cerca
-        </button>
       </form>
 
       <div>
-        {!click && (
+        {
           <Container fluide>
             {channels.map((channel) => (
               <div key={channel.id}>
@@ -257,13 +167,13 @@ function Search() {
                   <Card style={{ height: "100%" }} className="squeal mb-4">
                     <Card.Header className="d-flex justify-content-center align-items-center">
                       <Link to="/infoc" state={channel}>
-                        <button className="custom-button me-2">
+                        <button className="custom-button me-2 box cool-font-small">
                           <b className="">{channel.channel_name} &nbsp;</b>
 
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
+                            width="30"
+                            height="30"
                             fill="currentColor"
                             className="bi bi-info-circle-fill"
                             viewBox="0 0 16 16"
@@ -273,16 +183,13 @@ function Search() {
                         </button>
                       </Link>
 
-                      {channel.owner === userGlobal.username && (
-                        <button className="red-button">TUO</button>
-                      )}
                       {channel.type === "CHANNEL_USERS" && (
                         <div>
                           {roleUser.some(
                             (role) => role.channel_name === channel.channel_name
                           ) ? (
                             <button
-                              className="red-button box"
+                              className="red-button box cool-font-text"
                               onClick={() =>
                                 unfollow(channel.type, channel.channel_name)
                               }
@@ -291,7 +198,7 @@ function Search() {
                             </button>
                           ) : (
                             <button
-                              className="green-button box"
+                              className="green-button box cool-font-text"
                               onClick={() =>
                                 follow(channel.type, channel.channel_name)
                               }
@@ -309,7 +216,7 @@ function Search() {
                             <Row
                               key={role.id}
                               lg={12}
-                              className="d-flex justify-content-center align-items-center"
+                              className="d-flex justify-content-center align-items-center cool-font-details"
                             >
                               {role.role === 0 &&
                                 role.channel_name === channel.channel_name &&
@@ -317,7 +224,7 @@ function Search() {
                                   <>
                                     <div>
                                       RUOLO: <b>IN ATTESA</b>
-                                      <button className="custom-button ms-2">
+                                      <button className="custom-button ms-2 box">
                                         🕒
                                       </button>
                                     </div>
@@ -328,7 +235,7 @@ function Search() {
                                   <>
                                     <div>
                                       RUOLO: <b>LETTORE</b>
-                                      <button className="custom-button ms-2">
+                                      <button className="custom-button ms-2 box">
                                         📖
                                       </button>
                                     </div>
@@ -339,7 +246,7 @@ function Search() {
                                   <>
                                     <div>
                                       RUOLO: <b>SCRITTORE</b>
-                                      <button className="custom-button ms-2">
+                                      <button className="custom-button ms-2 box">
                                         ✒️
                                       </button>
                                     </div>
@@ -350,7 +257,7 @@ function Search() {
                                   <>
                                     <div>
                                       RUOLO: <b>ADMIN</b>
-                                      <button className="custom-button ms-2">
+                                      <button className="custom-button ms-2 box">
                                         ⚔️
                                       </button>
                                     </div>
@@ -361,7 +268,7 @@ function Search() {
                                   <>
                                     <div>
                                       RUOLO: <b>OWNER</b>
-                                      <button className="custom-button ms-2">
+                                      <button className="custom-button ms-2 box">
                                         👑
                                       </button>
                                     </div>
@@ -372,13 +279,13 @@ function Search() {
                         ))}
                       </div>
 
-                      <div className="d-flex flex-row justify-content-center align-items-center">
+                      <div className="d-flex flex-row justify-content-center align-items-center cool-font-details">
                         {channel.type === "CHANNEL_USERS" && (
                           <>
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
-                              width="16"
-                              height="16"
+                              width="30"
+                              height="30"
                               fill="currentColor"
                               className="bi bi-person-raised-hand"
                               viewBox="0 0 16 16"
@@ -397,15 +304,17 @@ function Search() {
                               width="40"
                               height="40"
                             />
-                            <div>&nbsp;CANALE UFFICIALE</div>
+                            <div className="cool-font-text">
+                              &nbsp;CANALE UFFICIALE
+                            </div>
                           </>
                         )}
                         {channel.type === "CHANNEL_HASHTAG" && (
                           <>
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
-                              width="16"
-                              height="16"
+                              width="30"
+                              height="30"
                               fill="currentColor"
                               className="bi bi-tag-fill"
                               viewBox="0 0 16 16"
@@ -417,13 +326,13 @@ function Search() {
                         )}
                       </div>
 
-                      <div className="d-flex flex-row justify-content-center align-items-center">
+                      <div className="d-flex flex-row justify-content-center align-items-center cool-font-details">
                         {channel.private === true ? (
                           <>
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
-                              width="16"
-                              height="16"
+                              width="30"
+                              height="30"
                               fill="currentColor"
                               className="bi bi-lock-fill"
                               viewBox="0 0 16 16"
@@ -436,8 +345,8 @@ function Search() {
                           <>
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
-                              width="16"
-                              height="16"
+                              width="30"
+                              height="30"
                               fill="currentColor"
                               className="bi bi-unlock-fill"
                               viewBox="0 0 16 16"
@@ -449,7 +358,7 @@ function Search() {
                         )}
                       </div>
 
-                      <div className="d-flex flex-row justify-content-center align-items-center">
+                      <div className="d-flex flex-row justify-content-center align-items-center cool-font-link">
                         {channel.locked && (
                           <>
                             <div className="altro d-flex flex-row justify-content-center align-items-center">
@@ -468,16 +377,25 @@ function Search() {
                           </>
                         )}
                       </div>
-                      <div className="d-flex flex-column justify-content-center align-items-center">
+                      {channel.type === "CHANNEL_USERS" && (
+                        <>
+                          <div className="cool-font-details">
+                            {channel.owner === userGlobal.username ? (
+                              <></>
+                            ) : (
+                              <> CREATORE: {channel.owner}</>
+                            )}
+                          </div>
+                          <div className="cool-font-details">
+                            ISCRITTI: <b>{channel.subscribers}</b>
+                          </div>
+                        </>
+                      )}
+
+                      <div className="d-flex flex-column justify-content-center align-items-center cool-font-details">
                         <>
                           <div>
-                            CREATORE: <b>{channel.owner}</b>
-                          </div>
-                          <div>
                             SQUEAL: <b>{channel.posts}</b>
-                          </div>
-                          <div>
-                            ISCRITTI: <b>{channel.subscribers}</b>
                           </div>
                         </>
                       </div>
@@ -487,92 +405,11 @@ function Search() {
               </div>
             ))}
           </Container>
-        )}
+        }
+        {channels.length === 0 && (<>
+        <h3 className="cool-font-link">Channel does not exist</h3>
+        </>)}
       </div>
-
-      {click && privateChannel && (
-        <>
-          <Row className="">
-            {list.map((channel) => (
-              <Col lg={12}>
-                {channel.private === true && (
-                  <>
-                    <Card key={channel.id} className="squeal mb-3">
-                      <Card.Body className="mb-4  w-100 d-flex flex-column justify-content-center align-items-center">
-                        <Card.Title className="">
-                          {channel.channel_name}
-                        </Card.Title>
-
-                        <Link to="/infoc" state={channel}>
-                          <button className="custom-button mb-2">Info</button>
-                        </Link>
-                        <div className="d-flex flex-row justify-content-center align-items-center"></div>
-                        {channel.owner === userGlobal.username && (
-                          <button className="red-button">your channel</button>
-                        )}
-                        {channel.owner !== userGlobal.username && (
-                          <button
-                            className="custom-button mb-2"
-                            onClick={follow(channel)}
-                          >
-                            Segui
-                          </button>
-                        )}
-                        <p>PRIVATE</p>
-                      </Card.Body>
-                    </Card>
-                  </>
-                )}
-              </Col>
-            ))}
-          </Row>
-        </>
-      )}
-
-      {click && publicChannel && (
-        <>
-          <Row className="">
-            {list.map((channel) => (
-              <Col lg={12}>
-                {channel.private === false && (
-                  <>
-                    <Card key={channel.id} className="squeal mb-3">
-                      <Card.Body className="mb-4  w-100 d-flex flex-column justify-content-center align-items-center">
-                        <Card.Title className="">
-                          {channel.channel_name}
-                        </Card.Title>
-
-                        <Link to="/infoc" state={channel}>
-                          <button className="custom-button mb-2">Info</button>
-                        </Link>
-                        <div className="d-flex flex-row justify-content-center align-items-center"></div>
-                        {channel.owner === userGlobal.username && (
-                          <button className="red-button">your channel</button>
-                        )}
-                        {channel.owner !== userGlobal.username && (
-                          <button
-                            className="custom-button mb-2"
-                            onClick={follow(channel)}
-                          >
-                            Segui
-                          </button>
-                        )}
-                        <p>PUBLIC</p>
-                      </Card.Body>
-                    </Card>
-                  </>
-                )}
-              </Col>
-            ))}
-          </Row>
-        </>
-      )}
-
-      {click && list.length === 0 && (
-        <>
-          <h1>NO CANALI DI QUESTO TIPO o IN FASE DI CARICAMENTO</h1>
-        </>
-      )}
     </div>
   );
 }

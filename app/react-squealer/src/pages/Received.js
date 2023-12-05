@@ -67,9 +67,18 @@ function Received() {
       <Navbar />
 
       <div className="container-flex">
+        <div className="row d-flex justify-content-center ms-1 me-1 mb-5">
+          <h3 className="cool-font-small">TODO:</h3>
+          <ul className="list-group col-md-4">
+            <li className="list-group-item list">Stampa destinatari</li>
+            <li className="list-group-item list mb-5">
+              Reazioni per sempre???
+            </li>
+          </ul>
+        </div>
         <div className="row">
           <div className="col-12 col-md-8">
-            <h1 className="cool-font-medium">CANALI seguiti</h1>
+            <h1 className="cool-font-medium">CANALI SEGUITI</h1>
 
             <Container className="">
               <Row className=" ">
@@ -80,7 +89,7 @@ function Received() {
                     className="mb-4 d-flex justify-content-center align-items-center"
                   >
                     <Card
-                      style={{ width: "60%" }}
+                      style={{ width: "80%" }}
                       className="squeal d-flex flex-col align-items-center"
                     >
                       <Card.Header className="w-100 d-flex flex-col justify-content-center align-items-center">
@@ -252,19 +261,12 @@ function Received() {
           </div>
 
           <div className="col-md-4 d-none d-md-block">
-            <h1 className="cool-font-medium">CHAT</h1>
+            
             <Chat />
           </div>
         </div>
       </div>
 
-      <div className="row d-flex justify-content-center ms-1 me-1 mb-5">
-        <h3 className="cool-font-small">TODO:</h3>
-        <ul className="list-group col-md-4">
-          <li className="list-group-item list mb-5">Stampa destinatari</li>
-          <li className="list-group-item list mb-5">Reazioni per sempre???</li>
-        </ul>
-      </div>
       <Footer />
     </>
   );

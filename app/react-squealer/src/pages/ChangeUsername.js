@@ -177,7 +177,7 @@ function ChangeUsername() {
 
   return (
     <div>
-      <button className="user_button mb-2 box" onClick={handleShow}>
+      <button className="user_button mb-2 box cool-font-text" onClick={handleShow}>
         CAMBIO USERNAME
       </button>
 

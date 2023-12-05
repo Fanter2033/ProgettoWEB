@@ -47,19 +47,27 @@ const Dest = ({ onDestinatariSubmit }) => {
     <div className="">
       <form onSubmit={handleDestinatariSubmit}>
         <div className="mb-2">
-          <label htmlFor="destinatariInput" className="form-label cool-font-details">
-            Inserisci i destinatari separati da virgole
+          <label
+            htmlFor="destinatariInput"
+            className="form-label cool-font-details"
+          >
+            DESTINATARI
           </label>
           <input
+            style={{ color : "#072f38", backgroundColor : "#528b57" }}
             type="text"
             className="form-control"
             id="destinatariInput"
             value={destinatari}
             onChange={handleDestinatariChange}
           />
+          <p>Inserisci i destinatari separati da virgole</p>
         </div>
 
-        <button type="submit" className="blue-button center box cool-font-small">
+        <button
+          type="submit"
+          className="custom-button center box cool-font-small"
+        >
           +
         </button>
       </form>
@@ -72,7 +80,10 @@ const Dest = ({ onDestinatariSubmit }) => {
             ))}
           </ul>
 
-          <button className="red-button box cool-font-small" onClick={handleResetDestinatari}>
+          <button
+            className="reset-button box cool-font-small"
+            onClick={handleResetDestinatari}
+          >
             x
           </button>
         </div>

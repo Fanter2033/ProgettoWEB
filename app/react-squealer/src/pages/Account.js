@@ -325,8 +325,22 @@ function Account() {
 
   //----------------------------------------------------------------------------------------------------------------
   return (
-    <div className="container-flex">
+    <div className="container-flex pb-5">
       <div className="row" onLoad={getUserData}>
+        <div className="row d-flex justify-content-center ms-1 me-1 mb-5">
+          <h3>TODO:</h3>
+          <ul className="list-group col-md-4">
+            <li className="list-group-item list">
+              if owner of ch toast for DELETE
+            </li>
+            <li className="list-group-item list">
+              FAI RICOMPARIRE IL BOTTONE COMPRA TRA 1 ANNO
+            </li>
+            <li className="list-group-item list">GET SMM INFO</li>
+            <li className="list-group-item list">cambio username, attenzione se esiste gia?</li>
+
+          </ul>
+        </div>
         <div className="row mb-5 mt-4">
           <div className="col-12 col-md-6 d-flex flex-col align-items-center justify-content-center">
             <img
@@ -362,7 +376,7 @@ function Account() {
             <img src={avvoltoio} alt="Avvoltoio animato" />
           </div>
 
-          <div className="col-12 col-md-6">
+          <div className="col-12 col-md-6 cool-font-text">
             <div className="row">
               <div className="col-12 col-md d-flex align-items-center justify-content-center ">
                 <div className="d-md-flex flex-md-row flex-column">
@@ -378,7 +392,7 @@ function Account() {
                         <p className="altro">BLOCCATO</p>
                       </>
                     )}
-                    <h2>
+                    <h2 className="cool-font-xsm">
                       {userData.first_name} {userData.last_name}
                     </h2>
                     <button className="yellow-button box col-12 ">
@@ -436,7 +450,7 @@ function Account() {
           </div>
         </div>
 
-        <div className="row mb-4 ">
+        <div className="row mb-4 cool-font-text">
           <div className="col-md-6">
             <div className="row">
               <h3 className="mb-4 cool-font-small">Quota rimanente</h3>
@@ -501,7 +515,7 @@ function Account() {
                 {userQuote.limit_monthly}
               </button>
             </div>
-            <h4 className="mt-4 mb-5 cool-font-small">
+            <h4 className="mt-5 mb-5 cool-font-small">
               Email: {userData.email}
             </h4>
           </div>
@@ -509,7 +523,7 @@ function Account() {
 
         <div className=" mb-5">
           <div className=" d-flex flex-column justify-content-center align-items-center ">
-            <button className="user_button mb-2 box" onClick={followedChannels}>
+            <button className="user_button mb-2 box cool-font-text" onClick={followedChannels}>
               SITUAZIONE CANALI
             </button>
             {following && (
@@ -701,7 +715,7 @@ function Account() {
 
             <button
               id="logout-button"
-              className=" mb-2 box"
+              className=" mb-2 box cool-font-xsm"
               onClick={logoutUser}
             >
               <ToastContainer />
@@ -710,7 +724,7 @@ function Account() {
 
             <button
               id="delete-button"
-              className=" mb-2 box"
+              className=" mb-2 box cool-font-xsm"
               onClick={handleOpenDeleteModal}
             >
               CANCELLA ACCOUNT
@@ -720,24 +734,13 @@ function Account() {
               handleCloseDeleteModal={handleCloseDeleteModal}
             />
 
-            <button className="user_button mb-2 box">
+            <button className="user_button mb-2 box cool-font-link">
               <Link to={ReactConfig.pathFunction("/about")} id="about-us">
                 ABOUT US:
               </Link>
             </button>
           </div>
         </div>
-      </div>
-      <div className="row d-flex justify-content-center ms-1 me-1 mb-5">
-        <h3>TODO:</h3>
-        <ul className="list-group col-md-4">
-          <li className="list-group-item list">
-            if owner of ch toast for DELETE
-          </li>
-          <li className="list-group-item list">
-            FAI RICOMPARIRE IL BOTTONE COMPRA TRA 1 ANNO
-          </li>
-        </ul>
       </div>
     </div>
   );

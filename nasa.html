@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NASA APOD Example</title>
+</head>
+<body>
+
+  <h1>NASA Astronomy Picture of the Day</h1>
+  <div id="apodContainer"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const apodContainer = document.getElementById('apodContainer');
+
+      const fetchApodData = async () => {
+        try {
+          const apiKey = 'jADiaT60QVDL3bR4I8etxbYBbxT3YtnMOIq2r4LD';
+          const apiUrl = `https://api.nasa.gov/planetary/apod?api_key=${apiKey}`;
+
+          const response = await fetch(apiUrl);
+
+          if (!response.ok) {
+            throw new Error('Failed to fetch APOD data');
+          }
+
+          const data = await response.json();
+
+          const apodContent = `
+            <img src="${data.url}" alt="${data.title}" style="max-width: 100%;">
+            <p>${data.title}</p>
+            <p>${data.explanation}</p>
+          `;
+
+          apodContainer.innerHTML = apodContent;
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
+      const intervalInMilliseconds = 24 * 60 * 60 * 1000;
+      //fetchApodData();
+      //setInterval(fetchApodData, intervalInMilliseconds);
+    });
+  </script>
+
+</body>
+</html>

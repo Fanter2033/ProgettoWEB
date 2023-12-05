@@ -27,11 +27,44 @@ di andare a capo su più righe se lo spazio orizzontale è limitato.
 
 //TODO PUT SQUEAL /squeal/{identifier_id}  SOLO mappeeeeeeeee------------------------------------------------------------------------------------------------------------
 function Squeal() {
-  const { userGlobal } = useUserContext();
+  const { userGlobal, setUserGlobal } = useUserContext();
 
   const navigate = useNavigate();
+
+  //GET WHO AM I--------------------------------------------------------------------------------
+  async function whoAmI() {
+    const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
+    fetch(uri, {
+      mode: "cors",
+      credentials: "include",
+    })
+      .then((res) => {
+        //console.log("aaaaaaaaaaaaaaaaaa", res);
+        if (res.ok) {
+          return res.json();
+        }
+      })
+      .then((data) => {
+        console.log("Tutto ok, io sono:", data);
+        const updated = {
+          ...userGlobal,
+          username: data.username,
+        };
+        setUserGlobal(updated);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
   if (userGlobal.username === undefined || userGlobal.username === "") {
-    navigate("/");
+    //navigate("/");
+    whoAmI()
+    .then(() =>{
+      getUserData();
+      getUserQuote();
+      log();
+    })
   }
 
   const notify = () =>
@@ -96,27 +129,6 @@ function Squeal() {
       progress: undefined,
       theme: "colored",
     });
-
-  //GET WHO AM I--------------------------------------------------------------------------------
-  async function whoAmI() {
-    const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
-    fetch(uri, {
-      mode: "cors",
-      credentials: "include",
-    })
-      .then((res) => {
-        console.log("aaaaaaaaaaaaaaaaaa", res);
-        if (res.ok) {
-          return res.json();
-        }
-      })
-      .then((data) => {
-        console.log("Tutto ok, io sono:", data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
 
   //GET USER DATA-----------------------------------------------------------------------------------------------
   const [userData, setUserData] = useState("");
@@ -208,10 +220,10 @@ function Squeal() {
 
   useEffect(() => {
     getUserQuote();
-    whoAmI();
+    //whoAmI();
     log();
 
-    const intervalId = setInterval(getUserQuote, 30000); //30 sec
+    const intervalId = setInterval(getUserQuote, 5000); //30 sec
     //const intervalId1 = setInterval(whoAmI, 30000); //30 sec
     const intervalId2 = setInterval(getUserData, 5000); //10 sec
 
@@ -408,6 +420,7 @@ function Squeal() {
         </label>
         <textarea
           id="userInput"
+          style={{ color: "#072f38", backgroundColor: "#528b57" }}
           name="userInput"
           value={userInput}
           onChange={handleInputChange}
@@ -429,6 +442,7 @@ function Squeal() {
           type="file"
           id="imageInput"
           name="imageInput"
+          style={{ color: "#072f38", backgroundColor: "#528b57" }}
           accept="image/*"
           onChange={handleImageUpload}
           className="form-control"
@@ -446,6 +460,7 @@ function Squeal() {
           type="text"
           id="youtubeLink"
           name="videoInput"
+          style={{ color: "#072f38", backgroundColor: "#528b57" }}
           value={youtubeLink}
           onChange={handleYoutubeLinkChange}
           className="form-control"
@@ -475,7 +490,12 @@ function Squeal() {
               type="number"
               id="numero1"
               value={numero1}
-              style={{ width: "20%" }}
+              style={{
+                width: "20%",
+                color: "#072f38",
+                backgroundColor: "#528b57",
+                borderRadius: "0.5rem",
+              }}
               onChange={handleNumero1Change}
             />
           </div>
@@ -487,7 +507,12 @@ function Squeal() {
               type="number"
               id="numero2"
               value={numero2}
-              style={{ width: "20%" }}
+              style={{
+                width: "20%",
+                color: "#072f38",
+                backgroundColor: "#528b57",
+                borderRadius: "0.5rem",
+              }}
               onChange={handleNumero2Change}
             />
           </div>
@@ -498,11 +523,12 @@ function Squeal() {
           name="userInput"
           rows="4"
           cols="50"
+          style={{ color: "#072f38", backgroundColor: "#528b57" }}
           placeholder="Inserisci il testo del post..."
           value={postText}
           className="form-control"
           onChange={(e) => setPostText(e.target.value)}
-        ></textarea>
+        />
         <div>
           <button
             type="button"
@@ -554,8 +580,13 @@ function Squeal() {
             <input
               type="number"
               id="numero1"
+              style={{
+                width: "20%",
+                color: "#072f38",
+                backgroundColor: "#528b57",
+                borderRadius: "0.5rem",
+              }}
               value={numero1}
-              style={{ width: "20%" }}
               onChange={handleNumero1Change}
             />
           </div>
@@ -567,7 +598,12 @@ function Squeal() {
               type="number"
               id="numero2"
               value={numero2}
-              style={{ width: "20%" }}
+              style={{
+                width: "20%",
+                color: "#072f38",
+                backgroundColor: "#528b57",
+                borderRadius: "0.5rem",
+              }}
               onChange={handleNumero2Change}
             />
           </div>
@@ -775,10 +811,9 @@ function Squeal() {
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
                     height="16"
-                    fill="currentColor"
+                    fill="#072f38"
                     className="bi bi-pencil"
                     viewBox="0 0 16 16"
-                    alt="MESSAGE_TEXT"
                   >
                     <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
                   </svg>
@@ -795,10 +830,9 @@ function Squeal() {
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
                     height="16"
-                    fill="currentColor"
+                    fill="#072f38"
                     className="bi bi-card-image"
                     viewBox="0 0 16 16"
-                    alt="IMAGE"
                   >
                     <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
                     <path d="M1.5 2A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13zm13 1a.5.5 0 0 1 .5.5v6l-3.775-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12v.54A.505.505 0 0 1 1 12.5v-9a.5.5 0 0 1 .5-.5h13z" />
@@ -816,7 +850,7 @@ function Squeal() {
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
                     height="16"
-                    fill="currentColor"
+                    fill="#072f38"
                     className="bi bi-youtube"
                     viewBox="0 0 16 16"
                     alt="VIDEO_URL"
@@ -836,10 +870,9 @@ function Squeal() {
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
                     height="16"
-                    fill="currentColor"
+                    fill="#072f38"
                     className="bi bi-geo-alt"
                     viewBox="0 0 16 16"
-                    alt="POSITION"
                   >
                     <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z" />
                     <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
@@ -857,10 +890,9 @@ function Squeal() {
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
                     height="16"
-                    fill="currentColor"
+                    fill="#072f38"
                     className="bi bi-clock-history"
                     viewBox="0 0 16 16"
-                    alt="TEXT_AUTO"
                   >
                     <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022l-.074.997zm2.004.45a7.003 7.003 0 0 0-.985-.299l.219-.976c.383.086.76.2 1.126.342l-.36.933zm1.37.71a7.01 7.01 0 0 0-.439-.27l.493-.87a8.025 8.025 0 0 1 .979.654l-.615.789a6.996 6.996 0 0 0-.418-.302zm1.834 1.79a6.99 6.99 0 0 0-.653-.796l.724-.69c.27.285.52.59.747.91l-.818.576zm.744 1.352a7.08 7.08 0 0 0-.214-.468l.893-.45a7.976 7.976 0 0 1 .45 1.088l-.95.313a7.023 7.023 0 0 0-.179-.483zm.53 2.507a6.991 6.991 0 0 0-.1-1.025l.985-.17c.067.386.106.778.116 1.17l-1 .025zm-.131 1.538c.033-.17.06-.339.081-.51l.993.123a7.957 7.957 0 0 1-.23 1.155l-.964-.267c.046-.165.086-.332.12-.501zm-.952 2.379c.184-.29.346-.594.486-.908l.914.405c-.16.36-.345.706-.555 1.038l-.845-.535zm-.964 1.205c.122-.122.239-.248.35-.378l.758.653a8.073 8.073 0 0 1-.401.432l-.707-.707z" />
                     <path d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0v1z" />
@@ -879,7 +911,7 @@ function Squeal() {
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
                     height="16"
-                    fill="currentColor"
+                    fill="#072f38"
                     className="bi bi-geo-fill"
                     viewBox="0 0 16 16"
                     alt="POSITION_AUTO"
@@ -919,7 +951,7 @@ function Squeal() {
             </div>
           </div>
           <div className="card-footer text-body-secondary">
-            <h3 className="cool-font-text">LIVE QUOTA</h3>
+            <h3 className="cool-font-text cool-font-link">LIVE QUOTA</h3>
 
             <div className="d-flex justify-content-evenly cool-font-text">
               <div className="text-center">
@@ -947,8 +979,8 @@ function Squeal() {
           </div>
         </div>
         <div className="col-12 mt-3">
-          <h2 className="cool-font-small">Log Squeal Pubblici</h2>
-          <h2 className="cool-font-small">Numero: {squealsLogger.length}</h2>
+          <h2 className="cool-font-link">Log Squeal Pubblici</h2>
+          <h2 className="cool-font-link">Numero: {squealsLogger.length}</h2>
 
           <Container className="">
             <Row className="w-100">

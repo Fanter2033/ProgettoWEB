@@ -51,6 +51,7 @@ function Chat() {
       <div className="container-flex pb-5">
         <div className="row ">
           <div className="col-12 justify-content-center align-items-center">
+            <h1 className="cool-font-medium">CHAT</h1>
             <Container className="">
               <Row className="">
                 {squeals.map((squeal) => (

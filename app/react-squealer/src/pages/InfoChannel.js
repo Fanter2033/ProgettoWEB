@@ -8,10 +8,41 @@ import Reactions from "./Reactions";
 
 import { Container, Card, Col, Row } from "react-bootstrap";
 import "../css/App.css";
+import notification from ".//media/message.mp3";
 
 function InfoChannel() {
   const location = useLocation();
-  const channel = location.state;
+
+  const [channel, setChannel] = useState(location.state);
+
+  if (channel.owner === "") {
+    //GET /channel/{type}/{name}/ LISTA INFO CANALE
+
+    try {
+      const uri = `${ReactConfig.base_url_requests}/channel/${channel.type}/${channel.channel_name}/`;
+      const options = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        mode: "cors",
+        credentials: "include",
+      };
+
+      let result = fetch(uri, options);
+
+      if (result.ok) {
+        let data = result.json();
+        //console.log("Successo nella richiesta dei ruoli UTENTE", data);
+        setChannel(data);
+      } else {
+        console.error("Errore nella richiesta:", result.statusText);
+      }
+    } catch (error) {
+      console.error("Errore nella fetch:", error);
+    }
+    console.log("Successo nella richiesta dei ruoli UTENTE", roleUser);
+  }
 
   const { userGlobal, setUserGlobal } = useUserContext();
 
@@ -98,8 +129,10 @@ function InfoChannel() {
   //GET /utils/squeals/{channel_type}/{channel_name}--------------------------------------------------------------
   const [squealsLogger, setSquealsLogger] = useState([]);
 
+  const [newMessageNotification, setNewMessageNotification] = useState(false);
+
   async function logPast() {
-    console.log("aaaaaaaaaaaaaaaa", channel.channel_name);
+    //console.log("aaaaaaaaaaaaaaaa", channel.channel_name);
     console.log(channel.type);
     try {
       const url = `${ReactConfig.base_url_requests}/utils/squeals/${channel.type}/${channel.channel_name}`;
@@ -117,6 +150,12 @@ function InfoChannel() {
       console.log(result);
       if (result.ok) {
         let json = await result.json();
+
+        if (json.length > squealsLogger.length) {
+          setNewMessageNotification(true);
+          const audio = new Audio(notification);
+          audio.play();
+        }
         setSquealsLogger(json);
       } else {
         console.error("Errore nella richiesta:", result.statusText);
@@ -132,12 +171,22 @@ function InfoChannel() {
     getRoles();
     //const intervalId1 = setInterval(logPast, 10000); //10 sec
     const intervalId2 = setInterval(getRoles, 10000); //10 sec
+    const intervalId3 = setInterval(logPast, 5000); //10 sec
 
     return () => {
       //clearInterval(intervalId1);
       clearInterval(intervalId2);
+      clearInterval(intervalId3);
     };
   }, []);
+
+  useEffect(() => {
+    if (newMessageNotification) {
+     
+     
+      setNewMessageNotification(false);
+    }
+  }, [newMessageNotification]);
 
   return (
     <div>
@@ -269,100 +318,108 @@ function InfoChannel() {
               )}
             {role.role === 1 &&
               role.channel_name === channel.channel_name &&
-              squealsLogger.map((squeal) => (
-                <Col lg={12} key={squeal.id} className="mb-4">
-                  <Card style={{ height: "100%" }} className="squeal">
-                    <Card.Header className="d-flex flex-row justify-content-evenly align-items-center">
-                      {" "}
-                      <div>
-                        <b>{squeal.sender}</b>
-                      </div>
-                      <div> TIPO: {squeal.message_type}</div>
-                      <div> ID: {squeal._id}</div>
-                    </Card.Header>
-                    <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
-                      <div>{squeal.content}</div>
-                    </Card.Body>
-                    <Card.Footer>
-                      <div>
-                        <Reactions squeal={squeal.id} />
-                      </div>
-                    </Card.Footer>
-                  </Card>
-                </Col>
-              ))}
+              squealsLogger
+                .map((squeal) => (
+                  <Col lg={12} key={squeal.id} className="mb-4">
+                    <Card style={{ height: "100%" }} className="squeal">
+                      <Card.Header className="d-flex flex-row justify-content-evenly align-items-center">
+                        {" "}
+                        <div>
+                          <b>{squeal.sender}</b>
+                        </div>
+                        <div> TIPO: {squeal.message_type}</div>
+                        <div> ID: {squeal._id}</div>
+                      </Card.Header>
+                      <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
+                        <div>{squeal.content}</div>
+                      </Card.Body>
+                      <Card.Footer>
+                        <div>
+                          <Reactions squeal={squeal.id} />
+                        </div>
+                      </Card.Footer>
+                    </Card>
+                  </Col>
+                ))
+                .reverse()}
             {role.role === 2 &&
               role.channel_name === channel.channel_name &&
-              squealsLogger.map((squeal) => (
-                <Col lg={12} key={squeal.id} className="mb-4">
-                  <Card style={{ height: "100%" }} className="squeal">
-                    <Card.Header className="d-flex flex-row justify-content-evenly align-items-center">
-                      {" "}
-                      <div>
-                        <b>{squeal.sender}</b>
-                      </div>
-                      <div> TIPO: {squeal.message_type}</div>
-                      <div> ID: {squeal._id}</div>
-                    </Card.Header>
-                    <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
-                      <div>{squeal.content}</div>
-                    </Card.Body>
-                    <Card.Footer>
-                      <div>
-                        <Reactions squeal={squeal.id} />
-                      </div>
-                    </Card.Footer>
-                  </Card>
-                </Col>
-              ))}
+              squealsLogger
+                .map((squeal) => (
+                  <Col lg={12} key={squeal.id} className="mb-4">
+                    <Card style={{ height: "100%" }} className="squeal">
+                      <Card.Header className="d-flex flex-row justify-content-evenly align-items-center">
+                        {" "}
+                        <div>
+                          <b>{squeal.sender}</b>
+                        </div>
+                        <div> TIPO: {squeal.message_type}</div>
+                        <div> ID: {squeal._id}</div>
+                      </Card.Header>
+                      <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
+                        <div>{squeal.content}</div>
+                      </Card.Body>
+                      <Card.Footer>
+                        <div>
+                          <Reactions squeal={squeal.id} />
+                        </div>
+                      </Card.Footer>
+                    </Card>
+                  </Col>
+                ))
+                .reverse()}
             {role.role === 3 &&
               role.channel_name === channel.channel_name &&
-              squealsLogger.map((squeal) => (
-                <Col lg={12} key={squeal.id} className="mb-4">
-                  <Card style={{ height: "100%" }} className="squeal">
-                    <Card.Header className="d-flex flex-row justify-content-evenly align-items-center">
-                      {" "}
-                      <div>
-                        <b>{squeal.sender}</b>
-                      </div>
-                      <div> TIPO: {squeal.message_type}</div>
-                      <div> ID: {squeal._id}</div>
-                    </Card.Header>
-                    <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
-                      <div>{squeal.content}</div>
-                    </Card.Body>
-                    <Card.Footer>
-                      <div>
-                        <Reactions squeal={squeal.id} />
-                      </div>
-                    </Card.Footer>
-                  </Card>
-                </Col>
-              ))}
+              squealsLogger
+                .map((squeal) => (
+                  <Col lg={12} key={squeal.id} className="mb-4">
+                    <Card style={{ height: "100%" }} className="squeal">
+                      <Card.Header className="d-flex flex-row justify-content-evenly align-items-center">
+                        {" "}
+                        <div>
+                          <b>{squeal.sender}</b>
+                        </div>
+                        <div> TIPO: {squeal.message_type}</div>
+                        <div> ID: {squeal._id}</div>
+                      </Card.Header>
+                      <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
+                        <div>{squeal.content}</div>
+                      </Card.Body>
+                      <Card.Footer>
+                        <div>
+                          <Reactions squeal={squeal.id} />
+                        </div>
+                      </Card.Footer>
+                    </Card>
+                  </Col>
+                ))
+                .reverse()}
             {role.role === 4 &&
               role.channel_name === channel.channel_name &&
-              squealsLogger.map((squeal) => (
-                <Col lg={12} key={squeal.id} className="mb-4">
-                  <Card style={{ height: "100%" }} className="squeal">
-                    <Card.Header className="d-flex flex-row justify-content-evenly align-items-center">
-                      {" "}
-                      <div>
-                        <b>{squeal.sender}</b>
-                      </div>
-                      <div> TIPO: {squeal.message_type}</div>
-                      <div> ID: {squeal._id}</div>
-                    </Card.Header>
-                    <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
-                      <div>{squeal.content}</div>
-                    </Card.Body>
-                    <Card.Footer>
-                      <div>
-                        <Reactions squeal={squeal.id} />
-                      </div>
-                    </Card.Footer>
-                  </Card>
-                </Col>
-              ))}
+              squealsLogger
+                .map((squeal) => (
+                  <Col lg={12} key={squeal.id} className="mb-4">
+                    <Card style={{ height: "100%" }} className="squeal">
+                      <Card.Header className="d-flex flex-row justify-content-evenly align-items-center">
+                        {" "}
+                        <div>
+                          <b>{squeal.sender}</b>
+                        </div>
+                        <div> TIPO: {squeal.message_type}</div>
+                        <div> ID: {squeal._id}</div>
+                      </Card.Header>
+                      <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
+                        <div>{squeal.content}</div>
+                      </Card.Body>
+                      <Card.Footer>
+                        <div>
+                          <Reactions squeal={squeal.id} />
+                        </div>
+                      </Card.Footer>
+                    </Card>
+                  </Col>
+                ))
+                .reverse()}
           </Row>
         </>
       ))}

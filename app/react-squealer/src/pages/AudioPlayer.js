@@ -1,41 +1,27 @@
 // AudioPlayer.js
 import React, { useRef, useState, useEffect } from "react";
+import notification from "./media/message.mp3";
 
 const AudioPlayer = () => {
-  const audioRef = useRef(null);
-  const [audioLoaded, setAudioLoaded] = useState(false);
-
+  const sound = new Audio(notification);
   const playSound = () => {
-    if (audioLoaded) {
-      audioRef.current.play();
-    }
+    sound.play();
   };
 
   const pauseSound = () => {
-    audioRef.current.pause();
-    //audioRef.current.currentTime = 0;
+    sound.pause();
   };
 
-  useEffect(() => {
-    const handleCanPlayThrough = () => {
-      setAudioLoaded(true);
-    };
+  /*
 
-    //audioRef.current.addEventListener('canplaythrough', handleCanPlayThrough);
+  if (!document.hasFocus()) {
+}
 
-    // Cleanup dell'evento all'unmount
-    return () => {
-      //audioRef.current.removeEventListener('canplaythrough', handleCanPlayThrough);
-    };
-  }, []);
-
+  */
+ 
 
   return (
     <>
-      <audio ref={audioRef}>
-        <source src="/media/car.mp3" type="audio/mp3" />
-        Your browser does not support the audio element.
-      </audio>
       <button onClick={playSound}>Play Sound</button>
       <button onClick={pauseSound}>Stop Sound</button>
     </>

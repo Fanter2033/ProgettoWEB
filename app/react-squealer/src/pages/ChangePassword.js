@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 
 import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 
@@ -145,7 +144,7 @@ function ChangePassword() {
 
   return (
     <div>
-      <button className="user_button mb-2 box" onClick={handleShow}>
+      <button className="user_button mb-2 box cool-font-text" onClick={handleShow}>
         CAMBIO PASSWORD
       </button>
 
