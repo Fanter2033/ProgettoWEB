@@ -2,7 +2,6 @@
 :root {
   --squeal-green: #528b57;
   --squeal-blue: #072f38;
-  --squeal-lighblue: #072f38;
   --squeal-yellow: #e0bb76;
   --squeal-red: #b45656;
   --squeal-pink: #b879b8;
@@ -20,6 +19,9 @@
 }
 .no-bg {
   background-color: transparent;
+}
+.icon-my-color{
+  fill : var(--squeal-red);
 }
 
 /* ------------ ATTENZIONE AGLI ALTRI FILE CSS -------------*/
@@ -379,10 +381,11 @@ img {
   top: 50%;
   left: 0;
   transform: translate(-100%, -50%);
-  animation: slideLeft 3s linear forwards;
+  animation: enter 3s linear forwards;
 }
 
-@keyframes slideRight {
+/*
+@keyframes enter {
   0% {
     transform: translate(-100%, -50%);
   }
@@ -390,8 +393,9 @@ img {
     transform: translate(100%, -50%);
   }
 }
+*/
 
-@keyframes slideLeft {
+@keyframes enter {
   0% {
     transform: translate(100%, -50%);
   }

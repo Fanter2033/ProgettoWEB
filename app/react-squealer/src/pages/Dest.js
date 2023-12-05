@@ -44,10 +44,10 @@ const Dest = ({ onDestinatariSubmit }) => {
   };
 
   return (
-    <div>
+    <div className="">
       <form onSubmit={handleDestinatariSubmit}>
         <div className="mb-2">
-          <label htmlFor="destinatariInput" className="form-label">
+          <label htmlFor="destinatariInput" className="form-label cool-font-details">
             Inserisci i destinatari separati da virgole
           </label>
           <input
@@ -59,8 +59,8 @@ const Dest = ({ onDestinatariSubmit }) => {
           />
         </div>
 
-        <button type="submit" className="custom-button">
-          Aggiungi
+        <button type="submit" className="blue-button center box cool-font-small">
+          +
         </button>
       </form>
       {error && <p style={{ color: "red" }}>{error}</p>}
@@ -72,8 +72,8 @@ const Dest = ({ onDestinatariSubmit }) => {
             ))}
           </ul>
 
-          <button className="btn btn-danger" onClick={handleResetDestinatari}>
-            Resetta
+          <button className="red-button box cool-font-small" onClick={handleResetDestinatari}>
+            x
           </button>
         </div>
       )}

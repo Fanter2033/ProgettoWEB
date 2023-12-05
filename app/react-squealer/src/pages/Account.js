@@ -32,7 +32,6 @@ import pink from "./media/avvoltoioEli.png";
 import avvoltoio from "./media/avvoltoio.gif";
 
 //TODO: check navigateeeeeeeeeeeeeee ho tolto il . davanti al /
-//TODO: PFP
 /*
 col-12 col-md-6
 su schermi md e più grandi ho due colonne
@@ -738,10 +737,6 @@ function Account() {
           <li className="list-group-item list">
             FAI RICOMPARIRE IL BOTTONE COMPRA TRA 1 ANNO
           </li>
-          <li className="list-group-item list">
-            QUANDO RICLICCI SUL BOTTONE SITUA CANALI: si toglie la lista
-          </li>
-          <li className="list-group-item list">vedi se pubblici</li>
         </ul>
       </div>
     </div>

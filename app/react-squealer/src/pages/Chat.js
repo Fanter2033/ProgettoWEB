@@ -57,7 +57,7 @@ function Chat() {
                   <Col lg={12} className="mb-4">
                     <Card
                       style={{ width: "100%" }}
-                      key={squeal.id}
+                      key={squeal._id}
                       className="squeal"
                     >
                       <Card.Header className="d-flex flex-col justify-content-center align-items-center">

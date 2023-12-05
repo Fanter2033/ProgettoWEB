@@ -17,6 +17,21 @@ html {
   z-index: -1;
 }
 
+.my-green {
+  background-color: var(--squeal-green);
+}
+.my-yellow {
+  background-color: var(--squeal-yellow);
+}
+.my-blu {
+  background-color: var(--squeal-blue);
+  color: var(--squeal-green);
+}
+.no-bg {
+  background-color: transparent;
+}
+
+
 /*---------------- SFONDO SU TUTTA LA PAGE --------------------*/
 #elemento-espanso {
   position: absolute; /* Posizionamento assoluto rispetto alla viewport */

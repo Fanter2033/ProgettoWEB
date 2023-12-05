@@ -38,11 +38,11 @@ function Received() {
       };
 
       let result = await fetch(uri, options);
-      console.log(result);
+      //console.log(result);
 
       if (result.ok) {
         let json = await result.json();
-        console.log("MMMMMMMMMMMMMMMMMMMMMMMH", json);
+        //console.log("MMMMMMMMMMMMMMMMMMMMMMMH", json);
         setDash(json);
       } else {
         console.error("Errore nella richiesta:", result.statusText);
@@ -73,10 +73,10 @@ function Received() {
 
             <Container className="">
               <Row className=" ">
-                {dash.map((squeal) => (
+                {dash.map((squeal, index) => (
                   <Col
                     lg={12}
-                    key={squeal.id}
+                    key={squeal.id || index}
                     className="mb-4 d-flex justify-content-center align-items-center"
                   >
                     <Card

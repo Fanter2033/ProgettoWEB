@@ -88,7 +88,7 @@ function ChannelForm() {
 
   return (
     <div>
-      <button id="button-channel" onClick={handleShow}>
+      <button id="button-channel" className="box cool-font-small" onClick={handleShow}>
         NUOVO CANALE
       </button>
 

@@ -744,7 +744,7 @@ function Squeal() {
   //-------------------------------------------------------------------
   return (
     <div className="container">
-      <div className="col-12 col-md-6 offset-md-3 ">
+      <div className="col-12 col-md-8 offset-md-2 ">
         <div className="card squeal d-flex box p-3">
           <div className="card-header squeal col-12">
             <div className="media-head "></div>
@@ -900,7 +900,7 @@ function Squeal() {
             <div className="row d-flex flex-row justify-content-evenly align-items-center">
               <div className="col-8">
                 <button
-                  className="blue-button box"
+                  className="blue-button box cool-font-small"
                   style={{ width: "80%" }}
                   onClick={postSqueal}
                 >
@@ -919,25 +919,26 @@ function Squeal() {
             </div>
           </div>
           <div className="card-footer text-body-secondary">
-            <div className="row d-flex mb-4">
-              <h3>LIVE QUOTA</h3>
-              <div className="">
-                <h4>Giornaliero</h4>
-                <button className="yellow-button m-2 box">
+            <h3 className="cool-font-text">LIVE QUOTA</h3>
+
+            <div className="d-flex justify-content-evenly cool-font-text">
+              <div className="text-center">
+                <h4>G</h4>
+                <button className="col-md-12 yellow-button m-1">
                   {newMonth !== 0 && <>{newDay}&nbsp;/&nbsp;</>}
                   {userQuote.remaining_daily}
                 </button>
               </div>
               <div className="">
-                <h4>Settimanale</h4>
-                <button className="yellow-button m-2 box">
+                <h4>S</h4>
+                <button className="col-md-12 yellow-button m-1">
                   {newMonth !== 0 && <>{newWeek}&nbsp;/&nbsp;</>}
                   {userQuote.remaining_weekly}
                 </button>
               </div>
               <div className="">
-                <h4>Mensile</h4>
-                <button className="yellow-button m-2 box">
+                <h4>M</h4>
+                <button className=" col-md-12 yellow-button m-1">
                   {newMonth !== 0 && <>{newMonth}&nbsp;/&nbsp;</>}
                   {userQuote.remaining_monthly}
                 </button>
@@ -946,18 +947,16 @@ function Squeal() {
           </div>
         </div>
         <div className="col-12 mt-3">
-          <h2 className="cool-font-small">Log Squeal Pubblici Passati </h2>
-          <h2 className="cool-font-small">
-            Numero Squeal: {squealsLogger.length}
-          </h2>
+          <h2 className="cool-font-small">Log Squeal Pubblici</h2>
+          <h2 className="cool-font-small">Numero: {squealsLogger.length}</h2>
 
           <Container className="">
             <Row className="w-100">
-              {squealsLogger.map((squeal) => (
+              {squealsLogger.map((squeal, index) => (
                 <Col lg={12} className="mb-4">
                   <Card
                     style={{ height: "100%" }}
-                    key={squeal.id}
+                    key={squeal._id}
                     className="squeal"
                   >
                     <Card.Header className="d-flex flex-col justify-content-center align-items-center">
@@ -965,10 +964,10 @@ function Squeal() {
                       <b>{squeal.sender}</b>
                     </Card.Header>
                     <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
-                      <div>{squeal.content}</div>
+                      <div className="cool-font-text">{squeal.content}</div>
                     </Card.Body>
                     <Card.Footer>
-                      <div>Id: {squeal._id}</div>
+                      <div className="cool-font-details">Id: {squeal._id}</div>
 
                       <div className="row"> </div>
                     </Card.Footer>

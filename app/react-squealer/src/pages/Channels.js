@@ -218,17 +218,19 @@ function Channels() {
               <div>
                 <p>orderBy</p>
                 <div className="d-flex justify-content-center align-items-center">
-                  <button className="custom-button box mb-2">PRIVATI</button>
-
-                  <button className="custom-button box mb-2">PUBBLICI</button>
+                  <button className="red-button mb-2">PRIVATI</button>
+                  <button className="red-button mb-2">PUBBLICI</button>
+                  <button className="red-button mb-2">NOME</button>
                 </div>
+                <p>orderDir</p>
                 <div>
-                  <button className="custom-button box mb-2">NOME</button>
+                  <button className="yellow-button box">ASC</button>
+                  <button className="yellow-button box">DECR</button>
                 </div>
 
                 <div>
                   <button
-                    className="custom-button box mb-2"
+                    className="green-button box mb-2"
                     onClick={getOfficialChannels}
                   >
                     UFFICIALI
@@ -265,7 +267,6 @@ function Channels() {
                                 )}
                               </Card.Header>
                               <Card.Body className="mb-4  w-100 d-flex flex-column justify-content-center align-items-center">
-                                {o.channel_name}
                                 <div className="d-flex flex-row justify-content-center align-items-center">
                                   {o.type === "CHANNEL_USERS" && (
                                     <>
@@ -371,7 +372,7 @@ function Channels() {
                   </Container>
 
                   <button
-                    className="custom-button box mb-2"
+                    className="green-button box mb-2"
                     onClick={getUserChannels}
                   >
                     UTENTI
@@ -407,7 +408,6 @@ function Channels() {
                               )}
                             </Card.Header>
                             <Card.Body className="mb-4  w-100 d-flex flex-column justify-content-center align-items-center">
-                              {u.channel_name}
                               <div className="d-flex flex-row justify-content-center align-items-center">
                                 {u.type === "CHANNEL_USERS" && (
                                   <>
@@ -512,7 +512,7 @@ function Channels() {
                   </Container>
 
                   <button
-                    className="custom-button box mb-2"
+                    className="green-button box mb-2"
                     onClick={getTagChannels}
                   >
                     TAG
@@ -650,12 +650,6 @@ function Channels() {
                       </>
                     )}
                   </Container>
-                </div>
-
-                <p>orderDir</p>
-                <div>
-                  <button className="custom-button box">ASC</button>
-                  <button className="custom-button box">DECR</button>
                 </div>
               </div>
               <ChannelForm />
