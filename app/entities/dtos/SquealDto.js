@@ -1,9 +1,7 @@
 module.exports = class SquealDto {
 
     #id;
-
     #destinations;
-
     #date;
     #sender;
     #message_type;
@@ -24,6 +22,7 @@ module.exports = class SquealDto {
             this.#critical_mass = null;
             this.#quote_cost = null;
             this.#content = null;
+            this.#destinations = [];
         } else {
             this.#id = documentFromMongoose._id;
             this.#date = documentFromMongoose.date;
@@ -34,11 +33,12 @@ module.exports = class SquealDto {
             this.#critical_mass = documentFromMongoose.critical_mass;
             this.#quote_cost = documentFromMongoose.quote_cost;
             this.#content = documentFromMongoose.content;
+            this.#destinations = [];
         }
     }
 
-    getDocument(){
-        return{
+    getDocument(getDestination = false) {
+        let out = {
             _id: this.#id,
             date: this.#date,
             sender: this.#sender,
@@ -48,7 +48,27 @@ module.exports = class SquealDto {
             critical_mass: this.#critical_mass,
             quote_cost: this.#quote_cost,
             content: this.#content,
+        };
+
+        if (getDestination) {
+            out['destinations'] = [];
+            for (const destination of this.#destinations) {
+                let name = '';
+                if (destination.type === autoload.config._CHANNEL_TYPE_HASHTAG) name = name + '#';
+                else name = name + '§';
+                if (destination.type === autoload.config._CHANNEL_TYPE_OFFICIAL) {
+                    name = name + destination.channel_name;
+                    name = name.toUpperCase();
+                } else {
+                    name = name + destination.channel_name;
+                    name = name.toLowerCase();
+                }
+                out.destinations.push(name);
+            }
         }
+
+
+        return out;
     }
 
 
@@ -58,6 +78,13 @@ module.exports = class SquealDto {
 
     set destinations(value) {
         this.#destinations = value;
+    }
+
+    /**
+     * @param {ChannelDto} cDto
+     */
+    insertDestination(cDto) {
+        this.#destinations.push(cDto);
     }
 
     get id() {
@@ -127,11 +154,11 @@ module.exports = class SquealDto {
         return this.#quote_cost = value;
     }
 
-    get content(){
+    get content() {
         return this.#content;
     }
 
-    set content(value){
+    set content(value) {
         return this.#content = value;
     }
 }

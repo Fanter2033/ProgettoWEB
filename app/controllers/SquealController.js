@@ -105,13 +105,18 @@ module.exports = class SquealController extends Controller {
             }
         }
 
+        let channelDtos = await this.#squealToChannelModel.getDestinationsChannels(identifier);
+
+        for (const channelDto of channelDtos) {
+            squeal.insertDestination(channelDto);
+        }
+
         if (isDest === true) {
-            output['content'] = squeal.getDocument();
+            output['content'] = squeal.getDocument(true);
             return output;
         }
 
         if (isPublic === true && isDest === false) {
-            let channelDtos = await this.#squealToChannelModel.getDestinationsChannels(identifier);
             let theresIsPublicChannel = await this.#channelController.thereIsPublicChannel(channelDtos);
             if (theresIsPublicChannel === false) {
                 if (this.isAuthenticatedUser(authenticatedUser) === false) {
@@ -146,7 +151,7 @@ module.exports = class SquealController extends Controller {
         }
 
 
-        output['content'] = squeal.getDocument();
+        output['content'] = squeal.getDocument(true);
         return output;
     }
 
