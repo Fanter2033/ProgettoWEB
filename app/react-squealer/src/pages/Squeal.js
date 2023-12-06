@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState, useCallback } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import ReactConfig from "../config/ReactConfig";
 import { useUserContext } from "../config/UserContext";
@@ -8,8 +8,6 @@ import { useUserContext } from "../config/UserContext";
 import CurrentDateTime from "./CurrentDateTime";
 import Dest from "./Dest";
 import MapComponent from "./MapComponent";
-//import MapWithSearch from "./MapWithSearch";
-import TextLink from "./TextLink";
 
 import imageCompression from "browser-image-compression";
 
@@ -19,10 +17,12 @@ import "react-toastify/dist/ReactToastify.css";
 import { Container, Card, Col, Row } from "react-bootstrap";
 import "../css/App.css";
 import cat from "./media/miau.png";
+
 /*
 l'aggiunta di flex-wrap consente agli elementi figlio 
 di andare a capo su più righe se lo spazio orizzontale è limitato. 
 */
+
 //offset mi tenere centrata la colonna
 
 //TODO PUT SQUEAL /squeal/{identifier_id}  SOLO mappeeeeeeeee------------------------------------------------------------------------------------------------------------
@@ -70,8 +70,31 @@ function Squeal() {
       theme: "colored",
     });
 
-  //GET WHO AM I
+  const notify4 = () =>
+    toast.error("Minimo 5 sec", {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
 
+  const notify5 = () =>
+    toast.error("Minimo 2 sec", {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
+  //GET WHO AM I--------------------------------------------------------------------------------
   async function whoAmI() {
     const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
     fetch(uri, {
@@ -179,8 +202,6 @@ function Squeal() {
 
   const handleInputChange = (e) => {
     const inputText = e.target.value;
-    //<TextLink text={inputText} />;
-
     const inputLength = inputText.length;
 
     // quota rimanente dopo il post
@@ -256,7 +277,7 @@ function Squeal() {
     setIsValidLink(regex.test(link));
   };
 
-  //POSITION -------------------------------------------------------------------------------------------
+  //POSITION --------------------------------------------------------------------------------
   const [markerCoordinates, setMarkerCoordinates] = useState(null);
   const handleMarkerAdded = (position) => {
     setMarkerCoordinates(position);
@@ -266,9 +287,9 @@ function Squeal() {
     setNewDay(remainingLimitD);
     setNewWeek(remainingLimitW);
     setNewMonth(remainingLimitM);
+
     //console.log("Coordinate utente:", position);
   };
-  //<MapWithSearch onMarkerAdded={handleMarkerAdded} />
 
   //TEXT_AUTO domande per utente--------------------------------------------------------------
   const [numero1, setNumero1] = useState("");
@@ -281,7 +302,7 @@ function Squeal() {
     setNumero2(e.target.value);
   };
 
-  //TEXT_AUTO bottoni ------------------------------------
+  //TEXT_AUTO bottoni ------------------------------------------------------------------------
   const [postText, setPostText] = useState("");
   const [clickedButtons, setClickedButtons] = useState([]);
 
@@ -291,9 +312,43 @@ function Squeal() {
 
     // aggiungi il testo del bottone alla lista dei bottoni cliccati
     setClickedButtons((prevButtons) => [...prevButtons, buttonText]);
+
+    const inputText = postText;
+    const inputLength = inputText.length;
+
+    // quota rimanente dopo il post
+    const remainingLimitD = liveDay - inputLength;
+    const remainingLimitW = liveWeek - inputLength;
+    const remainingLimitM = liveMonth - inputLength;
+
+    console.log("auto text cost", liveDay - remainingLimitD);
+
+    setUserInput(inputText);
+    setNewDay(remainingLimitD);
+    setNewWeek(remainingLimitW);
+    setNewMonth(remainingLimitM);
   };
 
-  //TYPE INPUT--------------------------------------------------------------
+  //TODO:CHANGE
+  //POSITION_AUTO --------------------------------------------------------------------------------
+  const [autoCoordinates, setAutoCoordinates] = useState(null);
+  const handleAutoMaps = (position) => {
+    setAutoCoordinates(position);
+
+    const iteration = 125 * numero1;
+
+    const remainingLimitD = liveDay - iteration;
+    const remainingLimitW = liveWeek - iteration;
+    const remainingLimitM = liveMonth - iteration;
+
+    setNewDay(remainingLimitD);
+    setNewWeek(remainingLimitW);
+    setNewMonth(remainingLimitM);
+
+    //console.log("Coordinate utente:", position);
+  };
+
+  //TYPE INPUT---------------------------------------------------------------------------------
   //inputType = MESSAGE_TEXT, IMAGE, VIDEO_URL, POSITION, POSITION_AUTO
   const [inputType, setInputType] = useState("");
   let inputElement = null;
@@ -322,6 +377,7 @@ function Squeal() {
         <label htmlFor="imageInput" className="form-label">
           <b>Immagine</b>
         </label>
+
         <input
           type="file"
           id="imageInput"
@@ -442,14 +498,40 @@ function Squeal() {
   } else if (inputType === "POSITION_AUTO") {
     inputElement = (
       <div className="mb-3">
-        <b>Geolocalizzazione temporizzata</b>
+        <label htmlFor="userInput" className="form-label">
+          <b>Geolocalizzazione temporizzata</b>
+          <div className="">
+            <label htmlFor="numero1" className="me-2">
+              Quante ripetizioni?
+            </label>
+            <input
+              type="number"
+              id="numero1"
+              value={numero1}
+              style={{ width: "20%" }}
+              onChange={handleNumero1Change}
+            />
+          </div>
+          <div className="">
+            <label htmlFor="numero2" className="me-2">
+              Ogni quanti secondi?
+            </label>
+            <input
+              type="number"
+              id="numero2"
+              value={numero2}
+              style={{ width: "20%" }}
+              onChange={handleNumero2Change}
+            />
+          </div>
+        </label>
+
+        <MapComponent onLocationChange={handleAutoMaps} />
       </div>
     );
   }
 
-  //TODO POST SQUEAL /squeal/ MANCANO MAPPE E MAPPE TEMPORIZZATE------------------------------------------------------------------------------------------------------------
-  const [fetchDataFlag, setFetchDataFlag] = useState(false);
-
+  //TODO: POST SQUEAL /squeal/ per MAPPE TEMPORIZZATE------------------------------------------------------------------------------------------------------------
   async function postSqueal(e) {
     e.preventDefault();
     /*
@@ -507,7 +589,44 @@ function Squeal() {
         };
         if (numero1 === "" || numero2 === "") {
           notify3();
+          return;
         }
+        if (numero1 < 5) {
+          notify4();
+          return;
+        }
+        if (numero2 < 2) {
+          notify5();
+          return;
+        }
+      } else if (inputType === "POSITION_AUTO") {
+        //TODO:CHANGE
+        const coordinates = autoCoordinates;
+        data = {
+          squeal: {
+            destinations: destinatariFromDest,
+            sender: userGlobal.username,
+            message_type: inputType,
+            content: coordinates,
+            auto_iterations: numero1,
+            auto_seconds_delay: numero2,
+          },
+        };
+        if (numero1 === "" || numero2 === "") {
+          notify3();
+          return;
+        }
+        if (numero1 < 5) {
+          notify4();
+          return;
+        }
+        if (numero2 < 2) {
+          notify5();
+          return;
+        }
+
+        console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbb", coordinates);
+        //console.log("aaaaaaaaaaaaaaaaaaaa", markerCoordinates);
       } else {
         data = {
           squeal: {
@@ -552,12 +671,12 @@ function Squeal() {
       notify();
     }
 
+    //TODO: THIS IS CALLED ONLY ON RESPONSE OK. HANDLE BE ERRORS
     /*
-    TODO: THIS IS CALLED ONLY ON RESPONSE OK. HANDLE BE ERRORS
     setTimeout(() => {
       window.location.reload();
     }, 3000); // 3000 millisecondi = 3 secondi
-     */
+    */
   }
 
   //GET LOG SQUEALS VECCHI--------------------------------------------------------------
@@ -764,7 +883,7 @@ function Squeal() {
             <div className="row d-flex flex-row justify-content-evenly align-items-center">
               <div className="col-8">
                 <button
-                  className="custom-button"
+                  className="blue-button box"
                   style={{ width: "80%" }}
                   onClick={postSqueal}
                 >
@@ -773,63 +892,38 @@ function Squeal() {
                 <ToastContainer />
               </div>
               <div className="col-4">
-                {" "}
                 <img
-                  src={cat}
-                  className="rounded-circle pfp-small box"
-                  alt="Immagine Profilo"
-                  style={{ width: "30%" }}
+                  src={"data:image/png;base64," + userData.pfp}
+                  alt="Foto Profilo"
+                  className="rounded-circle pfp box w-50 "
                 />
                 <h5 className="mt-0">{userGlobal.username}</h5>
               </div>
             </div>
           </div>
           <div className="card-footer text-body-secondary">
-            <div className="row d-flex flex-col align-items-center justify-content-evenly mb-4 flex-xs-wrap">
+            <div className="row d-flex mb-4">
+              <h3>LIVE QUOTA</h3>
               <div className="">
                 <h4>Giornaliero</h4>
                 <button className="yellow-button m-2 box">
-                  <h4>prima</h4>
+                  {newMonth !== 0 && <>{newDay}&nbsp;/&nbsp;</>}
                   {userQuote.remaining_daily}
                 </button>
-                {newMonth !== 0 && (
-                  <>
-                    <button className="yellow-button m-2 box">
-                      <h4>dopo</h4>
-                      {newDay}{" "}
-                    </button>
-                  </>
-                )}
               </div>
               <div className="">
                 <h4>Settimanale</h4>
                 <button className="yellow-button m-2 box">
-                  <h4>prima</h4>
+                  {newMonth !== 0 && <>{newWeek}&nbsp;/&nbsp;</>}
                   {userQuote.remaining_weekly}
                 </button>
-                {newMonth !== 0 && (
-                  <>
-                    <button className="yellow-button m-2 box">
-                      <h4>dopo</h4>
-                      {newWeek}{" "}
-                    </button>
-                  </>
-                )}
               </div>
               <div className="">
                 <h4>Mensile</h4>
                 <button className="yellow-button m-2 box">
-                  <h4>prima</h4>
+                  {newMonth !== 0 && <>{newMonth}&nbsp;/&nbsp;</>}
                   {userQuote.remaining_monthly}
                 </button>
-                {newMonth !== 0 && (
-                  <>
-                    <button className="yellow-button m-2 box">
-                      <h4>dopo</h4>
-                      {newMonth}{" "}
-                    </button>
-                  </>
-                )}
               </div>
             </div>
           </div>

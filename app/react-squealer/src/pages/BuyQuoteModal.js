@@ -69,7 +69,6 @@ function VipModal({ buyModal, closeBuyModal }) {
           .then((response) => {
             if (response.ok) {
               console.log("Aumento riuscito con successo");
-              
             } else {
               console.error("Aumento fallito", response.statusText);
             }
@@ -156,11 +155,11 @@ function VipModal({ buyModal, closeBuyModal }) {
           className="my-foot d-flex justify-content-center"
           style={footerStyle}
         >
-          <button className="blue-button box" onClick={closeBuyModal}>
-            Annulla
-          </button>
           <button className="green-button box" onClick={buyQuote}>
-            Compra
+            COMPRA
+          </button>
+          <button className="blue-button box" onClick={closeBuyModal}>
+            ANNULLA
           </button>
         </Modal.Footer>
       </Modal>
