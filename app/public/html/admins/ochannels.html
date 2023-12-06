@@ -30,6 +30,10 @@
                         <label for="registerChannel" class="form-label">Nome canale</label>
                         <input type="text" class="form-control" id="registerChannel" placeholder="nome canale">
                     </div>
+                    <div class="mb-3">
+                        <label for="descriptionChannel">Descrizione</label>
+                        <textarea class="form-control" id="descriptionChannel" rows="3" placeholder="Descrizione"></textarea>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -64,63 +68,36 @@
         </div>
     </div>
 </div>
-<!-- Inizio modale lock-->
-<div class="modal fade" id="modalToggleLock" tabindex="-1" role="dialog" aria-hidden="true">
+<!-- Inizio modale nuovo squeal -->
+<div class="modal fade" id="nuovoSqueal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title">Blocca canale</h6>
-            </div>
-            <div class="modal-body">
-                <div class="card-text text-left">
-                    <p name="confirmLock"></p>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
-                <button type="button" name="executeToggleLock" onclick="lockChannelExecute('', '')" class="btn btn-light" data-bs-dismiss="modal">
-                    Blocca canale
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Fine modale eliminazione -->
-<!-- Inizio modale cambia ruolo-->
-<div class="modal fade" id="modificaRuoliCanale" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h6 class="modal-title" id="modalEliminaUtenteTitle">Cambia ruolo utente</h6>
+                <h6 class="modal-title" id="modalEliminaCanaleTitle">Nuovo squeal</h6>
             </div>
             <div class="modal-body">
                 <div class="card-text text-left">
                     <div class="mb-3">
-                        <label for="newRoleUsername" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="newRoleUsername" placeholder="Username">
+                        <label for="channelDest" class="form-label">Destinazione</label>
+                        <input type="text" class="form-control" id="channelDest" disabled>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="selectRole">Nuovo ruolo</label>
-                    <select class="form-control" id="selectRole">
-                        <option value="4">Proprietario</option>
-                        <option value="3">Amministratore</option>
-                        <option value="2">Lettore/Scrittore</option>
-                        <option value="1">Solo lettore</option>
-                        <option value="0">In attesa di approvazione</option>
-                    </select>
+                    <div class="mb-3">
+                        <label for="squealContent" class="form-label">Nome canale</label>
+                        <textarea class="form-control" id="squealContent" rows="3" placeholder="Cosa stai pensando?"></textarea>
+                    </div>
+
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
-                <button type="button" id="executeChangeRole" class="btn btn-success" data-bs-dismiss="modal">Cambia
-                    ruolo
+                <button type="button" onclick="nuovoSqueal()" class="btn btn-success" data-bs-dismiss="modal">
+                    Crea squeal
                 </button>
             </div>
         </div>
     </div>
 </div>
-<!-- Fine modale cambia ruolo -->
+<!-- Fine modale nuovo squeal -->
 <!-- Fine modali -->
 <div class="d-flex flex-nowrap" style="height: 100vh;">
     <div class="d-flex flex-column flex-shrink-0 p-3" style="width: 280px;">
@@ -240,6 +217,25 @@
         st.draw();
     }
 
+    function nuovoSqueal() {
+        let channel_name = $('#channelDest').val();
+        let content = $('#squealContent').val();
+
+        fetch('../../squeal/?fromAdmin=true', {
+            method: 'POST',
+            body: JSON.stringify({
+                squeal : {
+                    destinations : [channel_name],
+                    content: content,
+                    message_type: 'MESSAGE_TEXT'
+                }
+            }),
+            headers: {
+                "Content-Type": "application/json",
+            }
+        })
+    }
+
     function notifyError(msg) {
         document.getElementById('toasFailProblem').innerHTML = msg;
         $('#toastFailGeneric').toast('show');
@@ -247,7 +243,10 @@
 
     function applicaCambiamentiCanale(channel_type, editingChannel = '') {
         let inputName = $('#registerChannel');
+        let descrizioneInput = $('#descriptionChannel');
         let channelName = $(inputName).val();
+        let descrizione = $(descrizioneInput).val();
+
         channelName = channelName.trim();
         if (channelName === '') {
             notifyError('Il nome del canale non può essere vuoto');
@@ -278,7 +277,7 @@
             if (response.ok) {
                 //tutto ok
                 $('#toastSuccess').toast('show');
-                loadTable();
+                aggiornaDescrizioneCanale(channelName, descrizione);
             } else {
                 notifyError('Errore con la richiesta. Riprovare');
             }
@@ -286,10 +285,28 @@
         $('#modalAggiungiCanale').modal('hide');
     }
 
+    function aggiornaDescrizioneCanale(channelName, description){
+        fetch(`../../channel/CHANNEL_OFFICIAL/${channelName}/description`, {
+            method: 'PUT',
+            body: JSON.stringify({
+                description: description
+            }),
+            headers: {
+                "Content-Type": "application/json",
+            }
+        }).then((response) => {
+            if (response.ok) {
+                //tutto ok
+                loadTable();
+            }
+        });
+    }
+
     function cleanModalAddChannel() {
         document.getElementById('executeOperation').setAttribute('onclick', `applicaCambiamentiCanale('CHANNEL_OFFICIAL')`);
         document.getElementById('executeOperation').innerHTML = 'Aggiungi canale';
         $('#registerChannel').val('');
+        $('#descriptionChannel').val('');
     }
 
     /**

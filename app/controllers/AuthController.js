@@ -62,6 +62,13 @@ module.exports = class AuthController extends Controller {
             output.msg = "";
             return output;
         }
+
+        if(requested_role !== 2 && user.locked === true){
+            output.code = 403;
+            output.msg = "";
+            return output;
+        }
+
         let checkResult = await this.hashCheck(user.psw_shadow, password_attempt);
         if (checkResult === false) {
             attempt.timestampEnd = this.getCurrentTimestampMillis();

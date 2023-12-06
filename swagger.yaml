@@ -891,7 +891,7 @@ paths:
           description: 'User not logged'
         '500':
           description: 'Internal server error'
-  /channel/CHANNEL_OFFICIAL/{name}/desription/:
+  /channel/CHANNEL_OFFICIAL/{name}/description/:
     put:
       tags:
         - channel
@@ -928,6 +928,11 @@ paths:
           in: body
           schema:
             $ref: '#/definitions/Squeal'
+        - name: fromAdmin
+          description: Is squeal from admin places?
+          required: false
+          type: boolean
+          in: query
       responses:
         '200':
           description: 'Successful operation'
@@ -942,6 +947,47 @@ paths:
           description: 'Quota exceed'
         '403':
           description: 'User not logged'
+    get:
+      tags:
+        - squeal
+      summary: Get a list of channels
+      description: Returns an array of Channels.
+      parameters:
+        - name: offset
+          in: query
+          required: false
+          type: integer
+        - name: limit
+          in: query
+          required: false
+          type: integer
+        - name: search
+          in: query
+          required: false
+          type: string
+        - name: from
+          in: query
+          required: false
+          type: string
+        - name: to
+          in: query
+          required: false
+          type: string
+        - name: orderBy
+          in: query
+          required: false
+          description: The order by value should be a key of Channel.
+          type: string
+        - name: orderDir
+          in: query
+          required: false
+          type: string
+          enum:
+            - ORDER_ASC
+            - ORDER_DESC
+      responses:
+        '200':
+          description: 'Successful operation'
   /squeal/{identifier_id}:
     get:
       tags:

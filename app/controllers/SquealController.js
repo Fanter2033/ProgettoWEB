@@ -174,15 +174,22 @@ module.exports = class SquealController extends Controller {
      * @param squealDto {SquealDto}
      * @param authenticatedUser {UserDto}
      * @param autoSqueal {SquealTextAutoDto}
+     * @param fromAdmin {boolean}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
-    async postSqueal(squealDto, authenticatedUser, autoSqueal) {
+    async postSqueal(squealDto, authenticatedUser, autoSqueal, fromAdmin = false) {
         let output = this.getDefaultOutput();
         squealDto.sender = authenticatedUser.username;
 
         if (this.isObjectVoid(authenticatedUser)) {
             output['code'] = 403;
             output['msg'] = 'Please Login.'
+            return output;
+        }
+
+        if(fromAdmin && authenticatedUser.isAdmin === false){
+            output['code'] = 401;
+            output['msg'] = 'nah.'
             return output;
         }
 
@@ -269,22 +276,24 @@ module.exports = class SquealController extends Controller {
             }
         }
 
-        if (quoteRes.remaining_daily < squealDto.quote_cost) {
-            output['code'] = 412;
-            output['msg'] = 'Daily quote not available';
-            return output;
-        }
+        if(fromAdmin === false) {
+            if (quoteRes.remaining_daily < squealDto.quote_cost) {
+                output['code'] = 412;
+                output['msg'] = 'Daily quote not available';
+                return output;
+            }
 
-        if (quoteRes.remaining_weekly < squealDto.quote_cost) {
-            output['code'] = 412;
-            output['msg'] = 'Weekly quote not available';
-            return output;
-        }
+            if (quoteRes.remaining_weekly < squealDto.quote_cost) {
+                output['code'] = 412;
+                output['msg'] = 'Weekly quote not available';
+                return output;
+            }
 
-        if (quoteRes.remaining_monthly < squealDto.quote_cost) {
-            output['code'] = 412;
-            output['msg'] = 'Monthly quote not available';
-            return output;
+            if (quoteRes.remaining_monthly < squealDto.quote_cost) {
+                output['code'] = 412;
+                output['msg'] = 'Monthly quote not available';
+                return output;
+            }
         }
 
         if (squealDto.message_type === 'TEXT_AUTO') {
@@ -303,11 +312,13 @@ module.exports = class SquealController extends Controller {
         }
 
         //CONTROLLI OK DEVO SCALARE LA QUOTA ED EFFETTUARE LE RELAZIONI
-        let ctrlOut = await quoteCtrl.chargeDebitQuota(squealDto.sender, squealDto.quote_cost);
-        if (ctrlOut.code !== 200) {
-            output['code'] = 500;
-            output['msg'] = 'Internal server error.';
-            return output;
+        if(fromAdmin === false) {
+            let ctrlOut = await quoteCtrl.chargeDebitQuota(squealDto.sender, squealDto.quote_cost);
+            if (ctrlOut.code !== 200) {
+                output['code'] = 500;
+                output['msg'] = 'Internal server error.';
+                return output;
+            }
         }
 
         //Controls ended. Let's insert
