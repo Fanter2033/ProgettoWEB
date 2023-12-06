@@ -1074,6 +1074,49 @@ paths:
           description: 'Not authorized'
         '404':
           description: 'Identifier not found'
+  /squeal/{identifier_id}/comment/:
+    get:
+      tags:
+        - comment
+      summary: Returns comment of a post
+      parameters:
+        - name: identifier_id
+          description: Squeal ID
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: 'Successful operation'
+        '400':
+          description: 'Generic error'
+        '401':
+          description: 'Not authorized'
+        '404':
+          description: 'Identifier not found'
+    post:
+      tags:
+        - comment
+      summary: Create a squeal
+      parameters:
+        - name: identifier_id
+          description: Squeal ID
+          required: true
+          in: path
+          type: string
+        - name: comment
+          in: formData
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Successful operation'
+        '400':
+          description: 'Generic error'
+        '401':
+          description: 'Not authorized'
+        '404':
+          description: 'Identifier not found'
   /user/{username}/quote:
     get:
       tags:

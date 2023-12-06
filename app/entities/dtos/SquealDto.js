@@ -2,6 +2,7 @@ module.exports = class SquealDto {
 
     #id;
     #destinations;
+    #comments;
     #date;
     #sender;
     #message_type;
@@ -23,6 +24,7 @@ module.exports = class SquealDto {
             this.#quote_cost = null;
             this.#content = null;
             this.#destinations = [];
+            this.#comments = [];
         } else {
             this.#id = documentFromMongoose._id;
             this.#date = documentFromMongoose.date;
@@ -34,6 +36,7 @@ module.exports = class SquealDto {
             this.#quote_cost = documentFromMongoose.quote_cost;
             this.#content = documentFromMongoose.content;
             this.#destinations = [];
+            this.#comments = [];
         }
     }
 
@@ -68,6 +71,11 @@ module.exports = class SquealDto {
         }
 
 
+        out['comments'] = [];
+        for (const comment of this.#comments)
+            out.comments.push(comment.getDocumentAttachSqueal());
+
+
         return out;
     }
 
@@ -85,6 +93,13 @@ module.exports = class SquealDto {
      */
     insertDestination(cDto) {
         this.#destinations.push(cDto);
+    }
+
+    /**
+     * @param {CommentDto} cDto
+     */
+    insertComment(cDto) {
+        this.#comments.push(cDto);
     }
 
     get id() {

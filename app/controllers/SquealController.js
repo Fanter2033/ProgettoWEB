@@ -17,6 +17,8 @@ const SquealIrDto = require("../entities/dtos/SquealIrDto");
 const UserDto = require("../entities/dtos/UserDto");
 const SquealTextAutoModel = require('../models/SquealTextAutoModel');
 const ChannelRoleDto = require("../entities/dtos/ChannelRoleDto");
+const CommentModel = require("../models/CommentModel");
+const CommentDto = require("../entities/dtos/CommentDto");
 
 module.exports = class SquealController extends Controller {
 
@@ -26,6 +28,7 @@ module.exports = class SquealController extends Controller {
     #squealToUserModel = new SquealToUserModel();
     #squealToChannelModel = new SquealToChannelModel();
     #squealImpressionReactions = new SquealIrModel();
+    #squealComments = new CommentModel();
 
     constructor(model) {
         super();
@@ -79,6 +82,8 @@ module.exports = class SquealController extends Controller {
             }
 
         }
+
+        await this.#squealComments.getCommentFromSqueal(squeal);
 
         if (escapeAddImpression) {
             output['content'] = squeal.getDocument();
@@ -1000,4 +1005,34 @@ module.exports = class SquealController extends Controller {
             type === autoload.config._REACTION_DO_NOT_LIKE ||
             type === autoload.config._REACTION_DISGUSTED;
     }
+
+    /**
+     * @param {UserDto} authUser
+     * @param {number} squeal_id
+     * @return {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async getSquealComments(authUser, squeal_id, content){
+        let output = this.getDefaultOutput();
+
+        let getSquealOutput = await this.getSqueal(squeal_id, authUser, '', true);
+
+        if(getSquealOutput.code !== 200)
+            return getSquealOutput;
+
+        if(this.isAuthenticatedUser(authUser) === false){
+            output['msg'] = 'Not auth';
+            output['code'] = 403;
+            return output;
+        }
+
+        //Ok can read the squeal. Let's insert the comment
+        let cDto = new CommentDto();
+        cDto.squeal_id = squeal_id;
+        cDto.username = authUser.username;
+        cDto.comment = content;
+        await this.#squealComments.postComment(cDto);
+
+        return output;
+    }
+
 }

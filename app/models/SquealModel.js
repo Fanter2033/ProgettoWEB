@@ -52,6 +52,7 @@ module.exports = class SquealModel extends Model {
     async postSqueal(squealDto) {
         await this.checkMongoose("Squeal", Squeal);
         squealDto = this.mongo_escape(squealDto.getDocument());
+        delete squealDto.comments;
         let newSqueal = new this.entityMongooseModel(squealDto);
         try {
             await newSqueal.save();
@@ -69,6 +70,7 @@ module.exports = class SquealModel extends Model {
     async replaceSqueal(squealDto, squeal_id) {
         await this.checkMongoose("Squeal", Squeal);
         let squealDoc = this.mongo_escape(squealDto.getDocument());
+        delete squealDoc.comments;
         squeal_id = parseInt(squeal_id);
         if (isNaN(squeal_id))
             return false;

@@ -107,7 +107,30 @@ squealDriver.patch('/:id/reaction/:reactions', async function(req, res) {
         res.status(ctrlOut.code).send(ctrlOut.content);
     else
         res.status(ctrlOut.code).send(ctrlOut);
-})
+});
+
+squealDriver.get('/:id/comment/', async function(req,res) {
+    let authUser = authController.getAuthenticatedUser(req);
+    let requested_id = parseInt(req.params['id']);
+
+    let ctrlOut = await squealController.getSquealComments(await authUser, requested_id);
+    if (ctrlOut.code === 200)
+        res.status(ctrlOut.code).send(ctrlOut.content);
+    else
+        res.status(ctrlOut.code).send(ctrlOut);
+});
+
+squealDriver.post('/:id/comment/', async function(req,res) {
+    let authUser = authController.getAuthenticatedUser(req);
+    let requested_id = parseInt(req.params['id']);
+    let content = (typeof req.body['content'] !== 'undefined' ? req.body['content']: null);
+
+    let ctrlOut = await squealController.getSquealComments(await authUser, requested_id, content);
+    if (ctrlOut.code === 200)
+        res.status(ctrlOut.code).send(ctrlOut.content);
+    else
+        res.status(ctrlOut.code).send(ctrlOut);
+});
 
 module.exports = squealDriver;
 
