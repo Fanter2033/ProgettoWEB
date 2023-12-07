@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../../css/squealer.css">
     <!-- Page defined scripts -->
     <script src="../../js/dashboardAdmin.js"></script>
+    <script src="../../js/classes/ServerTablesSQ.js"></script>
 </head>
 <body>
 <div class="d-flex flex-nowrap" style="height: 100vh;">
@@ -72,11 +73,63 @@
                 </ul>
             </header>
             <div>
-                Squeal
+                <div id="tableContainer">
+
+                </div>
             </div>
         </div>
     </div>
 </div>
+<div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-delay="10000" id="toastFail"
+     style="z-index: 1200; position: fixed; top: 0; right: 0;">
+    <div class="toast-header">
+        <strong class="mr-auto">Attenzione</strong>
+    </div>
+    <div class="toast-body">
+        <p class="text-danger">Operazione fallita</p>
+    </div>
+</div>
+<div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-delay="10000" id="toastFailGeneric"
+     style="z-index: 1200; position: fixed; top: 0; right: 0;">
+    <div class="toast-header">
+        <strong class="mr-auto">Attenzione</strong>
+    </div>
+    <div class="toast-body">
+        <p class="text-danger" id="toasFailProblem">Operazione fallita</p>
+    </div>
+</div>
+<div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-delay="10000" id="toastSuccess"
+     style="z-index: 1200; position: fixed; top: 0; right: 0;">
+    <div class="toast-header">
+        <strong class="mr-auto">Ok</strong>
+    </div>
+    <div class="toast-body">
+        <p class="text-success">Operazione effettuata con successo</p>
+    </div>
+</div>
+<script>
+    let st = new ServerTablesSQ('tableContainer', {
+        "id": "Numero",
+        "sender": "Mittente",
+        "content": "Contenuto",
+        "dests": "Destinatari",
+        "positive_value": "Reazioni +",
+        "negative_value": "Reazioni -",
+        "actions": "Azioni",
+    }, 'st');
 
+    loadTable();
+
+    async function loadTable() {
+        await st.askData2Server();
+        st.draw();
+    }
+
+    function notifyError(msg) {
+        document.getElementById('toasFailProblem').innerHTML = msg;
+        $('#toastFailGeneric').toast('show');
+    }
+
+</script>
 </body>
 </html>

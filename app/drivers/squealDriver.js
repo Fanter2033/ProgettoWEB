@@ -6,7 +6,6 @@ const SquealDto = require("../entities/dtos/SquealDto");
 const AuthController = require("../controllers/AuthController")
 const AuthModel = require("../models/AuthModel")
 const SquealTextAutoDto = require("../entities/dtos/SquealTextAutoDto");
-const {parse} = require("nodemon/lib/cli");
 
 let squealController = new SquealController(new SquealModel());
 let authController = new AuthController(new AuthModel());
@@ -62,6 +61,25 @@ squealDriver.post('/', async function(req, res){
         res.status(ctrlOut.code).send(ctrlOut.content);
     else
         res.status(ctrlOut.code).send(ctrlOut);
+});
+
+squealDriver.get('/', async function (req, res) {
+    let authUser = authController.getAuthenticatedUser(req);
+
+    let offset = (typeof req.query.offset !== 'undefined' ? req.query.offset : 0);
+    let limit = (typeof req.query.limit !== 'undefined' ? req.query.limit : 10);
+    let search_sender = (typeof req.query.search_sender !== 'undefined' ? req.query.search_sender : '');
+    let search_dest = (typeof req.query.search_sender !== 'undefined' ? req.query.search_sender : '');
+    let orderBy = (typeof req.query.orderBy !== 'undefined' ? req.query.orderBy : '');
+    let orderDir = (typeof req.query.orderDir !== 'undefined' ? req.query.orderDir : '');
+    authUser = await authUser;
+    if(limit < 0) limit = 10;
+
+    let ctrl = await squealController.getSquealList(authUser, offset, limit, search_sender, search_dest, orderBy, orderDir);
+    if (ctrl.code === 200)
+        res.status(ctrl.code).send(ctrl.content);
+    else
+        res.status(ctrl.code).send(ctrl);
 });
 
 //DA AGGIUNGERE ALLA SPECIFICA SWAGGER

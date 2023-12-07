@@ -413,6 +413,20 @@ module.exports = class SquealController extends Controller {
     }
 
     /**
+     *
+     * @param {UserDto} authUser
+     * @param {number} offset
+     * @param {number} limit
+     * @param {string} search_sender
+     * @param {string} search_dest
+     * @param {string} orderBy
+     * @param {string} orderDir
+     */
+    async getSquealList(authUser, offset, limit, search_sender, search_dest, orderBy, orderDir) {
+
+    }
+
+    /**
      * @param destinations {String[]}
      * @return {Promise<void>}
      */

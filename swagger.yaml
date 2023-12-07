@@ -1008,15 +1008,11 @@ paths:
           in: query
           required: false
           type: integer
-        - name: search
+        - name: search_sender
           in: query
           required: false
           type: string
-        - name: from
-          in: query
-          required: false
-          type: string
-        - name: to
+        - name: search_dest
           in: query
           required: false
           type: string
