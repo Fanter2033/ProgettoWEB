@@ -2,22 +2,19 @@ import React, { useState, useEffect } from "react";
 import { NavLink, Link } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 
-//import Search from "./Search";
 import Footer from "./Footer";
 
-import { Container, Card, Col, Row } from "react-bootstrap";
+import { Container, Card, Col } from "react-bootstrap";
+import squeal_logo from "./media/icone/Nav_logo.png";
 import "../css/App.css";
 
-//TODO: vai su infoc senza auth?
-//TODO: che squeal faccio vedere?
-
 function Home() {
-  //GET /channel    list of channels ------------------------------------------------------------------------------------------------------------
+  //GET /channel    list of OFFICIAL channels ------------------------------------------------------------------------------------------------------------
   const [channels, setChannels] = useState([]);
 
   async function getChannels() {
     try {
-      const uri = `${ReactConfig.base_url_requests}/channel`;
+      const uri = `${ReactConfig.base_url_requests}/channel/CHANNEL_OFFICIAL`;
       const options = {
         method: "GET",
         headers: {
@@ -41,7 +38,7 @@ function Home() {
     }
   }
 
-  console.log("LISTA CANALI", channels);
+  //console.log("LISTA CANALI", channels);
 
   useEffect(() => {
     const intervalId1 = setInterval(getChannels, 5000);
@@ -52,43 +49,68 @@ function Home() {
   }, []);
 
   return (
-    <div>
-      <div className="col-12 pt-4 pb-4">
-        <div className="mb-3">
+    <div className="pb-5 animated-title">
+      <div className="col-12 p-4 d-flex flex-row justify-content-evenly align-items-center">
+        <button className="me-1 green-button mb-1 box col-6 ">
           <NavLink
-            style={{ color: "#072f38" }}
-            className="cool-font-small"
+            className="me-1 cool-font-small"
             to={ReactConfig.pathFunction("/registration")}
           >
-            Join the community
+            REGISTRATI
           </NavLink>
-        </div>
-        <div className="col-12 mb-2">
+        </button>
+        <button className="ms-1 green-button mb-1 box col-6">
           <NavLink
-            style={{ color: "#072f38" }}
             className="cool-font-small"
             to={ReactConfig.pathFunction("/")}
           >
-            Login
+            LOGIN
           </NavLink>
-        </div>
+        </button>
       </div>
 
-      <h2>TUTTI i Canali:</h2>
-      <Container fluide className="d-flex flex-column justify-content-center align-items-center p-5 mb-5">
+      <h2 className="cool-font-link">CANALI UFFICIALI</h2>
+      <Container>
         {channels.map((channel) => (
-          <Col key={channel.id} lg={6} className="mb-4 ">
-            <Card>
-              <Card.Body className="mb-4  w-100 d-flex flex-column justify-content-center align-items-center">
-                <Card.Title className="ms-4 me-4">
-                  {channel.channel_name}
-                </Card.Title>
+          <Col lg={12} key={channel.channel_name}>
+            <div>
+              <Card style={{ height: "100%" }} className="squeal mb-4">
+                <Card.Header className="d-flex justify-content-center align-items-center">
+                  <Link to="/infoc" state={channel}>
+                    <button className="custom-button me-2 box cool-font-small">
+                      <b className="">{channel.channel_name} &nbsp;</b>
 
-                <Link to="/infoc" state={channel}>
-                  <button className="custom-button ms-4 me-4">Info</button>
-                </Link>
-              </Card.Body>
-            </Card>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        fill="currentColor"
+                        className="bi bi-info-circle-fill"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
+                      </svg>
+                    </button>
+                  </Link>
+                </Card.Header>
+                <Card.Body className="mb-4  w-100 d-flex flex-column justify-content-center align-items-center">
+                  <div className="d-flex flex-row">
+                    <img
+                      src={squeal_logo}
+                      alt="logo_squeal"
+                      width="40"
+                      height="40"
+                    />
+                    <div className="cool-font-text">&nbsp;CANALE UFFICIALE</div>
+                  </div>
+                  <div className="d-flex flex-column justify-content-center align-items-center cool-font-details">
+                    <div>
+                      SQUEAL: <b>{channel.posts}</b>
+                    </div>
+                  </div>
+                </Card.Body>
+              </Card>
+            </div>
           </Col>
         ))}
       </Container>

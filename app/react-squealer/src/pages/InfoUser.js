@@ -74,23 +74,62 @@ function InfoUser() {
     }
   }
 
-  console.log(userQuote);
+  //console.log(userQuote);
+
+  //GET LOG SQUEALS VECCHI--------------------------------------------------------------
+  const [squealsLogger, setSquealsLogger] = useState([]);
+
+  async function log() {
+    try {
+      const url = `${ReactConfig.base_url_requests}/utils/squeals/${username}`;
+      const options = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        mode: "cors",
+      };
+
+      let result = await fetch(url, options);
+
+      if (result.ok) {
+        let json = await result.json();
+        setSquealsLogger(json);
+      } else {
+        console.error("Errore nella richiesta:", result.statusText);
+      }
+    } catch (error) {
+      console.error("Errore nella fetch:", error);
+    }
+  }
 
   useEffect(() => {
     getUserData();
     getUserQuote();
+    log();
 
     const intervalId = setInterval(getUserQuote, 10000); //10 sec
     const intervalId2 = setInterval(getUserData, 10000); //10 sec
+    const intervalId3 = setInterval(getUserData, 10000); //10 sec
     return () => {
       clearInterval(intervalId);
       clearInterval(intervalId2);
+      clearInterval(intervalId3);
     };
   }, []);
 
+  //PFP----------------------------------------------------------------------------------------------------------------
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const handleImageClick = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
   return (
     <>
-      <div className="container">
+      <div className="container pb-5">
         <div className="col-12">
           <button
             className="red-button box w-25"
@@ -111,39 +150,56 @@ function InfoUser() {
             </svg>
           </button>
           <div className="row mb-5">
-            <div className="col-12 d-flex flex-column align-items-center">
-              <img
-                src={cattyy}
-                alt="Foto Profilo"
-                className="rounded-circle ms-4 pfp box mt-4"
-              />
-              <h1 className="cool-font-medium mt-2 mb-2">
-                Username: {userData.username}
+            <div className="col-12 d-flex flex-column align-items-center cool-font-small mt-3">
+              {userData.pfp && userData.vip && (
+                <img
+                  src={"data:image/png;base64," + userData.pfp}
+                  alt="Foto Profilo"
+                  className="rounded-circle pfp-vip box"
+                  onClick={() => handleImageClick()}
+                />
+              )}
+
+              {userData.pfp && !userData.vip && (
+                <img
+                  src={"data:image/png;base64," + userData.pfp}
+                  alt="Foto Profilo"
+                  className="rounded-circle pfp-vip box"
+                  onClick={() => handleImageClick()}
+                />
+              )}
+
+              <h1 className="cool-font-medium mt-4 mb-2">
+                USERNAME: {userData.username}
                 {userData.vip && <img src={pink} style={{ width: "10%" }} />}
               </h1>
-              <h2>Nome: {userData.first_name}</h2>
-              <h2>Cognome: {userData.last_name}</h2>
-              <h2>Email: {userData.email}</h2>
-              <button className="user_button box col-6">N SQUEALS</button>
+              <h2 className="cool-font-medium">NOME: {userData.first_name}</h2>
+              <h2 className="cool-font-medium">
+                COGNOME: {userData.last_name}
+              </h2>
+              <h2 className="cool-font-medium">EMAIL: {userData.email}</h2>
+              <button className="user_button box col-6">
+                N SQUEALS: {squealsLogger.length}
+              </button>
 
-              <div className="row d-flex align-items-center justify-content-evenly mb-5">
-                <h3 className="mb-4 cool-font-small">Quota rimanente</h3>
+              <div className="row d-flex align-items-center justify-content-evenly mt-4">
+                <div className="cool-font-link ">QUOTA RIMANENTE</div>
 
-                <div className="col-12">
-                  <h4>Giornaliero</h4>
-                  <button className="yellow-button m-2 box">
+                <div className="col-12 m-2">
+                  <h4 className="cool-font-medium">Giornaliero</h4>
+                  <button className="yellow-button  box w-50">
                     {userQuote.remaining_daily}
                   </button>
                 </div>
-                <div className="col-12">
-                  <h4>Settimanale</h4>
-                  <button className="yellow-button m-2 box">
+                <div className="col-12 m-2">
+                  <h4 className="cool-font-medium">Settimanale</h4>
+                  <button className="yellow-button box w-50">
                     {userQuote.remaining_weekly}
                   </button>
                 </div>
-                <div className="col-12">
-                  <h4>Mensile</h4>
-                  <button className="yellow-button m-2 box">
+                <div className="col-12 m-2">
+                  <h4 className="cool-font-medium">Mensile</h4>
+                  <button className="yellow-button  box w-50">
                     {userQuote.remaining_monthly}
                   </button>
                 </div>

@@ -7,6 +7,7 @@ import ReactConfig from "../config/ReactConfig";
 import ChangeNameChannel from "./ChangeNameChannel";
 import ChannelDeleteModal from "./ChannelDeleteModal";
 import ChangeRoleModal from "./ChangeRoleModal";
+import MatchRole from "./MatchRole";
 
 import { Container, Card, Col, Row } from "react-bootstrap";
 import "../css/App.css";
@@ -17,14 +18,13 @@ function DetailsChannel() {
   const channel = location.state;
 
   const { userGlobal, setUserGlobal } = useUserContext();
-  //!se sei il proprietario
+
   //una variabile booleana
   const isOwner = channel.owner === userGlobal.username;
 
-  //!{type}/{channel_name} fetch
   //GET /channel/{type}/{channel_name}/users/     list of following
   const [following, setFollowing] = useState([]);
-  const getChTypeNameUsers = () => {
+  const subscribersList = () => {
     const url = `${ReactConfig.base_url_requests}/channel/${channel.type}/${channel.channel_name}/users/`;
     fetch(url)
       .then((response) => response.json())
@@ -37,48 +37,76 @@ function DetailsChannel() {
       });
   };
 
+  //GET /user/{username}/roles/ LISTA CANALI SEGUITI E IL REALATIVO RUOLO DELL'UTENTE
+  const [roleUser, setRoleUser] = useState([]);
+  async function getRoles() {
+    try {
+      const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}/roles/`;
+      const options = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        mode: "cors",
+        credentials: "include",
+      };
+
+      let result = await fetch(uri, options);
+
+      if (result.ok) {
+        let data = await result.json();
+        //console.log("Successo nella richiesta dei ruoli UTENTE", data);
+        setRoleUser(data);
+      } else {
+        console.error("Errore nella richiesta:", result.statusText);
+      }
+    } catch (error) {
+      console.error("Errore nella fetch:", error);
+    }
+    console.log("Successo nella richiesta dei ruoli UTENTE", roleUser);
+  }
+
   const [roles0, setRoles0] = useState([]);
   const [roles1, setRoles1] = useState([]);
   const [roles2, setRoles2] = useState([]);
   const [roles3, setRoles3] = useState([]);
   const [roles4, setRoles4] = useState([]);
 
-  useEffect(() => {
-    /*
-    const fetchData = async (channelType, channelName, roleNumber) => {
-      const url = `${ReactConfig.base_url_requests}/channel/${channelType}/${channelName}/roles/${roleNumber}`;
+  const fetchData = async (channelName, roleNumber) => {
+    const url = `${ReactConfig.base_url_requests}/channel/CHANNEL_USERS/${channelName}/roles/${roleNumber}`;
 
-      try {
-        const response = await fetch(url);
-        const data = await response.json();
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
 
-        console.log(`Get roles for number ${roleNumber}:`, data);
+      console.log(`Get roles for number ${roleNumber}:`, data);
 
-        if (roleNumber === 0) {
-          setRoles0(data.content);
-        } else if (roleNumber === 1) {
-          setRoles1(data.content);
-        } else if (roleNumber === 2) {
-          setRoles2(data.content);
-        } else if (roleNumber === 3) {
-          setRoles3(data.content);
-        } else if (roleNumber === 4) {
-          setRoles4(data.content);
-        }
-      } catch (error) {
-        console.error(
-          `Failed to get roles for number ${roleNumber}, error:`,
-          error
-        );
+      if (roleNumber === 0) {
+        setRoles0(data.content);
+      } else if (roleNumber === 1) {
+        setRoles1(data.content);
+      } else if (roleNumber === 2) {
+        setRoles2(data.content);
+      } else if (roleNumber === 3) {
+        setRoles3(data.content);
+      } else if (roleNumber === 4) {
+        setRoles4(data.content);
       }
-    };
-    fetchData(channel.type, channel.channel_name, 0);
-    fetchData(channel.type, channel.channel_name, 1);
-    fetchData(channel.type, channel.channel_name, 2);
-    fetchData(channel.type, channel.channel_name, 3);
-    fetchData(channel.type, channel.channel_name, 4);
-    */
-  }, [channel.type, channel.channel_name]);
+    } catch (error) {
+      console.error(
+        `Failed to get roles for number ${roleNumber}, error:`,
+        error
+      );
+    }
+  };
+
+  useEffect(() => {
+    fetchData(channel.channel_name, 0);
+    fetchData(channel.channel_name, 1);
+    fetchData(channel.channel_name, 2);
+    fetchData(channel.channel_name, 3);
+    fetchData(channel.channel_name, 4);
+  }, []);
 
   console.log(
     "zzzzzzzzzzzzzz",
@@ -94,37 +122,9 @@ function DetailsChannel() {
     roles4
   );
 
-  //GET /channel/{type}/{channel_name}/roles/0 || 1 || 2 || 3 || 4    roles following a ch
-  const [roles, setRoles] = useState([]);
-  const getAllRoles = () => {
-    const url = `${ReactConfig.base_url_requests}/channel/${channel.type}/${channel.channel_name}/roles/4`;
-    fetch(url)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Get all the roles:", data);
-        setRoles(data.content);
-      })
-      .catch((error) => {
-        console.error("Failed to get all the roles, errore:", error);
-      });
-  };
-  //console.log(roles, "AAAAAAAAAAAAAA");
-
   useEffect(() => {
-    //const intervalId1 = setInterval(getChTypeName, 5000);
-    //const intervalId2 = setInterval(getChTypeNameUsers, 5000);
-    const intervalId4 = setInterval(getAllRoles, 5000);
-
-    //getChTypeName();
-    getChTypeNameUsers();
-    getAllRoles();
-    //se iscritto
-
-    //clearInterval(intervalId1);
-    return () => {
-      //clearInterval(intervalId2);
-      clearInterval(intervalId4);
-    };
+    getRoles();
+    subscribersList();
   }, []);
 
   //Role modalssssssss
@@ -136,11 +136,17 @@ function DetailsChannel() {
     setNewRoleModal(false);
   };
 
+  const [isInputPresent, setIsInputPresent] = useState(false);
+
+  // funzione di callback per ricevere il risultato dalla componente figlia
+  const handleInputPresence = (result) => {
+    setIsInputPresent(result);
+  };
+
   return (
     <>
-      <div className="container">
-        <div className="row d-flex flex-row justify-content-center align-items-content">
-          <p>Dettagli</p>
+      <div className="container pt-2">
+        <div className="row d-flex flex-row justify-content-center align-items-content mt-3">
           <button
             className="red-button box w-25"
             onClick={() => window.history.back()}
@@ -161,20 +167,39 @@ function DetailsChannel() {
           </button>
         </div>
 
-        <div
-          style={{
-            padding: "3em",
-            margin: "0",
-            borderRadius: "5px",
-          }}
-        >
+        <div className="d-flex flex-row justify-content-center align-items-center">
+          {channel.locked && (
+            <>
+              <div className="altro d-flex flex-row justify-content-center align-items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="30"
+                  height="30"
+                  fill="currentColor"
+                  className="bi bi-ban"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M15 8a6.973 6.973 0 0 0-1.71-4.584l-9.874 9.875A7 7 0 0 0 15 8M2.71 12.584l9.874-9.875a7 7 0 0 0-9.874 9.874ZM16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0" />
+                </svg>
+                <div className="cool-font-medium altro"> &nbsp;BLOCCATO</div>
+              </div>
+            </>
+          )}
+        </div>
+
+        <div>
           <h3 className="cool-font-medium">
             NOME CANALE: {channel.channel_name}
           </h3>
-          <p className="cool-font-small mb-0">CREATORE: {channel.owner}</p>
+
+          {channel.type !== "CHANNEL_HASHTAG" && (
+            <p className="cool-font-small mb-0">CREATORE: {channel.owner}</p>
+          )}
+
           <p className="cool-font-small mb-0">
             NUMERO SQUEALS: {channel.posts}
           </p>
+
           <div className="d-flex flex-row justify-content-center align-items-center cool-font-small">
             {channel.type === "CHANNEL_USERS" && (
               <>
@@ -199,6 +224,7 @@ function DetailsChannel() {
                   alt="logo_squeal"
                   width="40"
                   height="40"
+                  className="my-yellow"
                 />
                 <div>&nbsp;CANALE UFFICIALE</div>
               </>
@@ -251,135 +277,82 @@ function DetailsChannel() {
               </>
             )}
           </div>
-
-          <div className="d-flex flex-row justify-content-center align-items-center">
-            {channel.locked && (
-              <>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  className="bi bi-ban"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M15 8a6.973 6.973 0 0 0-1.71-4.584l-9.874 9.875A7 7 0 0 0 15 8M2.71 12.584l9.874-9.875a7 7 0 0 0-9.874 9.874ZM16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0" />
-                </svg>
-                <div> &nbsp;BLOCCATO</div>
-              </>
-            )}
-          </div>
         </div>
 
-        <button className="ms-4 me-4 custom-button box">
-          SE OWNER O ADMIN CAMBIA RUOLO UTENTI
-        </button>
-
-        <h3>Roles for TAG_CH: LETTORI</h3>
-        <h3>Roles for OFF_CH: SCRITTORI</h3>
-        <h3>Roles change ONLY for USER_CH</h3>
-        <button className="ms-4 me-4 custom-button box">
-          SE USER PRIVATO: UTENTI IN ATTESA
-        </button>
-        <button className="ms-4 me-4 custom-button box">
-          SE USER PUBBLICO: UTENTE SCRITTORE
-        </button>
-        <p>Ruoli per il numero 0: IN ATTESA {JSON.stringify(roles0)}</p>
-        <p>Ruoli per il numero 1: LETTORI {JSON.stringify(roles1)}</p>
-        <p>Ruoli per il numero 2: SCRITTORI {JSON.stringify(roles2)}</p>
-        <p>Ruoli per il numero 3: ADMIN{JSON.stringify(roles3)}</p>
-        <p>Ruoli per il numero 4: CREATORE{JSON.stringify(roles4)}</p>
-
-        {channel.owner === userGlobal.username && (
-          <div className="row">
-            <h2>Per il creatore del canale</h2>
-
+        {channel.owner === userGlobal.username &&
+          channel.type !== "CHANNEL_HASHTAG" && (
             <div className="row">
-              <ChangeNameChannel />{" "}
-            </div>
-            <div className="row">
-              {" "}
-              <ChannelDeleteModal />
-            </div>
-            <div>
-              <button className="user_button box">
-                Cambia ruoli follower?
-              </button>
-              <div className="row d-flex justify-content-center ms-1 me-1 mb-5">
-                <h3>CHANNEL ROLES:</h3>
-                <ul className="list-group col-md-4">
-                  <li className="list-group-item list">OWNER = 4</li>
-                  <li className="list-group-item list">ADMIN = 3</li>
-                  <li className="list-group-item list">WRITE = 2</li>
-                  <li className="list-group-item list">READ = 1</li>
-                  <li className="list-group-item list">WAITING_ACCEPT = 0</li>
-                </ul>
+              <h2>Per il creatore del canale</h2>
+
+              <div className="row">
+                <ChangeNameChannel />{" "}
               </div>
+              <div className="row">
+                {" "}
+                <ChannelDeleteModal />
+              </div>
+            </div>
+          )}
 
-              <h3>Roles?????</h3>
+        {channel.type === "CHANNEL_USERS" && (
+          <>
+            <div className="mt-3 mb-5">
+              <h3 className="cool-font-medium">ISCRITTI: {channel.subscribers}</h3>
+
               <Container>
                 <Row>
-                  {roles.map((user) => (
+                  {following.map((user) => (
                     <Col lg={12} key={user.id} className="mb-4">
                       <Card className="w-100 squeal">
                         {" "}
                         <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
-                          <div>{user}</div>
-                          <Link to="/infou" state={user}>
-                            <button className="ms-4 me-4 custom-button box">
-                              Info
-                            </button>
-                          </Link>
+                        <Link to="/infou" state={user}>
+                          <button className="ms-4 me-4 custom-button box">
+                            <b> {user} </b>
+
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              fill="currentColor"
+                              className="bi bi-info-circle-fill"
+                              viewBox="0 0 16 16"
+                            >
+                              <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
+                            </svg>
+                          </button>
+                        </Link>
+                          {(roles3.includes(userGlobal.username) ||
+                            roles4.includes(userGlobal.username)) && (
+                            <>
+                              <MatchRole
+                                inputString={user}
+                                array1={roles0}
+                                array2={roles1}
+                                array3={roles2}
+                                array4={roles3}
+                                array5={roles4}
+                                name={channel.channel_name}
+                                type={channel.type}
+                                onInputPresenceChange={handleInputPresence}
+                              />
+                            </>
+                          )}
                         </Card.Body>
                       </Card>
+                      <ChangeRoleModal
+                        closeRole={closeRoleModal}
+                        newRoleModel={newRoleModal}
+                        username={user}
+                        channel={channel.type}
+                      />
                     </Col>
                   ))}
                 </Row>
               </Container>
             </div>
-          </div>
+          </>
         )}
-        <div className="mt-3">
-          <h3>ISCRITTI: {channel.subscribers}</h3>
-
-          <Container>
-            <Row>
-              {following.map((user) => (
-                <Col lg={12} key={user.id} className="mb-4">
-                  <Card className="w-100 squeal">
-                    {" "}
-                    <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
-                      <div>{user}</div>
-                      <Link to="/infou" state={user}>
-                        <button className="ms-4 me-4 custom-button box">
-                          Info
-                        </button>
-                      </Link>
-                      {isOwner && (
-                        <>
-                          <div>
-                            <button
-                              className="custom-button box"
-                              onClick={openRoleModal}
-                            >
-                              RUOLO
-                            </button>
-                          </div>
-                        </>
-                      )}
-                    </Card.Body>
-                  </Card>
-                  <ChangeRoleModal
-                    closeRole={closeRoleModal}
-                    newRoleModel={newRoleModal}
-                    username={user}
-                    channel={channel.type}
-                  />
-                </Col>
-              ))}
-            </Row>
-          </Container>
-        </div>
       </div>
     </>
   );

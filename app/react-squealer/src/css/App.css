@@ -15,10 +15,13 @@
 }
 .my-blu {
   background-color: var(--squeal-blue);
-  color: var(--squeal-green)
+  color: var(--squeal-green);
 }
 .no-bg {
   background-color: transparent;
+}
+.icon-my-color {
+  fill: var(--squeal-red);
 }
 
 /* ------------ ATTENZIONE AGLI ALTRI FILE CSS -------------*/
@@ -36,6 +39,10 @@ html {
 
   overflow-x: hidden;
 }
+body {
+  background-color: var(--squeal-blue);
+  color: var(--squeal-yellow);
+}
 .App {
   text-align: center;
   background-color: var(--squeal-blue);
@@ -51,10 +58,15 @@ html {
   background-color: var(--squeal-yellow);
 }
 
-/* -----------------SQUEAL STUFF------------------ */
-.squeal{
+/* -----------------SQUEAL CARD STUFF------------------ */
+.squeal {
   background-color: var(--squeal-yellow) !important;
   color: var(--squeal-green) !important;
+}
+
+.offers {
+  background-color: var(--squeal-green) !important;
+  color: var(--squeal-blue) !important;
 }
 
 /* -----------------FONT STUFF------------------ */
@@ -70,18 +82,62 @@ html {
   font-family: "Cool-Font", sans-serif;
   font-size: 3vw;
 }
+.cool-font-xsm {
+  font-family: "Cool-Font", sans-serif;
+  font-size: 2vw;
+  color: var(--squeal-yellow);
+}
+
+.cool-font-text {
+  font-family: "Cool-Font", sans-serif;
+  font-size: 2vw;
+  color: var(--squeal-blue);
+}
+.cool-font-link {
+  font-family: "Cool-Font", sans-serif;
+  font-size: 2vw;
+  color: var(--squeal-red);
+}
+.cool-font-details {
+  font-family: "Cool-Font", sans-serif;
+  font-size: 2vw;
+  color: var(--squeal-green);
+}
+
+.cool-font-details-md {
+  font-family: "Cool-Font", sans-serif;
+  font-size: 5vw;
+  color: var(--squeal-green);
+}
+
+@media screen and (max-width: 600px) {
+  .cool-font-text,
+  .cool-font-link,
+  .cool-font-details {
+    font-size: 4vw;
+  }
+}
+
 @font-face {
   font-family: "Cool-Font";
   src: url("../../public/ArchivoBlack-Regular.ttf");
 }
 
-/* -----------------FONT STUFF------------------ */
+/* -----------------LIST STUFF------------------ */
 .list:hover {
   background-color: var(--squeal-blue);
   color: #c78181;
 }
 
-/* -------------------- BUTTON STUFF: 2 tipi ------------------*/
+/* -----------------LINK STUFF------------------ */
+.youtube-link {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* -------------------- BUTTON STUFF ------------------*/
 .custom-button {
   background-color: var(--squeal-blue);
   color: var(--squeal-yellow);
@@ -106,22 +162,49 @@ html {
   background-color: var(--squeal-green);
 }
 
-
-/*emoji*/
+/*emoji e tipo di squeal*/
 .bottoni_omologati {
-  width: 3em;
-  min-height: 3em;
+  min-width: 2em;
+  min-height: 2em;
   border-radius: 50%;
+  background-color: var(--squeal-green);
 }
 .bottoni_omologati:hover {
   background-color: var(--squeal-green);
+}
+
+@media screen and (min-width: 1024px) {
+  .bottoni_omologati {
+    min-width: 4em;
+    min-height: 4em;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .bottoni_omologati {
+    min-width: 3em;
+    min-height: 3em;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .bottoni_omologati {
+    min-width: 2.5em;
+    min-height: 2.5em;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .bottoni_omologati {
+    min-width: 2em;
+    min-height: 2em;
+  }
 }
 
 .user_button {
   background-color: var(--squeal-yellow);
   color: var(--squeal-blue);
   width: 60vw;
-  margin: 1em;
   border: none;
   padding: 1em;
   border-radius: 8px;
@@ -139,7 +222,6 @@ html {
   color: var(--squeal-yellow);
 
   width: 20vw;
-  margin: 1em;
   padding: 1em;
 
   border: none;
@@ -155,7 +237,6 @@ html {
 
   width: 100%;
   padding: 1em;
-  margin: 1em;
   border: none;
   border-radius: 0.5rem;
 
@@ -173,7 +254,6 @@ html {
   color: var(--squeal-yellow);
 
   width: 60vw;
-  margin: 1em;
   padding: 1em;
 
   border: none;
@@ -194,7 +274,6 @@ html {
   color: var(--squeal-yellow);
   width: 20vw;
 
-  margin: 1em;
   padding: 1em;
   border: none;
 
@@ -205,7 +284,6 @@ html {
   background-color: var(--squeal-blue);
   color: var(--squeal-yellow);
   width: 20vw;
-  margin: 1em;
   padding: 1em;
   border: none;
 
@@ -217,7 +295,6 @@ html {
   color: var(--squeal-blue);
   width: 20vw;
 
-  margin: 1em;
   padding: 1em;
   border: none;
 
@@ -229,7 +306,6 @@ html {
   color: var(--squeal-yellow);
   width: 20vw;
 
-  margin: 1em;
   padding: 1em;
   border: none;
 
@@ -238,16 +314,27 @@ html {
 }
 
 .red-button:hover {
-  background-color: var(--squeal-red);
-}
-.blue-button:hover {
-  background-color: var(--squeal-blue);
-}
-.yellow-button:hover {
   background-color: var(--squeal-yellow);
 }
-.green-button:hover {
+.blue-button:hover {
   background-color: var(--squeal-green);
+}
+.yellow-button:hover {
+  background-color: var(--squeal-blue);
+}
+.green-button:hover {
+  background-color: var(--squeal-blue);
+}
+.green-button:active {
+  background-color: var(--squeal-blue);
+}
+.reset-button {
+  background-color: var(--squeal-red);
+  color: var(--squeal-yellow);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
 /* -------------------- DESTINATARIO STUFF ------------------*/
@@ -309,37 +396,21 @@ img {
 }
 
 /* --------------------VOLTURE ------------------*/
-.vulture-animation {
+.image-container {
   position: absolute;
-  top: 0;
+  top: 50%;
   left: 0;
-  display: none;
+  transform: translate(-100%, -50%);
+  animation: enter 3s linear forwards;
 }
-
-.vulture-animation img {
-  width: 100px;
-  height: auto;
-  animation: fadeIn 0.5s ease-in forwards, fadeOut 0.5s ease-out forwards;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
+@keyframes enter {
+  0% {
+    transform: translate(100%, -50%);
   }
-  to {
-    opacity: 1;
+  100% {
+    transform: translate(-100%, -50%);
   }
 }
-
-@keyframes fadeOut {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
 /* -------------------- MODAL STUFF ------------------*/
 
 .custom-modal-header {
@@ -450,29 +521,27 @@ img {
 
 /* -------------------- PFP CORNICE img ------------------*/
 .pfp {
-  border:1rem solid var(--squeal-green);
+  border: 1rem solid var(--squeal-green);
 }
 .pfp-small {
-  border:0.2rem solid var(--squeal-green);
+  border: 0.2em solid var(--squeal-green);
 }
 
-/*
-.profile-picture-container {
-  border: 1rem solid var(--squeal-green);
-  border-radius: 50%;
-  overflow: hidden; // immagine non fuoriesce dalla cornice
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.pfp-vip {
+  border: 0.2rem solid var(--squeal-pink);
 }
 
-.profile-picture {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; //immagine si adatta alla cornice
-  border-radius: 50%; //stessa forma circolare
+
+/* -------------------- MAP CORNICE ------------------*/
+.borderedImage {
+  border: 1rem solid var(--squeal-blue);
+  border-radius: 8px;
+  display: block;
 }
-*/
+
+.borderedImage:hover {
+  border-color: var(--squeal-green);
+}
 
 /* -------------------- ESPERIMENTI PAZZI  img ------------------*/
 /*
@@ -480,28 +549,5 @@ img {
   background-color: red;
   background-size: cover;
   background-position: center;
-}
-*/
-
-/* -------------------- MADE BY REACT STUFF ------------------*/
-/*
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
 */

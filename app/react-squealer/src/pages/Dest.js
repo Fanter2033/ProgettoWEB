@@ -44,36 +44,58 @@ const Dest = ({ onDestinatariSubmit }) => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleDestinatariSubmit}>
-        <div className="mb-2">
-          <label htmlFor="destinatariInput" className="form-label">
-            Inserisci i destinatari separati da virgole
+    <div className="">
+      <form onSubmit={handleDestinatariSubmit} className="row d-flex align-items-center m-1">
+        <div className="col-10 mb-2">
+          <label
+            htmlFor="destinatariInput"
+            className="form-label cool-font-details-md"
+          >
+            DESTINATARI
           </label>
           <input
+            style={{ color: "#072f38", backgroundColor: "#528b57" }}
             type="text"
             className="form-control"
             id="destinatariInput"
             value={destinatari}
             onChange={handleDestinatariChange}
           />
+          <p className="text-wrap cool-font-details">
+            INSERISCILI SEPARATI DA VIRGOLE
+          </p>
         </div>
 
-        <button type="submit" className="custom-button">
-          Aggiungi
-        </button>
+        <div className="col-2 mb-4">
+          <button
+            type="submit"
+            className="custom-button center box cool-font-medium text-center"
+          >
+            +
+          </button>
+        </div>
       </form>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && (
+        <p
+          style={{ color: "#b45656", whiteSpace: "wrap" }}
+          className="cool-font-link"
+        >
+          {error}
+        </p>
+      )}
       {destinatariArray.length > 0 && (
-        <div>
+        <div className="row d-flex justify-content-center align-items-center">
           <ul className="list-unstyled">
             {destinatariArray.map((destinatario, index) => (
               <li key={index}>{destinatario}</li>
             ))}
           </ul>
 
-          <button className="btn btn-danger" onClick={handleResetDestinatari}>
-            Resetta
+          <button
+            className="reset-button box cool-font-medium"
+            onClick={handleResetDestinatari}
+          >
+            RESETTA
           </button>
         </div>
       )}

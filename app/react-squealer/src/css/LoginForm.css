@@ -122,6 +122,11 @@ input[type="radio"] {
   white-space: nowrap;
 }
 
+.animated-top{
+  animation: slideTop 1s ease-in-out;
+  white-space: nowrap;
+}
+
 @keyframes slideLeft {
   from {
     transform: translateX(-100%);
@@ -137,5 +142,14 @@ input[type="radio"] {
   }
   to {
     transform: translateX(0);
+  }
+}
+
+@keyframes slideTop {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translate(0);
   }
 }

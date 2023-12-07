@@ -1,10 +1,9 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useUserContext } from "../config/UserContext";
 import { useNavigate } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 
 import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 
@@ -27,22 +26,22 @@ function ChangePassword() {
   const [user, setUser] = useState({});
 
   useEffect(() => {
-      const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
-      fetch(uri, {
-          mode: "cors",
-          credentials: "include",
+    const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
+    fetch(uri, {
+      mode: "cors",
+      credentials: "include",
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
       })
-          .then((res) => {
-              if (res.ok) {
-                  return res.json();
-              }
-          })
-          .then(async (data) => {
-              setUser(data);
-          })
-          .catch((error) => {
-              console.error(error);
-          });
+      .then(async (data) => {
+        setUser(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, []);
 
   const notify = () =>
@@ -69,17 +68,17 @@ function ChangePassword() {
       theme: "dark",
     });
 
-    const notify_error_server = () =>
-        toast.error("⚠️ Errore! Modifica password fallita", {
-            position: "top-right",
-            autoClose: 4000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-        });
+  const notify_error_server = () =>
+    toast.error("⚠️ Errore! Modifica password fallita", {
+      position: "top-right",
+      autoClose: 4000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
 
   const changeP = (e) => {
     e.preventDefault();
@@ -89,7 +88,7 @@ function ChangePassword() {
       password: newPassword,
     });
 
-    if (newPassword.trim() === "") {
+    if (newPassword === "") {
       nofity_error();
     } else {
       try {
@@ -125,9 +124,9 @@ function ChangePassword() {
             }
           })
           .then((data) => {
-              if(data.status === 200){
-                  notify();
-              }
+            if (data.status === 200) {
+              notify();
+            }
             navigate("./");
           })
           .catch((error) => {
@@ -145,18 +144,23 @@ function ChangePassword() {
 
   return (
     <div>
-      <button className="user_button mb-2 box" onClick={handleShow}>
+      <button
+        className="user_button mb-2 box cool-font-text"
+        onClick={handleShow}
+      >
         CAMBIO PASSWORD
       </button>
 
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton className="modal-change-header">
-          <Modal.Title style={{ textAlign: "center" }}>
+          <Modal.Title
+            style={{ textAlign: "center" }}
+            className="cool-font-medium"
+          >
             Cambia password
           </Modal.Title>
         </Modal.Header>
-
-        <Modal.Body className="modal-change-body">
+        <Modal.Body className="modal-change-body cool-font-medium">
           <Form>
             <Form.Group
               as={Row}
@@ -167,6 +171,8 @@ function ChangePassword() {
               <Form.Control
                 type="text"
                 placeholder="inserisci qui"
+                className="text-center"
+
                 name="nuovaPassword"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
@@ -175,17 +181,25 @@ function ChangePassword() {
           </Form>
         </Modal.Body>
 
-        <Modal.Footer style={footerStyle}>
+        <Modal.Footer
+          style={footerStyle}
+          className="d-flex justify-content-center"
+        >
           <button
-            className="blue-button box"
+            className="blue-button cool-font-medium box col-6"
             onClick={changeP}
           >
             CAMBIA
           </button>
+          <button
+            className="red-button cool-font-medium box col-6"
+            onClick={handleClose}
+          >
+            ANNULLA
+          </button>
         </Modal.Footer>
       </Modal>
       <ToastContainer />
-
     </div>
   );
 }

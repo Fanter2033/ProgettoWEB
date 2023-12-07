@@ -1,15 +1,14 @@
 import React, { useState } from "react";
 import ReactConfig from "../config/ReactConfig";
 
-import { Button, Form, Modal } from "react-bootstrap";
+import { Form, Modal } from "react-bootstrap";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import "../css/LoginForm.css";
+import "../css/App.css";
 
 function ChannelForm() {
-
   const [nameForm, setNameForm] = useState("");
   const [privateForm, setPrivateForm] = useState(false);
 
@@ -83,17 +82,21 @@ function ChannelForm() {
     }
   };
 
+  const footerStyle = {
+    backgroundColor: "#e0bb76",
+  };
+
   return (
     <div>
-      <Button id="button-channel" onClick={handleShow}>
+      <button id="button-channel" className="box cool-font-small" onClick={handleShow}>
         NUOVO CANALE
-      </Button>
+      </button>
 
       <Modal show={show} onHide={handleClose} centered>
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="modal-buy-header">
           <Modal.Title className="text-center">Crea il tuo canale</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="modal-buy-body">
           <Form>
             <Form.Group
               className="mb-4 d-flex flex-row "
@@ -123,15 +126,16 @@ function ChannelForm() {
           </Form>
         </Modal.Body>
 
-        <Modal.Footer>
-          <Button
-            id="create-channel"
-            className="d-flex flex-row align-items-center justify-content-center"
-            onClick={createChannel}
-          >
+        <Modal.Footer
+          style={footerStyle}
+          className="my-foot d-flex justify-content-center"
+        >
+          <button className="green-button box" onClick={createChannel}>
             CREA
-          </Button>
-          <ToastContainer />
+          </button>
+          <button className="blue-button box" onClick={handleClose}>
+            ANNULLA
+          </button>
         </Modal.Footer>
       </Modal>
     </div>

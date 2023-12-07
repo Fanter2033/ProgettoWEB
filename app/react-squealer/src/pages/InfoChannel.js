@@ -4,27 +4,79 @@ import { useLocation, Link } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 import { useUserContext } from "../config/UserContext";
 
+import Reactions from "./Reactions";
+
 import { Container, Card, Col, Row } from "react-bootstrap";
 import "../css/App.css";
-import squeal_logo from "./media/icone/Nav_logo.png";
+import notification from ".//media/message.mp3";
 
-//! PUT dei canali???
 function InfoChannel() {
   const location = useLocation();
-  const channel = location.state;
+
+  const [channel, setChannel] = useState(location.state);
+
+  if (channel.owner === "") {
+    //GET /channel/{type}/{name}/ LISTA INFO CANALE
+
+    try {
+      const uri = `${ReactConfig.base_url_requests}/channel/${channel.type}/${channel.channel_name}/`;
+      const options = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        mode: "cors",
+        credentials: "include",
+      };
+
+      let result = fetch(uri, options);
+
+      if (result.ok) {
+        let data = result.json();
+        //console.log("Successo nella richiesta dei ruoli UTENTE", data);
+        setChannel(data);
+      } else {
+        console.error("Errore nella richiesta:", result.statusText);
+      }
+    } catch (error) {
+      console.error("Errore nella fetch:", error);
+    }
+    console.log("Successo nella richiesta dei ruoli UTENTE", roleUser);
+  }
 
   const { userGlobal, setUserGlobal } = useUserContext();
 
-  //TODO: PATCH /channel/{type}/{channel_name}  follow channel
-  const follow = () => {
-    const data = {
-      channel: {
-        name: channel.channel_name,
-        type: channel.channel_type,
-        private: channel.private,
-      },
-    };
+  //GET /user/{username}/roles/ LISTA CANALI SEGUITI E IL REALATIVO RUOLO DELL'UTENTE
+  const [roleUser, setRoleUser] = useState([]);
+  async function getRoles() {
+    try {
+      const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}/roles/`;
+      const options = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        mode: "cors",
+        credentials: "include",
+      };
 
+      let result = await fetch(uri, options);
+
+      if (result.ok) {
+        let data = await result.json();
+        //console.log("Successo nella richiesta dei ruoli UTENTE", data);
+        setRoleUser(data);
+      } else {
+        console.error("Errore nella richiesta:", result.statusText);
+      }
+    } catch (error) {
+      console.error("Errore nella fetch:", error);
+    }
+    console.log("Successo nella richiesta dei ruoli UTENTE", roleUser);
+  }
+
+  //PATCH /channel/{type}/{channel_name}  follow channel
+  const follow = () => {
     const url = `${ReactConfig.base_url_requests}/channel/${channel.type}/${channel.channel_name}`;
     const options = {
       method: "PATCH",
@@ -33,7 +85,6 @@ function InfoChannel() {
       },
       credentials: "include",
       mode: "cors",
-      body: JSON.stringify(data),
     };
 
     fetch(url, options)
@@ -50,11 +101,38 @@ function InfoChannel() {
       });
   };
 
-  //TODO: GET /utils/squeals/{channel_type}/{channel_name}--------------------------------------------------------------
+  //DELETE /channel/{type}/{name}/users/{username}/ unfollow
+  async function unfollow() {
+    const uri = `${ReactConfig.base_url_requests}/channel/${channel.type}/${channel.channel_name}/users/${userGlobal.username}`;
+    const options = {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      mode: "cors",
+    };
+
+    fetch(uri, options)
+      .then((response) => {
+        if (response.ok) {
+          console.log("Delete role successful :)");
+        } else {
+          console.error("Delete role failed :(", response.statusText);
+        }
+      })
+      .catch((error) => {
+        console.error("Network error", error);
+      });
+  }
+
+  //GET /utils/squeals/{channel_type}/{channel_name}--------------------------------------------------------------
   const [squealsLogger, setSquealsLogger] = useState([]);
 
+  const [newMessageNotification, setNewMessageNotification] = useState(false);
+
   async function logPast() {
-    console.log("aaaaaaaaaaaaaaaa", channel.channel_name);
+    //console.log("aaaaaaaaaaaaaaaa", channel.channel_name);
     console.log(channel.type);
     try {
       const url = `${ReactConfig.base_url_requests}/utils/squeals/${channel.type}/${channel.channel_name}`;
@@ -72,6 +150,12 @@ function InfoChannel() {
       console.log(result);
       if (result.ok) {
         let json = await result.json();
+
+        if (json.length > squealsLogger.length) {
+          setNewMessageNotification(true);
+          const audio = new Audio(notification);
+          audio.play();
+        }
         setSquealsLogger(json);
       } else {
         console.error("Errore nella richiesta:", result.statusText);
@@ -79,25 +163,32 @@ function InfoChannel() {
     } catch (error) {
       console.error("Errore nella fetch:", error);
     }
+    //console.log("LOGGERRRRRRRRRRRRRR", squealsLogger);
   }
 
-  console.log("LOGGERRRRRRRRRRRRRR", squealsLogger);
-
   useEffect(() => {
-    //const intervalId1 = setInterval(logPast, 10000); //10 sec
     logPast();
+    getRoles();
+    //const intervalId1 = setInterval(logPast, 10000); //10 sec
+    const intervalId2 = setInterval(getRoles, 10000); //10 sec
+    const intervalId3 = setInterval(logPast, 5000); //10 sec
 
     return () => {
       //clearInterval(intervalId1);
+      clearInterval(intervalId2);
+      clearInterval(intervalId3);
     };
   }, []);
 
+  useEffect(() => {
+    if (newMessageNotification) {
+      setNewMessageNotification(false);
+    }
+  }, [newMessageNotification]);
+
   return (
     <div>
-      <div className="">
-        <h3 className="cool-font-medium">
-          Nome Canale: {channel.channel_name}
-        </h3>
+      <div className="d-flex flex-row align-items-center justify-content-center align-items-center">
         <Link to="/details" state={channel}>
           <button className="yellow-button box ">
             <svg
@@ -131,49 +222,259 @@ function InfoChannel() {
             />
           </svg>
         </button>
-        <button className="green-button" onClick={follow}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            className="bi bi-plus-lg"
-            viewBox="0 0 16 16"
-          >
-            <path
-              fillRule="evenodd"
-              d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"
-            />
-          </svg>
-        </button>
+
+        {channel.type === "CHANNEL_USERS" && (
+          <>
+            {roleUser.some(
+              (role) => role.channel_name === channel.channel_name
+            ) ? (
+              <button
+                className="red-button box"
+                onClick={() => unfollow(channel.type, channel.channel_name)}
+              >
+                x
+              </button>
+            ) : (
+              <button
+                className="green-button box"
+                onClick={() => follow(channel.type, channel.channel_name)}
+              >
+                +
+              </button>
+            )}
+          </>
+        )}
       </div>
+      {roleUser.map((role) => (
+        <>
+          <Row
+            key={role.id}
+            lg={12}
+            className="d-flex justify-content-center align-items-center"
+          >
+            {role.role === 0 &&
+              role.channel_name === channel.channel_name &&
+              channel.type === "CHANNEL_USERS" && (
+                <>
+                  <div>
+                    RUOLO: <b>IN ATTESA</b>
+                    <button className="custom-button ms-2">🕒</button>
+                  </div>
+                </>
+              )}
+            {role.role === 1 && role.channel_name === channel.channel_name && (
+              <>
+                <div>
+                  RUOLO: <b>LETTORE</b>
+                  <button className="custom-button ms-2">📖</button>
+                </div>
+              </>
+            )}
+            {role.role === 2 && role.channel_name === channel.channel_name && (
+              <>
+                <div>
+                  RUOLO: <b>SCRITTORE</b>
+                  <button className="custom-button ms-2">✒️</button>
+                </div>
+              </>
+            )}
+            {role.role === 3 && role.channel_name === channel.channel_name && (
+              <>
+                <div>
+                  RUOLO: <b>ADMIN</b>
+                  <button className="custom-button ms-2">⚔️</button>
+                </div>
+              </>
+            )}
+            {role.role === 4 && role.channel_name === channel.channel_name && (
+              <>
+                <div>
+                  RUOLO: <b>OWNER</b>
+                  <button className="custom-button ms-2">👑</button>
+                </div>
+              </>
+            )}
+          </Row>
+        </>
+      ))}
 
       <div>
-        <h1 className="cool-font">Squeals</h1>
+        <h1 className="cool-font-medium mt-3">Squeals di {channel.channel_name}</h1>
         <br></br>
-        <Container className="">
-          <Row className="w-100">
-            {squealsLogger.map((squeal) => (
-              <Col lg={12} key={squeal.id} className="mb-4">
-                <Card style={{ height: "100%" }} className="squeal">
-                  <Card.Header className="d-flex flex-col justify-content-center align-items-center">
-                    {" "}
-                    <b>{squeal.sender}</b>
-                  </Card.Header>
-                  <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
-                    <div>{squeal.content}</div>
-                  </Card.Body>
-                  <Card.Footer>
-                    <div>Id: {squeal._id}</div>
-
-                    <div className="row"> </div>
-                  </Card.Footer>
-                </Card>
-              </Col>
-            ))}
-          </Row>
-        </Container>
+        <Container className=""></Container>
       </div>
+      {squealsLogger.length === 0 && (
+        <>
+          <p className="cool-font m-0 p-0 text-wrap">NON CI SONO ANCORA SQUEALS</p>
+        </>
+      )}
+
+      {roleUser.map((role) => (
+        <>
+          <Row className="w-100">
+            {role.role === 0 &&
+              role.channel_name === channel.channel_name &&
+              channel.type === "CHANNEL_USERS" && (
+                <>
+                  <h1>SEI IN ATTESA...</h1>
+                </>
+              )}
+            {role.role === 1 &&
+              role.channel_name === channel.channel_name &&
+              squealsLogger
+                .map((squeal) => (
+                  <Col lg={12} key={squeal.id} className="mb-4">
+                    <Card style={{ height: "100%" }} className="squeal">
+                      <Card.Header className="d-flex flex-row justify-content-evenly align-items-center">
+                        {" "}
+                        <div>
+                          <b>{squeal.sender}</b>
+                        </div>
+                        <div> TIPO: {squeal.message_type}</div>
+                        <div> ID: {squeal._id}</div>
+                      </Card.Header>
+                      <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
+                        <div>{squeal.content}</div>
+                      </Card.Body>
+                      <Card.Footer>
+                        <div>
+                          <Reactions squeal={squeal.id} />
+                        </div>
+                      </Card.Footer>
+                    </Card>
+                  </Col>
+                ))
+                .reverse()}
+            {role.role === 2 &&
+              role.channel_name === channel.channel_name &&
+              squealsLogger
+                .map((squeal) => (
+                  <Col lg={12} key={squeal.id} className="mb-4">
+                    <Card style={{ height: "100%" }} className="squeal">
+                      <Card.Header className="d-flex flex-row justify-content-evenly align-items-center">
+                        {" "}
+                        <div>
+                          <b>{squeal.sender}</b>
+                        </div>
+                        <div> TIPO: {squeal.message_type}</div>
+                        <div> ID: {squeal._id}</div>
+                      </Card.Header>
+                      <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
+                        <div>{squeal.content}</div>
+                      </Card.Body>
+                      <Card.Footer>
+                        <div>
+                          <Reactions squeal={squeal.id} />
+                        </div>
+                      </Card.Footer>
+                    </Card>
+                  </Col>
+                ))
+                .reverse()}
+            {role.role === 3 &&
+              role.channel_name === channel.channel_name &&
+              squealsLogger
+                .map((squeal) => (
+                  <Col lg={12} key={squeal.id} className="mb-4">
+                    <Card style={{ height: "100%" }} className="squeal">
+                      <Card.Header className="d-flex flex-row justify-content-evenly align-items-center">
+                        {" "}
+                        <div>
+                          <b>{squeal.sender}</b>
+                        </div>
+                        <div> TIPO: {squeal.message_type}</div>
+                        <div> ID: {squeal._id}</div>
+                      </Card.Header>
+                      <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
+                        <div>{squeal.content}</div>
+                      </Card.Body>
+                      <Card.Footer>
+                        <div>
+                          <Reactions squeal={squeal.id} />
+                        </div>
+                      </Card.Footer>
+                    </Card>
+                  </Col>
+                ))
+                .reverse()}
+            {role.role === 4 &&
+              role.channel_name === channel.channel_name &&
+              squealsLogger
+                .map((squeal) => (
+                  <Col lg={12} key={squeal.id} className="mb-4">
+                    <Card style={{ height: "100%" }} className="squeal">
+                      <Card.Header className="d-flex flex-row justify-content-evenly align-items-center">
+                        {" "}
+                        <div>
+                          <b>{squeal.sender}</b>
+                        </div>
+                        <div> TIPO: {squeal.message_type}</div>
+                        <div> ID: {squeal._id}</div>
+                      </Card.Header>
+                      <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
+                        <div>{squeal.content}</div>
+                      </Card.Body>
+                      <Card.Footer>
+                        <div>
+                          <Reactions squeal={squeal.id} />
+                        </div>
+                      </Card.Footer>
+                    </Card>
+                  </Col>
+                ))
+                .reverse()}
+          </Row>
+        </>
+      ))}
+      {channel.type === "CHANNEL_HASHTAG" &&
+        squealsLogger.map((squeal) => (
+          <Col
+            lg={12}
+            key={squeal.id}
+            className=" d-flex flex-row justify-content-evenly align-items-center"
+          >
+            <Card style={{ width: "80%" }} className="squeal">
+              <Card.Header className="d-flex flex-row justify-content-evenly align-items-center">
+                {" "}
+                <div>
+                  <b>{squeal.sender}</b>
+                </div>
+                <div> TIPO: {squeal.message_type}</div>
+                <div> ID: {squeal._id}</div>
+              </Card.Header>
+              <Card.Body className="mb-2 d-flex flex-col justify-content-center align-items-center">
+                <div>{squeal.content}</div>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
+      {channel.type === "CHANNEL_OFFICIAL" &&
+        squealsLogger.map((squeal) => (
+          <Col
+            lg={12}
+            key={squeal.id}
+            className="mb-4 d-flex flex-row justify-content-evenly align-items-center"
+          >
+            <Card style={{ height: "80%" }} className="squeal">
+              <Card.Header className="d-flex flex-row justify-content-evenly align-items-center">
+                {" "}
+                <div>
+                  <b>{squeal.sender}</b>
+                </div>
+                <div> TIPO: {squeal.message_type}</div>
+                <div> ID: {squeal._id}</div>
+              </Card.Header>
+              <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
+                <div>{squeal.content}</div>
+              </Card.Body>
+              <Card.Footer>
+                <div>
+                  <Reactions squeal={squeal.id} />
+                </div>
+              </Card.Footer>
+            </Card>
+          </Col>
+        ))}
     </div>
   );
 }

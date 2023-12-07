@@ -10,7 +10,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { useUserContext } from "../config/UserContext";
 
 import Geo from "./Geo";
-import VultureAnimation from "./VoltureAnimation";
 
 import ChangePfp from "./ChangePfp.js";
 import ChangeUsername from "./ChangeUsername";
@@ -28,11 +27,10 @@ import ToggleSMM from "./ToggleSMM";
 import { Card, Col, Row } from "react-bootstrap";
 
 import "../css/App.css";
-import cattyy from "./media/splash.jpeg";
 import pink from "./media/avvoltoioEli.png";
+import avvoltoio from "./media/avvoltoio.gif";
 
 //TODO: check navigateeeeeeeeeeeeeee ho tolto il . davanti al /
-//TODO: PFP
 /*
 col-12 col-md-6
 su schermi md e più grandi ho due colonne
@@ -46,7 +44,6 @@ const { firstname, lastname, username, email, password } = userData;
 
 function Account() {
   const { userGlobal, setUserGlobal } = useUserContext();
-  //console.log(userGlobal.vip, "viiiiip");
 
   //per il logout
   const navigate = useNavigate();
@@ -85,11 +82,16 @@ function Account() {
 
   //BUY modalssssssss
   const [buyModal, setBuyModal] = useState(false);
-  const openBuyModal = () => {
-    setBuyModal(true);
-  };
+  const [show, setShow] = useState(true);
+
   const closeBuyModal = () => {
     setBuyModal(false);
+  };
+
+  const handleInternalButtonClick = () => {
+    console.log("Bottone interno cliccato");
+    closeBuyModal();
+    //setShow(false);
   };
 
   //SMM connect modalssssssssss
@@ -106,6 +108,25 @@ function Account() {
   const handleCliccatoChange = (val) => {
     setIsCliccato(val);
     //console.log(isCliccato, "cccccccccccccccccclick")
+  };
+
+  //ANIMATION----------------------------------------------------------------------------------------------------------------
+  const [showVultureAnimation, setShowVultureAnimation] = useState(false);
+
+  const showVulture = () => {
+    setShowVultureAnimation(true);
+  };
+
+  const hideVulture = () => {
+    setShowVultureAnimation(false);
+  };
+
+  //PFP----------------------------------------------------------------------------------------------------------------
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const handleImageClick = () => {
+    setIsModalOpen(!isModalOpen);
   };
 
   //GET USER DATA-----------------------------------------------------------------------------------------------
@@ -127,7 +148,6 @@ function Account() {
 
       if (result.ok) {
         let data = await result.json();
-        //console.log(data);
         setUserData(data);
         return data;
       } else {
@@ -137,7 +157,6 @@ function Account() {
       console.error("Errore nella fetch:", error);
     }
   }
-  //console.log(userData);
 
   //GET USER QUOTE-----------------------------------------------------------------------------------------------
   const [userQuote, setUserQuote] = useState("");
@@ -159,7 +178,6 @@ function Account() {
 
       if (result.ok) {
         let quote = await result.json();
-        //console.log("GET quote:", quote);
         setUserQuote(quote);
         return quote;
       } else {
@@ -198,10 +216,8 @@ function Account() {
     }
   }
 
-  //console.log("LOGGERRRRRRRRRRRRRR", squealsLogger);
-
   //GET /user/{username}/roles/
-  const [roleUser, setRoleUser] = useState(0);
+  const [roleUser, setRoleUser] = useState([]);
 
   async function getRoles() {
     try {
@@ -219,7 +235,6 @@ function Account() {
 
       if (result.ok) {
         let data = await result.json();
-        //console.log("Successo nella richiesta dei ruoli", data);
         setRoleUser(data);
         return data;
       } else {
@@ -237,11 +252,14 @@ function Account() {
     getUserData();
     getRoles();
     getUserQuote();
+    //showVulture();
 
     const intervalId = setInterval(getUserData, 5000); //10 sec
     //const intervalId2 = setInterval(getSmm, 10000); //10 sec
     const intervalId3 = setInterval(getRoles, 10000); //10 sec
     const intervalId4 = setInterval(getUserQuote, 10000); //10 sec
+
+    // per evitare memory leaks
 
     return () => {
       clearInterval(intervalId);
@@ -293,43 +311,48 @@ function Account() {
   //!channels
   const [following, setFollowing] = useState(false);
   //OPEN CANALI SETTINGS -----------------------------------------------------------------------------------------------------
-  async function followedChannels() {
-    setFollowing(true);
-  }
-
-  //ANIMATION----------------------------------------------------------------------------------------------------------------
-  const [showVultureAnimation, setShowVultureAnimation] = useState(false);
-
-  const showVulture = () => {
-    setShowVultureAnimation(true);
-  };
-
-  const hideVulture = () => {
-    setShowVultureAnimation(false);
-  };
-
-  //PFP----------------------------------------------------------------------------------------------------------------
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
-
-  const handleImageClick = () => {
-    setIsModalOpen(!isModalOpen);
+  const followedChannels = () => {
+    setFollowing(!following);
   };
 
   //----------------------------------------------------------------------------------------------------------------
   return (
-    <div className="container-flex">
+    <div className="container pb-5">
       <div className="row" onLoad={getUserData}>
-        <div className="row mb-5 mt-4">
+        <div className="row d-flex justify-content-center">
+          <h3>TODO:</h3>
+          <ul className="list-group col-md-4">
+            <li className="list-group-item list">
+              if owner of ch toast for DELETE
+            </li>
+            <li className="list-group-item list">
+              FAI RICOMPARIRE IL BOTTONE COMPRA TRA 1 ANNO
+            </li>
+            <li className="list-group-item list">GET SMM INFO</li>
+            <li className="list-group-item list">
+              cambio username, attenzione se esiste gia?
+            </li>
+          </ul>
+        </div>
+        <div className="mb-3 mt-4">
           <div className="col-12 col-md-6 d-flex flex-col align-items-center justify-content-center">
-            <img
-              src={"data:image/png;base64," + userData.pfp}
-              alt="Foto Profilo"
-              className="rounded-circle ms-4 pfp box"
-              onMouseOver={showVulture}
-              onMouseLeave={hideVulture}
-              onClick={() => handleImageClick()}
-            />
+            {userData.pfp && userData.vip && (
+              <img
+                src={"data:image/png;base64," + userData.pfp}
+                alt="Foto Profilo"
+                className="rounded-circle pfp-vip box"
+                onClick={() => handleImageClick()}
+              />
+            )}
+
+            {userData.pfp && !userData.vip && (
+              <img
+                src={"data:image/png;base64," + userData.pfp}
+                alt="Foto Profilo"
+                className="rounded-circle pfp-vip box"
+                onClick={() => handleImageClick()}
+              />
+            )}
 
             {isModalOpen && <ChangePfp />}
 
@@ -352,9 +375,12 @@ function Account() {
               </>
             )}
           </div>
-          {showVultureAnimation && <VultureAnimation />}
 
-          <div className="col-12 col-md-6">
+          <div className={`image-container`}>
+            <img src={avvoltoio} alt="Avvoltoio animato" />
+          </div>
+
+          <div className="col-12 col-md-6 cool-font-text">
             <div className="row">
               <div className="col-12 col-md d-flex align-items-center justify-content-center ">
                 <div className="d-md-flex flex-md-row flex-column">
@@ -367,13 +393,13 @@ function Account() {
                     </h1>
                     {userData.locked && (
                       <>
-                        <p>BLOCCATO</p>
+                        <p className="altro">BLOCCATO</p>
                       </>
                     )}
-                    <h2>
+                    <h2 className="cool-font-medium">
                       {userData.first_name} {userData.last_name}
                     </h2>
-                    <button className="yellow-button box col-12">
+                    <button className="yellow-button box col-12 mb-3">
                       N SQUEALS PUBBLICI: {squealsLogger.length}
                     </button>
                     {userData.vip && (
@@ -428,75 +454,91 @@ function Account() {
           </div>
         </div>
 
-        <div className="row mb-4 ">
+        <div className="mb-4 cool-font-text">
           <div className="col-md-6">
             <div className="row">
-              <h3 className="mb-4 cool-font-small">Quota rimanente</h3>
+              <h3 className="cool-font-medium">QUOTA RIMANENTE</h3>
             </div>
 
-            <div className="row d-flex align-items-center justify-content-evenly mb-4">
+            <div className="row d-flex align-items-center justify-content-center mb-4">
               <div className="col-12">
-                <h4>Giornaliero</h4>
-                <button className="yellow-button m-2 box">
+                <h4 className="cool-font-medium mt-2">Giornaliero</h4>
+                <button className="yellow-button box w-50">
                   {userQuote.remaining_daily}
                 </button>
               </div>
               <div className="col-12">
-                <h4>Settimanale</h4>
-                <button className="yellow-button m-2 box">
+                <h4 className="cool-font-medium mt-2">Settimanale</h4>
+                <button className="yellow-button box w-50">
                   {userQuote.remaining_weekly}
                 </button>
               </div>
               <div className="col-12">
-                <h4>Mensile</h4>
-                <button className="yellow-button m-2 box">
+                <h4 className="cool-font-medium mt-2">Mensile</h4>
+                <button className="yellow-button box w-50">
                   {userQuote.remaining_monthly}
                 </button>
               </div>
             </div>
 
-            <button id="buy-button" className="box" onClick={openBuyModal}>
-              COMPRA
-            </button>
-            <BuyQuoteModal buyModal={buyModal} closeBuyModal={closeBuyModal} />
+            {show && (
+              <button
+                id="buy-button"
+                className="box w-50"
+                onClick={() => setBuyModal(true)}
+              >
+                COMPRA
+              </button>
+            )}
+
+            {buyModal && (
+              <BuyQuoteModal
+                onInternalButtonClick={handleInternalButtonClick}
+                closeBuyModal={closeBuyModal}
+              />
+            )}
           </div>
 
           <div className="col-md-6">
-            <div className="col-12">
-              <h3 className="cool-font-small">Limiti</h3>
-              <h4>Giornaliero</h4>
-              <button className="yellow-button m-2 box">
+            <div className="col-12 mt-3">
+              <h3 className="cool-font-medium">LIMIT</h3>
+              <h4 className="cool-font-medium mt-2">Giornaliero</h4>
+              <button className="yellow-button box w-50">
                 {userQuote.limit_daily}
               </button>
             </div>
             <div className="col-12">
-              <h4>Settimanale</h4>
-              <button className="yellow-button m-2 box">
+              <h4 className="cool-font-medium mt-2">Settimanale</h4>
+              <button className="yellow-button box w-50">
                 {userQuote.limit_weekly}
               </button>
             </div>
             <div className="col-12">
-              <h4>Mensile</h4>
-              <button className="yellow-button m-2 box">
+              <h4 className="cool-font-medium mt-2">Mensile</h4>
+              <button className="yellow-button box w-50">
                 {userQuote.limit_monthly}
               </button>
             </div>
-            <h4 className="mt-4 mb-5 cool-font-small">
-              Email: {userData.email}
-            </h4>
+            <h4 className="mt-5 cool-font-medium">EMAIL: {userData.email}</h4>
           </div>
         </div>
 
+
         <div className=" mb-5">
           <div className=" d-flex flex-column justify-content-center align-items-center ">
-            <button className="user_button mb-2 box" onClick={followedChannels}>
+            <button
+              className="user_button mb-2 box cool-font-text"
+              onClick={followedChannels}
+            >
               SITUAZIONE CANALI
             </button>
+            {following && roleUser.length === 0 && (
+              <p className="cool-font-small">NON SEGUI ANCORA NESSUN CANALE</p>
+            )}
             {following && (
               <div className="container-flex pb-5">
                 <div className="row">
                   <div className="col-12">
-                    <h2>Situazione Canali</h2>
                     <Row className="ms-4 me-4">
                       {roleUser.map((channel) => (
                         <Col
@@ -506,110 +548,165 @@ function Account() {
                         >
                           {channel.role === 0 && (
                             <>
-                              <Card className="w-50 squeal">
+                              <Card className="w-50 offers">
                                 <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
-                                  <p>Nome: {channel.channel_name}</p>
                                   <Link to="/infoc" state={channel}>
-                                    <button className="custom-button box">
-                                      Info
+                                    <button className="ms-4 me-4 custom-button box">
+                                      <b>{channel.channel_name} </b>
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="16"
+                                        height="16"
+                                        fill="currentColor"
+                                        className="bi bi-info-circle-fill"
+                                        viewBox="0 0 16 16"
+                                      >
+                                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
+                                      </svg>
                                     </button>
                                   </Link>
                                 </Card.Header>
                                 <Card.Body className=" d-flex flex-row justify-content-evenly">
-                                  <Card.Title className="ms-4 me-4">
-                                    RUOLO: IN ATTESA
+                                  <Card.Title className="ms-4 me-4 cool-font-text">
+                                    RUOLO: IN ATTESA 🕓
                                   </Card.Title>
                                 </Card.Body>
                                 <Card.Footer>
-                                  <p>Tipo: {channel.type}</p>
+                                  <p className="cool-font-text">
+                                    Tipo: {channel.type}
+                                  </p>
                                 </Card.Footer>
                               </Card>
                             </>
                           )}
                           {channel.role === 1 && (
                             <>
-                              <Card className="w-50 squeal">
+                              <Card className="w-50 offers">
                                 <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
-                                  <p>Nome: {channel.channel_name}</p>
                                   <Link to="/infoc" state={channel}>
-                                    <button className="custom-button box">
-                                      Info
+                                    <button className="ms-4 me-4 custom-button box">
+                                      <b>{channel.channel_name} </b>
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="16"
+                                        height="16"
+                                        fill="currentColor"
+                                        className="bi bi-info-circle-fill"
+                                        viewBox="0 0 16 16"
+                                      >
+                                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
+                                      </svg>
                                     </button>
                                   </Link>
                                 </Card.Header>
                                 <Card.Body className=" d-flex flex-row justify-content-evenly">
-                                  <Card.Title className="ms-4 me-4">
-                                    RUOLO: LETTORE
+                                  <Card.Title className="ms-4 me-4 cool-font-text">
+                                    RUOLO: LETTORE 📖
                                   </Card.Title>
                                 </Card.Body>
                                 <Card.Footer>
-                                  <p>Tipo: {channel.type}</p>
+                                  <p className="cool-font-text">
+                                    Tipo: {channel.type}
+                                  </p>
                                 </Card.Footer>
                               </Card>
                             </>
                           )}
                           {channel.role === 2 && (
                             <>
-                              <Card className="w-50 squeal">
+                              <Card className="w-50 offers">
                                 <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
-                                  <p>Nome: {channel.channel_name}</p>
                                   <Link to="/infoc" state={channel}>
-                                    <button className="custom-button box">
-                                      Info
+                                    <button className="ms-4 me-4 custom-button box">
+                                      <b>{channel.channel_name} </b>
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="16"
+                                        height="16"
+                                        fill="currentColor"
+                                        className="bi bi-info-circle-fill"
+                                        viewBox="0 0 16 16"
+                                      >
+                                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
+                                      </svg>
                                     </button>
                                   </Link>
                                 </Card.Header>
                                 <Card.Body className=" d-flex flex-row justify-content-evenly">
-                                  <Card.Title className="ms-4 me-4">
-                                    RUOLO: SCRITTORE
+                                  <Card.Title className="ms-4 me-4 cool-font-text">
+                                    RUOLO: SCRITTORE ✒️
                                   </Card.Title>
                                 </Card.Body>
                                 <Card.Footer>
-                                  <p>Tipo: {channel.type}</p>
+                                  <p className="cool-font-text">
+                                    Tipo: {channel.type}
+                                  </p>
                                 </Card.Footer>
                               </Card>
                             </>
                           )}
                           {channel.role === 3 && (
                             <>
-                              <Card className="w-50 squeal">
+                              <Card className="w-50 offers">
                                 <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
-                                  <p>Nome: {channel.channel_name}</p>
                                   <Link to="/infoc" state={channel}>
-                                    <button className="custom-button box">
-                                      Info
+                                    <button className="ms-4 me-4 custom-button box">
+                                      <b>{channel.channel_name} </b>
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="16"
+                                        height="16"
+                                        fill="currentColor"
+                                        className="bi bi-info-circle-fill"
+                                        viewBox="0 0 16 16"
+                                      >
+                                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
+                                      </svg>
                                     </button>
                                   </Link>
                                 </Card.Header>
                                 <Card.Body className=" d-flex flex-row justify-content-evenly">
-                                  <Card.Title className="ms-4 me-4">
-                                    RUOLO: ADMIN
+                                  <Card.Title className="ms-4 me-4 cool-font-text">
+                                    RUOLO: ADMIN ⚔️
                                   </Card.Title>
                                 </Card.Body>
                                 <Card.Footer>
-                                  <p>Tipo: {channel.type}</p>
+                                  <p className="cool-font-text">
+                                    Tipo: {channel.type}
+                                  </p>
                                 </Card.Footer>
                               </Card>
                             </>
                           )}
                           {channel.role === 4 && (
                             <>
-                              <Card className="w-50 squeal">
+                              <Card className="w-50 offers">
                                 <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
-                                  <p>Nome: {channel.channel_name}</p>
                                   <Link to="/infoc" state={channel}>
-                                    <button className="custom-button box">
-                                      Info
+                                    <button className="ms-4 me-4 custom-button box">
+                                      <b>{channel.channel_name} </b>
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="16"
+                                        height="16"
+                                        fill="currentColor"
+                                        className="bi bi-info-circle-fill"
+                                        viewBox="0 0 16 16"
+                                      >
+                                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
+                                      </svg>
                                     </button>
                                   </Link>
                                 </Card.Header>
                                 <Card.Body className=" d-flex flex-row justify-content-evenly">
-                                  <Card.Title className="ms-4 me-4">
-                                    RUOLO: CREATORE
+                                  <Card.Title className="ms-4 me-4 cool-font-text">
+                                    RUOLO: CREATORE 👑
                                   </Card.Title>
                                 </Card.Body>
                                 <Card.Footer>
-                                  <p>Tipo: {channel.type}</p>
+                                  <p className="cool-font-text">
+                                    Tipo: {channel.type}
+                                  </p>
                                 </Card.Footer>
                               </Card>
                             </>
@@ -627,42 +724,40 @@ function Account() {
 
             <button
               id="logout-button"
-              className=" mb-2 box"
+              className=" mb-2 box cool-font-small"
               onClick={logoutUser}
             >
               <ToastContainer />
               LOGOUT
             </button>
 
-            <button
-              id="delete-button"
-              className=" mb-2 box"
-              onClick={handleOpenDeleteModal}
-            >
-              CANCELLA ACCOUNT
-            </button>
-            <UserDeleteModal
-              showDeleteModal={showDeleteModal}
-              handleCloseDeleteModal={handleCloseDeleteModal}
-            />
+            {roleUser.some((role) => role.role === 4) ? (
+              <button id="delete-button" className=" mb-2 box cool-font-small">
+                PER CANCELLARTI NON DEVI ESSERE CREATORE
+              </button>
+            ) : (
+              <>
+                <button
+                  id="delete-button"
+                  className=" mb-2 box cool-font-xsm"
+                  onClick={handleOpenDeleteModal}
+                >
+                  CANCELLA ACCOUNT
+                </button>
+                <UserDeleteModal
+                  showDeleteModal={showDeleteModal}
+                  handleCloseDeleteModal={handleCloseDeleteModal}
+                />
+              </>
+            )}
 
-            <button className="user_button mb-2 box">
+            <button className="user_button mb-2 box cool-font-link">
               <Link to={ReactConfig.pathFunction("/about")} id="about-us">
                 ABOUT US:
               </Link>
             </button>
           </div>
         </div>
-      </div>
-      <div className="row d-flex justify-content-center ms-1 me-1 mb-5">
-        <h3>TODO:</h3>
-        <ul className="list-group col-md-4">
-          <li className="list-group-item list">PROFILE PICTURES</li>
-          <li className="list-group-item list">
-            if owner of ch toast for DELETE
-          </li>
-          <li className="list-group-item list">quota per un anno</li>
-        </ul>
       </div>
     </div>
   );
