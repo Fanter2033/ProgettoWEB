@@ -188,7 +188,7 @@ function InfoChannel() {
 
   return (
     <div>
-      <div className="">
+      <div className="d-flex flex-row align-items-center justify-content-center align-items-center">
         <Link to="/details" state={channel}>
           <button className="yellow-button box ">
             <svg
@@ -232,14 +232,14 @@ function InfoChannel() {
                 className="red-button box"
                 onClick={() => unfollow(channel.type, channel.channel_name)}
               >
-                DISISCRIVITI
+                x
               </button>
             ) : (
               <button
                 className="green-button box"
                 onClick={() => follow(channel.type, channel.channel_name)}
               >
-                ISCRIVITI
+                +
               </button>
             )}
           </>
@@ -299,10 +299,15 @@ function InfoChannel() {
       ))}
 
       <div>
-        <h1 className="cool-font-medium">Squeals di {channel.channel_name}</h1>
+        <h1 className="cool-font-medium mt-3">Squeals di {channel.channel_name}</h1>
         <br></br>
         <Container className=""></Container>
       </div>
+      {squealsLogger.length === 0 && (
+        <>
+          <p className="cool-font m-0 p-0 text-wrap">NON CI SONO ANCORA SQUEALS</p>
+        </>
+      )}
 
       {roleUser.map((role) => (
         <>

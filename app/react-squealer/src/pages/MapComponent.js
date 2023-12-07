@@ -1,12 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import {
-  MapContainer,
-  TileLayer,
-  Popup,
-  Marker,
-  useMapEvents,
-} from "react-leaflet";
+import { MapContainer, TileLayer, Popup, Marker } from "react-leaflet";
 import L from "leaflet";
 
 import { useUserContext } from "../config/UserContext";
@@ -61,7 +55,10 @@ const MapComponent = ({ onLocationChange }) => {
 
   return (
     <div className="map__container d-flex flex-row justify-content-center ">
-      <div className="mt-3 borderedImage " style={{ height: "300px", width: "80%" }}>
+      <div
+        className="mt-3 borderedImage box"
+        style={{ height: "300px", width: "100%" }}
+      >
         <MapContainer
           center={userLocation || [41.8719, 12.5674]}
           zoom={5}

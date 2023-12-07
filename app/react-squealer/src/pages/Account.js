@@ -319,7 +319,7 @@ function Account() {
   return (
     <div className="container pb-5">
       <div className="row" onLoad={getUserData}>
-        <div className="row d-flex justify-content-center ms-1 me-1 mb-5">
+        <div className="row d-flex justify-content-center">
           <h3>TODO:</h3>
           <ul className="list-group col-md-4">
             <li className="list-group-item list">
@@ -334,13 +334,22 @@ function Account() {
             </li>
           </ul>
         </div>
-        <div className="row mb-5 mt-4">
+        <div className="mb-3 mt-4">
           <div className="col-12 col-md-6 d-flex flex-col align-items-center justify-content-center">
-            {userData.pfp && (
+            {userData.pfp && userData.vip && (
               <img
                 src={"data:image/png;base64," + userData.pfp}
                 alt="Foto Profilo"
-                className="rounded-circle ms-4 pfp box"
+                className="rounded-circle pfp-vip box"
+                onClick={() => handleImageClick()}
+              />
+            )}
+
+            {userData.pfp && !userData.vip && (
+              <img
+                src={"data:image/png;base64," + userData.pfp}
+                alt="Foto Profilo"
+                className="rounded-circle pfp-vip box"
                 onClick={() => handleImageClick()}
               />
             )}
@@ -387,10 +396,10 @@ function Account() {
                         <p className="altro">BLOCCATO</p>
                       </>
                     )}
-                    <h2 className="cool-font-xsm">
+                    <h2 className="cool-font-medium">
                       {userData.first_name} {userData.last_name}
                     </h2>
-                    <button className="yellow-button box col-12 ">
+                    <button className="yellow-button box col-12 mb-3">
                       N SQUEALS PUBBLICI: {squealsLogger.length}
                     </button>
                     {userData.vip && (
@@ -445,28 +454,28 @@ function Account() {
           </div>
         </div>
 
-        <div className="row mb-4 cool-font-text">
+        <div className="mb-4 cool-font-text">
           <div className="col-md-6">
             <div className="row">
-              <h3 className="mb-4 cool-font-small">Quota rimanente</h3>
+              <h3 className="cool-font-medium">QUOTA RIMANENTE</h3>
             </div>
 
-            <div className="row d-flex align-items-center justify-content-evenly mb-4">
+            <div className="row d-flex align-items-center justify-content-center mb-4">
               <div className="col-12">
-                <h4>Giornaliero</h4>
-                <button className="yellow-button m-2 box">
+                <h4 className="cool-font-medium mt-2">Giornaliero</h4>
+                <button className="yellow-button box w-50">
                   {userQuote.remaining_daily}
                 </button>
               </div>
               <div className="col-12">
-                <h4>Settimanale</h4>
-                <button className="yellow-button m-2 box">
+                <h4 className="cool-font-medium mt-2">Settimanale</h4>
+                <button className="yellow-button box w-50">
                   {userQuote.remaining_weekly}
                 </button>
               </div>
               <div className="col-12">
-                <h4>Mensile</h4>
-                <button className="yellow-button m-2 box">
+                <h4 className="cool-font-medium mt-2">Mensile</h4>
+                <button className="yellow-button box w-50">
                   {userQuote.remaining_monthly}
                 </button>
               </div>
@@ -475,7 +484,7 @@ function Account() {
             {show && (
               <button
                 id="buy-button"
-                className="box"
+                className="box w-50"
                 onClick={() => setBuyModal(true)}
               >
                 COMPRA
@@ -491,30 +500,29 @@ function Account() {
           </div>
 
           <div className="col-md-6">
-            <div className="col-12">
-              <h3 className="cool-font-small">Limiti</h3>
-              <h4>Giornaliero</h4>
-              <button className="yellow-button m-2 box">
+            <div className="col-12 mt-3">
+              <h3 className="cool-font-medium">LIMIT</h3>
+              <h4 className="cool-font-medium mt-2">Giornaliero</h4>
+              <button className="yellow-button box w-50">
                 {userQuote.limit_daily}
               </button>
             </div>
             <div className="col-12">
-              <h4>Settimanale</h4>
-              <button className="yellow-button m-2 box">
+              <h4 className="cool-font-medium mt-2">Settimanale</h4>
+              <button className="yellow-button box w-50">
                 {userQuote.limit_weekly}
               </button>
             </div>
             <div className="col-12">
-              <h4>Mensile</h4>
-              <button className="yellow-button m-2 box">
+              <h4 className="cool-font-medium mt-2">Mensile</h4>
+              <button className="yellow-button box w-50">
                 {userQuote.limit_monthly}
               </button>
             </div>
-            <h4 className="mt-5 mb-5 cool-font-small">
-              Email: {userData.email}
-            </h4>
+            <h4 className="mt-5 cool-font-medium">EMAIL: {userData.email}</h4>
           </div>
         </div>
+
 
         <div className=" mb-5">
           <div className=" d-flex flex-column justify-content-center align-items-center ">
@@ -716,7 +724,7 @@ function Account() {
 
             <button
               id="logout-button"
-              className=" mb-2 box cool-font-xsm"
+              className=" mb-2 box cool-font-small"
               onClick={logoutUser}
             >
               <ToastContainer />
@@ -724,8 +732,8 @@ function Account() {
             </button>
 
             {roleUser.some((role) => role.role === 4) ? (
-              <button id="delete-button" className=" mb-2 box cool-font-xsm">
-                PER CANCELLARE NON ESSERE CREATORE
+              <button id="delete-button" className=" mb-2 box cool-font-small">
+                PER CANCELLARTI NON DEVI ESSERE CREATORE
               </button>
             ) : (
               <>

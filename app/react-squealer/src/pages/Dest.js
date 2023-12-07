@@ -62,7 +62,7 @@ const Dest = ({ onDestinatariSubmit }) => {
             onChange={handleDestinatariChange}
           />
           <p className="text-wrap cool-font-details">
-            Inseriscili separati da virgole
+            INSERISCILI SEPARATI DA VIRGOLE
           </p>
         </div>
 

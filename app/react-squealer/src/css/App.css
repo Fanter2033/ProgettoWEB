@@ -205,7 +205,6 @@ body {
   background-color: var(--squeal-yellow);
   color: var(--squeal-blue);
   width: 60vw;
-  margin: 1em;
   border: none;
   padding: 1em;
   border-radius: 8px;
@@ -223,7 +222,6 @@ body {
   color: var(--squeal-yellow);
 
   width: 20vw;
-  margin: 1em;
   padding: 1em;
 
   border: none;
@@ -239,7 +237,6 @@ body {
 
   width: 100%;
   padding: 1em;
-  margin: 1em;
   border: none;
   border-radius: 0.5rem;
 
@@ -257,7 +254,6 @@ body {
   color: var(--squeal-yellow);
 
   width: 60vw;
-  margin: 1em;
   padding: 1em;
 
   border: none;
@@ -528,8 +524,13 @@ img {
   border: 1rem solid var(--squeal-green);
 }
 .pfp-small {
-  border: 0.2rem solid var(--squeal-green);
+  border: 0.2em solid var(--squeal-green);
 }
+
+.pfp-vip {
+  border: 0.2rem solid var(--squeal-pink);
+}
+
 
 /* -------------------- MAP CORNICE ------------------*/
 .borderedImage {

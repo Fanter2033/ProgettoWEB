@@ -82,7 +82,6 @@ function Chat() {
                       </Card.Header>
                       <Card.Body
                         className="mb-4 d-flex flex-col justify-content-center align-items-center"
-                        style={{ overflowWrap: "break-word" }}
                       >
                         {squeal.message_type === "MESSAGE_TEXT" && (
                           <>
@@ -103,7 +102,7 @@ function Chat() {
                           <>
                             <a
                               href={squeal.content}
-                              className="cool-font-link youtube-link"
+                              className="cool-font-link youtube-link text-wrap"
                             >
                               {squeal.content}
                             </a>

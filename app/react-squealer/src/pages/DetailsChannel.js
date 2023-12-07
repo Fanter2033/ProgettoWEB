@@ -145,7 +145,7 @@ function DetailsChannel() {
 
   return (
     <>
-      <div className="container">
+      <div className="container pt-2">
         <div className="row d-flex flex-row justify-content-center align-items-content mt-3">
           <button
             className="red-button box w-25"
@@ -296,8 +296,8 @@ function DetailsChannel() {
 
         {channel.type === "CHANNEL_USERS" && (
           <>
-            <div className="mt-3">
-              <h3>ISCRITTI: {channel.subscribers}</h3>
+            <div className="mt-3 mb-5">
+              <h3 className="cool-font-medium">ISCRITTI: {channel.subscribers}</h3>
 
               <Container>
                 <Row>

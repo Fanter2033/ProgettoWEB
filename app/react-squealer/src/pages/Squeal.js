@@ -16,7 +16,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { Container, Card, Col, Row } from "react-bootstrap";
 import "../css/App.css";
-import cat from "./media/miau.png";
 
 /*
 l'aggiunta di flex-wrap consente agli elementi figlio 
@@ -422,7 +421,7 @@ function Squeal() {
           placeholder="Squeal time"
           rows="4"
           cols="50"
-          className="form-control"
+          className="form-control box"
         />
       </div>
     );
@@ -440,7 +439,7 @@ function Squeal() {
           style={{ color: "#072f38", backgroundColor: "#528b57" }}
           accept="image/*"
           onChange={handleImageUpload}
-          className="form-control"
+          className="form-control box"
         />
         {base64Image && <img src={base64Image} alt="Selected" />}
       </div>
@@ -458,7 +457,7 @@ function Squeal() {
           style={{ color: "#072f38", backgroundColor: "#528b57" }}
           value={youtubeLink}
           onChange={handleYoutubeLinkChange}
-          className="form-control"
+          className="form-control box"
         />
         {!isValidLink && (
           <p style={{ color: "red" }}>Inserisci un link YouTube valido.</p>
@@ -521,41 +520,41 @@ function Squeal() {
           style={{ color: "#072f38", backgroundColor: "#528b57" }}
           placeholder="Inserisci il testo del post..."
           value={postText}
-          className="form-control"
+          className="form-control box"
           onChange={(e) => setPostText(e.target.value)}
         />
-        <div>
+        <div className="text-wrap mt-2">
           <button
             type="button"
-            className="custom-button"
+            className="custom-button cool-font-small m-1 box"
             onClick={() => handleButtonClick("{NUMERO}")}
           >
             NUMERO
           </button>
           <button
             type="button"
-            className="custom-button"
+            className="custom-button cool-font-small m-1 box"
             onClick={() => handleButtonClick("{ORA}")}
           >
             ORA
           </button>
           <button
             type="button"
-            className="custom-button"
+            className="custom-button cool-font-small m-1 box"
             onClick={() => handleButtonClick("{MINUTO}")}
           >
             MINUTO
           </button>
           <button
             type="button"
-            className="custom-button"
+            className="custom-button cool-font-small m-1 box"
             onClick={() => handleButtonClick("{SECONDO}")}
           >
             SECONDO
           </button>
           <button
             type="button"
-            className="custom-button"
+            className="custom-button cool-font-small m-1 box"
             onClick={() => handleButtonClick("{DATA}")}
           >
             DATA
@@ -565,7 +564,7 @@ function Squeal() {
     );
   } else if (inputType === "POSITION_AUTO") {
     inputElement = (
-      <div className="mb-3">
+      <div className="mb-3 text-wrap">
         <label htmlFor="userInput" className="form-label">
           <b>Geolocalizzazione temporizzata</b>
           <div className="">
@@ -788,15 +787,15 @@ function Squeal() {
               <Dest onDestinatariSubmit={handleDestinatariSubmit} />
             </div>
 
-            <div className="mb-3 mt-3">
+            <div className="mb-3 mt-">
               <div
-                className="btn-group"
+                className="btn-group d-flex justify-content-evenly"
                 role="group"
                 aria-label="Tipo di Input"
               >
                 <button
                   type="button"
-                  className={`bottoni_omologati ${
+                  className={`bottoni_omologati box ${
                     inputType === "MESSAGE_TEXT" ? "active" : ""
                   }`}
                   onClick={() => setInputType("MESSAGE_TEXT")}
@@ -815,7 +814,7 @@ function Squeal() {
 
                 <button
                   type="button"
-                  className={`bottoni_omologati ${
+                  className={`bottoni_omologati box ${
                     inputType === "IMAGE" ? "active" : ""
                   }`}
                   onClick={() => setInputType("IMAGE")}
@@ -835,7 +834,7 @@ function Squeal() {
 
                 <button
                   type="button"
-                  className={`bottoni_omologati ${
+                  className={`bottoni_omologati box ${
                     inputType === "VIDEO_URL" ? "active" : ""
                   }`}
                   onClick={() => setInputType("VIDEO_URL")}
@@ -855,7 +854,7 @@ function Squeal() {
 
                 <button
                   type="button"
-                  className={` bottoni_omologati ${
+                  className={` bottoni_omologati box ${
                     inputType === "POSITION" ? "active" : ""
                   }`}
                   onClick={() => setInputType("POSITION")}
@@ -875,7 +874,7 @@ function Squeal() {
 
                 <button
                   type="button"
-                  className={`bottoni_omologati ${
+                  className={`bottoni_omologati box ${
                     inputType === "TEXT_AUTO" ? "active" : ""
                   }`}
                   onClick={() => setInputType("TEXT_AUTO")}
@@ -896,7 +895,7 @@ function Squeal() {
 
                 <button
                   type="button"
-                  className={`bottoni_omologati ${
+                  className={`bottoni_omologati box ${
                     inputType === "POSITION_AUTO" ? "active" : ""
                   }`}
                   onClick={() => setInputType("POSITION_AUTO")}
@@ -919,15 +918,15 @@ function Squeal() {
               </div>
             </div>
 
-            <div className="card-text mb-3">
+            <div className="card-text mb-5">
               <form>{inputElement}</form>
             </div>
 
-            <div className="row d-flex flex-row justify-content-evenly align-items-center">
+            <div className="row d-flex flex-row justify-content-evenly align-items-center mb-3">
               <div className="col-8">
                 <button
-                  className="blue-button box cool-font-small"
-                  style={{ width: "80%" }}
+                  className="blue-button box cool-font-medium"
+                  style={{ width: "100%" }}
                   onClick={postSqueal}
                 >
                   SQUEAL
@@ -935,13 +934,21 @@ function Squeal() {
                 <ToastContainer />
               </div>
               <div className="col-4">
-                {userData.pfp && (
+                {userData.pfp && !userData.vip && (
                   <img
                     src={"data:image/png;base64," + userData.pfp}
                     alt="Foto Profilo"
                     className="rounded-circle pfp-small box w-100 "
                   />
                 )}
+                {userData.pfp && userData.vip && (
+                  <img
+                    src={"data:image/png;base64," + userData.pfp}
+                    alt="Foto Profilo"
+                    className="rounded-circle pfp-vip box w-100"
+                  />
+                )}
+
                 <h5 className="mt-0">{userGlobal.username}</h5>
               </div>
             </div>
@@ -949,25 +956,39 @@ function Squeal() {
           <div className="card-footer text-body-secondary">
             <h3 className="cool-font-text cool-font-link">LIVE QUOTA</h3>
 
-            <div className="d-flex justify-content-evenly cool-font-text">
+            <div className="d-flex justify-content-between cool-font-text text-wrap">
               <div className="text-center">
                 <h4>G</h4>
-                <button className="col-md-12 yellow-button m-1">
-                  {newMonth !== 0 && <>{newDay}&nbsp;/&nbsp;</>}
+                <button className="col-md-12 yellow-button">
+                  {newMonth !== 0 && (
+                    <>
+                      {newDay} <br /> ----- <br />
+                    </>
+                  )}
                   {userQuote.remaining_daily}
                 </button>
               </div>
               <div className="">
                 <h4>S</h4>
-                <button className="col-md-12 yellow-button m-1">
-                  {newMonth !== 0 && <>{newWeek}&nbsp;/&nbsp;</>}
+                <button className="col-md-12 yellow-button ps-1 pe-1">
+                  {newMonth !== 0 && (
+                    <>
+                      {newWeek} <br />
+                      ----- <br />
+                    </>
+                  )}
                   {userQuote.remaining_weekly}
                 </button>
               </div>
               <div className="">
                 <h4>M</h4>
-                <button className=" col-md-12 yellow-button m-1">
-                  {newMonth !== 0 && <>{newMonth}&nbsp;/&nbsp;</>}
+                <button className=" col-md-12 yellow-button ps-1 pe-1">
+                  {newMonth !== 0 && (
+                    <>
+                      {newMonth} <br />
+                      ----- <br />
+                    </>
+                  )}
                   {userQuote.remaining_monthly}
                 </button>
               </div>

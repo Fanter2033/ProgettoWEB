@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useUserContext } from "../config/UserContext";
 import { useNavigate } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
@@ -27,22 +27,22 @@ function ChangeUsername() {
   const [user, setUser] = useState({});
 
   useEffect(() => {
-      const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
-      fetch(uri, {
-          mode: "cors",
-          credentials: "include",
+    const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
+    fetch(uri, {
+      mode: "cors",
+      credentials: "include",
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
       })
-          .then((res) => {
-              if (res.ok) {
-                  return res.json();
-              }
-          })
-          .then(async (data) => {
-              setUser(data);
-          })
-          .catch((error) => {
-              console.error(error);
-          });
+      .then(async (data) => {
+        setUser(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, []);
 
   const notify = () =>
@@ -68,17 +68,17 @@ function ChangeUsername() {
       theme: "dark",
     });
 
-    const notify_error_server = () =>
-        toast.error("⚠️ Errore! Nome non valido o già in uso!", {
-            position: "top-right",
-            autoClose: 4000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-        });
+  const notify_error_server = () =>
+    toast.error("⚠️ Errore! Nome non valido o già in uso!", {
+      position: "top-right",
+      autoClose: 4000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
 
   const cambioU = (e) => {
     e.preventDefault();
@@ -91,9 +91,10 @@ function ChangeUsername() {
 
     //console.log("mimmooooooooooooooooooooooooooooooooo" + userGlobal.username);
 
-    if (newUsername.trim() === "") {
+    if (newUsername === "") {
       //TODO: se il campo è vuoto apri toast, non funge
       nofity_error();
+      handleClose();
     } else {
       try {
         handleClose();
@@ -132,9 +133,9 @@ function ChangeUsername() {
             }
           })
           .then((data) => {
-                notify();
-                logoutUser();
-                navigate("../");
+            notify();
+            logoutUser();
+            navigate("../");
           })
           .catch((error) => {
             console.error("Cambio username failed, error:", error);
@@ -145,31 +146,31 @@ function ChangeUsername() {
     }
   };
 
-    async function logoutUser() {
-        const uri = `${ReactConfig.base_url_requests}/auth/logout`;
-        const options = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            credentials: "include",
-            mode: "cors",
-        };
+  async function logoutUser() {
+    const uri = `${ReactConfig.base_url_requests}/auth/logout`;
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      mode: "cors",
+    };
 
-        fetch(uri, options)
-            .then((response) => {
-                if (response.ok) {
-                    console.log("logout riuscito con successo");
-                    navigate(`/`);
-                } else {
-                    notify();
-                    console.error("Logout failed", response.statusText);
-                }
-            })
-            .catch((error) => {
-                console.error("Network error", error);
-            });
-    }
+    fetch(uri, options)
+      .then((response) => {
+        if (response.ok) {
+          console.log("logout riuscito con successo");
+          navigate(`/`);
+        } else {
+          notify();
+          console.error("Logout failed", response.statusText);
+        }
+      })
+      .catch((error) => {
+        console.error("Network error", error);
+      });
+  }
 
   //console.log("nomeeeeeeeeeeeeeeeeeeee", userGlobal.username);
 
@@ -179,17 +180,20 @@ function ChangeUsername() {
 
   return (
     <div>
-      <button className="user_button mb-2 box cool-font-text" onClick={handleShow}>
+      <button
+        className="user_button mb-2 box cool-font-text"
+        onClick={handleShow}
+      >
         CAMBIO USERNAME
       </button>
 
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton className="modal-change-header">
-          <Modal.Title style={{ textAlign: "center" }}>
+          <Modal.Title style={{ textAlign: "center" }} className="cool-font-medium">
             Cambia username
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body className="modal-change-body">
+        <Modal.Body className="modal-change-body cool-font-medium">
           <Form>
             <Form.Group
               as={Row}
@@ -200,6 +204,7 @@ function ChangeUsername() {
               <Form.Control
                 type="text"
                 placeholder="inserisci qui"
+                className="text-center"
                 name="nuovoUsername"
                 value={newUsername}
                 onChange={(e) => {
@@ -211,8 +216,14 @@ function ChangeUsername() {
           </Form>
         </Modal.Body>
 
-        <Modal.Footer style={footerStyle}>
-          <button className="blue-button box" onClick={cambioU}>
+        <Modal.Footer
+          style={footerStyle}
+          className="d-flex justify-content-center"
+        >
+          <button
+            className="blue-button box cool-font-medium col-6"
+            onClick={cambioU}
+          >
             CAMBIA
           </button>
         </Modal.Footer>

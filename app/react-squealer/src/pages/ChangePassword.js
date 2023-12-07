@@ -88,7 +88,7 @@ function ChangePassword() {
       password: newPassword,
     });
 
-    if (newPassword.trim() === "") {
+    if (newPassword === "") {
       nofity_error();
     } else {
       try {
@@ -144,18 +144,23 @@ function ChangePassword() {
 
   return (
     <div>
-      <button className="user_button mb-2 box cool-font-text" onClick={handleShow}>
+      <button
+        className="user_button mb-2 box cool-font-text"
+        onClick={handleShow}
+      >
         CAMBIO PASSWORD
       </button>
 
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton className="modal-change-header">
-          <Modal.Title style={{ textAlign: "center" }}>
+          <Modal.Title
+            style={{ textAlign: "center" }}
+            className="cool-font-medium"
+          >
             Cambia password
           </Modal.Title>
         </Modal.Header>
-
-        <Modal.Body className="modal-change-body">
+        <Modal.Body className="modal-change-body cool-font-medium">
           <Form>
             <Form.Group
               as={Row}
@@ -166,6 +171,8 @@ function ChangePassword() {
               <Form.Control
                 type="text"
                 placeholder="inserisci qui"
+                className="text-center"
+
                 name="nuovaPassword"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
@@ -174,11 +181,20 @@ function ChangePassword() {
           </Form>
         </Modal.Body>
 
-        <Modal.Footer style={footerStyle}>
-          <button className="blue-button box" onClick={changeP}>
+        <Modal.Footer
+          style={footerStyle}
+          className="d-flex justify-content-center"
+        >
+          <button
+            className="blue-button cool-font-medium box col-6"
+            onClick={changeP}
+          >
             CAMBIA
           </button>
-          <button className="red-button box" onClick={handleClose}>
+          <button
+            className="red-button cool-font-medium box col-6"
+            onClick={handleClose}
+          >
             ANNULLA
           </button>
         </Modal.Footer>
