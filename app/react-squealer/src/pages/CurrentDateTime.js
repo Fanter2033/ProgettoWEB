@@ -19,7 +19,7 @@ const CurrentDateTime = () => {
 
   return (
     <div>
-      <p className="cool-font-small squeal">{currentDateTime}</p>
+      <p className="cool-font-details-md squeal m-0">{currentDateTime}</p>
     </div>
   );
 };

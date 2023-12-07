@@ -14,7 +14,7 @@ function Post() {
   if (userGlobal.username === undefined || userGlobal.username === "") {
     navigate("./");
   }
-  console.log(userGlobal.username);
+  //console.log(userGlobal.username);
 
   return (
     <>
@@ -36,7 +36,7 @@ function Post() {
         </ul>
       </div>
       <div className="container-flex pt-5 pb-5">
-        <h1>POST</h1>
+        <h1 className="cool-font">CONDIVIDI</h1>
         <div className="">
           <Squeal />
         </div>

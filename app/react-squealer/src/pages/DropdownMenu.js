@@ -17,7 +17,7 @@ const DropdownMenu = ({ onOrderChange }) => {
           id="orderOptions"
           value={selectedOption}
           onChange={handleOptionChange}
-          style={{ height: "3rem", borderRadius: "0.5rem" }}
+          style={{ height: "20%", width:"70%", borderRadius: "0.5rem" }}
         >
           <option value="">OPZIONI</option>
           <option value="CHANNEL_USERS">TEMPORALE</option>

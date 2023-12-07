@@ -55,10 +55,10 @@ function Chat() {
             <Container className="">
               <Row className="">
                 {squeals.map((squeal) => (
-                  <Col lg={12} className="mb-4">
+                  <Col lg={12} className="mb-4" key={squeal._id}>
                     <Card
                       style={{ width: "100%" }}
-                      key={squeal._id}
+                      
                       className="squeal"
                     >
                       <Card.Header className="d-flex flex-col justify-content-center align-items-center">

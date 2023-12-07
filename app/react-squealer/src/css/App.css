@@ -104,6 +104,12 @@ body {
   color: var(--squeal-green);
 }
 
+.cool-font-details-md {
+  font-family: "Cool-Font", sans-serif;
+  font-size: 5vw;
+  color: var(--squeal-green);
+}
+
 @media screen and (max-width: 600px) {
   .cool-font-text,
   .cool-font-link,
@@ -272,7 +278,6 @@ body {
   color: var(--squeal-yellow);
   width: 20vw;
 
-  margin: 1em;
   padding: 1em;
   border: none;
 
@@ -283,7 +288,6 @@ body {
   background-color: var(--squeal-blue);
   color: var(--squeal-yellow);
   width: 20vw;
-  margin: 1em;
   padding: 1em;
   border: none;
 
@@ -295,7 +299,6 @@ body {
   color: var(--squeal-blue);
   width: 20vw;
 
-  margin: 1em;
   padding: 1em;
   border: none;
 
@@ -307,7 +310,6 @@ body {
   color: var(--squeal-yellow);
   width: 20vw;
 
-  margin: 1em;
   padding: 1em;
   border: none;
 
@@ -405,18 +407,6 @@ img {
   transform: translate(-100%, -50%);
   animation: enter 3s linear forwards;
 }
-
-/*
-@keyframes enter {
-  0% {
-    transform: translate(-100%, -50%);
-  }
-  100% {
-    transform: translate(100%, -50%);
-  }
-}
-*/
-
 @keyframes enter {
   0% {
     transform: translate(100%, -50%);
@@ -552,52 +542,11 @@ img {
   border-color: var(--squeal-green);
 }
 
-/*
-.profile-picture-container {
-  border: 1rem solid var(--squeal-green);
-  border-radius: 50%;
-  overflow: hidden; // immagine non fuoriesce dalla cornice
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.profile-picture {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; //immagine si adatta alla cornice
-  border-radius: 50%; //stessa forma circolare
-}
-*/
-
 /* -------------------- ESPERIMENTI PAZZI  img ------------------*/
 /*
 .background-image {
   background-color: red;
   background-size: cover;
   background-position: center;
-}
-*/
-
-/* -------------------- MADE BY REACT STUFF ------------------*/
-/*
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
 */

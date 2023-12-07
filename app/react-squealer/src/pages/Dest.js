@@ -45,35 +45,46 @@ const Dest = ({ onDestinatariSubmit }) => {
 
   return (
     <div className="">
-      <form onSubmit={handleDestinatariSubmit}>
-        <div className="mb-2">
+      <form onSubmit={handleDestinatariSubmit} className="row d-flex align-items-center m-1">
+        <div className="col-10 mb-2">
           <label
             htmlFor="destinatariInput"
-            className="form-label cool-font-details"
+            className="form-label cool-font-details-md"
           >
             DESTINATARI
           </label>
           <input
-            style={{ color : "#072f38", backgroundColor : "#528b57" }}
+            style={{ color: "#072f38", backgroundColor: "#528b57" }}
             type="text"
             className="form-control"
             id="destinatariInput"
             value={destinatari}
             onChange={handleDestinatariChange}
           />
-          <p>Inserisci i destinatari separati da virgole</p>
+          <p className="text-wrap cool-font-details">
+            Inseriscili separati da virgole
+          </p>
         </div>
 
-        <button
-          type="submit"
-          className="custom-button center box cool-font-small"
-        >
-          +
-        </button>
+        <div className="col-2 mb-4">
+          <button
+            type="submit"
+            className="custom-button center box cool-font-medium text-center"
+          >
+            +
+          </button>
+        </div>
       </form>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && (
+        <p
+          style={{ color: "#b45656", whiteSpace: "wrap" }}
+          className="cool-font-link"
+        >
+          {error}
+        </p>
+      )}
       {destinatariArray.length > 0 && (
-        <div>
+        <div className="row d-flex justify-content-center align-items-center">
           <ul className="list-unstyled">
             {destinatariArray.map((destinatario, index) => (
               <li key={index}>{destinatario}</li>
@@ -81,10 +92,10 @@ const Dest = ({ onDestinatariSubmit }) => {
           </ul>
 
           <button
-            className="reset-button box cool-font-small"
+            className="reset-button box cool-font-medium"
             onClick={handleResetDestinatari}
           >
-            x
+            RESETTA
           </button>
         </div>
       )}

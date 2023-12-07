@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 
@@ -7,7 +7,6 @@ import { useUserContext } from "../config/UserContext";
 import { Modal } from "react-bootstrap";
 import "../css/App.css";
 
-//TODO: se è owner di canali, impedisci delete
 const UserDeleteModal = ({ showDeleteModal, handleCloseDeleteModal }) => {
   const { userGlobal, setUserGlobal } = useUserContext();
   const navigate = useNavigate();
@@ -42,27 +41,29 @@ const UserDeleteModal = ({ showDeleteModal, handleCloseDeleteModal }) => {
   };
 
   return (
-    <Modal show={showDeleteModal} onHide={handleCloseDeleteModal} centered>
-      <Modal.Header closeButton className="modal-delete-header">
-        <Modal.Title>Conferma Eliminazione</Modal.Title>
-      </Modal.Header>
-      <Modal.Body className="modal-delete-body">
-        Sei sicuro di voler eliminare questo utente?
-        <br></br>
-        Questa azione è <span className="cool-font-small">IRREVERSIBILE</span>
-        <br></br>
-        Assicurati di <span className="cool-font-small">NON</span> essere il
-        proprietario di una canale.
-      </Modal.Body>
-      <Modal.Footer style={footerStyle}>
-        <button className="blue-button box" onClick={deleteUser}>
-          ELIMINA
-        </button>
-        <button className="red-button box" onClick={handleCloseDeleteModal}>
-          ANNULLA
-        </button>
-      </Modal.Footer>
-    </Modal>
+    <>
+      <Modal show={showDeleteModal} onHide={handleCloseDeleteModal} centered>
+        <Modal.Header closeButton className="modal-delete-header">
+          <Modal.Title>Conferma Eliminazione</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="modal-delete-body">
+          Sei sicuro di voler eliminare questo utente?
+          <br></br>
+          Questa azione è <span className="cool-font-small">IRREVERSIBILE</span>
+          <br></br>
+          Assicurati di <span className="cool-font-small">NON</span> essere il
+          proprietario di una canale.
+        </Modal.Body>
+        <Modal.Footer style={footerStyle}>
+          <button className="blue-button box" onClick={deleteUser}>
+            ELIMINA
+          </button>
+          <button className="red-button box" onClick={handleCloseDeleteModal}>
+            ANNULLA
+          </button>
+        </Modal.Footer>
+      </Modal>
+    </>
   );
 };
 

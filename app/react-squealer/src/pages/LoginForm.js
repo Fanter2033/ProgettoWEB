@@ -33,16 +33,16 @@ function LoginForm() {
       theme: "colored",
     });
   const notify_success = () =>
-      toast.success("Operazione effettuata con successo. Autenticarsi", {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
+    toast.success("Operazione effettuata con successo. Autenticarsi", {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
 
   const login = async () => {
     //corrected with love by @romanellas
@@ -107,33 +107,33 @@ function LoginForm() {
     if (newPassword.trim() === "" || reset.trim() === "") {
       //notify2();
     } else {
-    const uri = `${ReactConfig.base_url_requests}/user/${usernameReset}/resetPassword`;
-    const data = {
+      const uri = `${ReactConfig.base_url_requests}/user/${usernameReset}/resetPassword`;
+      const data = {
         password: newPassword,
         reset: reset,
-    }
-    const options = {
-      method: "PUT",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(data),
-    };
+      };
+      const options = {
+        method: "PUT",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(data),
+      };
 
-    await fetch(uri, options)
-      .then((response) => {
-        if (response.ok) {
-          notify_success();
-        } else {
-          notify();
-          console.error("Reset failed", response.statusText);
-        }
-      })
-      .catch((error) => {
-        console.error("Network error", error);
-      });
+      await fetch(uri, options)
+        .then((response) => {
+          if (response.ok) {
+            notify_success();
+          } else {
+            notify();
+            console.error("Reset failed", response.statusText);
+          }
+        })
+        .catch((error) => {
+          console.error("Network error", error);
+        });
     }
   };
 
@@ -164,13 +164,17 @@ function LoginForm() {
     }
   };
 
+  const footerStyle = {
+    backgroundColor: "#e0bb76",
+  };
+
   //*reminder: input tag in React <input/>
   return (
     <div className="container">
       <div className="col-12 text-center pt-5 animated-title-container">
         <div className="row  ">
           <div className="col-12 d-flex flex-col justify-content-center align-items-center">
-            <h1 className=" animated-title cool-font-medium">Log in to</h1>
+            <h1 className="animated-title cool-font">Log in to</h1>
             <h1 className="animated-squeal cool-font" aria-label="Squealer">
               &#129413;
             </h1>
@@ -178,22 +182,22 @@ function LoginForm() {
         </div>
       </div>
 
-      <div className="row justify-content-center ">
+      <div className="row justify-content-center animated-top">
         <div className="col-6">
           <form onSubmit={handleLogin}>
-            <div className="form-group row p-2 mb-3">
+            <div className="form-group row p-2 mb-0">
               <label
                 htmlFor="inputUsername"
-                className="form-label cool-font-small"
+                className="form-label cool-font-medium"
               >
                 Username
               </label>
               <input
                 type="text"
-                className="form-control"
+                className="form-control cool-font-text text-center box"
+                style={{ color: "#072f38", backgroundColor: "#e0bb76" }}
                 id="inputUsername"
                 aria-describedby="username"
-                placeholder="username"
                 autoComplete="on"
                 value={usernameForm}
                 onChange={(e) => setUsernameForm(e.target.value)}
@@ -202,19 +206,19 @@ function LoginForm() {
               />
             </div>
 
-            <div className="form-group row p-2 mb-4">
+            <div className="form-group row p-2 mb-3">
               <label
                 htmlFor="inputPassword5"
-                className="form-label cool-font-small"
+                className="form-label cool-font-medium"
               >
                 Password
               </label>
               <input
                 type="password"
                 id="inputPassword"
-                className="form-control"
+                className="form-control cool-font-text text-center box"
+                style={{ color: "#072f38", backgroundColor: "#e0bb76" }}
                 aria-describedby="password"
-                placeholder="password"
                 autoComplete="on"
                 value={passwordForm}
                 ref={input2Ref}
@@ -224,53 +228,71 @@ function LoginForm() {
 
             <div className="form-group row p-2">
               <button
-                className="col-12 col-md-4 offset-md-4 mb-3 yellow-button"
+                className="col-12 mb-3 green-button box cool-font-text box"
                 type="submit"
                 onKeyDown={handleKeyFinal}
               >
                 <ToastContainer />
                 LOGIN
               </button>
+              <button
+                className="red-button box cool-font-text mb-3 box"
+                onClick={resetPassword}
+              >
+                Password <br/> dimenticata?
+              </button>
             </div>
           </form>
-          <button className="yellow-button mb-4" onClick={resetPassword}>
-            Forgor password?
-          </button>
 
           {showReset && (
             <Modal show={showReset} onHide={closeReset} centered>
               <Modal.Header closeButton className="modal-delete-header">
-                <Modal.Title>Recupero Password</Modal.Title>
+                <h1 className="cool-font-text">Recupero Password</h1>
               </Modal.Header>
-              <Modal.Body className="modal-delete-body">
+              <Modal.Body className="modal-delete-body p-4 d-flex flex-row justify-content-center align-items-center">
                 <form onSubmit={resetPassword}>
-                  <label className="form-label cool-font-small">
-                    Username
-                  </label>
+                  <label className="form-label cool-font-text">Username</label>
                   <input
-                      type="text"
-                      value={usernameReset}
-                      onChange={(e) => setUsernameReset(e.target.value)}
+                    type="text"
+                    style={{
+                      width: "80%",
+                      color: "#072f38",
+                      backgroundColor: "#072f38",
+                      borderRadius: "0.5rem",
+                    }}
+                    value={usernameReset}
+                    onChange={(e) => setUsernameReset(e.target.value)}
                   />
-                  <label className="form-label cool-font-small">
+                  <label className="form-label cool-font-text">
                     Qual è il tuo hobby preferito?
                   </label>
                   <input
                     type="text"
+                    style={{
+                      width: "80%",
+                      color: "#072f38",
+                      backgroundColor: "#072f38",
+                      borderRadius: "0.5rem",
+                    }}
                     value={reset}
                     onChange={handleInputChange}
                   />
                   <label
                     htmlFor="inputPassword5"
-                    className="form-label cool-font-small"
+                    className="form-label cool-font-text"
                   >
                     Nuova password:
                   </label>
                   <input
                     type="password"
                     name="password"
-                    className="form-control"
+                    className="form-control cool-font-link text-center"
                     id="inputPassword"
+                    style={{
+                      fontColor: "#b45656",
+                      backgroundColor: "#072f38",
+                      borderRadius: "0.5rem",
+                    }}
                     value={newPassword}
                     aria-describedby="passwordHelpBlock"
                     placeholder="Password"
@@ -278,37 +300,46 @@ function LoginForm() {
                     required
                   />
 
-                  <button type="submit" className="blue-button box mt-5">
-                    Accedi
+                  <button
+                    type="submit"
+                    className="blue-button box mt-3 cool-font-small col-6"
+                  >
+                    ACCEDI
                   </button>
                 </form>
-
-                <button className="red-button box" onClick={closeReset}>
-                  Annulla
-                </button>
               </Modal.Body>
+
+              <Modal.Footer
+                style={footerStyle}
+                className="d-flex justify-content-center"
+              >
+                <button
+                  className="red-button box cool-font-small col-6"
+                  onClick={closeReset}
+                >
+                  ANNULLA
+                </button>
+              </Modal.Footer>
             </Modal>
           )}
           <div className="row p-2 mb-5">
-            <div className="col-12 mb-4">
+            <button className="col-12 mb-3 yellow-button">
               <NavLink
-                style={{ color: "#e0bb76" }}
-                className="cool-font-small"
+                className="cool-font-text"
                 to={ReactConfig.pathFunction("/registration")}
               >
-                New Here ?
+                REGISTRATI
               </NavLink>
-            </div>
+            </button>
 
-            <div className="col-12 mb-5">
+            <button className="col-12 mb-5 yellow-button">
               <NavLink
-                style={{ color: "#e0bb76" }}
-                className="cool-font-small"
+                className="cool-font-text"
                 to={ReactConfig.pathFunction("/home")}
               >
-                Skip the log in !
+              SALTA IL LOGIN
               </NavLink>
-            </div>
+            </button>
           </div>
         </div>
       </div>

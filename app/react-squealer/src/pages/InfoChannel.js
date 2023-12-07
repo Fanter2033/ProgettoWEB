@@ -182,8 +182,6 @@ function InfoChannel() {
 
   useEffect(() => {
     if (newMessageNotification) {
-     
-     
       setNewMessageNotification(false);
     }
   }, [newMessageNotification]);

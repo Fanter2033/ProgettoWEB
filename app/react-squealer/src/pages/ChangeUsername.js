@@ -127,6 +127,8 @@ function ChangeUsername() {
             if (res.ok) {
               //creation ok
               return res.json();
+            } else {
+              notify_error_server();
             }
           })
           .then((data) => {

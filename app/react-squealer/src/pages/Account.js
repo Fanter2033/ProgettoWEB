@@ -10,7 +10,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { useUserContext } from "../config/UserContext";
 
 import Geo from "./Geo";
-//import VultureAnimation from "./VoltureAnimation";
 
 import ChangePfp from "./ChangePfp.js";
 import ChangeUsername from "./ChangeUsername";
@@ -45,7 +44,6 @@ const { firstname, lastname, username, email, password } = userData;
 
 function Account() {
   const { userGlobal, setUserGlobal } = useUserContext();
-  //console.log(userGlobal.vip, "viiiiip");
 
   //per il logout
   const navigate = useNavigate();
@@ -150,7 +148,6 @@ function Account() {
 
       if (result.ok) {
         let data = await result.json();
-        //console.log(data);
         setUserData(data);
         return data;
       } else {
@@ -160,7 +157,6 @@ function Account() {
       console.error("Errore nella fetch:", error);
     }
   }
-  //console.log(userData);
 
   //GET USER QUOTE-----------------------------------------------------------------------------------------------
   const [userQuote, setUserQuote] = useState("");
@@ -182,7 +178,6 @@ function Account() {
 
       if (result.ok) {
         let quote = await result.json();
-        //console.log("GET quote:", quote);
         setUserQuote(quote);
         return quote;
       } else {
@@ -221,10 +216,8 @@ function Account() {
     }
   }
 
-  //console.log("LOGGERRRRRRRRRRRRRR", squealsLogger);
-
   //GET /user/{username}/roles/
-  const [roleUser, setRoleUser] = useState(0);
+  const [roleUser, setRoleUser] = useState([]);
 
   async function getRoles() {
     try {
@@ -242,7 +235,6 @@ function Account() {
 
       if (result.ok) {
         let data = await result.json();
-        //console.log("Successo nella richiesta dei ruoli", data);
         setRoleUser(data);
         return data;
       } else {
@@ -325,7 +317,7 @@ function Account() {
 
   //----------------------------------------------------------------------------------------------------------------
   return (
-    <div className="container-flex pb-5">
+    <div className="container pb-5">
       <div className="row" onLoad={getUserData}>
         <div className="row d-flex justify-content-center ms-1 me-1 mb-5">
           <h3>TODO:</h3>
@@ -337,18 +329,21 @@ function Account() {
               FAI RICOMPARIRE IL BOTTONE COMPRA TRA 1 ANNO
             </li>
             <li className="list-group-item list">GET SMM INFO</li>
-            <li className="list-group-item list">cambio username, attenzione se esiste gia?</li>
-
+            <li className="list-group-item list">
+              cambio username, attenzione se esiste gia?
+            </li>
           </ul>
         </div>
         <div className="row mb-5 mt-4">
           <div className="col-12 col-md-6 d-flex flex-col align-items-center justify-content-center">
-            <img
-              src={"data:image/png;base64," + userData.pfp}
-              alt="Foto Profilo"
-              className="rounded-circle ms-4 pfp box"
-              onClick={() => handleImageClick()}
-            />
+            {userData.pfp && (
+              <img
+                src={"data:image/png;base64," + userData.pfp}
+                alt="Foto Profilo"
+                className="rounded-circle ms-4 pfp box"
+                onClick={() => handleImageClick()}
+              />
+            )}
 
             {isModalOpen && <ChangePfp />}
 
@@ -523,9 +518,15 @@ function Account() {
 
         <div className=" mb-5">
           <div className=" d-flex flex-column justify-content-center align-items-center ">
-            <button className="user_button mb-2 box cool-font-text" onClick={followedChannels}>
+            <button
+              className="user_button mb-2 box cool-font-text"
+              onClick={followedChannels}
+            >
               SITUAZIONE CANALI
             </button>
+            {following && roleUser.length === 0 && (
+              <p className="cool-font-small">NON SEGUI ANCORA NESSUN CANALE</p>
+            )}
             {following && (
               <div className="container-flex pb-5">
                 <div className="row">
@@ -722,17 +723,25 @@ function Account() {
               LOGOUT
             </button>
 
-            <button
-              id="delete-button"
-              className=" mb-2 box cool-font-xsm"
-              onClick={handleOpenDeleteModal}
-            >
-              CANCELLA ACCOUNT
-            </button>
-            <UserDeleteModal
-              showDeleteModal={showDeleteModal}
-              handleCloseDeleteModal={handleCloseDeleteModal}
-            />
+            {roleUser.some((role) => role.role === 4) ? (
+              <button id="delete-button" className=" mb-2 box cool-font-xsm">
+                PER CANCELLARE NON ESSERE CREATORE
+              </button>
+            ) : (
+              <>
+                <button
+                  id="delete-button"
+                  className=" mb-2 box cool-font-xsm"
+                  onClick={handleOpenDeleteModal}
+                >
+                  CANCELLA ACCOUNT
+                </button>
+                <UserDeleteModal
+                  showDeleteModal={showDeleteModal}
+                  handleCloseDeleteModal={handleCloseDeleteModal}
+                />
+              </>
+            )}
 
             <button className="user_button mb-2 box cool-font-link">
               <Link to={ReactConfig.pathFunction("/about")} id="about-us">

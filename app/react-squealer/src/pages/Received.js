@@ -82,10 +82,10 @@ function Received() {
 
             <Container className="">
               <Row className=" ">
-                {dash.map((squeal, index) => (
+                {dash.map((squeal) => (
                   <Col
                     lg={12}
-                    key={squeal.id || index}
+                    key={squeal._id}
                     className="mb-4 d-flex justify-content-center align-items-center"
                   >
                     <Card

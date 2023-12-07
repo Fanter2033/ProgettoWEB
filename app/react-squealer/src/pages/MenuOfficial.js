@@ -14,7 +14,8 @@ function MenuOfficial({ onOrderChange }) {
       <label htmlFor="orderOptions">Seleziona l'ordine:</label>
       <select
         id="orderOptions"
-        style={{ height: "3rem", borderRadius: "0.5rem"  }}
+        style={{ height: "20%", width:"70%", borderRadius: "0.5rem" }}
+
         value={selectedOption}
         onChange={handleOptionChange}
       >

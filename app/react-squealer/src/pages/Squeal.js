@@ -39,7 +39,6 @@ function Squeal() {
       credentials: "include",
     })
       .then((res) => {
-        //console.log("aaaaaaaaaaaaaaaaaa", res);
         if (res.ok) {
           return res.json();
         }
@@ -59,12 +58,11 @@ function Squeal() {
 
   if (userGlobal.username === undefined || userGlobal.username === "") {
     //navigate("/");
-    whoAmI()
-    .then(() =>{
+    whoAmI().then(() => {
       getUserData();
       getUserQuote();
       log();
-    })
+    });
   }
 
   const notify = () =>
@@ -149,7 +147,6 @@ function Squeal() {
 
       if (result.ok) {
         let data = await result.json();
-        //console.log(data);
         setUserData(data);
         return data;
       } else {
@@ -180,7 +177,6 @@ function Squeal() {
 
       if (result.ok) {
         let quote = await result.json();
-        //console.log(quote);
         setUserQuote(quote);
         return quote;
       } else {
@@ -227,7 +223,6 @@ function Squeal() {
     //const intervalId1 = setInterval(whoAmI, 30000); //30 sec
     const intervalId2 = setInterval(getUserData, 5000); //10 sec
 
-    //console.log(newDay);
     return () => {
       clearInterval(intervalId);
       //clearInterval(intervalId1);
@@ -779,12 +774,11 @@ function Squeal() {
 
   //-------------------------------------------------------------------
   return (
-    <div className="container">
+    <div className="container animated-title">
       <div className="col-12 col-md-8 offset-md-2 ">
         <div className="card squeal d-flex box p-3">
           <div className="card-header squeal col-12">
-            <div className="media-head "></div>
-            <div className="media-body">
+            <div>
               <CurrentDateTime />
             </div>
           </div>
@@ -941,11 +935,13 @@ function Squeal() {
                 <ToastContainer />
               </div>
               <div className="col-4">
-                <img
-                  src={"data:image/png;base64," + userData.pfp}
-                  alt="Foto Profilo"
-                  className="rounded-circle pfp-small box w-50 "
-                />
+                {userData.pfp && (
+                  <img
+                    src={"data:image/png;base64," + userData.pfp}
+                    alt="Foto Profilo"
+                    className="rounded-circle pfp-small box w-100 "
+                  />
+                )}
                 <h5 className="mt-0">{userGlobal.username}</h5>
               </div>
             </div>
@@ -985,12 +981,8 @@ function Squeal() {
           <Container className="">
             <Row className="w-100">
               {squealsLogger.map((squeal, index) => (
-                <Col lg={12} className="mb-4">
-                  <Card
-                    style={{ height: "100%" }}
-                    key={squeal._id}
-                    className="squeal"
-                  >
+                <Col lg={12} className="mb-4" key={squeal._id}>
+                  <Card style={{ height: "100%" }} className="squeal">
                     <Card.Header className="d-flex flex-col justify-content-center align-items-center">
                       {" "}
                       <b>{squeal.sender}</b>

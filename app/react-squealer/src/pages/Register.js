@@ -161,23 +161,28 @@ function Register() {
   return (
     <div className="container">
       <div className="row justify-content-center">
-        <div className="col-6 ">
-          <form onSubmit={handleRegistration}>
-            <h1 className="text-center mb-5 mt-5 cool-font-medium">
-              Register to &#129413;
-            </h1>
+        <h1 className="text-center mt-3 cool-font animated-title">Welcome</h1>
+        <h1 className="animated-squeal cool-font" aria-label="Squealer">
+          to &#129413;
+        </h1>
 
+        <div className="animated-title col-6 ">
+          <form onSubmit={handleRegistration}>
             <div className="form-group row p-2 mb-3">
-              <label htmlFor="inputName" className="form-label cool-font-small">
+              <label
+                htmlFor="inputName"
+                className="form-label cool-font-medium"
+              >
                 Nome
               </label>
               <input
                 type="text"
                 name="name"
-                className="form-control"
+                className="form-control cool-font-text text-center box"
+                style={{ color: "#072f38", backgroundColor: "#e0bb76" }}
                 id="inputName"
                 value={name}
-                placeholder="Name"
+                placeholder="Nome"
                 onChange={(e) => setName(e.target.value)}
                 required
               />
@@ -186,14 +191,15 @@ function Register() {
             <div className="form-group row p-2 mb-3">
               <label
                 htmlFor="inputSurname"
-                className="form-label cool-font-small"
+                className="form-label cool-font-medium"
               >
                 Cognome
               </label>
               <input
                 type="text"
                 name="surname"
-                className="form-control"
+                className="form-control cool-font-text text-center box"
+                style={{ color: "#072f38", backgroundColor: "#e0bb76" }}
                 id="inputSurname"
                 value={surname}
                 placeholder="Cognome"
@@ -205,14 +211,15 @@ function Register() {
             <div className="form-group row p-2 mb-3">
               <label
                 htmlFor="inputUsername"
-                className="form-label cool-font-small"
+                className="form-label cool-font-medium"
               >
                 Username
               </label>
               <input
                 type="text"
                 name="username"
-                className="form-control"
+                className="form-control cool-font-text text-center box"
+                style={{ color: "#072f38", backgroundColor: "#e0bb76" }}
                 id="inputUsername"
                 value={username}
                 placeholder="Username"
@@ -222,16 +229,17 @@ function Register() {
             </div>
 
             <div className="form-group row p-2 mb-3">
-              <label htmlFor="email" className="form-label cool-font-small">
+              <label htmlFor="email" className="form-label cool-font-medium">
                 Email
               </label>
               <input
                 type="text"
                 name="email"
-                className="form-control"
+                className="form-control cool-font-text text-center box"
+                style={{ color: "#072f38", backgroundColor: "#e0bb76" }}
                 id="email"
                 value={email}
-                placeholder="nomecognome@example.it"
+                placeholder="you@example.it"
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
@@ -240,14 +248,15 @@ function Register() {
             <div className="form-group row p-2">
               <label
                 htmlFor="inputPassword5"
-                className="form-label cool-font-small"
+                className="form-label cool-font-medium"
               >
                 Password
               </label>
               <input
                 type="password"
                 name="password"
-                className="form-control"
+                className="form-control cool-font-text text-center box"
+                style={{ color: "#072f38", backgroundColor: "#e0bb76" }}
                 id="inputPassword"
                 value={password}
                 aria-describedby="passwordHelpBlock"
@@ -255,29 +264,31 @@ function Register() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
-              <div id="passwordHelpBlock" className="form-text p-2 mb-2">
-                Vincoli sulla password
-              </div>
             </div>
 
-            <div className="form-group row p-2 mb-5">
-              <label htmlFor="inputPassword5" className="form-label">
-                <span className="cool-font-small">
-                  Qual è il tuo passatempo preferito?
-                </span>
-                <br></br>
-                Questa risposta per il reset password
-                <br></br>
+            <div className="form-group row p-2 mb-3 cool-font-link  ">
+              <h3 className="text-wrap cool-font-medium">
+                Qual è il tuo passatempo preferito?
+              </h3>
+
+              <label
+                htmlFor="inputPassword5"
+                className="form-label  d-flex flex-col justify-content-center align-items-center"
+              >
+                Questa risposta serve
+                <br />
+                per il reset password
+                <br />
                 Presta attenzione!
-                <br></br>
-                Con amore, i creatori
               </label>
               <input
                 type="text"
                 name="reset"
-                className="form-control"
+                className="form-control cool-font-text text-center box"
                 id="inputReset"
+                style={{ color: "#072f38", backgroundColor: "#e0bb76" }}
                 value={reset}
+                placeholder="Passatempo"
                 onChange={(e) => setReset(e.target.value)}
                 required
               />
@@ -285,19 +296,19 @@ function Register() {
 
             <div className="form-group row p-2">
               <button
-                className="col-12 col-md-4 offset-md-4 mb-3 yellow-button"
+                className="col-12 col-md-4 offset-md-4 mb-3 green-button cool-font-small box"
                 type="button"
                 onClick={handleRegistration}
               >
                 <ToastContainer />
-                REGISTER
+                REGISTRATI
               </button>
-              <button className="col-12 col-md-4 offset-md-4 mb-5 yellow-button">
+              <button className="col-12 col-md-4 offset-md-4 mb-5 red-button box cool-font-small">
                 <NavLink
-                  style={{ color: "#b45656" }}
+                  style={{ color: "#e0bb76" }}
                   to={ReactConfig.pathFunction("/")}
                 >
-                  Login
+                  INDIETRO
                 </NavLink>
               </button>
             </div>

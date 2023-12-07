@@ -18,7 +18,6 @@ import { Container, Card, Col, Row } from "react-bootstrap";
 import "../css/App.css";
 import squeal_logo from "./media/icone/Nav_logo.png";
 
-
 /*
 jADiaT60QVDL3bR4I8etxbYBbxT3YtnMOIq2r4LD
 */
@@ -46,9 +45,6 @@ function Channels() {
 
       if (result.ok) {
         let data = await result.json();
-
-        console.log("INFO UTENTE", data);
-
         setUserGlobal(data);
       } else {
         console.error("Errore nella richiesta:", result.statusText);
@@ -88,8 +84,6 @@ function Channels() {
     } catch (error) {
       console.error("Errore nella fetch:", error);
     }
-
-    console.log("LISTA CANALI TAGS", tagChannel);
   }
 
   //popolarità
@@ -118,8 +112,6 @@ function Channels() {
     } catch (error) {
       console.error("Errore nella fetch:", error);
     }
-
-    console.log("LISTA CANALI USER", userChannel);
   }
 
   ///GET /channel    list of channels USERS-------------------------------------------------------------
@@ -148,8 +140,6 @@ function Channels() {
     } catch (error) {
       console.error("Errore nella fetch:", error);
     }
-
-    console.log("LISTA CANALI USER", userChannel);
   }
 
   ///GET /channel    list of channels OFFICIAL-------------------------------------------------------
@@ -177,8 +167,6 @@ function Channels() {
     } catch (error) {
       console.error("Errore nella fetch:", error);
     }
-
-    console.log("LISTA CANALI OFFICAL", officialChannel);
   }
 
   //----------------------------------------------------------------------------
@@ -242,16 +230,15 @@ function Channels() {
             </ul>
           </div>
           <div className="col-12 mt-5">
-            
             <div>
               <div>
-                <div className="d-flex justify-content-center align-items-center"></div>
+                <div className="d-flex justify-content-evenly align-items-center"></div>
 
                 <div>
                   <Row>
                     <div className="col-4">
                       <button
-                        className="yellow-button box cool-font-text"
+                        className="green-button box cool-font-xsm"
                         onClick={changeClickUser}
                       >
                         UTENTE
@@ -265,7 +252,7 @@ function Channels() {
                     </div>
                     <div className="col-4">
                       <button
-                        className="yellow-button box cool-font-text"
+                        className="green-button box cool-font-xsm"
                         onClick={changeClickOfficial}
                       >
                         UFFICIALE
@@ -278,7 +265,7 @@ function Channels() {
                     </div>
                     <div className="col-4">
                       <button
-                        className="yellow-button box cool-font-text"
+                        className="green-button box cool-font-xsm"
                         onClick={changeClickTag}
                       >
                         TAG
