@@ -9,6 +9,7 @@ const SquealModel = require("../models/SquealModel");
 const VipController = require("./VipController");
 const VipModel = require("../models/VipModel");
 const VipDto = require("../entities/dtos/VipDto");
+const CommentModel = require("../models/CommentModel");
 
 module.exports = class UserController extends Controller {
 
@@ -122,6 +123,7 @@ module.exports = class UserController extends Controller {
         let squealModel = new SquealModel();
         let squealImpressionReactions = new SquealIrModel();
         let squealToUserModel = new SquealToUserModel();
+        let commentModel = new CommentModel();
 
         //Now squeals
         let result = await squealModel.deleteUser(username);
@@ -143,7 +145,14 @@ module.exports = class UserController extends Controller {
         result = await squealToUserModel.deleteUser(username);
         if(result === false){
             output['code'] = 500;
-            output['msg'] = 'Internal server error UserController::updateUser - 3';
+            output['msg'] = 'Internal server error UserController::deleteUser - 3';
+            return output;
+        }
+
+        result = await commentModel.deleteUsers(username);
+        if(result === false) {
+            output['code'] = 500;
+            output['msg'] = 'Internal server error UserController::deleteUser - 4';
             return output;
         }
 
@@ -375,6 +384,16 @@ module.exports = class UserController extends Controller {
                 output['msg'] = 'Internal server error UserController::updateUser - 5';
                 return output;
             }
+
+            //Now comments
+            let commentModel = new CommentModel();
+            result = await commentModel.substituteUsers(oldUsername, newUser.username);
+            if(result === false){
+                output['code'] = 500;
+                output['msg'] = 'Internal server error UserController::updateUser - 5';
+                return output;
+            }
+
         }
 
         return output;
@@ -426,9 +445,10 @@ module.exports = class UserController extends Controller {
      * @param {string} search
      * @param {string} orderBy
      * @param {string} orderDir
+     * @param {string} filter
      * @return Promise<>
      */
-    async getUserList(requestingUser, offset, limit, search, orderBy, orderDir) {
+    async getUserList(requestingUser, offset, limit, search, orderBy, orderDir, filter = 'NONE') {
         let output = this.getDefaultOutput();
 
         let isAdmin = false;
@@ -448,8 +468,8 @@ module.exports = class UserController extends Controller {
         orderDir = ((orderDir === 'ORDER_ASC') ? 'ORDER_ASC' : 'ORDER_DESC');
 
         output.content = {}
-        output.content['users'] = await this._model.getUserList(offset, limit, search, orderBy, orderDir);
-        output.content['totalCount'] = await this._model.getUserCount(search);
+        output.content['users'] = await this._model.getUserList(offset, limit, search, orderBy, orderDir, filter);
+        output.content['totalCount'] = await this._model.getUserCount(search, filter);
 
         for (let i = 0; i < output.content['users'].length; i++) {
             if (isAdmin === false)

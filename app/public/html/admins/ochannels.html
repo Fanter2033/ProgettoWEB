@@ -233,7 +233,13 @@
             headers: {
                 "Content-Type": "application/json",
             }
-        })
+        }).then((response) => {
+            if(response.ok) {
+                $('#toastSuccess').toast('show');
+            } else {
+                notifyError('Si è verificato un errore');
+            }
+        });
     }
 
     function notifyError(msg) {

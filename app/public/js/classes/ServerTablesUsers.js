@@ -10,6 +10,7 @@ class ServerTablesUsers {
     #data;
     #userCount;
     #variableName;
+    #filter;
 
     /**
      * @param {string} id id html
@@ -27,6 +28,7 @@ class ServerTablesUsers {
         this.#data = [];
         this.#userCount = 0;
         this.#variableName = variableName;
+        this.#filter = 'NONE';
     }
 
     /**
@@ -54,7 +56,11 @@ class ServerTablesUsers {
     }
 
     async askData2Server() {
-        const response = await fetch(`../../user/?orderBy=${this.#orderBy}&orderDir=${this.#orderDir}&search=${this.#search}&offset=${this.getOffset()}&limit=${this.#limit}`, {
+        let f = this.#filter;
+        let uri = `../../user/?orderBy=${this.#orderBy}&orderDir=${this.#orderDir}&search=${this.#search}&offset=${this.getOffset()}&limit=${this.#limit}`;
+        if(f !== 'NONE')
+            uri = `../../user/type/${f}/?orderBy=${this.#orderBy}&orderDir=${this.#orderDir}&search=${this.#search}&offset=${this.getOffset()}&limit=${this.#limit}`;
+        const response = await fetch(uri, {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -80,7 +86,18 @@ class ServerTablesUsers {
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAggiungiUtente" onclick="cleanModalAddUser()">
                 Aggiungi</button>
             </div>
-            <div class="col-md-4 offset-md-6 col-sm-12">
+            <div class="col-md-4 offset-md-1 col-sm-12">
+                <div class="row">
+                    <select class="form-select form-control" onchange="${this.#variableName}.changeFilters(this);" name="select_datatable_users">
+                        <option value="NONE">Nessun filtro</option>
+                        <option value="USERS">Utenti</option>
+                        <option value="VIPS" >VIP</option>
+                        <option value="SMM">SMM</option>
+                        <option value="MOD">Moderators</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4 offset-md-1 col-sm-12">
                 <div class="row">
                     <input type="email" name="serverTableSearch" class="form-control" onkeyup="${this.#variableName}.executeSearch(this);" value="${this.#search}" placeholder="Cerca fra gli utenti..." maxlength="32">
                 </div>
@@ -105,6 +122,17 @@ class ServerTablesUsers {
             ${this.getTableHeader()}
             ${this.getTableBody()}`;
         footer.innerHTML = this.drawNavigationButtons();
+    }
+
+    /**
+     * @param {HTMLElement} inputElement
+     * @return {Promise<void>}
+     */
+    async changeFilters(inputElement){
+        this.#filter = inputElement.value;
+        await this.askData2Server();
+        this.draw();
+        $('select[name="select_datatable_users"]').val(this.#filter);
     }
 
     /**

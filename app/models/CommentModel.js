@@ -47,4 +47,38 @@ module.exports = class CommentModel extends Model {
         }
         return true;
     }
+
+    /**
+     * @param {string} oldUsername
+     * @param {string} newUsername
+     * @return {Promise<boolean>}
+     */
+    async substituteUsers(oldUsername, newUsername){
+        await this.checkMongoose("comments", Comment);
+        let filter = {"username": `${oldUsername}`};
+        filter = this.mongo_escape(filter);
+        let update = {"username": `${newUsername}`};
+        update = this.mongo_escape(update);
+        try {
+            await this.entityMongooseModel.updateMany(filter, update);
+            return true;
+        } catch (ignored) {
+            return false;
+        }
+    }
+
+    async deleteUsers(username){
+        await this.checkMongoose("comments", Comment);
+        let filter = {
+            username: username
+        }
+        filter = this.mongo_escape(filter);
+        try {
+            await this.entityMongooseModel.deleteMany(filter);
+            return true;
+        } catch (ignored) {
+            return false;
+        }
+    }
+
 }

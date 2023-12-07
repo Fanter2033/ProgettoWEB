@@ -123,9 +123,10 @@ module.exports = class UserModel extends Model {
      * @param {string} search
      * @param {string} orderBy
      * @param {string} orderDir
+     * @param {string} filter
      * @returns {Promise<UserDto | {}>}
      */
-    async getUserList(offset, limit, search, orderBy, orderDir) {
+    async getUserList(offset, limit, search, orderBy, orderDir, filterType = 'NONE') {
         await this.checkMongoose("User", User);
         orderDir = (orderDir === 'ORDER_ASC' ? 'asc' : 'desc');
         let filter = {
@@ -136,6 +137,7 @@ module.exports = class UserModel extends Model {
                 {email: {$regex: this.mongo_escape(search)}}
             ]
         };
+        filter = this.insertTypeFilter(filter, filterType);
         let sorting = {};
         sorting[orderBy] = orderDir;
         sorting = this.mongo_escape(sorting);
@@ -176,7 +178,7 @@ module.exports = class UserModel extends Model {
      *
      * Returns the number of all users in the DB.
      */
-    async getUserCount(search) {
+    async getUserCount(search, filterType = 'NONE') {
         let filter = {
             $or: [
                 {username: {$regex: this.mongo_escape(search)}},
@@ -185,7 +187,32 @@ module.exports = class UserModel extends Model {
                 {email: {$regex: this.mongo_escape(search)}}
             ]
         };
+        filter = this.insertTypeFilter(filter, filterType);
         return await this.entityMongooseModel.count(filter);
+    }
+
+    /**
+     * @param {object} filter
+     * @param {string} type
+     * @return {*}
+     */
+    insertTypeFilter(filter, type = 'NONE'){
+        type = this.mongo_escape(type);
+        switch (type) {
+            case 'USERS':
+                filter['isUser'] = true;
+                break;
+            case 'VIPS':
+                filter['vip'] = true;
+                break;
+            case 'SMM':
+                filter['isSmm'] = true;
+                break;
+            case 'MOD':
+                filter['isAdmin'] = true;
+                break;
+        }
+        return filter;
     }
 
     /**
