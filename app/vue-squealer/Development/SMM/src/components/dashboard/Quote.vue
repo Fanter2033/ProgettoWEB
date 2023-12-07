@@ -91,7 +91,6 @@ import {onMounted, onUpdated, reactive, watch} from "vue";
 import {ref} from "vue";
 
 import {Chart as ChartJS, ArcElement, Tooltip, Legend} from 'chart.js'
-import DashBoard from "@/components/dashboard/DashBoard.vue";
 //import { Pie } from 'vue-chartjs'
 
 const route = useRoute();
@@ -100,6 +99,7 @@ const isMouseOver = ref(false);
 const state = reactive({
   modal_demo: null,
 });
+
 
 onMounted(() => {
   VipName.value = route.params.vip;

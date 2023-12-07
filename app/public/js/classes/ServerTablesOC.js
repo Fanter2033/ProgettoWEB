@@ -1,4 +1,4 @@
-class ServerTablesUC {
+class ServerTablesOC {
     #containerId;
     #page;
     #limit;
@@ -53,7 +53,7 @@ class ServerTablesUC {
     }
 
     async askData2Server() {
-        const response = await fetch(`../../channel/CHANNEL_USERS/?orderBy=${this.#orderBy}&orderDir=${this.#orderDir}&search=${this.#search}&offset=${this.getOffset()}&limit=${this.#limit}`, {
+        const response = await fetch(`../../channel/CHANNEL_OFFICIAL/?orderBy=${this.#orderBy}&orderDir=${this.#orderDir}&search=${this.#search}&offset=${this.getOffset()}&limit=${this.#limit}`, {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -76,7 +76,7 @@ class ServerTablesUC {
         let html = `
         <div class="row w-100">
             <div class="col-md-2">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAggiungiCanale" onclick="cleanModalAddChannel('CHANNEL_USERS')">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAggiungiCanale" onclick="cleanModalAddChannel('CHANNEL_OFFICIAL')">
                 Aggiungi</button>
             </div>
             <div class="col-md-4 offset-md-6 col-sm-12">
@@ -226,12 +226,6 @@ class ServerTablesUC {
                 <button type="button" class="btn btn-warning" onclick="${this.#variableName}.updateChannel('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#modalAggiungiCanale">Modifica</button>
                 &nbsp;
                 <button type="button" class="btn btn-danger" onclick="${this.#variableName}.deleteChannel('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#modalEliminaCanale">Elimina</button>
-                &nbsp;
-                <button type="button" class="btn btn-success" onclick="changeRolesChannel('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#modificaRuoliCanale">Cambia ruoli</button>
-                &nbsp;
-                <button type="button" class="btn btn-light" onclick="lockChannel('CHANNEL_USERS', '${channelRow.channel_name}', ${channelRow.locked})" data-bs-toggle="modal" data-bs-target="#modalToggleLock">
-                    ${channelRow.locked ? 'Sblocca' : 'Blocca'}
-                </button>
                 </td>`;
         }
 
@@ -259,13 +253,9 @@ class ServerTablesUC {
             return channelDto;
 
         document.getElementById('registerChannel').value = channelDto.channel_name;
-        document.getElementById('privacyChannelPublic').checked = false;
-        document.getElementById('privacyChannelPrivate').checked = false;
-        if(channelDto.private) document.getElementById('privacyChannelPrivate').checked = true;
-        else document.getElementById('privacyChannelPublic').checked = true;
 
 
-        document.getElementById('executeOperation').setAttribute('onclick', `applicaCambiamentiCanale('CHANNEL_USERS', '${channel_name}')`);
+        document.getElementById('executeOperation').setAttribute('onclick', `applicaCambiamentiCanale('CHANNEL_OFFICIAL', '${channel_name}')`);
         document.getElementById('executeOperation').innerHTML = 'Modifica canale';
     }
 
@@ -278,7 +268,7 @@ class ServerTablesUC {
         if (channelDto === null)
             return channelDto;
         document.getElementById('eliminaUtenteCanale').innerHTML = `Volete eliminare il canale "§${channelDto.channel_name}"?`;
-        document.getElementById('executeDeleteButton').setAttribute('onclick', `executeDeleteOnServer('CHANNEL_USERS', "${channelDto.channel_name}")`);
+        document.getElementById('executeDeleteButton').setAttribute('onclick', `executeDeleteOnServer('CHANNEL_OFFICIAL', "${channelDto.channel_name}")`);
     }
 
     /**

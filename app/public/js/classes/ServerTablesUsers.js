@@ -169,15 +169,15 @@ class ServerTablesUsers {
                 <div class="row w-100">
                     <div class="offset-md-${12 - this.getNumberOfButtonsRequired()} col-md-${this.getNumberOfButtonsRequired()} col-sm-12">
                         <div class="row">
-                            <button type="button" class="col-4 btn btn-light" onclick="${this.#variableName}.setPage(1)"><<<</button>
+                            <button type="button" class="col-2 btn btn-light" onclick="${this.#variableName}.setPage(1)"><<<</button>
                             &nbsp;
-                            <button type="button" class="col-4 btn btn-light" onclick="${this.#variableName}.setPage(${this.#page - 1})"><</button>
+                            <button type="button" class="col-2 btn btn-light" onclick="${this.#variableName}.setPage(${this.#page - 1})"><</button>
                             &nbsp;
-                            <button type="button" class="col-3 btn btn-primary">${this.getRealPage()}</button>
+                            <button type="button" class="col-3 btn btn-primary">${this.#page}</button>
                             &nbsp;
-                            <button type="button" class="col-4 btn btn-light" onclick="${this.#variableName}.setPage(${this.#page})">></button>
+                            <button type="button" class="col-2 btn btn-light" onclick="${this.#variableName}.setPage(${this.#page + 1})">></button>
                             &nbsp;
-                            <button type="button" class="col-4 btn btn-light" onclick="${this.#variableName}.setPage(${this.getMaxPage()})">>>></button>           
+                            <button type="button" class="col-2 btn btn-light" onclick="${this.#variableName}.setPage(${this.getMaxPage()})">>>></button>           
                         </div>
                     </div>    
                 </div>

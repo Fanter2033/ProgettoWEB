@@ -361,4 +361,23 @@ module.exports = class ChannelModel extends Model {
         return true;
     }
 
+    /**
+     * @param {ChannelDto} channelDto
+     * @return Promise<boolean>
+     */
+    async changeChannelDescription(channelDto){
+        await this.checkMongoose("Channel", Channel);
+        let filter = {
+            "type": `${this.mongo_escape(channelDto.type)}`,
+            "channel_name": `${this.mongo_escape(channelDto.channel_name)}`
+        };
+        channelDto.description = this.mongo_escape(channelDto.description);
+        try {
+            await this.entityMongooseModel.updateOne(filter, {description: channelDto.description});
+        } catch (ignored) {
+            return false;
+        }
+        return true;
+    }
+
 }

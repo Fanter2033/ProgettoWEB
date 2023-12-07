@@ -21,7 +21,7 @@ module.exports = class ChannelDto {
             if(typeof documentFromMongoose.description !== 'undefined')
                 this.#description = documentFromMongoose.description;
             else
-                this.#description = '';this.#description = '';
+                this.#description = '';
         }
     }
 
@@ -30,7 +30,8 @@ module.exports = class ChannelDto {
             channel_name: this.#channel_name,
             type: this.#type,
             private: this.#private,
-            locked: this.#locked
+            locked: this.#locked,
+            description: this.#description
         }
     }
 
