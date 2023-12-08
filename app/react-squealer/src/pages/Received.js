@@ -17,11 +17,32 @@ import { Container, Card, Col, Row } from "react-bootstrap";
 import "../css/App.css";
 
 function Received() {
-  const { userGlobal } = useUserContext();
+  const { userGlobal, setUserGlobal } = useUserContext();
   const navigate = useNavigate();
 
   if (userGlobal.username === undefined || userGlobal.username === "") {
-    navigate("./");
+    //GET WHO AM I--------------------------------------------------------------------------------
+    const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
+    fetch(uri, {
+      mode: "cors",
+      credentials: "include",
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+      })
+      .then((data) => {
+        console.log("Tutto ok, io sono:", data);
+        const updated = {
+          ...userGlobal,
+          username: data.username,
+        };
+        setUserGlobal(updated);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   //GET /dashboard/ ------------------------------------------------------------------------------------------------------------

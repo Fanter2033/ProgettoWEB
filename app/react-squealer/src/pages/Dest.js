@@ -92,7 +92,7 @@ const Dest = ({ onDestinatariSubmit }) => {
           </ul>
 
           <button
-            className="reset-button box cool-font-medium"
+            className="reset-button box cool-font-medium mb-4"
             onClick={handleResetDestinatari}
           >
             RESETTA

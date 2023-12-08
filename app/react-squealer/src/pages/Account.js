@@ -48,9 +48,30 @@ function Account() {
   //per il logout
   const navigate = useNavigate();
 
-  const navigate_logout = useNavigate();
-  if (userGlobal.username === undefined || userGlobal.username === "") {
-    navigate_logout("/");
+  //const navigate_logout = useNavigate();
+
+  async function whoAmI() {
+    if (userGlobal.username === undefined || userGlobal.username === "") {
+      //GET WHO AM I--------------------------------------------------------------------------------
+      const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
+      fetch(uri, {
+        mode: "cors",
+        credentials: "include",
+      })
+        .then((res) => {
+          if (res.ok) {
+            return res.json();
+          }
+        })
+        .then((data) => {
+          console.log("Tutto ok, io sono:", data);
+
+          setUserGlobal(data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
   }
 
   //VIP modalssssssss
@@ -253,11 +274,13 @@ function Account() {
     getRoles();
     getUserQuote();
     //showVulture();
+    whoAmI();
 
     const intervalId = setInterval(getUserData, 5000); //10 sec
     //const intervalId2 = setInterval(getSmm, 10000); //10 sec
     const intervalId3 = setInterval(getRoles, 10000); //10 sec
     const intervalId4 = setInterval(getUserQuote, 10000); //10 sec
+    const intervalId5 = setInterval(whoAmI, 10000); //10 sec
 
     // per evitare memory leaks
 
@@ -266,6 +289,7 @@ function Account() {
       //clearInterval(intervalId2);
       clearInterval(intervalId3);
       clearInterval(intervalId4);
+      clearInterval(intervalId5);
     };
   }, []);
 
@@ -335,7 +359,7 @@ function Account() {
           </ul>
         </div>
         <div className="mb-3 mt-4">
-          <div className="col-12 col-md-6 d-flex flex-col align-items-center justify-content-center">
+          <div className="col-12 d-flex flex-col align-items-center justify-content-center">
             {userData.pfp && userData.vip && (
               <img
                 src={"data:image/png;base64," + userData.pfp}
@@ -380,86 +404,83 @@ function Account() {
             <img src={avvoltoio} alt="Avvoltoio animato" />
           </div>
 
-          <div className="col-12 col-md-6 cool-font-text">
-            <div className="row">
-              <div className="col-12 col-md d-flex align-items-center justify-content-center ">
-                <div className="d-md-flex flex-md-row flex-column">
-                  <div className="col-12">
-                    <h1 className="d-flex flex-col align-items-center justify-content-center cool-font-medium mt-2 mb-2">
-                      {userData.username}
-                      {userData.vip && (
-                        <img src={pink} style={{ width: "10%" }} />
-                      )}
-                    </h1>
-                    {userData.locked && (
-                      <>
-                        <p className="altro">BLOCCATO</p>
-                      </>
-                    )}
-                    <h2 className="cool-font-medium">
-                      {userData.first_name} {userData.last_name}
-                    </h2>
-                    <button className="yellow-button box col-12 mb-3">
-                      N SQUEALS PUBBLICI: {squealsLogger.length}
-                    </button>
+          <div className="row">
+            <div className="col-12 d-flex align-items-center justify-content-center  cool-font-text">
+              <div className="d-md-flex flex-md-row flex-column">
+                <div className="col-12">
+                  <h1 className="d-flex flex-col align-items-center justify-content-center cool-font-medium mt-2 mb-2">
+                    {userData.username}
                     {userData.vip && (
-                      <div
-                        id="vip_buttons"
-                        className="row d-flex flex-row justify-content-center align-items-center"
-                      >
-                        <ToggleSMM mongoData={userData.isSmm} />
+                      <img src={pink} style={{ width: "10%" }} />
+                    )}
+                  </h1>
+                  {userData.locked && (
+                    <>
+                      <p className="altro">BLOCCATO</p>
+                    </>
+                  )}
+                  <h2 className="cool-font-medium">
+                    {userData.first_name} {userData.last_name}
+                  </h2>
+                  <button className="yellow-button box col-12 mb-3">
+                    N SQUEALS PUBBLICI: {squealsLogger.length}
+                  </button>
+                  {userData.vip && (
+                    <div
+                      id="vip_buttons"
+                      className="row d-flex flex-row justify-content-center align-items-center"
+                    >
+                      <ToggleSMM mongoData={userData.isSmm} />
 
-                        {!userData.isSmm ? (
-                          <button
-                            className="col-6 upgrade-button mb-2 box"
-                            onClick={openConnect}
-                          >
-                            MANAGE SMM
-                          </button>
-                        ) : null}
-                        <ConnectSMM
-                          openConnect={connectSMM}
-                          closeConnect={closeConnect}
-                        />
-
+                      {!userData.isSmm ? (
                         <button
                           className="col-6 upgrade-button mb-2 box"
-                          onClick={openDowngrade}
+                          onClick={openConnect}
                         >
-                          DOWNGRADE
+                          MANAGE SMM
                         </button>
-                      </div>
-                    )}
-                    <DowngradeModal
-                      downgrade={downgrade}
-                      closeDowngrade={closeDowngrade}
-                    />
-                    {!userData.vip && (
-                      <button
-                        className="box upgrade-button"
-                        onClick={handleShowModal}
-                      >
-                        UPGRADE
-                      </button>
-                    )}
+                      ) : null}
+                      <ConnectSMM
+                        openConnect={connectSMM}
+                        closeConnect={closeConnect}
+                      />
 
-                    <VipModal
-                      showModal={showModal}
-                      handleClose={handleCloseModal}
-                    />
-                  </div>
+                      <button
+                        className="col-6 upgrade-button mb-2 box"
+                        onClick={openDowngrade}
+                      >
+                        DOWNGRADE
+                      </button>
+                    </div>
+                  )}
+                  <DowngradeModal
+                    downgrade={downgrade}
+                    closeDowngrade={closeDowngrade}
+                  />
+                  {!userData.vip && (
+                    <button
+                      className="box upgrade-button"
+                      onClick={handleShowModal}
+                    >
+                      UPGRADE
+                    </button>
+                  )}
+
+                  <VipModal
+                    showModal={showModal}
+                    handleClose={handleCloseModal}
+                  />
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="mb-4 cool-font-text">
-          <div className="col-md-6">
+        <div className="row mb-4 cool-font-text">
+          <div className="col-6">
             <div className="row">
               <h3 className="cool-font-medium">QUOTA RIMANENTE</h3>
             </div>
-
             <div className="row d-flex align-items-center justify-content-center mb-4">
               <div className="col-12">
                 <h4 className="cool-font-medium mt-2">Giornaliero</h4>
@@ -499,7 +520,7 @@ function Account() {
             )}
           </div>
 
-          <div className="col-md-6">
+          <div className="col-6">
             <div className="col-12 mt-3">
               <h3 className="cool-font-medium">LIMIT</h3>
               <h4 className="cool-font-medium mt-2">Giornaliero</h4>
@@ -522,7 +543,6 @@ function Account() {
             <h4 className="mt-5 cool-font-medium">EMAIL: {userData.email}</h4>
           </div>
         </div>
-
 
         <div className=" mb-5">
           <div className=" d-flex flex-column justify-content-center align-items-center ">
