@@ -6,6 +6,7 @@ class ServerTablesSQ {
     #orderBy;
     #orderDir;
     #search;
+    #searchDest;
     #data;
     #userCount;
     #variableName;
@@ -23,6 +24,7 @@ class ServerTablesSQ {
         this.#orderBy = '_id';
         this.#orderDir = 'ORDER_DESC';
         this.#search = '';
+        this.#searchDest = '';
         this.#data = [];
         this.#userCount = 0;
         this.#variableName = variableName;
@@ -53,7 +55,7 @@ class ServerTablesSQ {
     }
 
     async askData2Server() {
-        const response = await fetch(`../../channel/CHANNEL_OFFICIAL/?orderBy=${this.#orderBy}&orderDir=${this.#orderDir}&search=${this.#search}&offset=${this.getOffset()}&limit=${this.#limit}`, {
+        const response = await fetch(`../../squeal/?orderBy=${this.#orderBy}&orderDir=${this.#orderDir}&search_sender=${this.#search}&search_dest=${this.#searchDest}&offset=${this.getOffset()}&limit=${this.#limit}`, {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -61,7 +63,7 @@ class ServerTablesSQ {
         });
         if (response.ok) {
             let temp = await response.json();
-            this.#data = temp.channels;
+            this.#data = temp.squeals;
             this.#userCount = temp.totalCount;
         }
     }
@@ -74,14 +76,15 @@ class ServerTablesSQ {
         if (containerNode === null)
             return;
         let html = `
-        <div class="row w-100">
-            <div class="col-md-2">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAggiungiCanale" onclick="cleanModalAddChannel('CHANNEL_OFFICIAL')">
-                Aggiungi</button>
-            </div>
-            <div class="col-md-4 offset-md-6 col-sm-12">
+        <div class="ps-2 row w-100">
+            <div class="col-md-4 col-sm-12">
                 <div class="row">
-                    <input type="input" name="serverTableSearch" class="form-control" onkeyup="${this.#variableName}.executeSearch(this);" value="${this.#search}" placeholder="Cerca tra i canali..." maxlength="32">
+                    <input type="input" name="serverTableDestinations" class="form-control" onkeyup="${this.#variableName}.executeSearchDest(this);" value="${this.#searchDest}" placeholder="Cerca tra i destinatari..." maxlength="32">
+                </div>
+            </div>           
+            <div class="col-md-4 offset-md-4 col-sm-12">
+                <div class="row">
+                    <input type="input" name="serverTableSearch" class="form-control" onkeyup="${this.#variableName}.executeSearchNormal(this);" value="${this.#search}" placeholder="Cerca tra gli squeal..." maxlength="32">
                 </div>
             </div>
         </div>
@@ -111,12 +114,27 @@ class ServerTablesSQ {
      * @param {HTMLElement} inputElement
      * @return {Promise<void>}
      */
-    async executeSearch(inputElement) {
+    async executeSearchDest(inputElement) {
+        this.#searchDest = inputElement.value;
+        await this.executeSearch(this.#searchDest, this.#search);
+    }
+
+    /**
+     * @param {HTMLElement} inputElement
+     * @return {Promise<void>}
+     */
+    async executeSearchNormal(inputElement) {
         this.#search = inputElement.value;
-        let searched = this.#search;
+        await this.executeSearch(this.#searchDest, this.#search);
+    }
+
+    /**
+     * @return {Promise<void>}
+     */
+    async executeSearch(sD, sN) {
         this.#page = 1;
         await this.askData2Server();
-        if(searched === this.#search)
+        if(sN === this.#search && sD === this.#searchDest)
             this.drawData();
     }
 
@@ -124,7 +142,7 @@ class ServerTablesSQ {
      * @param {number} page
      * @return {Promise<void>}
      */
-    async setPage(page){
+    async setPage(page) {
         this.#page = page;
         await this.askData2Server();
         this.drawData();
@@ -204,22 +222,20 @@ class ServerTablesSQ {
      * @param channelRow
      * @return {string}
      */
-    getChannelRole(channelRow) {
+    getRow(channelRow) {
         let html = '';
         let objKeys = Object.keys(channelRow);
         for (const assocJsonKey in this.#assoc_json)
-            if (assocJsonKey === 'private') {
-                let isPrivate = 'Privato';
-                if(channelRow.private !== true)
-                    isPrivate = 'Pubblico';
-                html = html + `<td>${isPrivate}</td>`;
-            } else if (assocJsonKey === 'locked') {
-                let isLocked = 'Sì';
-                if(channelRow.locked !== true)
-                    isLocked = 'No';
-                html = html + `<td>${isLocked}</td>`;
+            if (assocJsonKey === 'destinations') {
+                let destStr = '<ul>';
+                for (const dest of channelRow[assocJsonKey]) {
+                    destStr = destStr + `<li>${dest}</li>`;
+                }
+                destStr = destStr + '</ul>'
+                html = html + `<td>${destStr}</td>`
             } else if (objKeys.includes(assocJsonKey))
                 html = html + `<td>${channelRow[assocJsonKey]}</td>`;
+
 
         if (Object.keys(this.#assoc_json).includes('actions')) {
             html = html + `<td>
@@ -239,13 +255,13 @@ class ServerTablesSQ {
      * @return {string}
      */
     getTableBody() {
-        if(this.#data.length === 0){
+        if (this.#data.length === 0) {
             return '<tbody class="text-center"><h1>No Data</h1></tbody>';
         }
         let html = '<tbody>';
         for (let i = 0; i < this.#data.length; i++) {
             html = html + `<tr>`
-            html = html + this.getChannelRole(this.#data[i]);
+            html = html + this.getRow(this.#data[i]);
             html = html + `</tr>`
         }
 
@@ -257,7 +273,7 @@ class ServerTablesSQ {
      * @return {number}
      */
     getNumberOfButtonsRequired() {
-        if(this.getMaxPage() === 0)
+        if (this.getMaxPage() === 0)
             return 0;
         if (this.#page === this.getMaxPage() && this.getMaxPage() === 1)
             return 0;

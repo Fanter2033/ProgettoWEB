@@ -2,6 +2,7 @@ module.exports = class SquealDto {
 
     #id;
     #destinations;
+    #destinationsUsers;
     #comments;
     #date;
     #sender;
@@ -24,6 +25,7 @@ module.exports = class SquealDto {
             this.#quote_cost = null;
             this.#content = null;
             this.#destinations = [];
+            this.#destinationsUsers = [];
             this.#comments = [];
         } else {
             this.#id = documentFromMongoose._id;
@@ -36,6 +38,7 @@ module.exports = class SquealDto {
             this.#quote_cost = documentFromMongoose.quote_cost;
             this.#content = documentFromMongoose.content;
             this.#destinations = [];
+            this.#destinationsUsers = [];
             this.#comments = [];
         }
     }
@@ -77,6 +80,8 @@ module.exports = class SquealDto {
                 }
                 out.destinations.push(name);
             }
+            for (const dst of this.#destinationsUsers)
+                out.destinations.push(dst);
         }
 
 
@@ -102,6 +107,13 @@ module.exports = class SquealDto {
      */
     insertDestination(cDto) {
         this.#destinations.push(cDto);
+    }
+
+    /**
+     * @param {string} userString
+     */
+    insertDestinationUser(userString) {
+        this.#destinationsUsers.push(userString);
     }
 
     /**

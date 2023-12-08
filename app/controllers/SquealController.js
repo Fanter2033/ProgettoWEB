@@ -83,10 +83,25 @@ module.exports = class SquealController extends Controller {
 
         }
 
+        //Adding comments
         await this.#squealComments.getCommentFromSqueal(squeal);
 
+        //Adding dest - Channels
+        let channelDtos = await this.#squealToChannelModel.getDestinationsChannels(identifier);
+        for (const channelDto of channelDtos) {
+            squeal.insertDestination(channelDto);
+        }
+
         if (escapeAddImpression) {
-            output['content'] = squeal.getDocument();
+            if(authenticatedUser.isAdmin === true){
+                //Not we should get all private dests and add in queue of destinations
+                let users = await this.#squealToUserModel.getSquealDestUser(squeal.id);
+                for (const user of users)
+                    squeal.insertDestinationUser(`@${user}`);
+                output['content'] = squeal.getDocument(true);
+            } else
+                output['content'] = squeal.getDocument();
+
             return output;
         }
 
@@ -108,12 +123,6 @@ module.exports = class SquealController extends Controller {
                 output['msg'] = 'Internal server error (1).';
                 return output;
             }
-        }
-
-        let channelDtos = await this.#squealToChannelModel.getDestinationsChannels(identifier);
-
-        for (const channelDto of channelDtos) {
-            squeal.insertDestination(channelDto);
         }
 
         if (isDest === true) {
@@ -458,14 +467,14 @@ module.exports = class SquealController extends Controller {
             squeals: [],
             totalCount: 0
         }
-        let id_squeals = await this._model.getSquealList(offset, limit, search_sender, id_dest, orderBy, orderDir);
+        let id_squeals = await this._model.getSquealList(offset, limit, search_sender, id_dest, orderBy, orderDir, search_dest);
 
         for (const idSqueal of id_squeals) {
             let squeal = await this.getSqueal(idSqueal, authUser, '', true);
             output.content['squeals'].push(squeal.content);
         }
 
-        output.content['totalCount'] = await this._model.getSquealListCount(search_sender, id_dest);
+        output.content['totalCount'] = await this._model.getSquealListCount(search_sender, id_dest, search_dest);
 
         return output;
     }

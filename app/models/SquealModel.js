@@ -246,10 +246,11 @@ module.exports = class SquealModel extends Model {
      * @param {number[]} includes_ids
      * @param {string} orderBy
      * @param {string} orderDir
+     * @param {string} dest_search
      * @return {Promise<numbers[] | []>}
      * Returns only ids. Not content
      */
-    async getSquealList(offset, limit, search_sender, includes_ids, orderBy, orderDir) {
+    async getSquealList(offset, limit, search_sender, includes_ids, orderBy, orderDir, dest_search) {
         await this.checkMongoose("Squeal", Squeal);
         orderDir = (orderDir === 'ORDER_ASC' ? 'asc' : 'desc');
         let results;
@@ -274,6 +275,9 @@ module.exports = class SquealModel extends Model {
                 {_id: {$in: includes_ids}},
             ]
         }
+
+        if(search_sender === '' && dest_search === '')
+            filter = {};
 
         if (Object.keys(sorting).length !== 0) {
             results = await this.entityMongooseModel
@@ -300,10 +304,11 @@ module.exports = class SquealModel extends Model {
     /**
      * @param {string} search_sender
      * @param {number[]} includes_ids
+     * @param {string} dest_search
      * @return {Promise<number>}
      * Returns only ids. Not content
      */
-    async getSquealListCount(search_sender, includes_ids) {
+    async getSquealListCount(search_sender, includes_ids, dest_search) {
         await this.checkMongoose("Squeal", Squeal);
         let results;
 
@@ -322,6 +327,9 @@ module.exports = class SquealModel extends Model {
                 {_id: {$in: includes_ids}},
             ]
         }
+
+        if(search_sender === '' && dest_search === '')
+            filter = {};
 
         results = await this.entityMongooseModel
             .find(filter).count();

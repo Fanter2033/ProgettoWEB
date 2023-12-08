@@ -143,4 +143,28 @@ module.exports = class SquealToUserModel extends Model {
     }
 
 
+    /**
+     * @param squeal_id {number}
+     * @return {Promise<string[]>}
+     */
+    async getSquealDestUser(squeal_id) {
+        await this.checkMongoose("squeal_to_users", SquealUser);
+
+        squeal_id = this.mongo_escape(squeal_id);
+
+        let filter = {
+            "squeal_id": `${squeal_id}`,
+        }
+        let output = [];
+        try {
+            let result = await this.entityMongooseModel.find(filter);
+            for (const resultElement of result)
+                    output.push(resultElement._doc['destination_username']);
+            return output;
+        } catch (ignored) {
+            return output;
+        }
+    }
+
+
 }
