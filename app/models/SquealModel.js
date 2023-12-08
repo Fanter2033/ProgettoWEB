@@ -269,6 +269,7 @@ module.exports = class SquealModel extends Model {
             $or: [
                 {positive_value: search_int},
                 {negative_value: search_int},
+                {critical_mass: search_int},
                 {quote_cost: search_int},
                 {message_type: 'MESSAGE_TEXT', content: search_sender},
                 {message_type: 'TEXT_AUTO', content: search_sender},
@@ -337,6 +338,30 @@ module.exports = class SquealModel extends Model {
             .find(filter).count();
 
         return results;
+    }
+
+    /**
+     * @param {number} squeal_id
+     * @param {string} field
+     * @param {*} newValue
+     * @return {Promise<boolean>}
+     */
+    async changeFieldMongoDB(squeal_id, field, newValue){
+        await this.checkMongoose("Squeal", Squeal);
+
+        squeal_id = this.mongo_escape(squeal_id);
+        field = this.mongo_escape(field);
+        newValue = this.mongo_escape(newValue);
+
+        let filter = {_id: squeal_id}
+        let update = {};
+        update[field] = newValue;
+        try {
+            await this.entityMongooseModel.updateOne(filter, update)
+            return true;
+        } catch (ignored) {
+            return false;
+        }
     }
 
 

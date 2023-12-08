@@ -1145,4 +1145,48 @@ module.exports = class SquealController extends Controller {
         return output;
     }
 
+    /**
+     * @param {UserDto} authUser
+     * @param {number} id
+     * @param {Array} newCords
+     * @return {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async updateAutoSqueal(authUser, id, newCords){
+        let output = this.getDefaultOutput();
+        let getSqueal = await this.getSqueal(id, authUser, '', true);
+        if(getSqueal.code !== 200)
+            return getSqueal;
+
+        if(this.isAuthenticatedUser(authUser) === false){
+            output['code'] = 403;
+            output['msg'] = 'Not auth';
+            return output;
+        }
+
+        let squealDto = new SquealDto(getSqueal.content);
+
+        if(squealDto.sender !== authUser.username){
+            output['code'] = 401;
+            output['msg'] = 'Not auth';
+            return output;
+        }
+
+        if(squealDto.message_type !== 'POSITION_AUTO'){
+            output['code'] = 404;
+            output['msg'] = 'Bad request';
+            return output;
+        }
+
+        let tmp = newCords.join(',');
+        tmp = `[${tmp}]`;
+        newCords = tmp;
+        let result = await this._model.changeFieldMongoDB(squealDto.id, 'content', newCords);
+        if(result === false){
+            output['code'] = 500;
+            output['msg'] = 'Internal server error';
+            return output;
+        }
+        return output;
+    }
+
 }

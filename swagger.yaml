@@ -1059,19 +1059,17 @@ paths:
     put:
       tags:
         - squeal
-      summary: Update the squeal
-      description: Update the squeal with his identifier in path with the passed Squeal object in the body. The quota used by the final post is the maximum between the old quota and the newer
+      summary: Update the POSITION_AUTO squeal
       parameters:
         - name: identifier_id
           in: path
           required: true
           type: integer
-        - name: new_squeal
-          in: body
-          description: new Squeal object
+        - name: new_position
+          in: formData
+          description: New coords
+          type: array
           required: true
-          schema:
-            $ref: '#/definitions/Squeal'
       responses:
         '200':
           description: 'Updated'

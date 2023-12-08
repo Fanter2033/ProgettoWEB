@@ -82,6 +82,24 @@ squealDriver.get('/', async function (req, res) {
         res.status(ctrl.code).send(ctrl);
 });
 
+squealDriver.put('/:id', async function(req, res) {
+    let authUser = authController.getAuthenticatedUser(req);
+    let id = req.params['id'];
+    let newCords = (typeof req.body.new_position !== 'undefined' ? req.body.new_position: [0, 0]);
+    if(Array.isArray(newCords) === false){
+        newCords = [0,0];
+    }
+    if(newCords.length !== 2) {
+        newCords = [0,0];
+    }
+
+    let ctrl = await squealController.updateAutoSqueal(await authUser, id, newCords);
+    if (ctrl.code === 200)
+        res.status(ctrl.code).send(ctrl.content);
+    else
+        res.status(ctrl.code).send(ctrl);
+});
+
 //DA AGGIUNGERE ALLA SPECIFICA SWAGGER
 squealDriver.post('/from-smm/:username', async function(req, res){
     let authUser = await authController.getAuthenticatedUser(req);
