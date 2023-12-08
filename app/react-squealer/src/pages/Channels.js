@@ -25,8 +25,27 @@ function Channels() {
   const { userGlobal, setUserGlobal } = useUserContext();
 
   const navigate = useNavigate();
-  if (userGlobal.username === undefined) {
-    navigate("./");
+  if (userGlobal.username === undefined || userGlobal.username === "") {
+    //GET WHO AM I--------------------------------------------------------------------------------
+    const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
+    fetch(uri, {
+      mode: "cors",
+      credentials: "include",
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+      })
+      .then((data) => {
+        console.log("Tutto ok, io sono:", data);
+
+        userGlobal.username = data.username;
+        console.log("userGlobal", userGlobal);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   //GET USER INFO ------------------------------------------------------
