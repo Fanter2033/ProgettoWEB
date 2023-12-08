@@ -219,35 +219,108 @@ class ServerTablesSQ {
     }
 
     /**
-     * @param channelRow
+     * @param squealRow
      * @return {string}
      */
-    getRow(channelRow) {
+    getRow(squealRow) {
         let html = '';
-        let objKeys = Object.keys(channelRow);
+        let objKeys = Object.keys(squealRow);
         for (const assocJsonKey in this.#assoc_json)
             if (assocJsonKey === 'destinations') {
                 let destStr = '<ul>';
-                for (const dest of channelRow[assocJsonKey]) {
+                for (const dest of squealRow[assocJsonKey]) {
                     destStr = destStr + `<li>${dest}</li>`;
                 }
                 destStr = destStr + '</ul>'
                 html = html + `<td>${destStr}</td>`
             } else if (objKeys.includes(assocJsonKey))
-                html = html + `<td>${channelRow[assocJsonKey]}</td>`;
+                html = html + `<td>${squealRow[assocJsonKey]}</td>`;
 
 
         if (Object.keys(this.#assoc_json).includes('actions')) {
             html = html + `<td>
-                <button type="button" class="btn btn-warning" onclick="${this.#variableName}.updateChannel('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#modalAggiungiCanale">Modifica</button>
+                <button type="button" class="btn btn-primary mb-1" onclick="${this.#variableName}.seeContent(${squealRow._id})">Visualizza</button>
                 &nbsp;
-                <button type="button" class="btn btn-danger" onclick="${this.#variableName}.deleteChannel('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#modalEliminaCanale">Elimina</button>
+                <button type="button" class="btn btn-warning mb-1" onclick="${this.#variableName}.updateDestinations(${squealRow._id})" data-bs-toggle="modal" data-bs-target="#modalModificaDestinatari">Modifica destinatari</button>
                 &nbsp;
-                <button type="button" class="btn btn-success" onclick="${this.#variableName}.newSqueal('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#nuovoSqueal">Crea squeal</button>
+                <button type="button" class="btn btn-success mb-1" onclick="${this.#variableName}.updateReactions(${squealRow._id})" data-bs-toggle="modal" data-bs-target="#modalModificaReazioni">Modifica reazioni</button>
+                &nbsp;
+                <button type="button" class="btn btn-danger mb-1" onclick="${this.#variableName}.seeComments(${squealRow._id})">Mostra commenti</button>
+               
                 </td>`;
         }
 
         return html;
+    }
+
+    seeContent(id){
+        let data = this.getDataJson(id);
+        let type = data.message_type;
+        let finalHtml;
+        switch (type) {
+            case 'MESSAGE_TEXT':
+            case 'TEXT_AUTO':
+                finalHtml = `<p>Messaggio testuale: <br/> ${data.content} </p>`;
+                break;
+            case 'POSITION':
+            case 'POSITION_AUTO':
+                let content = data.content;
+                if(content.includes('[') === false)
+                    content = '[' + content;
+                if(content.includes(']') === false)
+                    content = content + ']';
+                let coords = [0, 0]
+                try {
+                     coords = JSON.parse(content);
+                } catch (ignored){}
+                let x = coords[0];
+                let y= coords[1];
+                finalHtml = `<p>Posizione: <br/> <a href="https://www.google.com/maps/@${x},${y},18z" target="_blank">Apri in Google Maps</a></p>`;
+                break;
+            case 'VIDEO_URL':
+                let content_url = data.content;
+                finalHtml = `<p>Video di YT: <br/> <a href="${content_url}" target="_blank">Apri in Youtube</a></p>`;
+                break;
+            case 'IMAGE':
+                let base64 = data.content;
+                finalHtml = `<p>Immagine:</p><img src="data:image/png;base64,${base64}"/>`;
+                break;
+            default:
+                notifyError('Errore generico');
+                return;
+        }
+
+        $('#modalMostraContenuti #containerContent').html(finalHtml);
+        $('#modalMostraContenuti').modal('show');
+
+    }
+
+    seeComments(id){
+        let data = this.getDataJson(id);
+
+        let comments = data.comments;
+        if(comments.length === 0) {
+            notifyError('Nessun commento presente');
+            return;
+        }
+
+        let commentiHtml = '<ul>'
+        for (const comment of comments) {
+            commentiHtml = commentiHtml + `<li><b>${comment.username}</b> ha commentato: <br/>${comment.comment}</li>`;
+        }
+        commentiHtml = commentiHtml + '</ul>'
+        $('#modalMostraCommenti #containerCommenti').html(commentiHtml);
+        $('#modalMostraCommenti').modal('show');
+
+    }
+
+
+    getDataJson(id){
+        id = parseInt(id);
+        for (const datum of this.#data)
+            if(datum._id === id)
+                return datum;
+        return null;
     }
 
 

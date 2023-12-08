@@ -129,6 +129,7 @@ class ServerTablesUsers {
      * @return {Promise<void>}
      */
     async changeFilters(inputElement){
+        this.#page = 1;
         this.#filter = inputElement.value;
         await this.askData2Server();
         this.draw();

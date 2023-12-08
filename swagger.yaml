@@ -1115,6 +1115,53 @@ paths:
           description: 'Not authorized'
         '404':
           description: 'Identifier not found'
+  /squeal/{identifier_id}/destinations/:
+    put:
+      tags:
+        - squeal / admin-only
+      parameters:
+        - name: identifier_id
+          description: Squeal ID
+          required: true
+          in: path
+          type: string
+        - name: destinations
+          description: new Squeal destinations
+          required: true
+          in: formData
+          type: array
+      responses:
+        '200':
+          description: 'Successful operation'
+        '400':
+          description: 'Generic error'
+        '401':
+          description: 'Not authorized'
+        '404':
+          description: 'Identifier not found'
+  /squeal/{identifier_id}/reactions/:
+    put:
+      tags:
+        - squeal / admin-only
+      parameters:
+        - name: identifier_id
+          description: Squeal ID
+          required: true
+          in: path
+          type: string
+        - name: positive_value
+          required: true
+          in: formData
+          type: number
+      responses:
+        '200':
+          description: 'Successful operation'
+        '400':
+          description: 'Generic error'
+        '401':
+          description: 'Not authorized'
+        '404':
+          description: 'Identifier not found'
   /squeal/{identifier_id}/comment/:
     get:
       tags:
