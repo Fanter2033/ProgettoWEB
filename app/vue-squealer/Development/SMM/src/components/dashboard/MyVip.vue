@@ -1,20 +1,19 @@
 <template>
-  <!-- Elemento di menu con submenu: per ora statico con il signor romanellas -->
-  <li class="mb-2">
+  <!-- Elemento di menu con submenu -->
+  <li class="nav-item">
     <div class="py-1 px-1 d-flex">
-    <i class="fs-4 bi-person-circle mx-lg-1 icon-small"></i>   <!--qui deve prendere icona da db-->
-    <span class="ms-1 d-none d-lg-inline">{{vipName}}</span>
-    <a      href="#submenu"
-            class="align-items-center dropdown-toggle"
-            data-bs-toggle="collapse"
-            data-bs-target="#submenu"
-            @click="toggleCollapse"
-            :aria-expanded="isCollapse"></a>
+      <i class="fs-4 bi-person-circle mx-lg-1 icon-small"></i>   <!--TODO: get_pfp(username)-->
+      <span class="ms-1 d-none d-lg-inline">{{ vipName }}</span>
+      <a :aria-expanded="isCollapse"
+         class="align-items-center dropdown-toggle"
+         data-bs-target="#submenu"
+         data-bs-toggle="collapse"
+         @click="toggleCollapse"></a>
     </div>
     <!-- Sottomenu -->
     <ul
-        class="collapse nav flex-column ms-1"
         :class="{ show: !isCollapse }"
+        class="collapse nav flex-column ms-1 p-2 pt-0"
     >
       <li class="py-1">
         <router-link :to="{ name:'Chart', params: {vip: vipName} }">
@@ -24,13 +23,13 @@
       </li>
       <li class="py-1">
         <router-link :to="{ name:'Quote', params: {vip: vipName} }">
-            <i class="fs-4 bi-currency-euro"></i
-            ><span class="d-none d-lg-inline">Quote</span>
+          <i class="fs-4 bi-currency-euro"></i
+          ><span class="d-none d-lg-inline">Quote</span>
         </router-link>
       </li>
       <li>
         <div>
-            <Squeal :vip="vipName" />
+          <Squeal :vip="vipName"/>
         </div>
       </li>
     </ul>
@@ -38,16 +37,18 @@
 </template>
 
 <script setup>
-  import Squeal from "@/components/dashboard/Squeal.vue";
-  import {ref} from "vue";
-  defineProps({
-    vipName: String,
-  })
+import Squeal from "@/components/dashboard/Squeal.vue";
+import {ref} from "vue";
 
-  const isCollapse = ref(false);
-  function toggleCollapse(){
-    isCollapse.value = !isCollapse.value;
-  }
+defineProps({
+  vipName: String,
+})
+
+const isCollapse = ref(false);
+
+function toggleCollapse() {
+  isCollapse.value = !isCollapse.value;
+}
 
 </script>
 

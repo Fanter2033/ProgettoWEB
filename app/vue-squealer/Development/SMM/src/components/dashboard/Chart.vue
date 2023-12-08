@@ -8,32 +8,41 @@
         <SideBar/>
       </div>
 
-      <div class="col-10">
-        <div class="container-fluid border rounded border-secondary border-2 m-1 p-1" style="background-color: whitesmoke">
-          <LineChart style="background-color: whitesmoke"/>
-          <div class="container border rounded">
-          <div class="d-flex justify-content-center">
-            <form class="mx-sm-auto p-1">
-              <label for="fromDate">From</label>
-              <input id="fromDate"
-                     v-model="fromTimeForm"
-                     class="row border rounded"
-                     type="date">
-              <label class="mt-2" for="toDate">To</label>
-              <input id="toDate"
-                     v-model="toTimeForm"
-                     class="row border rounded"
-                     type="date">
-            </form>
-            <div class="d-flex align-items-center">
-              <button class="btn" @click="this.updatePopData(this.$route.params.vip);">update data</button>
+      <div class="col-9 justify-content-center pt-4">
+        <h2>Popolarità positiva e negativa degli squeal</h2>
+        <div class="d-flex justify-content-center ">
+          <div class="container-fluid border rounded border-secondary border-2 p-1" style="background-color: whitesmoke">
+            <LineChart style="background-color: whitesmoke"/>
+            <div class="container border rounded ">
+              <div class="d-flex justify-content-start ">
+
+                <div>
+                  <form class="mx-sm-auto p-1">
+                    <label for="fromDate">From</label>
+                    <input id="fromDate"
+                           v-model="fromTimeForm"
+                           class="row border rounded"
+                           type="date">
+                    <label class="mt-2" for="toDate">To</label>
+                    <input id="toDate"
+                           v-model="toTimeForm"
+                           class="row border rounded"
+                           type="date">
+                  </form>
+                </div>
+
+                <div class="justify-content-center m-5">
+                  <button class="btn" @click="this.updatePopData(this.$route.params.vip);">update data</button>
+                </div>
+
+              </div>
+
+
             </div>
           </div>
-
-
-          </div>
         </div>
-        <DoughnutChart class="mt-3"></DoughnutChart>
+        <h2>Squeal - statistiche</h2>
+        <DoughnutChart class="mt-3 border rounded p-1"></DoughnutChart>
       </div>
 
     </div>
@@ -128,4 +137,5 @@ export default defineComponent({
 });
 </script>
 
-<style></style>
+<style>
+</style>

@@ -127,9 +127,9 @@
                     <input
                       id="number1"
                       v-model="inputNumberRep"
-                      class=""
                       min="1"
                       type="number"
+                      class="border rounded"
                     />
                   </div>
                   <div class="d-flex flex-nowrap justify-content-between mb-1">
@@ -140,10 +140,11 @@
                         id="number2"
                         v-model="inputSecRep"
                         type="number"
+                        class="border rounded"
                         min="1"/>
                   </div>
                   <textarea
-                    class="container"
+                    class="container border rounded"
                     placeholder="Inserisci il testo del post..."
                     v-model="inputContent"
                   ></textarea>
@@ -323,8 +324,8 @@ function postSqueal() {
     }
   }
   if(inputType.value === 'TEXT_AUTO'){
-    squealBody.auto_iterations = inputNumberRep;
-    squealBody.auto_seconds_delay = inputSecRep;
+    squealBody.squeal.auto_iterations = inputNumberRep.value;
+    squealBody.squeal.auto_seconds_delay = inputSecRep.value;
   }
   const options = {
     method: 'POST',
