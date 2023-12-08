@@ -542,13 +542,13 @@ function Account() {
                     <Row className="ms-4 me-4">
                       {roleUser.map((channel) => (
                         <Col
-                          key={channel.id}
+                          key={channel.channel_name}
                           lg={12}
                           className="mb-4 d-flex justify-content-center align-items-center"
                         >
                           {channel.role === 0 && (
                             <>
-                              <Card className="w-50 offers">
+                              <Card className="w-100 offers">
                                 <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
                                   <Link to="/infoc" state={channel}>
                                     <button className="ms-4 me-4 custom-button box">
@@ -581,7 +581,7 @@ function Account() {
                           )}
                           {channel.role === 1 && (
                             <>
-                              <Card className="w-50 offers">
+                              <Card className="w-100 offers">
                                 <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
                                   <Link to="/infoc" state={channel}>
                                     <button className="ms-4 me-4 custom-button box">
@@ -614,7 +614,7 @@ function Account() {
                           )}
                           {channel.role === 2 && (
                             <>
-                              <Card className="w-50 offers">
+                              <Card className="w-100 offers">
                                 <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
                                   <Link to="/infoc" state={channel}>
                                     <button className="ms-4 me-4 custom-button box">
@@ -647,7 +647,7 @@ function Account() {
                           )}
                           {channel.role === 3 && (
                             <>
-                              <Card className="w-50 offers">
+                              <Card className="w-100 offers">
                                 <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
                                   <Link to="/infoc" state={channel}>
                                     <button className="ms-4 me-4 custom-button box">
@@ -680,7 +680,7 @@ function Account() {
                           )}
                           {channel.role === 4 && (
                             <>
-                              <Card className="w-50 offers">
+                              <Card className="w-100 offers">
                                 <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
                                   <Link to="/infoc" state={channel}>
                                     <button className="ms-4 me-4 custom-button box">
@@ -753,7 +753,7 @@ function Account() {
 
             <button className="user_button mb-2 box cool-font-link">
               <Link to={ReactConfig.pathFunction("/about")} id="about-us">
-                ABOUT US:
+                INFO SUI CREATORI
               </Link>
             </button>
           </div>

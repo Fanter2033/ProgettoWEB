@@ -123,6 +123,15 @@ body {
   src: url("../../public/ArchivoBlack-Regular.ttf");
 }
 
+.text-3d {
+  font-family: "Cool-Font", sans-serif;
+  font-size: 10vw;
+  color: var(--squeal-yellow);
+
+  text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.8);
+
+  transform: perspective(400px) rotateX(20deg);
+}
 /* -----------------LIST STUFF------------------ */
 .list:hover {
   background-color: var(--squeal-blue);
@@ -530,7 +539,6 @@ img {
 .pfp-vip {
   border: 0.2rem solid var(--squeal-pink);
 }
-
 
 /* -------------------- MAP CORNICE ------------------*/
 .borderedImage {
