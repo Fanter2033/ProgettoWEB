@@ -423,7 +423,51 @@ module.exports = class SquealController extends Controller {
      * @param {string} orderDir
      */
     async getSquealList(authUser, offset, limit, search_sender, search_dest, orderBy, orderDir) {
+        let output = this.getDefaultOutput();
 
+        if(this.isAuthenticatedUser(authUser) === false){
+            output['code'] = 403;
+            output['code'] = 'Not authenticated';
+            return output;
+        }
+
+        if(authUser.isAdmin === false){
+            output['code'] = 401;
+            output['code'] = 'Not authorized';
+            return output;
+        }
+
+        offset = parseInt(offset);
+        limit = parseInt(limit);
+        search_sender = search_sender.trim();
+        search_dest = search_dest.trim();
+        orderBy = orderBy.trim();
+        orderDir = orderDir.trim();
+
+        offset = (isNaN(offset) ? 0 : offset);
+        limit = (isNaN(limit) ? 10 : limit);
+        if (limit > 100) limit = 100;
+        orderDir = ((orderDir === 'ORDER_ASC') ? 'ORDER_ASC' : 'ORDER_DESC');
+
+        //Let's get dests from model
+        let id_dest_ch = await this.#squealToChannelModel.getIdSquealsFromDestSearchChannels(search_dest);
+        let id_dest_users = await this.#squealToUserModel.getIdSquealsFromDestSearchUsers(search_dest);
+        let id_dest = id_dest_users.concat(id_dest_ch);
+
+        output.content = {
+            squeals: [],
+            totalCount: 0
+        }
+        let id_squeals = await this._model.getSquealList(offset, limit, search_sender, id_dest, orderBy, orderDir);
+
+        for (const idSqueal of id_squeals) {
+            let squeal = await this.getSqueal(idSqueal, authUser, '', true);
+            output.content['squeals'].push(squeal.content);
+        }
+
+        output.content['totalCount'] = await this._model.getSquealListCount(search_sender, id_dest);
+
+        return output;
     }
 
     /**
@@ -1025,7 +1069,36 @@ module.exports = class SquealController extends Controller {
      * @param {number} squeal_id
      * @return {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
-    async getSquealComments(authUser, squeal_id, content){
+    async getSquealComments(authUser, squeal_id){
+        let output = this.getDefaultOutput();
+
+        let getSquealOutput = await this.getSqueal(squeal_id, authUser, '', true);
+
+        if(getSquealOutput.code !== 200)
+            return getSquealOutput;
+
+        if(this.isAuthenticatedUser(authUser) === false){
+            output['msg'] = 'Not auth';
+            output['code'] = 403;
+            return output;
+        }
+
+        let s = new SquealDto();
+        s.id = squeal_id;
+        await this.#squealComments.getCommentFromSqueal(s);
+
+        output.content = s.getComments();
+
+        return output;
+    }
+
+    /**
+     * @param {UserDto} authUser
+     * @param {number} squeal_id
+     * @param content
+     * @return {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async postComment(authUser, squeal_id, content){
         let output = this.getDefaultOutput();
 
         let getSquealOutput = await this.getSqueal(squeal_id, authUser, '', true);

@@ -38,6 +38,9 @@ module.exports = class CommentModel extends Model {
     async postComment(commentDto){
         await this.checkMongoose("comments", Comment);
 
+        if(commentDto.comment === null)
+            commentDto.comment = '';
+
         let document = this.mongo_escape(commentDto.getDocument());
 
         try {

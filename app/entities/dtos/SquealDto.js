@@ -40,6 +40,15 @@ module.exports = class SquealDto {
         }
     }
 
+    getComments(){
+        let out = [];
+        for (const comment of this.#comments)
+            out.push(comment.getDocumentAttachSqueal());
+
+
+        return out;
+    }
+
     getDocument(getDestination = false) {
         let out = {
             _id: this.#id,

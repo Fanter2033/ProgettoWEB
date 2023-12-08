@@ -2,6 +2,7 @@ const Model = require("./Model");
 const Squeal = require("../entities/schemas/SquealSchema");
 const SquealDto = require("../entities/dtos/SquealDto");
 const SquealStat = require('../entities/SquealStat');
+const ExtendedChannelDto = require("../entities/dtos/ExtendedChannelDto");
 
 module.exports = class SquealModel extends Model {
     constructor(CollectionName) {
@@ -224,7 +225,7 @@ module.exports = class SquealModel extends Model {
      * @param {string} sender
      * @return {Promise<SquealDto[]>}
      */
-    async getSquealsFromSender(sender){
+    async getSquealsFromSender(sender) {
         await this.checkMongoose("Squeal", Squeal);
         sender = this.mongo_escape(sender);
         let filter = {
@@ -236,5 +237,97 @@ module.exports = class SquealModel extends Model {
             out.push(new SquealDto(resultElement._doc));
         return out;
     }
+
+
+    /**
+     * @param {number} offset
+     * @param {number} limit
+     * @param {string} search_sender
+     * @param {number[]} includes_ids
+     * @param {string} orderBy
+     * @param {string} orderDir
+     * @return {Promise<numbers[] | []>}
+     * Returns only ids. Not content
+     */
+    async getSquealList(offset, limit, search_sender, includes_ids, orderBy, orderDir) {
+        await this.checkMongoose("Squeal", Squeal);
+        orderDir = (orderDir === 'ORDER_ASC' ? 'asc' : 'desc');
+        let results;
+        let sorting = {};
+        sorting[orderBy] = orderDir;
+        sorting = this.mongo_escape(sorting);
+        if (orderBy === '')
+            sorting = {_id: "desc"};
+
+        let search_int = parseInt(search_sender);
+        if (isNaN(search_int)) search_int = -1;
+
+        let filter = {
+            $or: [
+                {positive_value: search_int},
+                {negative_value: search_int},
+                {quote_cost: search_int},
+                {message_type: 'MESSAGE_TEXT', content: search_sender},
+                {message_type: 'TEXT_AUTO', content: search_sender},
+                {sender: search_sender},
+                {_id: search_int},
+                {_id: {$in: includes_ids}},
+            ]
+        }
+
+        if (Object.keys(sorting).length !== 0) {
+            results = await this.entityMongooseModel
+                .find(filter)
+                .sort(sorting)
+                .skip(offset)
+                .limit(limit);
+        } else {
+            results = await this.entityMongooseModel
+                .find(filter)
+                .skip(offset)
+                .limit(limit);
+        }
+
+
+        let output = [];
+        for (const result of results) {
+            output.push(result._doc['_id']);
+        }
+        return output;
+    }
+
+
+    /**
+     * @param {string} search_sender
+     * @param {number[]} includes_ids
+     * @return {Promise<number>}
+     * Returns only ids. Not content
+     */
+    async getSquealListCount(search_sender, includes_ids) {
+        await this.checkMongoose("Squeal", Squeal);
+        let results;
+
+        let search_int = parseInt(search_sender);
+        if (isNaN(search_int)) search_int = -1;
+
+        let filter = {
+            $or: [
+                {positive_value: search_int},
+                {negative_value: search_int},
+                {quote_cost: search_int},
+                {message_type: 'MESSAGE_TEXT', content: search_sender},
+                {message_type: 'TEXT_AUTO', content: search_sender},
+                {sender: search_sender},
+                {_id: search_int},
+                {_id: {$in: includes_ids}},
+            ]
+        }
+
+        results = await this.entityMongooseModel
+            .find(filter).count();
+
+        return results;
+    }
+
 
 }

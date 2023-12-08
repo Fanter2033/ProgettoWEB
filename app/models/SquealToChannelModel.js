@@ -3,6 +3,8 @@ const SquealChannel = require("../entities/schemas/SquealChannel");
 const Squeal2ChannelDto = require("../entities/dtos/Squeal2ChannelDto");
 const ChannelDto = require("../entities/dtos/ChannelDto");
 const ChannelRoleSchema = require("../entities/schemas/ChannelRoleSchema");
+const Squeal = require("../entities/schemas/SquealSchema");
+const SquealDto = require("../entities/dtos/SquealDto");
 
 module.exports = class SquealToChannelModel extends Model {
     constructor() {
@@ -127,7 +129,7 @@ module.exports = class SquealToChannelModel extends Model {
         let update = {"channel_name": newChannel.channel_name, "channel_type": newChannel.type};
         update = this.mongo_escape(update);
         try {
-            let result = await this.entityMongooseModel.updateMany(filter, update);
+            await this.entityMongooseModel.updateMany(filter, update);
             return true;
         } catch (ignored) {
             return false;
@@ -151,6 +153,27 @@ module.exports = class SquealToChannelModel extends Model {
             return false;
         }
         return true;
+    }
+
+    /**
+     * @param {string} search_dest
+     * @return {Promise<numbers[] | []>}
+     */
+    async getIdSquealsFromDestSearchChannels(search_dest){
+        await this.checkMongoose("squeal_to_channels", SquealChannel);
+        search_dest = this.mongo_escape(search_dest);
+        let filter = {
+            channel_name: {$regex: search_dest}
+        };
+
+        if(search_dest === '')
+            return [];
+
+        let out = [];
+        let result = await this.entityMongooseModel.find(filter).sort({squeal_id: -1});
+        for (const resultElement of result)
+            out.push(resultElement._doc['squeal_id']);
+        return out;
     }
 
 

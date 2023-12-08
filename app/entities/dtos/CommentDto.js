@@ -7,7 +7,7 @@ module.exports = class CommentDto {
         if (documentFromMongoose === null) {
             this.#squeal_id = null;
             this.#username = null;
-            this.#comment = null;
+            this.#comment = '';
         } else {
             this.#squeal_id = documentFromMongoose.squeal_id;
             this.#username = documentFromMongoose.username;

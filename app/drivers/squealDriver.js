@@ -69,7 +69,7 @@ squealDriver.get('/', async function (req, res) {
     let offset = (typeof req.query.offset !== 'undefined' ? req.query.offset : 0);
     let limit = (typeof req.query.limit !== 'undefined' ? req.query.limit : 10);
     let search_sender = (typeof req.query.search_sender !== 'undefined' ? req.query.search_sender : '');
-    let search_dest = (typeof req.query.search_sender !== 'undefined' ? req.query.search_sender : '');
+    let search_dest = (typeof req.query.search_dest !== 'undefined' ? req.query.search_dest : '');
     let orderBy = (typeof req.query.orderBy !== 'undefined' ? req.query.orderBy : '');
     let orderDir = (typeof req.query.orderDir !== 'undefined' ? req.query.orderDir : '');
     authUser = await authUser;
@@ -143,7 +143,7 @@ squealDriver.post('/:id/comment/', async function(req,res) {
     let requested_id = parseInt(req.params['id']);
     let content = (typeof req.body['content'] !== 'undefined' ? req.body['content']: null);
 
-    let ctrlOut = await squealController.getSquealComments(await authUser, requested_id, content);
+    let ctrlOut = await squealController.postComment(await authUser, requested_id, content);
     if (ctrlOut.code === 200)
         res.status(ctrlOut.code).send(ctrlOut.content);
     else

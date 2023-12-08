@@ -1,5 +1,6 @@
 const Model = require("./Model");
 const SquealUser = require('../entities/schemas/SquealUser');
+const SquealChannel = require("../entities/schemas/SquealChannel");
 module.exports = class SquealToUserModel extends Model {
     constructor() {
         super();
@@ -117,5 +118,29 @@ module.exports = class SquealToUserModel extends Model {
             return output;
         }
     }
+
+
+    /**
+     * @param {string} search_sender
+     * @return {Promise<numbers[] | []>}
+     */
+    async getIdSquealsFromDestSearchUsers(search_sender){
+        await this.checkMongoose("squeal_to_users", SquealUser);
+        search_sender = this.mongo_escape(search_sender);
+        let filter = {
+            destination_username: {$regex: search_sender}
+        };
+
+        let out = [];
+
+        if(search_sender === '')
+            return out;
+
+        let result = await this.entityMongooseModel.find(filter).sort({squeal_id: -1});
+        for (const resultElement of result)
+            out.push(resultElement._doc['squeal_id']);
+        return out;
+    }
+
 
 }
