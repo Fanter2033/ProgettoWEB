@@ -80,7 +80,6 @@ module.exports = class SquealController extends Controller {
             } catch (ignored) {
                 squeal.content = [0,0];
             }
-
         }
 
         //Adding comments
@@ -90,6 +89,21 @@ module.exports = class SquealController extends Controller {
         let channelDtos = await this.#squealToChannelModel.getDestinationsChannels(identifier);
         for (const channelDto of channelDtos) {
             squeal.insertDestination(channelDto);
+        }
+
+        //Adding reactions
+        let reactionDto = new SquealIrDto();
+        if(this.isAuthenticatedUser(authenticatedUser)) {
+            reactionDto.squeal_id = squeal.id;
+            reactionDto.is_session_id = false;
+            reactionDto.value = authenticatedUser.username;
+            reactionDto = await this.#squealImpressionReactions.getCurrentAssoc(reactionDto);
+            if(!reactionDto.reactions)
+                squeal.reaction = 'NONE';
+            else
+                squeal.reaction = reactionDto.reactions;
+        } else {
+            squeal.reaction = 'NONE';
         }
 
         if (escapeAddImpression) {

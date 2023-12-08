@@ -13,6 +13,8 @@ module.exports = class SquealDto {
     #quote_cost;
     #content;
 
+    #reaction;
+
     constructor(documentFromMongoose = null) {
         if (documentFromMongoose === null) {
             this.#id = null;
@@ -27,6 +29,7 @@ module.exports = class SquealDto {
             this.#destinations = [];
             this.#destinationsUsers = [];
             this.#comments = [];
+            this.#reaction = 'NONE';
         } else {
             this.#id = documentFromMongoose._id;
             this.#date = documentFromMongoose.date;
@@ -40,6 +43,7 @@ module.exports = class SquealDto {
             this.#destinations = [];
             this.#destinationsUsers = [];
             this.#comments = [];
+            this.#reaction = 'NONE';
         }
     }
 
@@ -52,7 +56,7 @@ module.exports = class SquealDto {
         return out;
     }
 
-    getDocument(getDestination = false) {
+    getDocument(getDestination = false, getReaction = true) {
         let out = {
             _id: this.#id,
             date: this.#date,
@@ -84,6 +88,9 @@ module.exports = class SquealDto {
                 out.destinations.push(dst);
         }
 
+        if(getReaction){
+            out['reaction'] = this.#reaction
+        }
 
         out['comments'] = [];
         for (const comment of this.#comments)
@@ -196,6 +203,15 @@ module.exports = class SquealDto {
 
     set content(value) {
         return this.#content = value;
+    }
+
+
+    get reaction() {
+        return this.#reaction;
+    }
+
+    set reaction(value) {
+        this.#reaction = value;
     }
 }
 
