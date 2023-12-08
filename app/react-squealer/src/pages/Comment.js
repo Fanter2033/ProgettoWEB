@@ -1,8 +1,33 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import CommentModal from "./CommentModal";
 
-//TODO: implement comment
-function Comment() {
-  return <div></div>;
+import "../css/App.css";
+
+function Comment({ squeal }) {
+  const [showComment, setShowComment] = useState(false);
+
+  const handleOpenComment = () => {
+    setShowComment(true);
+  };
+  const handleCloseComment = () => {
+    setShowComment(false);
+  };
+
+  return (
+    <>
+      <button
+        className="green-button cool-font-small w-100"
+        onClick={handleOpenComment}
+      >
+        COMMENTA
+      </button>
+      <CommentModal
+        squeal={squeal}
+        showComment={showComment}
+        handleCloseComment={handleCloseComment}
+      />
+    </>
+  );
 }
 
 export default Comment;
