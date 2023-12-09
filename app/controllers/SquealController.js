@@ -361,7 +361,7 @@ module.exports = class SquealController extends Controller {
         squealDto.negative_value = 0;
         squealDto.positive_value = 0;
 
-        if (squealDto.message_type === 'POSITION') {
+        if (squealDto.message_type === 'POSITION' || squealDto.message_type === 'POSITION_AUTO') {
             let tmp = squealDto.content.join(',');
             tmp = `[${tmp}]`;
             squealDto.content = tmp;
