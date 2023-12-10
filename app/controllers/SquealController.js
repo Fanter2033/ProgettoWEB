@@ -365,7 +365,6 @@ module.exports = class SquealController extends Controller {
             let tmp = squealDto.content.join(',');
             tmp = `[${tmp}]`;
             squealDto.content = tmp;
-            //TODO MAKE FOR UPDATE AUTO_SQUEAL
         }
 
         let modelOutput = await this._model.postSqueal(squealDto);
@@ -1186,6 +1185,158 @@ module.exports = class SquealController extends Controller {
             output['msg'] = 'Internal server error';
             return output;
         }
+        return output;
+    }
+
+    /**
+     * @param {UserDto} authUser
+     * @param {number} squeal_id
+     * @param {String[]} destinations
+     * @return {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async changeDestinations(authUser, squeal_id, destinations){
+        let getSqueal = await this.getSqueal(squeal_id, authUser, '', true);
+        if(getSqueal.code !== 200)
+            return getSqueal;
+
+        let output = this.getDefaultOutput();
+
+        if(this.isAuthenticatedUser(authUser) === false){
+            output['code'] = 403;
+            output['msg'] = 'Not logged';
+            return output;
+        }
+
+        if(authUser.isAdmin === false){
+            output['code'] = 401;
+            output['msg'] = 'Not an admin';
+            return output;
+        }
+
+        let checkResult = await this.checkDestinations(destinations);
+        await this.createHashtagChannels(destinations);
+        if (!checkResult) {
+            output['code'] = 404;
+            output['msg'] = 'At least one destination do not exists.';
+            return output;
+        }
+
+        checkResult = await this.checkDestinationsAuthorizations(destinations, authUser.username);
+        if (!checkResult) {
+            output['code'] = 401;
+            output['msg'] = 'Do not have all authorization to write on all channels.';
+            return output;
+        }
+
+        //Devo eliminaree tutte le relazioni su quello squeal
+        let mongoRes1 = this.#squealToUserModel.deleteSqueal(squeal_id);
+        let mongoRes2 = this.#squealToChannelModel.deleteSqueal(squeal_id);
+        mongoRes1 = await mongoRes1;
+        mongoRes2 = await mongoRes2;
+        if(mongoRes1 === false) {
+            output['code'] = 500;
+            output['msg'] = 'Internal server error (4)';
+            return output;
+        }
+        if(mongoRes2 === false) {
+            output['code'] = 500;
+            output['msg'] = 'Internal server error (5)';
+            return output;
+        }
+
+        //Devo ricreare tutte le relazioni precedenti
+        for (const dest of destinations)
+            if (this.isDestUserFormat(dest)) {
+                let dto = new Squeal2UserDto();
+                let searchValue = dest.substring(1);
+                dto.squeal_id = squeal_id;
+                dto.destination_username = searchValue;
+                let result = await this.#squealToUserModel.createAssocSquealUser(dto);
+                if (result === false) {
+                    output['code'] = 500;
+                    output['msg'] = 'Internal server error (1)';
+                    return output;
+                }
+            } else if (this.isDestChannelFormat(dest)) {
+                let dto = new Squeal2ChannelDto();
+                let searchValue = dest.substring(1);
+                dto.squeal_id = squeal_id;
+                dto.channel_name = searchValue;
+                if (dest.charAt(0) === '#')
+                    dto.channel_type = autoload.config._CHANNEL_TYPE_HASHTAG;
+                else if (dest.charAt(0) === '§' && searchValue === searchValue.toUpperCase())
+                    dto.channel_type = autoload.config._CHANNEL_TYPE_OFFICIAL;
+                else
+                    dto.channel_type = autoload.config._CHANNEL_TYPE_USER;
+                let result = await this.#squealToChannelModel.createAssocSquealChannel(dto);
+                if (result === false) {
+                    output['code'] = 500;
+                    output['msg'] = 'Internal server error (2)';
+                    return output;
+                }
+            } else {
+                output['code'] = 500;
+                output['msg'] = 'Internal server error (3)';
+                return output;
+            }
+
+        return output;
+    }
+
+    /**
+     * @param {UserDto} authUser
+     * @param {number} squeal_id
+     * @param {number} positive_value
+     * @param {number} negative_value
+     * @return {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async changeReactionValues(authUser, squeal_id, positive_value, negative_value){
+        let output = this.getDefaultOutput();
+        let getSqueal = await this.getSqueal(squeal_id, authUser, '', true);
+        if(getSqueal.code !== 200)
+            return getSqueal;
+
+        if(isNaN(positive_value)){
+            output['code'] = 400;
+            output['msg'] = 'Invalid field (1)';
+            return output;
+        }
+
+        if(isNaN(negative_value)){
+            output['code'] = 400;
+            output['msg'] = 'Invalid field (2)';
+            return output;
+        }
+
+        if(this.isAuthenticatedUser(authUser) === false){
+            output['code'] = 403;
+            output['msg'] = 'Not logged';
+            return output;
+        }
+
+        if(authUser.isAdmin === false){
+            output['code'] = 401;
+            output['msg'] = 'Not an admin';
+            return output;
+        }
+
+        let res1 = this._model.changeFieldMongoDB(squeal_id, 'positive_value', positive_value);
+        let res2 = this._model.changeFieldMongoDB(squeal_id, 'negative_value', negative_value);
+        res1 = await res1;
+        res2 = await res2;
+
+        if(res1 === false){
+            output['code'] = 500;
+            output['msg'] = 'Cannot update (1)';
+            return output;
+        }
+
+        if(res2 === false){
+            output['code'] = 500;
+            output['msg'] = 'Cannot update (2)';
+            return output;
+        }
+
         return output;
     }
 

@@ -1153,6 +1153,10 @@ paths:
           required: true
           in: formData
           type: number
+        - name: negative_value
+          required: true
+          in: formData
+          type: number
       responses:
         '200':
           description: 'Successful operation'

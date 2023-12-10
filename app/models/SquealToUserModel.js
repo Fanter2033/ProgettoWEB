@@ -166,5 +166,25 @@ module.exports = class SquealToUserModel extends Model {
         }
     }
 
+    /**
+     * @param squeal_id
+     * @return {Promise<boolean>}
+     */
+    async deleteSqueal(squeal_id){
+        await this.checkMongoose("squeal_to_users", SquealUser);
+
+        squeal_id = this.mongo_escape(squeal_id);
+
+        let filter = {
+            "squeal_id": `${squeal_id}`,
+        }
+        try {
+            await this.entityMongooseModel.deleteMany(filter);
+            return true;
+        } catch (ignored) {
+            return false;
+        }
+    }
+
 
 }

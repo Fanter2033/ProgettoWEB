@@ -1,10 +1,6 @@
 const Model = require("./Model");
 const SquealChannel = require("../entities/schemas/SquealChannel");
-const Squeal2ChannelDto = require("../entities/dtos/Squeal2ChannelDto");
 const ChannelDto = require("../entities/dtos/ChannelDto");
-const ChannelRoleSchema = require("../entities/schemas/ChannelRoleSchema");
-const Squeal = require("../entities/schemas/SquealSchema");
-const SquealDto = require("../entities/dtos/SquealDto");
 
 module.exports = class SquealToChannelModel extends Model {
     constructor() {
@@ -174,6 +170,27 @@ module.exports = class SquealToChannelModel extends Model {
         for (const resultElement of result)
             out.push(resultElement._doc['squeal_id']);
         return out;
+    }
+
+
+    /**
+     * @param squeal_id
+     * @return {Promise<boolean>}
+     */
+    async deleteSqueal(squeal_id){
+        await this.checkMongoose("squeal_to_channels", SquealChannel);
+
+        squeal_id = this.mongo_escape(squeal_id);
+
+        let filter = {
+            "squeal_id": `${squeal_id}`,
+        }
+        try {
+            await this.entityMongooseModel.deleteMany(filter);
+            return true;
+        } catch (ignored) {
+            return false;
+        }
     }
 
 

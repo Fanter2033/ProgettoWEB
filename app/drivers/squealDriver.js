@@ -168,5 +168,32 @@ squealDriver.post('/:id/comment/', async function(req,res) {
         res.status(ctrlOut.code).send(ctrlOut);
 });
 
+//Squeal - Admin only
+squealDriver.put('/:id/destinations/', async function(req,res) {
+    let authUser = authController.getAuthenticatedUser(req);
+    let requested_id = parseInt(req.params['id']);
+    let destinations = (typeof req.body['destinations'] !== 'undefined' ? req.body['destinations']: []);
+
+    let ctrlOut = await squealController.changeDestinations(await authUser, requested_id, destinations);
+    if (ctrlOut.code === 200)
+        res.status(ctrlOut.code).send(ctrlOut.content);
+    else
+        res.status(ctrlOut.code).send(ctrlOut);
+});
+
+
+squealDriver.put('/:id/reactions/', async function(req,res) {
+    let authUser = authController.getAuthenticatedUser(req);
+    let requested_id = parseInt(req.params['id']);
+    let positive_value = (typeof req.body['positive_value'] !== 'undefined' ? parseInt(req.body['positive_value']): NaN);
+    let negative_value = (typeof req.body['negative_value'] !== 'undefined' ? parseInt(req.body['negative_value']): NaN);
+
+    let ctrlOut = await squealController.changeReactionValues(await authUser, requested_id, positive_value, negative_value);
+    if (ctrlOut.code === 200)
+        res.status(ctrlOut.code).send(ctrlOut.content);
+    else
+        res.status(ctrlOut.code).send(ctrlOut);
+});
+
 module.exports = squealDriver;
 
