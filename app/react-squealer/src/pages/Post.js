@@ -56,9 +56,6 @@ function Post() {
           <li className="list-group-item list">
             LIVE QUOTA: text temporizzati
           </li>
-          <li className="list-group-item list">
-            clear dei campi o reindirizzamento
-          </li>
         </ul>
       </div>
       <div className="container-flex pt-5 pb-5">

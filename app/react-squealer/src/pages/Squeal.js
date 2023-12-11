@@ -8,6 +8,7 @@ import { useUserContext } from "../config/UserContext";
 import CurrentDateTime from "./CurrentDateTime";
 import Dest from "./Dest";
 import MapComponent from "./MapComponent";
+import SquealContent from "./SquealContent";
 
 import imageCompression from "browser-image-compression";
 
@@ -292,15 +293,24 @@ function Squeal() {
   //IMAGE-----------------------------------------------------------------------------------
   const [base64Image, setBase64Image] = useState("");
 
-  const handleImageUpload = useCallback(async (e) => {
-    const imageFile = e.target.files[0];
-
+  const costImage = (e) => {
+    console.log("live day", liveDay);
     const remainingLimitD = liveDay - 125;
+    console.log("remaining daily before", remainingLimitD);
+
     const remainingLimitW = liveWeek - 125;
     const remainingLimitM = liveMonth - 125;
+
     setNewDay(remainingLimitD);
     setNewWeek(remainingLimitW);
     setNewMonth(remainingLimitM);
+    console.log("remaining daily", remainingLimitD);
+
+    const imageFile = e.target.files[0];
+    handleImageUpload(imageFile);
+  };
+
+  const handleImageUpload = useCallback(async (imageFile) => {
     try {
       // compressione
       const options = {
@@ -388,6 +398,8 @@ function Squeal() {
     setClickedButtons((prevButtons) => [...prevButtons, buttonText]);
 
     const inputText = postText;
+    console.log("auto text cost", postText);
+
     const inputLength = inputText.length;
 
     // quota rimanente dopo il post
@@ -395,7 +407,7 @@ function Squeal() {
     const remainingLimitW = liveWeek - inputLength;
     const remainingLimitM = liveMonth - inputLength;
 
-    console.log("auto text cost", liveDay - remainingLimitD);
+    console.log("auto text cost", inputLength);
 
     setUserInput(inputText);
     setNewDay(remainingLimitD);
@@ -459,7 +471,7 @@ function Squeal() {
           name="imageInput"
           style={{ color: "#072f38", backgroundColor: "#528b57" }}
           accept="image/*"
-          onChange={handleImageUpload}
+          onChange={costImage}
           className="form-control box cool-font-link"
         />
         {base64Image && <img src={base64Image} alt="Selected" />}
@@ -484,7 +496,9 @@ function Squeal() {
           className="form-control box cool-font-link"
         />
         {!isValidLink && (
-          <p className="cool-font-link mt-1">Inserisci un link YouTube valido.</p>
+          <p className="cool-font-link mt-1">
+            Inserisci un link YouTube valido.
+          </p>
         )}
       </div>
     );
@@ -497,7 +511,7 @@ function Squeal() {
     );
   } else if (inputType === "TEXT_AUTO") {
     inputElement = (
-      <div className="mb-3">
+      <div className="mb-3 text-wrap">
         <label htmlFor="userInput" className="form-label ">
           <b className="cool-font-details-md">MESSAGGIO A TEMPO</b>
           <div className="">
@@ -589,8 +603,8 @@ function Squeal() {
   } else if (inputType === "POSITION_AUTO") {
     inputElement = (
       <div className="mb-3 text-wrap">
-        <label htmlFor="userInput" className="form-label cool-font-details-md">
-          <b>MAPPA A TEMPO</b>
+        <label htmlFor="userInput" className="form-label ">
+          <b className="cool-font-details-md">MAPPA A TEMPO</b>
           <div className="">
             <label htmlFor="numero1" className="me-2 cool-font-details">
               QUANTE RIPETIZIONI?
@@ -949,7 +963,7 @@ function Squeal() {
             <div className="row d-flex flex-row justify-content-evenly align-items-center ">
               <div className="col-8">
                 <button
-                  className="blue-button box cool-font-medium w-100" 
+                  className="blue-button box cool-font-medium w-100"
                   onClick={postSqueal}
                 >
                   SQUEAL
@@ -1006,7 +1020,7 @@ function Squeal() {
 
           <Container className="">
             <Row className="w-100">
-              {squealsLogger.map((squeal, index) => (
+              {squealsLogger.map((squeal) => (
                 <Col lg={12} className="mb-4" key={squeal._id}>
                   <Card style={{ height: "100%" }} className="squeal">
                     <Card.Header className="d-flex flex-col justify-content-center align-items-center">
@@ -1033,3 +1047,10 @@ function Squeal() {
 }
 
 export default Squeal;
+
+/*
+ <SquealContent
+   content={squeal.content}
+   type={squeal.message_type}
+ />
+*/

@@ -148,8 +148,12 @@ function Received() {
                             <b>PER:</b>
                             <ShowDest arrayDest={squeal.destinations} />
                           </div>
+                          <div className="col-12 cool-font-details d-flex flex-column justify-content-start align-items-start mt-2">
+                            <div>Id: {squeal._id}</div>
+                            <TypeSqueal typeSqueal={squeal.message_type} />
+                          </div>
                         </Card.Header>
-                        <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
+                        <Card.Body className="mb-4 d-flex flex-col justify-content-evenly align-items-center">
                           <SquealContent
                             content={squeal.content}
                             type={squeal.message_type}
@@ -162,10 +166,6 @@ function Received() {
                               reaction={squeal.reaction}
                             />
                           </div>
-                          <div className="cool-font-details">
-                            Id: {squeal._id}
-                          </div>
-                          <TypeSqueal typeSqueal={squeal.message_type} />
                           <Comment squeal={squeal._id} />
 
                           <ShowComment arrayComment={squeal.comments} />

@@ -365,7 +365,7 @@ function InfoChannel() {
                 .map((squeal) => (
                   <Col lg={12} key={squeal._id} className="mb-4">
                     <Card style={{ height: "100%" }} className="squeal">
-                      <Card.Header className="d-flex flex-row justify-content-evenly align-items-center cool-font-details">
+                      <Card.Header className="d-flex flex-column justify-content-evenly align-items-center cool-font-details">
                         <div className="col-12 d-flex flex-row justify-content-between align-items-center">
                           <div>
                             <b>DA:</b>
@@ -425,7 +425,7 @@ function InfoChannel() {
                 .map((squeal) => (
                   <Col lg={12} key={squeal._id} className="mb-4">
                     <Card style={{ height: "100%" }} className="squeal">
-                      <Card.Header className="row d-flex flex-col justify-content-evenly align-items-center">
+                      <Card.Header className="row d-flex flex-column justify-content-evenly align-items-center">
                         {" "}
                         <div className="col-12 d-flex flex-row justify-content-between align-items-center">
                           <div>
@@ -487,7 +487,7 @@ function InfoChannel() {
                 .map((squeal) => (
                   <Col lg={12} key={squeal._id} className="mb-4">
                     <Card style={{ height: "100%" }} className="squeal">
-                      <Card.Header className="row d-flex flex-col justify-content-evenly align-items-center">
+                      <Card.Header className="row d-flex flex-column justify-content-evenly align-items-center">
                         {" "}
                         <div className="col-12 d-flex flex-row justify-content-between align-items-center">
                           <div>
@@ -550,7 +550,7 @@ function InfoChannel() {
                 .map((squeal) => (
                   <Col lg={12} key={squeal._id} className="mb-5">
                     <Card style={{ height: "100%" }} className="squeal">
-                      <Card.Header className="row d-flex flex-col justify-content-evenly align-items-center">
+                      <Card.Header className="row d-flex flex-column justify-content-evenly align-items-center">
                         {" "}
                         <div className="col-12 d-flex flex-row justify-content-between align-items-center">
                           <div>
@@ -615,10 +615,10 @@ function InfoChannel() {
           <Col
             lg={12}
             key={squeal._id}
-            className=" d-flex flex-row justify-content-evenly align-items-center"
+            className=" d-flex flex-row justify-content-evenly align-items-center m-4"
           >
             <Card style={{ width: "80%" }} className="squeal">
-              <Card.Header className="row d-flex flex-col justify-content-evenly align-items-center">
+              <Card.Header className="row d-flex flex-column justify-content-evenly align-items-center">
                 {" "}
                 <div className="col-12 d-flex flex-row justify-content-between align-items-center">
                   <div>
@@ -674,7 +674,7 @@ function InfoChannel() {
             className="d-flex flex-row justify-content-evenly align-items-center m-4"
           >
             <Card style={{ height: "80%" }} className="squeal mb-2">
-              <Card.Header className="row d-flex flex-col justify-content-evenly align-items-center">
+              <Card.Header className="row d-flex flex-column justify-content-evenly align-items-center">
                 {" "}
                 <div className="col-12 d-flex flex-row justify-content-between align-items-center">
                   <div>

@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import "../css/App.css";
 
-function ChannelForm() {
+function CreateChannel() {
   const [nameForm, setNameForm] = useState("");
   const [privateForm, setPrivateForm] = useState(false);
 
@@ -94,7 +94,7 @@ function ChannelForm() {
 
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton className="modal-buy-header">
-          <Modal.Title className="text-center">Crea il tuo canale</Modal.Title>
+          <Modal.Title className="text-center cool-font-medium" style={{ textAlign: "center", color: "#e0bb76" }}>CREA IL TUO CANALE</Modal.Title>
         </Modal.Header>
         <Modal.Body className="modal-buy-body">
           <Form>
@@ -102,13 +102,13 @@ function ChannelForm() {
               className="mb-4 d-flex flex-row "
               controlId="exampleForm.ControlInput1"
             >
-              <Form.Label className="ms-4 me-4">Nome</Form.Label>
+              <Form.Label className="ms-4 me-4 cool-font-text">NOME</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Name of Channel :)"
+                placeholder="nome del canale :)"
                 name="nome"
                 value={nameForm}
-                className="w-form-control"
+                className="w-form-control cool-font-text"
                 onChange={(e) => setNameForm(e.target.value)}
               />
             </Form.Group>
@@ -117,11 +117,11 @@ function ChannelForm() {
               inline
               type="checkbox"
               name="privato"
-              label="Privato?"
+              label="PRIVATO?"
               checked={privateForm}
               onChange={handleCheckboxChange}
               id="custom-checkbox"
-              className="custom-control-input d-flex flex-row align-items-center"
+              className="custom-control-input d-flex flex-row align-items-center cool-font-text"
             />
           </Form>
         </Modal.Body>
@@ -130,10 +130,10 @@ function ChannelForm() {
           style={footerStyle}
           className="my-foot d-flex justify-content-center"
         >
-          <button className="green-button box" onClick={createChannel}>
+          <button className="green-button box cool-font-medium w-100" onClick={createChannel}>
             CREA
           </button>
-          <button className="blue-button box" onClick={handleClose}>
+          <button className="blue-button box cool-font-medium w-100" onClick={handleClose}>
             ANNULLA
           </button>
         </Modal.Footer>
@@ -142,4 +142,4 @@ function ChannelForm() {
   );
 }
 
-export default ChannelForm;
+export default CreateChannel;

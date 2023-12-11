@@ -69,7 +69,7 @@ const Dest = ({ onDestinatariSubmit }) => {
         <div className="col-2 mb-4 ">
           <button
             type="submit"
-            className="dest-button center box cool-font-medium text-center"
+            className="bottoni_omologati center box cool-font-medium text-center"
           >
             +
           </button>

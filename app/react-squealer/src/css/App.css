@@ -147,18 +147,9 @@ body {
 }
 
 /* -------------------- BUTTON STUFF ------------------*/
-.dest-button {
-  background-color: var(--squeal-blue);
-  color: var(--squeal-yellow);
-  padding: 0.5em;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
 .custom-button {
   background-color: var(--squeal-blue);
   color: var(--squeal-yellow);
-  padding: 10px 20px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -183,7 +174,6 @@ body {
 .bottoni_omologati {
   min-width: 2em;
   min-height: 2em;
-
   border-radius: 50%;
   background-color: var(--squeal-green);
 }

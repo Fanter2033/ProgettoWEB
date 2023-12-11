@@ -27,13 +27,21 @@ function SquealContent({ content, type }) {
           </a>
         </>
       )}
-      {type === "POSITION" && <RenderMap coordinates={content} />}
+      {type === "POSITION" && (
+        <>
+          <RenderMap coordinates={content} />
+        </>
+      )}
       {type === "TEXT_AUTO" && (
         <>
           <div className="cool-font-text">{content}</div>
         </>
       )}
-      {type === "POSITION_AUTO" && <RenderMap coordinates={content} />}
+      {type === "POSITION_AUTO" && (
+        <>
+          <RenderMap coordinates={content} />
+        </>
+      )}
     </>
   );
 }
