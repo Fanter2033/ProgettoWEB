@@ -881,7 +881,7 @@ module.exports = class SquealController extends Controller {
         output.content = [];
         for (const squeal of squeals)
             if (await this.isSquealPublic(squeal.id))
-                output.content.push(squeal.getDocument());
+                output.content.push(squeal.getDocument(true));
         return output;
     }
 
@@ -1056,7 +1056,6 @@ module.exports = class SquealController extends Controller {
             autoSqueal.id = squealDto.id;
             autoSqueal.quota_update_cost = this.countPlaceHolders(squealDto.content);
             autoSqueal.original_content = squealDto.content;
-            //TODO MOSTRARE DIRETTAMENTE UNO SQUEAL AGGIORNATO
             let result = await tmpModel.createScheduledOperation(autoSqueal, this.getCurrentTimestampSeconds() + 3);
             if (result === false) {
                 output['code'] = 500;
