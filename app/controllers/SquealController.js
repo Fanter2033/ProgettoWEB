@@ -879,9 +879,14 @@ module.exports = class SquealController extends Controller {
         //No controls to do here
         let squeals = await this._model.getSquealsFromSender(user);
         output.content = [];
-        for (const squeal of squeals)
+        for (const squeal of squeals) {
+            let channelDtos = await this.#squealToChannelModel.getDestinationsChannels(squeal.id);
+            for (const channelDto of channelDtos)
+                squeal.insertDestination(channelDto);
             if (await this.isSquealPublic(squeal.id))
                 output.content.push(squeal.getDocument(true));
+        }
+
         return output;
     }
 
