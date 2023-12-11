@@ -1211,11 +1211,18 @@ module.exports = class SquealController extends Controller {
      * @return {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
     async changeDestinations(authUser, squeal_id, destinations){
+        let output = this.getDefaultOutput();
+
+        if(isNaN(squeal_id)){
+            output['code'] = 400;
+            output['msg'] = 'Bad request';
+            return output;
+        }
+
         let getSqueal = await this.getSqueal(squeal_id, authUser, '', true);
+
         if(getSqueal.code !== 200)
             return getSqueal;
-
-        let output = this.getDefaultOutput();
 
         if(this.isAuthenticatedUser(authUser) === false){
             output['code'] = 403;
@@ -1308,6 +1315,13 @@ module.exports = class SquealController extends Controller {
      */
     async changeReactionValues(authUser, squeal_id, positive_value, negative_value){
         let output = this.getDefaultOutput();
+
+        if(isNaN(squeal_id)){
+            output['code'] = 400;
+            output['msg'] = 'Bad request';
+            return output;
+        }
+
         let getSqueal = await this.getSqueal(squeal_id, authUser, '', true);
         if(getSqueal.code !== 200)
             return getSqueal;
@@ -1352,6 +1366,8 @@ module.exports = class SquealController extends Controller {
             output['msg'] = 'Cannot update (2)';
             return output;
         }
+
+        await this.handleReactions(getSqueal.content.sender);
 
         return output;
     }

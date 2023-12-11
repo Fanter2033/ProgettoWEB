@@ -292,8 +292,26 @@ class ServerTablesSQ {
 
         $('#modalMostraContenuti #containerContent').html(finalHtml);
         $('#modalMostraContenuti').modal('show');
-
     }
+
+    updateDestinations(id){
+        let data = this.getDataJson(id);
+        let value = data.destinations.join(',');
+        $('#squealDests').val(value);
+        $('#modalModificaDestinatari button[name="saveOperations"]').attr('onclick', `updateDestinationsSqueal(${id})`)
+    }
+
+    updateReactions(id){
+        let data = this.getDataJson(id);
+        let negative_value = data.negative_value;
+        let positive_value = data.positive_value;
+
+        $('#reazioniNeg').val(negative_value);
+        $('#reazioniPos').val(positive_value);
+
+        $('#modalModificaReazioni button[name="saveOperations"]').attr('onclick', `updateReactionSqueal(${id})`)
+    }
+
 
     seeComments(id){
         let data = this.getDataJson(id);
