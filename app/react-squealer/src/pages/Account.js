@@ -346,13 +346,7 @@ function Account() {
         <div className="row d-flex justify-content-center">
           <h3>TODO:</h3>
           <ul className="list-group col-md-4">
-            <li className="list-group-item list">
-              FAI RICOMPARIRE IL BOTTONE COMPRA TRA 1 ANNO
-            </li>
             <li className="list-group-item list">GET SMM INFO</li>
-            <li className="list-group-item list">
-              cambio username, attenzione se esiste gia?
-            </li>
           </ul>
         </div>
         <div className="mb-3 mt-4">
@@ -482,19 +476,19 @@ function Account() {
             </div>
             <div className="row d-flex align-items-center justify-content-center mb-4">
               <div className="col-12">
-                <h4 className="cool-font-medium mt-2">Giornaliero</h4>
+                <h4 className="cool-font-small mt-2">GIORNALIERO</h4>
                 <button className="yellow-button box w-50">
                   {userQuote.remaining_daily}
                 </button>
               </div>
               <div className="col-12">
-                <h4 className="cool-font-medium mt-2">Settimanale</h4>
+                <h4 className="cool-font-small mt-2">SETTIMANALE</h4>
                 <button className="yellow-button box w-50">
                   {userQuote.remaining_weekly}
                 </button>
               </div>
               <div className="col-12">
-                <h4 className="cool-font-medium mt-2">Mensile</h4>
+                <h4 className="cool-font-small mt-2">MENSILE</h4>
                 <button className="yellow-button box w-50">
                   {userQuote.remaining_monthly}
                 </button>
@@ -502,26 +496,25 @@ function Account() {
             </div>
           </div>
 
-
           <div className="col-6">
             <div className="row">
               <h3 className="cool-font-medium">QUOTA LIMITE</h3>
             </div>
 
             <div className="col-12 mt-2">
-              <h4 className="cool-font-medium mt-2">Giornaliero</h4>
+              <h4 className="cool-font-small mt-2">GIORNALIERO</h4>
               <button className="yellow-button box w-50">
                 {userQuote.limit_daily}
               </button>
             </div>
             <div className="col-12">
-              <h4 className="cool-font-medium mt-2">Settimanale</h4>
+              <h4 className="cool-font-small mt-2">SETTIMANALE</h4>
               <button className="yellow-button box w-50">
                 {userQuote.limit_weekly}
               </button>
             </div>
             <div className="col-12">
-              <h4 className="cool-font-medium mt-2">Mensile</h4>
+              <h4 className="cool-font-small mt-2 ">MENSILE</h4>
               <button className="yellow-button box w-50">
                 {userQuote.limit_monthly}
               </button>
@@ -530,7 +523,7 @@ function Account() {
         </div>
 
         <div className="">
-          {show && (
+          {show && userData.vip && (
             <button
               id="buy-button"
               className="box cool-font-medium w-100"
@@ -725,7 +718,7 @@ function Account() {
 
             <button
               id="logout-button"
-              className=" mb-2 box cool-font-small"
+              className=" mb-2 box cool-font-link"
               onClick={logoutUser}
             >
               <ToastContainer />
@@ -733,14 +726,14 @@ function Account() {
             </button>
 
             {roleUser.some((role) => role.role === 4) ? (
-              <button id="delete-button" className=" mb-2 box cool-font-small">
+              <button id="delete-button" className=" mb-2 box cool-font-link">
                 PER CANCELLARTI NON DEVI ESSERE CREATORE
               </button>
             ) : (
               <>
                 <button
                   id="delete-button"
-                  className=" mb-2 box cool-font-xsm"
+                  className=" mb-2 box cool-font-link"
                   onClick={handleOpenDeleteModal}
                 >
                   CANCELLA ACCOUNT

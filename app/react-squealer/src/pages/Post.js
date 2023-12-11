@@ -45,12 +45,6 @@ function Post() {
         <h3>TODO:</h3>
         <ul className="list-group col-md-4">
           <li className="list-group-item list">
-            PUT squeal mappe temporizzare
-          </li>
-          <li className="list-group-item list">
-            POST squeal mappe temporizzare
-          </li>
-          <li className="list-group-item list">
             LIVE QUOTA: mappe temporizzate
           </li>
           <li className="list-group-item list">

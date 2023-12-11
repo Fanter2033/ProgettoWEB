@@ -10,9 +10,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { Modal, Row, Form } from "react-bootstrap";
 import "../css/App.css";
 
-//TODO: se canale gia esiste error
-//TODO: se il campo è vuoto apri toast
-
 //PUT: CHANGE USERNAME /user/${username}-----------------------------------------------------------------------------------------------------
 function ChangeNameChannel() {
   const location = useLocation();
@@ -20,7 +17,6 @@ function ChangeNameChannel() {
   console.log(channel);
 
   const { userGlobal, setUserGlobal } = useUserContext();
-  const [newUsername, setNewUsername] = useState();
 
   const navigate = useNavigate();
 
@@ -40,7 +36,7 @@ function ChangeNameChannel() {
       theme: "dark",
     });
   const nofity_error = () =>
-    toast.error("⚠️ Manca il nome!", {
+    toast.error("⚠️ Riempi tutti i campi!", {
       position: "top-right",
       autoClose: 4000,
       hideProgressBar: false,
@@ -51,7 +47,19 @@ function ChangeNameChannel() {
       theme: "dark",
     });
 
-  //TODO: PUT channel/{type}/{channel_name} per cambiare nome
+  const notify_exist = () =>
+    toast.error("⚠️ Questo nome è già in uso!", {
+      position: "top-right",
+      autoClose: 4000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
+
+  //PUT channel/{type}/{channel_name} per cambiare nome
   const [newName, setNewName] = useState("");
 
   const handleChangeChannelName = (e) => {
@@ -62,16 +70,16 @@ function ChangeNameChannel() {
       nofity_error();
     } else {
       try {
-        handleClose();
+        const isItPrivate = channel.private;
         const data = {
           channel: {
             name: newName,
             type: "CHANNEL_USERS",
-            private: false,
+            private: isItPrivate,
           },
         };
 
-        const url = `${ReactConfig.base_url_requests}/user/${userGlobal.username}`;
+        const url = `${ReactConfig.base_url_requests}/channel/${channel.type}/${channel.channel_name}`;
         const options = {
           method: "PUT",
           headers: {
@@ -85,18 +93,17 @@ function ChangeNameChannel() {
         fetch(url, options)
           .then((res) => {
             console.log(res);
-            if (res.ok) {
-              //creation ok
-              return res.json();
+            if (!res.ok) {
+              notify_exist();
+            } else {
+              notify();
+              console.log("Cambio username went good");
+              navigate("./");
+              handleClose();
             }
           })
-          .then((data) => {
-            notify();
-            console.log("Cambio username went good", data);
-            navigate("./");
-          })
           .catch((error) => {
-            console.error("Cambio username failed, error:", error);
+            console.error("Cambio nome canale failed, error:", error);
           });
       } catch (error) {
         console.error(error);
@@ -104,21 +111,25 @@ function ChangeNameChannel() {
     }
   };
 
-  //console.log("nomeeeeeeeeeeeeeeeeeeee", channel.channel_name);
-
   const footerStyle = {
     backgroundColor: "#e0bb76",
   };
 
   return (
     <>
-      <button className="cool-font-link yellow-button mb-2 box  w-100" onClick={handleShow}>
+      <button
+        className="cool-font-link yellow-button mb-2 box w-100"
+        onClick={handleShow}
+      >
         CAMBIO NOME CANALE
       </button>
 
       <Modal show={show} onHide={handleClose} centered>
-        <Modal.Header closeButton className="modal-change-header cool-font-medium">
-          <Modal.Title  style={{ textAlign: "center", color: "#e0bb76" }}>
+        <Modal.Header
+          closeButton
+          className="modal-change-header cool-font-medium"
+        >
+          <Modal.Title style={{ textAlign: "center", color: "#e0bb76" }}>
             CAMBIA NOME CANALE
           </Modal.Title>
         </Modal.Header>
@@ -129,15 +140,18 @@ function ChangeNameChannel() {
               className="mb-4"
               controlId="exampleForm.ControlInput1"
             >
-              <Form.Label className="cool-font-medium">NUOVO NOME CANALE</Form.Label>
+              <Form.Label className="cool-font-medium">
+                NUOVO NOME CANALE
+              </Form.Label>
               <Form.Control
                 type="text"
                 placeholder="inserisci qui"
                 className="cool-font-small text-center"
+                style={{ color: "#072f38", backgroundColor: "#e0bb76" }}
                 name="nuovoUsername"
                 value={newName}
                 onChange={(e) => {
-                  setNewUsername(e.target.value);
+                  setNewName(e.target.value);
                 }}
               />
             </Form.Group>
@@ -145,10 +159,16 @@ function ChangeNameChannel() {
         </Modal.Body>
 
         <Modal.Footer style={footerStyle}>
-          <button className="blue-button box cool-font-medium w-100" onClick={handleChangeChannelName}>
+          <button
+            className="blue-button box cool-font-medium w-100"
+            onClick={handleChangeChannelName}
+          >
             CAMBIA
           </button>
-          <button className="red-button box cool-font-medium w-100" onClick={handleClose}>
+          <button
+            className="red-button box cool-font-medium w-100"
+            onClick={handleClose}
+          >
             ANNULLA
           </button>
           <ToastContainer />

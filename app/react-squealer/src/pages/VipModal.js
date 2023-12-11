@@ -67,32 +67,37 @@ function VipModal({ showModal, handleClose }) {
     <div>
       <Modal show={showModal} onHide={handleClose} centered>
         <Modal.Header closeButton className="custom-modal-header">
-          <Modal.Title className="">Upgrade Account</Modal.Title>
+          <Modal.Title
+            className="cool-font-medium"
+            style={{ color: "#e0bb76" }}
+          >
+            UPGRADE ACCOUNT
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body className="custom-modal-body">
-          <p className="custom-modal-text cool-font-medium">
-            Diventa <span className="luminescent-word">VIP</span>
-          </p>
-          <ul className="custom-modal-list">
-            <li>Cosa ottieni?</li>
-            <br></br>
+          <ul
+            className="custom-modal-list cool-font-small"
+            style={{ color: "#072f38" }}
+          >
+            <li className="cool-font-medium">DIVENTA VIP</li>
+            <li>COSA OTTIENI?</li>
             <li>Squealer badge.</li>
             <li>Il tuo nome è per sempre.</li>
-            <li>Funzioni extra di geolocazione.</li>
-            <li>Managment della quota avanzato.</li>
+            <li>Possibilità di comprare quota.</li>
             <li>Potrai collegarti a un Social Media Manager</li>
-            <li>che si occuper della gestione del tuo profilo</li>
+            <li>che si occuperà della gestione del tuo profilo.</li>
             <li>OPPURE</li>
-            <li>Diventa tu stesso un SMM</li>
-            <li>NB:i ruoli non possono coesistere per lo stesso account</li>
+            <li>Diventa tu stesso un SMM.</li>
+            <br/>
+            <li>NB: I RUOLI NON POSSONO COESITERE PER LO STESSO ACCOUNT</li>
           </ul>
         </Modal.Body>
         <Modal.Footer className="my-foot" style={footerStyle}>
-          <button className="custom-button w-100" onClick={handleClose}>
-            Chiudi
+          <button className="upgrade-button cool-font-medium" onClick={handleUpgrade}>
+            UPGRADE
           </button>
-          <button className="upgrade-button" onClick={handleUpgrade}>
-            Upgrade
+          <button className="custom-button cool-font-medium w-100" onClick={handleClose}>
+            CHIUDI
           </button>
         </Modal.Footer>
       </Modal>

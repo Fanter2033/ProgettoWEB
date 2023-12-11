@@ -403,6 +403,7 @@ function InfoChannel() {
                         <SquealContent
                           content={squeal.content}
                           type={squeal.message_type}
+                          id={squeal._id}
                         />
                       </Card.Body>
                       <Card.Footer>
@@ -464,6 +465,7 @@ function InfoChannel() {
                         <SquealContent
                           content={squeal.content}
                           type={squeal.message_type}
+                          id={squeal._id}
                         />
                       </Card.Body>
                       <Card.Footer>
@@ -527,6 +529,7 @@ function InfoChannel() {
                         <SquealContent
                           content={squeal.content}
                           type={squeal.message_type}
+                          id={squeal._id}
                         />
                       </Card.Body>
                       <Card.Footer>
@@ -590,6 +593,7 @@ function InfoChannel() {
                         <SquealContent
                           content={squeal.content}
                           type={squeal.message_type}
+                          id={squeal._id}
                         />
                       </Card.Body>
                       <Card.Footer>
@@ -656,6 +660,7 @@ function InfoChannel() {
                 <SquealContent
                   content={squeal.content}
                   type={squeal.message_type}
+                  id={squeal._id}
                 />
               </Card.Body>
               <Card.Footer>
@@ -712,6 +717,7 @@ function InfoChannel() {
                 <SquealContent
                   content={squeal.content}
                   type={squeal.message_type}
+                  id={squeal._id}
                 />
               </Card.Body>
               <Card.Footer>

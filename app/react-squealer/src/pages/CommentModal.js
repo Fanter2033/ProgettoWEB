@@ -10,11 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Modal } from "react-bootstrap";
 import "../css/App.css";
 
-//TODO: POST comment
-//TODO: GET comment
-
 function CommentModal({ squeal, showComment, handleCloseComment }) {
-  //console.log(squeal);
   const { userGlobal, setUserGlobal } = useUserContext();
 
   const notify = () =>
@@ -52,13 +48,11 @@ function CommentModal({ squeal, showComment, handleCloseComment }) {
         };
 
         let result = await fetch(uri, options);
-        //console.log(result);
 
         if (result.ok) {
           let json = await result.json();
           console.log("POST COMMENTOOOOOO OK", json);
           handleCloseComment();
-          //console.log(comment);
         } else {
           console.error("Errore nella POST del commento:", result.statusText);
         }
@@ -78,12 +72,12 @@ function CommentModal({ squeal, showComment, handleCloseComment }) {
     <>
       <Modal show={showComment} onHide={handleCloseComment} centered>
         <Modal.Header closeButton className="modal-buy-header">
-          <Modal.Title className="cool-font-medium">Commenta</Modal.Title>
+          <Modal.Title className="cool-font-medium" style= {{color:"#e0bb76"}}>COMMENTA</Modal.Title>
         </Modal.Header>
-        <Modal.Body className="modal-buy-body p-5">
+        <Modal.Body className="modal-buy-body m-0">
           <div className="row p-2 mb-3">
             <label htmlFor="comment" className=" cool-font-medium">
-              Commento
+              
             </label>
             <textarea
               type="text"
@@ -108,13 +102,13 @@ function CommentModal({ squeal, showComment, handleCloseComment }) {
           className="d-flex justify-content-center"
         >
           <button
-            className="blue-button cool-font-small box w-50 box"
+            className="green-button cool-font-medium box w-50 box"
             onClick={postComment}
           >
             COMMENTA
           </button>
           <button
-            className="red-button box cool-font-small w-50 box"
+            className="red-button box cool-font-medium w-50 box"
             onClick={handleCloseComment}
           >
             ANNULLA

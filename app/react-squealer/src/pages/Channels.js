@@ -236,15 +236,14 @@ function Channels() {
             <h3>TODO:</h3>
             <ul className="list-group col-md-4">
               <li className="list-group-item list">
-                GESTIONE RUOLI AMIN: PATCH new_role
+                GESTIONE CAMBIO RUOLI
               </li>
-              <li className="list-group-item list">CREARE 3 CANALI API</li>
               <li className="list-group-item list">URL: limit, offset</li>
               <li className="list-group-item list">
-                criterio squeals appartenenza canale
+                criterio squeals appartenenza canale?
               </li>
               <li className="list-group-item list">
-                canali silenziabili o popolari??
+                regolare notifiche se c'è tempo
               </li>
             </ul>
           </div>

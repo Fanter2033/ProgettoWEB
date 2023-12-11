@@ -181,7 +181,10 @@ function DetailsChannel() {
                 >
                   <path d="M15 8a6.973 6.973 0 0 0-1.71-4.584l-9.874 9.875A7 7 0 0 0 15 8M2.71 12.584l9.874-9.875a7 7 0 0 0-9.874 9.874ZM16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0" />
                 </svg>
-                <div className="cool-font-medium altro"> &nbsp;BLOCCATO&nbsp;</div>
+                <div className="cool-font-medium altro">
+                  {" "}
+                  &nbsp;BLOCCATO&nbsp;
+                </div>
                 <div>NON SI PUO SCRIVERE</div>
               </div>
             </>
@@ -196,9 +199,13 @@ function DetailsChannel() {
           </Card.Header>
 
           <Card.Body>
-            <h3 className="cool-font-medium">
-              DESCRIZIONE: {channel.description}
-            </h3>
+            {channel.channel_type === "CHANNEL_OFFICIAL" && (
+              <>
+                <h3 className="cool-font-medium">
+                  DESCRIZIONE: {channel.description}
+                </h3>
+              </>
+            )}
 
             {channel.type === "CHANNEL_USERS" && (
               <p className="cool-font-small mb-0">CREATORE: {channel.owner}</p>
@@ -297,7 +304,9 @@ function DetailsChannel() {
         {channel.owner === userGlobal.username &&
           channel.type === "CHANNEL_USERS" && (
             <div className="row">
-              <h2 className="cool-font-medium mt-3">PER IL CREATORE DEL CANALE</h2>
+              <h2 className="cool-font-medium mt-3">
+                PER IL CREATORE DEL CANALE
+              </h2>
 
               <div className="">
                 <ChangeNameChannel />{" "}

@@ -161,19 +161,18 @@ function Register() {
   return (
     <div className="container">
       <div className="row justify-content-center">
-        <h1 className="text-center mt-3 cool-font animated-title">Welcome</h1>
+        <h1 className="text-center mt-3 cool-font animated-title">Benvenuti</h1>
         <h1 className="animated-squeal cool-font" aria-label="Squealer">
-          to &#129413;
+          su &#129413;
         </h1>
 
         <div className="animated-title col-6 ">
           <form onSubmit={handleRegistration}>
-            <div className="form-group row p-2 mb-3">
+            <div className="form-group row mb-3">
               <label
                 htmlFor="inputName"
                 className="form-label cool-font-medium"
               >
-                Nome
               </label>
               <input
                 type="text"
@@ -188,12 +187,11 @@ function Register() {
               />
             </div>
 
-            <div className="form-group row p-2 mb-3">
+            <div className="form-group row mb-3">
               <label
                 htmlFor="inputSurname"
                 className="form-label cool-font-medium"
               >
-                Cognome
               </label>
               <input
                 type="text"
@@ -208,12 +206,11 @@ function Register() {
               />
             </div>
 
-            <div className="form-group row p-2 mb-3">
+            <div className="form-group row mb-3">
               <label
                 htmlFor="inputUsername"
                 className="form-label cool-font-medium"
               >
-                Username
               </label>
               <input
                 type="text"
@@ -228,9 +225,8 @@ function Register() {
               />
             </div>
 
-            <div className="form-group row p-2 mb-3">
+            <div className="form-group row mb-3">
               <label htmlFor="email" className="form-label cool-font-medium">
-                Email
               </label>
               <input
                 type="text"
@@ -239,18 +235,17 @@ function Register() {
                 style={{ color: "#072f38", backgroundColor: "#e0bb76" }}
                 id="email"
                 value={email}
-                placeholder="you@example.it"
+                placeholder="Email"
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
 
-            <div className="form-group row p-2">
+            <div className="form-group row">
               <label
                 htmlFor="inputPassword5"
                 className="form-label cool-font-medium"
               >
-                Password
               </label>
               <input
                 type="password"
@@ -266,7 +261,7 @@ function Register() {
               />
             </div>
 
-            <div className="form-group row p-2 mb-3 cool-font-link  ">
+            <div className="form-group row mt-3 mb-3 cool-font-link  ">
               <h3 className="text-wrap cool-font-medium">
                 Qual è il tuo passatempo preferito?
               </h3>
@@ -296,14 +291,14 @@ function Register() {
 
             <div className="form-group row p-2">
               <button
-                className="col-12 col-md-4 offset-md-4 mb-3 green-button cool-font-small box"
+                className="col-12 col-md-4 offset-md-4 mb-3 green-button cool-font-medium box"
                 type="button"
                 onClick={handleRegistration}
               >
                 <ToastContainer />
                 REGISTRATI
               </button>
-              <button className="col-12 col-md-4 offset-md-4 mb-5 red-button box cool-font-small">
+              <button className="col-12 col-md-4 offset-md-4 mb-5 red-button box cool-font-medium">
                 <NavLink
                   style={{ color: "#e0bb76" }}
                   to={ReactConfig.pathFunction("/")}

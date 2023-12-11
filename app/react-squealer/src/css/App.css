@@ -146,6 +146,10 @@ body {
   white-space: nowrap;
 }
 
+.link-comment {
+  text-decoration: none; /* Rimuove la sottolineatura */
+  color: var(--squeal-blu); /* Sostituisci con il colore che desideri, ad esempio il rosso (#ff0000) */
+}
 /* -------------------- BUTTON STUFF ------------------*/
 .custom-button {
   background-color: var(--squeal-blue);

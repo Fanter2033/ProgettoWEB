@@ -4,7 +4,8 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
 function RenderMap({ coordinates }) {
-  if (!Array.isArray(coordinates) || coordinates.length !== 2) {
+  
+  if (!Array.isArray(coordinates)) {
     console.log(coordinates);
     console.error("Coordinate non valide.");
     return null;
@@ -44,7 +45,7 @@ con il verde
     <MapContainer
       center={coordinates}
       zoom={13}
-      style={{ height: "400px", width: "100%" }}
+      style={{ height: "200px", width: "100%" }}
     >
       <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

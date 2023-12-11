@@ -61,10 +61,10 @@ function Chat() {
                   <Col lg={12} className="mb-4" key={squeal._id}>
                     <Card style={{ width: "100%" }} className="squeal">
                       <Card.Header className="d-flex flex-column justify-content-center align-items-center">
-                        <div className="row">
-                          <b> DA: </b>
+                        <div>
+                          <b className="cool-font-details"> DA: </b>
                           <Link to="/infou" state={squeal.sender}>
-                            <button className="ms-4 me-4 custom-button box">
+                            <button className=" ms-2 custom-button box">
                               <b>{squeal.sender} </b>
 
                               <svg
@@ -81,7 +81,7 @@ function Chat() {
                           </Link>
                         </div>
                         <div className="row cool-font-details mt-2">
-                          <div>Id: {squeal._id}</div>
+                          <div>ID: {squeal._id}</div>
                           <TypeSqueal typeSqueal={squeal.message_type} />
                         </div>
                       </Card.Header>
@@ -89,6 +89,7 @@ function Chat() {
                         <SquealContent
                           content={squeal.content}
                           type={squeal.message_type}
+                          id={squeal._id}
                         />
                       </Card.Body>
                       <Card.Footer>
@@ -115,3 +116,18 @@ function Chat() {
 }
 
 export default Chat;
+
+/*
+
+
+
+
+
+
+
+
+
+                         <div>
+ {squeal.content}
+ </div>
+*/

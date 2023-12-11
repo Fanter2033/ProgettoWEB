@@ -46,6 +46,23 @@ di andare a capo su più righe se lo spazio orizzontale è limitato.
               </div>
 */
 
+/*
+
+const secondiInUnMinuto = 60;
+const secondiInUnOra = 60 * secondiInUnMinuto;
+const secondiInUnGiorno = 24 * secondiInUnOra;
+const giorniInUnMese = 30; // un'approssimazione media
+const secondiInUnMese = giorniInUnMese * secondiInUnGiorno;
+const giorniInUnAnno = 365; // un'approssimazione media, non considerando anni bisestili
+const secondiInUnAnno = giorniInUnAnno * secondiInUnGiorno;
+
+console.log('Secondi in un minuto:', secondiInUnMinuto);
+console.log('Secondi in un'ora:', secondiInUnOra);
+console.log('Secondi in un giorno:', secondiInUnGiorno);
+console.log('Secondi in un mese:', secondiInUnMese);
+console.log('Secondi in un anno:', secondiInUnAnno);
+
+*/
 //TODO PUT SQUEAL /squeal/{identifier_id}  SOLO mappeeeeeeeee------------------------------------------------------------------------------------------------------------
 function Squeal() {
   const { userGlobal, setUserGlobal } = useUserContext();
@@ -85,6 +102,18 @@ function Squeal() {
       log();
     });
   }
+
+  const notify_quote = () =>
+    toast.error("Quota esaurita", {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
 
   const notify = () =>
     toast.error("Manca desinatario. Riprovare", {
@@ -176,6 +205,7 @@ function Squeal() {
     } catch (error) {
       console.error("Errore nella fetch:", error);
     }
+    console.log(userData);
   }
 
   //GET QUOTE-----------------------------------------------------------------------------------------------
@@ -415,23 +445,19 @@ function Squeal() {
     setNewMonth(remainingLimitM);
   };
 
-  //TODO:CHANGE
   //POSITION_AUTO --------------------------------------------------------------------------------
   const [autoCoordinates, setAutoCoordinates] = useState(null);
   const handleAutoMaps = (position) => {
     setAutoCoordinates(position);
 
-    const iteration = 125 * numero1;
+    //console.log("Coordinate utente:", position);
 
-    const remainingLimitD = liveDay - iteration;
-    const remainingLimitW = liveWeek - iteration;
-    const remainingLimitM = liveMonth - iteration;
-
+    const remainingLimitD = liveDay - 125;
+    const remainingLimitW = liveWeek - 125;
+    const remainingLimitM = liveMonth - 125;
     setNewDay(remainingLimitD);
     setNewWeek(remainingLimitW);
     setNewMonth(remainingLimitM);
-
-    //console.log("Coordinate utente:", position);
   };
 
   //TYPE INPUT---------------------------------------------------------------------------------
@@ -622,23 +648,6 @@ function Squeal() {
               onChange={handleNumero1Change}
             />
           </div>
-          <div className="">
-            <label htmlFor="numero2" className="me-2 cool-font-details">
-              OGNI QUANTI SECONDI?
-            </label>
-            <input
-              type="number"
-              id="numero2"
-              value={numero2}
-              style={{
-                width: "20%",
-                color: "#072f38",
-                backgroundColor: "#528b57",
-                borderRadius: "0.5rem",
-              }}
-              onChange={handleNumero2Change}
-            />
-          </div>
         </label>
 
         <MapComponent onLocationChange={handleAutoMaps} />
@@ -668,9 +677,158 @@ function Squeal() {
     */
   }
 
-  //TODO: POST SQUEAL /squeal/ per MAPPE TEMPORIZZATE------------------------------------------------------------------------------------------------------------
+  /*
+
+  async function eseguiOgni5Secondi(iterazioneCorrente, lim) {
+    console.log(
+      "aaaaaaaaaaa iterazione num: " + iterazioneCorrente
+    );
+    iterazioneCorrente++;
+
+    if (iterazioneCorrente <= lim) {
+      // richiama la funzione dopo 5 sec
+      setTimeout(() => eseguiOgni5Secondi(iterazioneCorrente, lim), 5000);
+    }
+  }
+
+  */
+
+  const [userLocation, setUserLocation] = useState(null);
+
+  const getLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const userLocation = [
+            position.coords.latitude,
+            position.coords.longitude,
+          ];
+          setUserLocation(userLocation);
+        },
+        (error) => {
+          console.error("Error getting user location:", error);
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+    }
+  };
+
+  useEffect(() => {
+    getLocation();
+  }, []);
+
+  async function eseguiOgni10Secondi(
+    iterazioneCorrente,
+    lim,
+    id,
+    autoCoordinates
+  ) {
+    //PUT SQUEAL /squeal/ per MAPPE TEMPORIZZATE------------------------------------------------------------------------------------------------------------
+    console.log("coordinate", autoCoordinates);
+
+    //per numero1 volte ongi 5sec
+    let data = {};
+    data = {
+      squeal: {
+        destinations: destinatariFromDest,
+        sender: userGlobal.username,
+        message_type: inputType,
+        new_position: userLocation,
+      },
+    };
+
+    const uri = `${ReactConfig.base_url_requests}/squeal/${id}`;
+    const options = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      mode: "cors",
+      body: JSON.stringify(data),
+    };
+
+    fetch(uri, options)
+      .then((res) => {
+        //console.log(res);
+        if (res.ok) {
+          //creation ok
+          return res.json();
+        }
+      })
+      .then((data) => {
+        console.log("Cambio mappa went good");
+      })
+      .catch((error) => {
+        console.error("Cambio mappa failed, error:", error);
+      });
+
+    iterazioneCorrente++;
+    if (iterazioneCorrente <= lim) {
+      setTimeout(
+        () => eseguiOgni10Secondi(iterazioneCorrente, lim, id, userLocation),
+        10000
+      );
+    }
+  }
+
+  //POST SQUEAL /squeal/ MAPPE TEMPORIZZATE------------------------------------------------------------------------------------------------------------
+  async function postAuto() {
+    let data = {};
+    const coordinates = autoCoordinates;
+    data = {
+      squeal: {
+        destinations: destinatariFromDest,
+        sender: userGlobal.username,
+        message_type: inputType,
+        content: coordinates,
+      },
+    };
+
+    //console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbb", coordinates);
+    //console.log("aaaaaaaaaaaaaaaaaaaa", markerCoordinates);
+
+    const uri = `${ReactConfig.base_url_requests}/squeal/`;
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      mode: "cors",
+      body: JSON.stringify(data),
+    };
+
+    fetch(uri, options)
+      .then((response) => {
+        if (response.ok) {
+          //console.log("POST mappa temporizzatra riuscita con successo");
+          return response.json();
+        }
+      })
+      .then((json) => {
+        //console.log(json, "PALLE");
+        // Avvia la prima esecuzione
+        const id = json._id;
+        eseguiOgni10Secondi(1, numero1, id, coordinates);
+      })
+      .catch((error) => {
+        console.error("Network error", error);
+      });
+  }
+
+  //POST SQUEAL /squeal/ ------------------------------------------------------------------------------------------------------------
   async function postSqueal(e) {
     e.preventDefault();
+    if (newDay < 0 || newWeek < 0 || newMonth < 0) {
+      notify_quote();
+
+      const extra = -newDay;
+      console.log(extra);
+      return null;
+    }
+
     /*
     squeal:{
       destinations
@@ -705,8 +863,22 @@ function Squeal() {
             sender: userGlobal.username,
             message_type: inputType,
             content: coordinates,
+            auto_iterations: numero1,
+            auto_seconds_delay: numero2,
           },
         };
+        if (numero1 === "" || numero2 === "") {
+          notify3();
+          return;
+        }
+        if (numero1 < 5) {
+          notify4();
+          return;
+        }
+        if (numero2 < 2) {
+          notify5();
+          return;
+        }
 
         //console.log("aaaaaaaaaaaaaaaaaaaa", markerCoordinates);
       } else if (inputType === "TEXT_AUTO") {
@@ -737,33 +909,8 @@ function Squeal() {
           return;
         }
       } else if (inputType === "POSITION_AUTO") {
-        //TODO:CHANGE
-        const coordinates = autoCoordinates;
-        data = {
-          squeal: {
-            destinations: destinatariFromDest,
-            sender: userGlobal.username,
-            message_type: inputType,
-            content: coordinates,
-            auto_iterations: numero1,
-            auto_seconds_delay: numero2,
-          },
-        };
-        if (numero1 === "" || numero2 === "") {
-          notify3();
-          return;
-        }
-        if (numero1 < 5) {
-          notify4();
-          return;
-        }
-        if (numero2 < 2) {
-          notify5();
-          return;
-        }
-
-        console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbb", coordinates);
-        //console.log("aaaaaaaaaaaaaaaaaaaa", markerCoordinates);
+        postAuto();
+        return null;
       } else {
         data = {
           squeal: {
@@ -790,6 +937,7 @@ function Squeal() {
         .then((response) => {
           if (response.ok) {
             console.log("POST Squeal riuscita con successo");
+
             clear();
             navigate("/received");
           } else {
@@ -1028,7 +1176,7 @@ function Squeal() {
                       <b>{squeal.sender}</b>
                     </Card.Header>
                     <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
-                      <div className="cool-font-text">{squeal.content}</div>
+                      <div>{squeal.content}</div>
                     </Card.Body>
                     <Card.Footer>
                       <div className="cool-font-details">Id: {squeal._id}</div>
@@ -1049,8 +1197,12 @@ function Squeal() {
 export default Squeal;
 
 /*
+ 
  <SquealContent
-   content={squeal.content}
-   type={squeal.message_type}
- />
+                        content={squeal.content}
+                        type={squeal.message_type}
+                        id={squeal._id}
+                      />
+ 
+ 
 */

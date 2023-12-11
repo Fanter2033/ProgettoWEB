@@ -122,7 +122,7 @@ function Received() {
                         <Card.Header className="w-100">
                           <div className="col-12 d-flex flex-row justify-content-between align-items-center">
                             <div>
-                              <b>DA:</b>
+                              <b className="cool-font-details">DA:</b>
                               <Link to="/infou" state={squeal.sender}>
                                 <button className=" ms-2 custom-button box ">
                                   <b>{squeal.sender} </b>
@@ -149,15 +149,12 @@ function Received() {
                             <ShowDest arrayDest={squeal.destinations} />
                           </div>
                           <div className="col-12 cool-font-details d-flex flex-column justify-content-start align-items-start mt-2">
-                            <div>Id: {squeal._id}</div>
+                            <div>ID: {squeal._id}</div>
                             <TypeSqueal typeSqueal={squeal.message_type} />
                           </div>
                         </Card.Header>
                         <Card.Body className="mb-4 d-flex flex-col justify-content-evenly align-items-center">
-                          <SquealContent
-                            content={squeal.content}
-                            type={squeal.message_type}
-                          />
+                          <div>{squeal.content}</div>
                         </Card.Body>
                         <Card.Footer className="w-100">
                           <div>
@@ -208,3 +205,12 @@ function Received() {
 }
 
 export default Received;
+
+/*
+ <SquealContent
+   content={squeal.content}
+   type={squeal.message_type}
+   id={squeal._id}
+ />
+
+*/
