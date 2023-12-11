@@ -91,9 +91,9 @@ function VipModal({ onInternalButtonClick, closeBuyModal }) {
     <div>
       <Modal show={true} onHide={closeBuyModal} centered>
         <Modal.Header closeButton className="modal-change-header">
-          <Modal.Title className="">Buy Quote</Modal.Title>
+          <Modal.Title className="cool-font-link" style= {{color:"#e0bb76"}}>BUY QUOTE</Modal.Title>
         </Modal.Header>
-        <Modal.Body className="modal-change-body">
+        <Modal.Body className="modal-change-body cool-font-link">
           <div className="m-3">
             <div className="card text-center offers">
               <div className="card-header">PACCHETTO 1</div>
@@ -153,13 +153,13 @@ function VipModal({ onInternalButtonClick, closeBuyModal }) {
           </div>
         </Modal.Body>
         <Modal.Footer
-          className="my-foot d-flex justify-content-center"
+          className="my-foot d-flex justify-content-center cool-font-small "
           style={footerStyle}
         >
-          <button className="green-button box" onClick={buyQuote}>
-            PAGA 💸
+          <button className="green-button box w-100" onClick={buyQuote}>
+            PAGA
           </button>
-          <button className="blue-button box" onClick={closeBuyModal}>
+          <button className="blue-button box w-100" onClick={closeBuyModal}>
             ANNULLA
           </button>
         </Modal.Footer>

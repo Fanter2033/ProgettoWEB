@@ -8,6 +8,7 @@ import { useUserContext } from "../config/UserContext";
 import CurrentDateTime from "./CurrentDateTime";
 import Dest from "./Dest";
 import MapComponent from "./MapComponent";
+import SquealContent from "./SquealContent";
 
 import imageCompression from "browser-image-compression";
 
@@ -23,6 +24,27 @@ di andare a capo su più righe se lo spazio orizzontale è limitato.
 */
 
 //offset mi tenere centrata la colonna
+
+/*
+<div className="col-4">
+                {userData.pfp && !userData.vip && (
+                  <img
+                    src={"data:image/png;base64," + userData.pfp}
+                    alt="Foto Profilo"
+                    className="rounded-circle pfp-small box"
+                  />
+                )}
+                {userData.pfp && userData.vip && (
+                  <img
+                    src={"data:image/png;base64," + userData.pfp}
+                    alt="Foto Profilo"
+                    className="rounded-circle pfp-vip box"
+                  />
+                )}
+
+                <h5 className="mt-0">{userGlobal.username}</h5>
+              </div>
+*/
 
 //TODO PUT SQUEAL /squeal/{identifier_id}  SOLO mappeeeeeeeee------------------------------------------------------------------------------------------------------------
 function Squeal() {
@@ -271,15 +293,24 @@ function Squeal() {
   //IMAGE-----------------------------------------------------------------------------------
   const [base64Image, setBase64Image] = useState("");
 
-  const handleImageUpload = useCallback(async (e) => {
-    const imageFile = e.target.files[0];
-
+  const costImage = (e) => {
+    console.log("live day", liveDay);
     const remainingLimitD = liveDay - 125;
+    console.log("remaining daily before", remainingLimitD);
+
     const remainingLimitW = liveWeek - 125;
     const remainingLimitM = liveMonth - 125;
+
     setNewDay(remainingLimitD);
     setNewWeek(remainingLimitW);
     setNewMonth(remainingLimitM);
+    console.log("remaining daily", remainingLimitD);
+
+    const imageFile = e.target.files[0];
+    handleImageUpload(imageFile);
+  };
+
+  const handleImageUpload = useCallback(async (imageFile) => {
     try {
       // compressione
       const options = {
@@ -367,6 +398,8 @@ function Squeal() {
     setClickedButtons((prevButtons) => [...prevButtons, buttonText]);
 
     const inputText = postText;
+    console.log("auto text cost", postText);
+
     const inputLength = inputText.length;
 
     // quota rimanente dopo il post
@@ -374,7 +407,7 @@ function Squeal() {
     const remainingLimitW = liveWeek - inputLength;
     const remainingLimitM = liveMonth - inputLength;
 
-    console.log("auto text cost", liveDay - remainingLimitD);
+    console.log("auto text cost", inputLength);
 
     setUserInput(inputText);
     setNewDay(remainingLimitD);
@@ -409,8 +442,8 @@ function Squeal() {
   if (inputType === "MESSAGE_TEXT") {
     inputElement = (
       <div className="mb-3">
-        <label htmlFor="userInput" className="form-label">
-          <b>Testo</b>
+        <label htmlFor="userInput" className="form-label cool-font-details-md">
+          <b>TESTO</b>
         </label>
         <textarea
           id="userInput"
@@ -421,15 +454,15 @@ function Squeal() {
           placeholder="Squeal time"
           rows="4"
           cols="50"
-          className="form-control box"
+          className="form-control box cool-font-link"
         />
       </div>
     );
   } else if (inputType === "IMAGE") {
     inputElement = (
       <div className="mb-3">
-        <label htmlFor="imageInput" className="form-label">
-          <b>Immagine</b>
+        <label htmlFor="imageInput" className="form-label cool-font-details-md">
+          <b>IMMAGINE</b>
         </label>
 
         <input
@@ -438,8 +471,8 @@ function Squeal() {
           name="imageInput"
           style={{ color: "#072f38", backgroundColor: "#528b57" }}
           accept="image/*"
-          onChange={handleImageUpload}
-          className="form-control box"
+          onChange={costImage}
+          className="form-control box cool-font-link"
         />
         {base64Image && <img src={base64Image} alt="Selected" />}
       </div>
@@ -447,8 +480,11 @@ function Squeal() {
   } else if (inputType === "VIDEO_URL") {
     inputElement = (
       <div className="mb-3">
-        <label htmlFor="youtubeLink" className="form-label">
-          <b>Link YouTube</b>
+        <label
+          htmlFor="youtubeLink"
+          className="form-label cool-font-details-md"
+        >
+          <b>LINK YouTube</b>
         </label>
         <input
           type="text"
@@ -457,28 +493,30 @@ function Squeal() {
           style={{ color: "#072f38", backgroundColor: "#528b57" }}
           value={youtubeLink}
           onChange={handleYoutubeLinkChange}
-          className="form-control box"
+          className="form-control box cool-font-link"
         />
         {!isValidLink && (
-          <p style={{ color: "red" }}>Inserisci un link YouTube valido.</p>
+          <p className="cool-font-link mt-1">
+            Inserisci un link YouTube valido.
+          </p>
         )}
       </div>
     );
   } else if (inputType === "POSITION") {
     inputElement = (
-      <div className="mb-3">
-        <b>Geolocalizzazione</b>
+      <div className="mb-3 cool-font-details-md">
+        <b>MAPPA</b>
         <MapComponent onLocationChange={handleMarkerAdded} />
       </div>
     );
   } else if (inputType === "TEXT_AUTO") {
     inputElement = (
-      <div className="mb-3">
-        <label htmlFor="userInput" className="form-label">
-          <b>Messaggio temporizzato</b>
+      <div className="mb-3 text-wrap">
+        <label htmlFor="userInput" className="form-label ">
+          <b className="cool-font-details-md">MESSAGGIO A TEMPO</b>
           <div className="">
-            <label htmlFor="numero1" className="me-2">
-              Quante ripetizioni?
+            <label htmlFor="numero1" className="me-2 cool-font-details">
+              QUANTE RIPETIZIONI?
             </label>
             <input
               type="number"
@@ -494,8 +532,8 @@ function Squeal() {
             />
           </div>
           <div className="">
-            <label htmlFor="numero2" className="me-2">
-              Ogni quanti secondi?
+            <label htmlFor="numero2" className="me-2 cool-font-details">
+              OGNI QUANTI SECONDI?
             </label>
             <input
               type="number"
@@ -518,9 +556,9 @@ function Squeal() {
           rows="4"
           cols="50"
           style={{ color: "#072f38", backgroundColor: "#528b57" }}
-          placeholder="Inserisci il testo del post..."
+          placeholder="MINIMO 5 SECONDI"
           value={postText}
-          className="form-control box"
+          className="form-control box cool-font-link"
           onChange={(e) => setPostText(e.target.value)}
         />
         <div className="text-wrap mt-2">
@@ -565,11 +603,11 @@ function Squeal() {
   } else if (inputType === "POSITION_AUTO") {
     inputElement = (
       <div className="mb-3 text-wrap">
-        <label htmlFor="userInput" className="form-label">
-          <b>Geolocalizzazione temporizzata</b>
+        <label htmlFor="userInput" className="form-label ">
+          <b className="cool-font-details-md">MAPPA A TEMPO</b>
           <div className="">
-            <label htmlFor="numero1" className="me-2">
-              Quante ripetizioni?
+            <label htmlFor="numero1" className="me-2 cool-font-details">
+              QUANTE RIPETIZIONI?
             </label>
             <input
               type="number"
@@ -585,8 +623,8 @@ function Squeal() {
             />
           </div>
           <div className="">
-            <label htmlFor="numero2" className="me-2">
-              Ogni quanti secondi?
+            <label htmlFor="numero2" className="me-2 cool-font-details">
+              OGNI QUANTI SECONDI?
             </label>
             <input
               type="number"
@@ -753,7 +791,7 @@ function Squeal() {
           if (response.ok) {
             console.log("POST Squeal riuscita con successo");
             clear();
-            //navigate("/post");
+            navigate("/received");
           } else {
             console.error(
               "Errore durante la POST, riprova",
@@ -787,7 +825,7 @@ function Squeal() {
               <Dest onDestinatariSubmit={handleDestinatariSubmit} />
             </div>
 
-            <div className="mb-3 mt-">
+            <div className="mb-3">
               <div
                 className="btn-group d-flex justify-content-evenly"
                 role="group"
@@ -918,38 +956,19 @@ function Squeal() {
               </div>
             </div>
 
-            <div className="card-text mb-5">
+            <div className="card-text mb-4">
               <form>{inputElement}</form>
             </div>
 
-            <div className="row d-flex flex-row justify-content-evenly align-items-center mb-3">
+            <div className="row d-flex flex-row justify-content-evenly align-items-center ">
               <div className="col-8">
                 <button
-                  className="blue-button box cool-font-medium"
-                  style={{ width: "100%" }}
+                  className="blue-button box cool-font-medium w-100"
                   onClick={postSqueal}
                 >
                   SQUEAL
                 </button>
                 <ToastContainer />
-              </div>
-              <div className="col-4">
-                {userData.pfp && !userData.vip && (
-                  <img
-                    src={"data:image/png;base64," + userData.pfp}
-                    alt="Foto Profilo"
-                    className="rounded-circle pfp-small box w-100 "
-                  />
-                )}
-                {userData.pfp && userData.vip && (
-                  <img
-                    src={"data:image/png;base64," + userData.pfp}
-                    alt="Foto Profilo"
-                    className="rounded-circle pfp-vip box w-100"
-                  />
-                )}
-
-                <h5 className="mt-0">{userGlobal.username}</h5>
               </div>
             </div>
           </div>
@@ -995,13 +1014,13 @@ function Squeal() {
             </div>
           </div>
         </div>
-        <div className="col-12 mt-3">
-          <h2 className="cool-font-link">Log Squeal Pubblici</h2>
-          <h2 className="cool-font-link">Numero: {squealsLogger.length}</h2>
+        <div className="col-12 mt-3 mb-5">
+          <h2 className="cool-font-link">LOG DEGLI SQUEAL PUBBLICI</h2>
+          <h2 className="cool-font-link">NUMERO: {squealsLogger.length}</h2>
 
           <Container className="">
             <Row className="w-100">
-              {squealsLogger.map((squeal, index) => (
+              {squealsLogger.map((squeal) => (
                 <Col lg={12} className="mb-4" key={squeal._id}>
                   <Card style={{ height: "100%" }} className="squeal">
                     <Card.Header className="d-flex flex-col justify-content-center align-items-center">
@@ -1028,3 +1047,10 @@ function Squeal() {
 }
 
 export default Squeal;
+
+/*
+ <SquealContent
+   content={squeal.content}
+   type={squeal.message_type}
+ />
+*/

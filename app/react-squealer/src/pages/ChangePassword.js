@@ -154,10 +154,11 @@ function ChangePassword() {
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton className="modal-change-header">
           <Modal.Title
-            style={{ textAlign: "center" }}
+            style={{ textAlign: "center", color:"#e0bb76" }}
             className="cool-font-medium"
+
           >
-            Cambia password
+            CAMBIA PASSWORD
           </Modal.Title>
         </Modal.Header>
         <Modal.Body className="modal-change-body cool-font-medium">
@@ -167,12 +168,12 @@ function ChangePassword() {
               className="mb-4"
               controlId="exampleForm.ControlInput1"
             >
-              <Form.Label>Nuova password</Form.Label>
+              <Form.Label style= {{color:"#e0bb76"}}>NUOVA PASSWORD</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="inserisci qui"
-                className="text-center"
-
+                className="text-center "
+                style={{ color: "#072f38", backgroundColor: "#e0bb76" }}
                 name="nuovaPassword"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}

@@ -5,7 +5,7 @@ import { useUserContext } from "../config/UserContext";
 
 import { Modal } from "react-bootstrap";
 
-function DowngradeModal({downgrade, closeDowngrade}) {
+function DowngradeModal({ downgrade, closeDowngrade }) {
   const { userGlobal } = useUserContext();
 
   const handelDowngrade = () => {
@@ -46,28 +46,35 @@ function DowngradeModal({downgrade, closeDowngrade}) {
     <div>
       <Modal show={downgrade} onHide={closeDowngrade} centered>
         <Modal.Header closeButton className="custom-modal-header">
-          <Modal.Title className="">Downgrade Account</Modal.Title>
+          <Modal.Title className="cool-font-small" style= {{color:"#e0bb76"}}>
+            DOWNGRADE ACCOUNT
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body className="custom-modal-body">
           <p className="custom-modal-text cool-font-medium">
-            Torna <span className="luminescent-word">USER</span>
+            Torna ad essere <span className="luminescent-word">USER</span>
           </p>
-          <ul className="custom-modal-list">
-            <li>Potrai cambiare nome</li>
-            <li>MA</li>
-            <li>Perderai il pagamento effettuato</li>
-            <li>e tutti i vantaggi del VIP</li>
-            <li>Potrai cambiare nome</li>
-            <li>sicuro di voler procedere?</li>
-            <li>Questa azione è irreversibile</li>
+          <ul className="custom-modal-list cool-font-text wrap">
+            Potrai cambiare nome <br />
+            MA
+            <br /> Perderai il pagamento effettuato e tutti i vantaggi
+            dell'account VIP. <br />
+            Questa azione è irreversibile.
+            <br /> Sicuro di voler procedere?
           </ul>
         </Modal.Body>
         <Modal.Footer className="my-foot" style={footerStyle}>
-          <button className="custom-button w-100" onClick={closeDowngrade}>
-            Chiudi
+          <button
+            className="upgrade-button cool-font-small"
+            onClick={handelDowngrade}
+          >
+            DOWNGRADE
           </button>
-          <button className="upgrade-button" onClick={handelDowngrade}>
-            Downgrade
+          <button
+            className="custom-button cool-font-small w-100"
+            onClick={closeDowngrade}
+          >
+            CHIUDI
           </button>
         </Modal.Footer>
       </Modal>

@@ -57,24 +57,37 @@ const ChannelDeleteModal = () => {
 
   return (
     <>
-      <button className="red-button box" onClick={handleShow}>
+      <button className="cool-font-link red-button box w-100" onClick={handleShow}>
         CANCELLA CHANNEL
       </button>
       <Modal show={show} onHide={handleClose} centered>
-        <Modal.Header closeButton className="modal-delete-header">
-          <Modal.Title>Conferma Eliminazione</Modal.Title>
+        <Modal.Header
+          closeButton
+          className="modal-delete-header cool-font-medium"
+          style={{ color: "#e0bb76" }}
+        >
+          <Modal.Title>CONFERMA ELIMINAZIONE</Modal.Title>
         </Modal.Header>
-        <Modal.Body className="modal-delete-body">
-          Sei sicuro di voler eliminare questo cananle?
+        <Modal.Body
+          className="modal-delete-body cool-font-text p-5"
+          style={{ color: "#072f38" }}
+        >
+          SEI SICURO DI VOLER ELIMINARE QUESTO CANALE?
           <br></br>
-          Questa azione è <span className="cool-font-small">IRREVERSIBILE</span>
+          QUESTA AZIONE È <span className="cool-font-link">IRREVERSIBILE</span>
         </Modal.Body>
         <Modal.Footer style={footerStyle}>
-          <button className="blue-button box" onClick={handleClose}>
-            Annulla
+          <button
+            className="red-button box cool-font-medium w-100"
+            onClick={handleDeleteChannel}
+          >
+            ELIMINA CANALE
           </button>
-          <button className="red-button box" onClick={handleDeleteChannel}>
-            Elimina Canale
+          <button
+            className="blue-button box cool-font-medium w-100"
+            onClick={handleClose}
+          >
+            ANNULLA
           </button>
         </Modal.Footer>
       </Modal>

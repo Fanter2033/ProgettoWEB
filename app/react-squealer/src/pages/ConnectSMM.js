@@ -59,7 +59,7 @@ function ConnectSMM({ openConnect, closeConnect }) {
     };
   }, []);
 
-  //TODO: PATCH /user/{username}/pick-smm/{smm} ----------------------------------------------------------------------------------------------------------
+  //PATCH /user/{username}/pick-smm/{smm} ----------------------------------------------------------------------------------------------------------
   async function addSmm(e) {
     e.preventDefault();
     console.log("sono vip?", userData.vip);
@@ -86,7 +86,7 @@ function ConnectSMM({ openConnect, closeConnect }) {
       });
   }
 
-  //TODO: PATCH /user/{username}/remove-smm -----------------------------------------------------------------------------------------------------
+  //PATCH /user/{username}/remove-smm -----------------------------------------------------------------------------------------------------
   async function removeSmm() {
     const uri2 = `${ReactConfig.base_url_requests}/user/${userData.username}/remove-smm`;
     const options = {
@@ -115,54 +115,79 @@ function ConnectSMM({ openConnect, closeConnect }) {
     backgroundColor: "#e0bb76",
   };
 
-  //TODO: GET /user/{username}/my-smm-----------------------------------------------------------------------------------------------------
+  const [mySmm, setMySmm] = useState("");
+  //GET /user/{username}/my-smm-----------------------------------------------------------------------------------------------------
   async function getSmm() {
-    const uri = `${ReactConfig.base_url_requests}/user/${userData.username}/my-smm`;
-    await fetch(uri)
-      .then((response) => {
-        if (response.ok) {
-          console.log(response);
-          //console.log("Got my smm succesfully");
+    try {
+      const uri = `${ReactConfig.base_url_requests}/user/${userData.username}/my-smm`;
 
-        } else {
-          console.error("Did not got my smm", response.statusText);
-        }
-      })
-      .catch((error) => {
-        console.error("Network error", error);
-      });
+      let res = await fetch(uri);
+
+      console.log(res);
+      if (res.ok) {
+        let data = res.body;
+        console.log(data);
+        setMySmm(data);
+        return data;
+      } else {
+        console.error("Errore nella richiesta:", res.statusText);
+      }
+      console.log(mySmm);
+    } catch (error) {
+      console.error("Errore nella fetch:", error);
+    }
   }
 
   return (
     <div>
       <Modal show={openConnect} onHide={closeConnect} centered>
         <Modal.Header closeButton className="custom-modal-header">
-          <Modal.Title className="">Manage SMM qui</Modal.Title>
+          <Modal.Title className="cool-font-medium" style= {{color:"#e0bb76"}}>
+            GESTISCI SMM QUI
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body className="custom-modal-body">
+        <Modal.Body className="custom-modal-body cool-font-link" >
           <div className="row d-flex justify-content-center align-items-center">
             <div className="col-6">
-              <p>Connetti il tuo SMM</p>
-              <input type="text" value={smm} onChange={handleInputChange} />
+              <p style= {{color:"##528b57"}}>CONNETTI IL TUO SMM</p>
+              <input
+                className="form-control cool-font-details text-center box"
+                type="text"
+                value={smm}
+                onChange={handleInputChange}
+                style={{ color: "#e0bb76", backgroundColor: "#528b57" }}
+              />
 
-              <button className="green-button box mt-2 w-50" onClick={addSmm}>
+              <button
+                className="green-button box mt-2 mb-4 w-100 cool-font-small "
+                onClick={addSmm}
+              >
                 CONNETTI
               </button>
-              <p >Ottieni info sul tuo SMM</p>
-              <button className="green-button box mt-2 w-50" onClick={getSmm}>
+              <p style= {{color:"#072f38"}}>NOME DEL TUO SMM</p>
+              <button
+                className="blue-button box w-100 cool-font-small"
+                onClick={getSmm}
+              >
                 VAI
               </button>
 
-              <p className="mt-4">Rimuovi SMM</p>
-              <button className="red-button mb-2 box w-50" onClick={removeSmm}>
+              <p style= {{color:"#b45656"}} className="mt-4">RIMUOVI SMM</p>
+              <button
+                className="red-button mb-2 box w-100 cool-font-small"
+                onClick={removeSmm}
+              >
                 RIMUOVI
               </button>
             </div>
           </div>
         </Modal.Body>
         <Modal.Footer className="my-foot" style={footerStyle}>
-          <button className="upgrade-button" onClick={closeConnect}>
-            Chiudi
+          <button
+            className="upgrade-button cool-font-small"
+            onClick={closeConnect}
+          >
+            CHIUDI
           </button>
         </Modal.Footer>
       </Modal>

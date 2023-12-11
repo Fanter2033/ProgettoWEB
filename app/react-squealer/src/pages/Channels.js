@@ -6,7 +6,7 @@ import { useUserContext } from "../config/UserContext";
 
 import Search from "./Search";
 import Footer from "./Footer";
-import ChannelForm from "./ChannelForm";
+import CreateChannel from "./CreateChannel";
 import DropdownMenu from "./DropdownMenu";
 import MenuOfficial from "./MenuOfficial";
 import MenuTag from "./MenuTag";
@@ -548,7 +548,7 @@ function Channels() {
           </div>
         </div>
         <div className="row">
-          <ChannelForm />
+          <CreateChannel />
           <Search />
         </div>
       </div>

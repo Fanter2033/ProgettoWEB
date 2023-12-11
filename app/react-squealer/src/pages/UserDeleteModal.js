@@ -43,22 +43,35 @@ const UserDeleteModal = ({ showDeleteModal, handleCloseDeleteModal }) => {
   return (
     <>
       <Modal show={showDeleteModal} onHide={handleCloseDeleteModal} centered>
-        <Modal.Header closeButton className="modal-delete-header">
-          <Modal.Title>Conferma Eliminazione</Modal.Title>
+        <Modal.Header
+          closeButton
+          className="modal-delete-header cool-font-medium"
+          style={{ textAlign: "center", color: "#e0bb76" }}
+        >
+          <Modal.Title>CONFERMA ELIMINAZIONE</Modal.Title>
         </Modal.Header>
-        <Modal.Body className="modal-delete-body">
-          Sei sicuro di voler eliminare questo utente?
-          <br></br>
-          Questa azione è <span className="cool-font-small">IRREVERSIBILE</span>
-          <br></br>
+        <Modal.Body
+          className="modal-delete-body cool-font-text"
+          style={{ textAlign: "center", color: "#072f38" }}
+        >
           Assicurati di <span className="cool-font-small">NON</span> essere il
           proprietario di una canale.
+          <br></br>
+          Sei sicuro di voler eliminare questo utente?
+          <br></br>
+          Questa azione è <span className="cool-font-link">IRREVERSIBILE</span>.
         </Modal.Body>
         <Modal.Footer style={footerStyle}>
-          <button className="blue-button box" onClick={deleteUser}>
+          <button
+            className="blue-button box cool-font-small w-100"
+            onClick={deleteUser}
+          >
             ELIMINA
           </button>
-          <button className="red-button box" onClick={handleCloseDeleteModal}>
+          <button
+            className="red-button box cool-font-small w-100"
+            onClick={handleCloseDeleteModal}
+          >
             ANNULLA
           </button>
         </Modal.Footer>

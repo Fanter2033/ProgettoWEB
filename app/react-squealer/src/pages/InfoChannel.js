@@ -20,7 +20,7 @@ function InfoChannel() {
   const location = useLocation();
 
   const [channel, setChannel] = useState(location.state);
-
+  console.log(channel);
   if (channel.owner === "") {
     //GET /channel/{type}/{name}/ LISTA INFO CANALE
 
@@ -39,7 +39,7 @@ function InfoChannel() {
 
       if (result.ok) {
         let data = result.json();
-        //console.log("Successo nella richiesta dei ruoli UTENTE", data);
+        console.log("Successo nella richiesta dei ruoli UTENTE", data);
         setChannel(data);
       } else {
         console.error("Errore nella richiesta:", result.statusText);
@@ -195,8 +195,8 @@ function InfoChannel() {
   }, [newMessageNotification]);
 
   return (
-    <div>
-      <div className="d-flex flex-row align-items-center justify-content-evenly align-items-center mt-3">
+    <div className="pb-5">
+      <div className="d-flex flex-row align-items-center justify-content-evenly align-items-center pt-3 pb-3">
         <Link to="/details" state={channel}>
           <button className="yellow-button box ">
             <svg
@@ -250,6 +250,30 @@ function InfoChannel() {
                 +
               </button>
             )}
+          </>
+        )}
+      </div>
+
+      <div className="d-flex flex-row justify-content-center align-items-center">
+        {channel.locked && (
+          <>
+            <div className="altro d-flex flex-row justify-content-center align-items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="30"
+                height="30"
+                fill="currentColor"
+                className="bi bi-ban"
+                viewBox="0 0 16 16"
+              >
+                <path d="M15 8a6.973 6.973 0 0 0-1.71-4.584l-9.874 9.875A7 7 0 0 0 15 8M2.71 12.584l9.874-9.875a7 7 0 0 0-9.874 9.874ZM16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0" />
+              </svg>
+              <div className="cool-font-medium altro">
+                {" "}
+                &nbsp;BLOCCATO &nbsp;
+              </div>
+              <div>NON SI PUO SCRIVERE</div>
+            </div>
           </>
         )}
       </div>
@@ -309,10 +333,9 @@ function InfoChannel() {
 
       <div>
         <h1 className="cool-font-medium mt-3">
-          Squeals di {channel.channel_name}
+          SQUEALS DI {channel.channel_name}
         </h1>
         <br></br>
-        <Container className=""></Container>
       </div>
       {squealsLogger.length === 0 && (
         <>
@@ -326,10 +349,13 @@ function InfoChannel() {
         <>
           <Row className="w-100" key={role._id}>
             {role.role === 0 &&
+              squealsLogger.length !== 0 &&
               role.channel_name === channel.channel_name &&
               channel.type === "CHANNEL_USERS" && (
                 <>
-                  <h1>SEI IN ATTESA...</h1>
+                  <h1 className="cool-font-medium text-center">
+                    SEI IN ATTESA...
+                  </h1>
                 </>
               )}
 
@@ -339,15 +365,38 @@ function InfoChannel() {
                 .map((squeal) => (
                   <Col lg={12} key={squeal._id} className="mb-4">
                     <Card style={{ height: "100%" }} className="squeal">
-                      <Card.Header className="d-flex flex-row justify-content-evenly align-items-center cool-font-details">
-                        {" "}
-                        <div>
-                          <b>{squeal.sender}</b>
+                      <Card.Header className="d-flex flex-column justify-content-evenly align-items-center cool-font-details">
+                        <div className="col-12 d-flex flex-row justify-content-between align-items-center">
+                          <div>
+                            <b>DA:</b>
+
+                            <Link to="/infou" state={squeal.sender}>
+                              <button className=" ms-2 custom-button box ">
+                                <b>{squeal.sender} </b>
+
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="16"
+                                  height="16"
+                                  fill="currentColor"
+                                  className="bi bi-info-circle-fill"
+                                  viewBox="0 0 16 16"
+                                >
+                                  <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
+                                </svg>
+                              </button>
+                            </Link>
+                          </div>
                         </div>
-                        <TypeSqueal typeSqueal={squeal.message_type} />
-                        <div className="cool-font-details">
-                          {" "}
-                          ID:{squeal._id}
+                        <div className="col-12 d-flex flex-row justify-content-start align-items-center">
+                          <b>PER:</b>
+                          <ShowDest arrayDest={squeal.destinations} />
+                        </div>
+                        <div  className="col-12 d-flex flex-column justify-content-start align-items-start">
+                          <TypeSqueal typeSqueal={squeal.message_type} />
+                          <div className="cool-font-details">
+                            ID:{squeal._id}
+                          </div>
                         </div>
                       </Card.Header>
                       <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center ">
@@ -358,7 +407,10 @@ function InfoChannel() {
                       </Card.Body>
                       <Card.Footer>
                         <div>
-                          <Reactions squeal={squeal._id} />
+                          <Reactions
+                            squeal={squeal._id}
+                            reaction={squeal.reaction}
+                          />
                         </div>
                         <ShowComment arrayComment={squeal.comments} />
                       </Card.Footer>
@@ -373,7 +425,7 @@ function InfoChannel() {
                 .map((squeal) => (
                   <Col lg={12} key={squeal._id} className="mb-4">
                     <Card style={{ height: "100%" }} className="squeal">
-                      <Card.Header className="row d-flex flex-col justify-content-evenly align-items-center">
+                      <Card.Header className="row d-flex flex-column justify-content-evenly align-items-center">
                         {" "}
                         <div className="col-12 d-flex flex-row justify-content-between align-items-center">
                           <div>
@@ -396,15 +448,16 @@ function InfoChannel() {
                               </button>
                             </Link>
                           </div>
-                          <TypeSqueal typeSqueal={squeal.message_type} />
-                          <div className="cool-font-details">
-                            {" "}
-                            ID:{squeal._id}
-                          </div>
                         </div>
                         <div className="col-12 d-flex flex-row justify-content-start align-items-center">
                           <b>PER:</b>
                           <ShowDest arrayDest={squeal.destinations} />
+                        </div>
+                        <div className="col-12 d-flex flex-column justify-content-start align-items-start">
+                          <TypeSqueal typeSqueal={squeal.message_type} />
+                          <div className="cool-font-details">
+                            ID:{squeal._id}
+                          </div>
                         </div>
                       </Card.Header>
                       <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
@@ -415,7 +468,10 @@ function InfoChannel() {
                       </Card.Body>
                       <Card.Footer>
                         <div>
-                          <Reactions squeal={squeal._id} />
+                          <Reactions
+                            squeal={squeal._id}
+                            reaction={squeal.reaction}
+                          />
                         </div>
                         <Comment squeal={squeal._id} />
                         <ShowComment arrayComment={squeal.comments} />
@@ -431,7 +487,7 @@ function InfoChannel() {
                 .map((squeal) => (
                   <Col lg={12} key={squeal._id} className="mb-4">
                     <Card style={{ height: "100%" }} className="squeal">
-                      <Card.Header className="row d-flex flex-col justify-content-evenly align-items-center">
+                      <Card.Header className="row d-flex flex-column justify-content-evenly align-items-center">
                         {" "}
                         <div className="col-12 d-flex flex-row justify-content-between align-items-center">
                           <div>
@@ -454,15 +510,16 @@ function InfoChannel() {
                               </button>
                             </Link>
                           </div>
-                          <TypeSqueal typeSqueal={squeal.message_type} />
-                          <div className="cool-font-details">
-                            {" "}
-                            ID:{squeal._id}
-                          </div>
                         </div>
                         <div className="col-12 d-flex flex-row justify-content-start align-items-center">
                           <b>PER:</b>
                           <ShowDest arrayDest={squeal.destinations} />
+                        </div>
+                        <div  className="col-12 d-flex flex-column justify-content-start align-items-start">
+                          <TypeSqueal typeSqueal={squeal.message_type} />
+                          <div className="cool-font-details">
+                            ID:{squeal._id}
+                          </div>
                         </div>
                       </Card.Header>
 
@@ -474,7 +531,10 @@ function InfoChannel() {
                       </Card.Body>
                       <Card.Footer>
                         <div>
-                          <Reactions squeal={squeal._id} />
+                          <Reactions
+                            squeal={squeal._id}
+                            reaction={squeal.reaction}
+                          />
                         </div>
                         <Comment squeal={squeal._id} />
                         <ShowComment arrayComment={squeal.comments} />
@@ -490,7 +550,7 @@ function InfoChannel() {
                 .map((squeal) => (
                   <Col lg={12} key={squeal._id} className="mb-5">
                     <Card style={{ height: "100%" }} className="squeal">
-                      <Card.Header className="row d-flex flex-col justify-content-evenly align-items-center">
+                      <Card.Header className="row d-flex flex-column justify-content-evenly align-items-center">
                         {" "}
                         <div className="col-12 d-flex flex-row justify-content-between align-items-center">
                           <div>
@@ -513,15 +573,16 @@ function InfoChannel() {
                               </button>
                             </Link>
                           </div>
-                          <TypeSqueal typeSqueal={squeal.message_type} />
-                          <div className="cool-font-details">
-                            {" "}
-                            ID:{squeal._id}
-                          </div>
                         </div>
                         <div className="col-12 d-flex flex-row justify-content-start align-items-center">
                           <b>PER:</b>
                           <ShowDest arrayDest={squeal.destinations} />
+                        </div>
+                        <div  className="col-12 d-flex flex-column justify-content-start align-items-start">
+                          <TypeSqueal typeSqueal={squeal.message_type} />
+                          <div className="cool-font-details">
+                            ID:{squeal._id}
+                          </div>
                         </div>
                       </Card.Header>
 
@@ -533,7 +594,10 @@ function InfoChannel() {
                       </Card.Body>
                       <Card.Footer>
                         <div>
-                          <Reactions squeal={squeal._id} />
+                          <Reactions
+                            squeal={squeal._id}
+                            reaction={squeal.reaction}
+                          />
                         </div>
                         <Comment squeal={squeal._id} />
                         <ShowComment arrayComment={squeal.comments} />
@@ -551,10 +615,10 @@ function InfoChannel() {
           <Col
             lg={12}
             key={squeal._id}
-            className=" d-flex flex-row justify-content-evenly align-items-center"
+            className=" d-flex flex-row justify-content-evenly align-items-center m-4"
           >
             <Card style={{ width: "80%" }} className="squeal">
-              <Card.Header className="row d-flex flex-col justify-content-evenly align-items-center">
+              <Card.Header className="row d-flex flex-column justify-content-evenly align-items-center">
                 {" "}
                 <div className="col-12 d-flex flex-row justify-content-between align-items-center">
                   <div>
@@ -577,12 +641,14 @@ function InfoChannel() {
                       </button>
                     </Link>
                   </div>
-                  <TypeSqueal typeSqueal={squeal.message_type} />
-                  <div className="cool-font-details"> ID:{squeal._id}</div>
                 </div>
                 <div className="col-12 d-flex flex-row justify-content-start align-items-center">
                   <b>PER:</b>
                   <ShowDest arrayDest={squeal.destinations} />
+                </div>
+                <div  className="col-12 d-flex flex-column justify-content-start align-items-start">
+                  <TypeSqueal typeSqueal={squeal.message_type} />
+                  <div className="cool-font-details"> ID:{squeal._id}</div>
                 </div>
               </Card.Header>
 
@@ -605,10 +671,10 @@ function InfoChannel() {
           <Col
             lg={12}
             key={squeal._id}
-            className="mb-4 d-flex flex-row justify-content-evenly align-items-center"
+            className="d-flex flex-row justify-content-evenly align-items-center m-4"
           >
-            <Card style={{ height: "80%" }} className="squeal">
-              <Card.Header className="row d-flex flex-col justify-content-evenly align-items-center">
+            <Card style={{ height: "80%" }} className="squeal mb-2">
+              <Card.Header className="row d-flex flex-column justify-content-evenly align-items-center">
                 {" "}
                 <div className="col-12 d-flex flex-row justify-content-between align-items-center">
                   <div>
@@ -631,12 +697,14 @@ function InfoChannel() {
                       </button>
                     </Link>
                   </div>
-                  <TypeSqueal typeSqueal={squeal.message_type} />
-                  <div className="cool-font-details"> ID:{squeal._id}</div>
                 </div>
                 <div className="col-12 d-flex flex-row justify-content-start align-items-center">
                   <b>PER:</b>
                   <ShowDest arrayDest={squeal.destinations} />
+                </div>
+                <div  className="col-12 d-flex flex-column justify-content-start align-items-start">
+                  <TypeSqueal typeSqueal={squeal.message_type} />
+                  <div className="cool-font-details"> ID:{squeal._id}</div>
                 </div>
               </Card.Header>
 
@@ -648,10 +716,14 @@ function InfoChannel() {
               </Card.Body>
               <Card.Footer>
                 <div>
-                  <Reactions squeal={squeal._id} />
+                  <Reactions squeal={squeal._id} reaction={squeal.reaction} />
                 </div>
-                <Comment squeal={squeal._id} />
-                <ShowComment arrayComment={squeal.comments} />
+                {userGlobal.username !== "" && (
+                  <>
+                    <Comment squeal={squeal._id} />
+                    <ShowComment arrayComment={squeal.comments} />
+                  </>
+                )}
               </Card.Footer>
             </Card>
           </Col>

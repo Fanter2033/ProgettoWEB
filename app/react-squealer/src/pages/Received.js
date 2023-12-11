@@ -80,7 +80,7 @@ function Received() {
   useEffect(() => {
     getDashboard();
     //getComments();
-    const intervalId1 = setInterval(getDashboard, 10000); //10 sec
+    const intervalId1 = setInterval(getDashboard, 5000); //10 sec
     //const intervalId2 = setInterval(getDashboard, 10000); //10 sec
 
     return () => {
@@ -97,10 +97,8 @@ function Received() {
         <div className="row d-flex justify-content-center">
           <h3 className="cool-font-small">TODO:</h3>
           <ul className="list-group col-md-4">
-            <li className="list-group-item list">Stampa destinatari</li>
-            <li className="list-group-item list">Commenti</li>
             <li className="list-group-item list mb-5">
-              Reazioni per sempre???
+              Mappa NON renderizzata?
             </li>
           </ul>
         </div>
@@ -108,13 +106,13 @@ function Received() {
           <div className="col-12 col-md-8">
             <h1 className="cool-font">CANALI SEGUITI</h1>
 
-            <Container className="">
+            <Container className="pb-5">
               <Row className=" ">
                 {dash
-                  .map((squeal) => (
+                  .map((squeal, index) => (
                     <Col
                       lg={12}
-                      key={squeal._id}
+                      key={index}
                       className="mb-4 d-flex justify-content-center align-items-center"
                     >
                       <Card
@@ -150,8 +148,12 @@ function Received() {
                             <b>PER:</b>
                             <ShowDest arrayDest={squeal.destinations} />
                           </div>
+                          <div className="col-12 cool-font-details d-flex flex-column justify-content-start align-items-start mt-2">
+                            <div>Id: {squeal._id}</div>
+                            <TypeSqueal typeSqueal={squeal.message_type} />
+                          </div>
                         </Card.Header>
-                        <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
+                        <Card.Body className="mb-4 d-flex flex-col justify-content-evenly align-items-center">
                           <SquealContent
                             content={squeal.content}
                             type={squeal.message_type}
@@ -159,12 +161,11 @@ function Received() {
                         </Card.Body>
                         <Card.Footer className="w-100">
                           <div>
-                            <Reactions squeal={squeal._id} />
+                            <Reactions
+                              squeal={squeal._id}
+                              reaction={squeal.reaction}
+                            />
                           </div>
-                          <div className="cool-font-details">
-                            Id: {squeal._id}
-                          </div>
-                          <TypeSqueal typeSqueal={squeal.message_type} />
                           <Comment squeal={squeal._id} />
 
                           <ShowComment arrayComment={squeal.comments} />

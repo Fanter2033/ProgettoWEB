@@ -150,7 +150,6 @@ body {
 .custom-button {
   background-color: var(--squeal-blue);
   color: var(--squeal-yellow);
-  padding: 10px 20px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -178,6 +177,7 @@ body {
   border-radius: 50%;
   background-color: var(--squeal-green);
 }
+
 .bottoni_omologati:hover {
   background-color: var(--squeal-green);
 }
@@ -191,22 +191,22 @@ body {
 
 @media screen and (min-width: 768px) {
   .bottoni_omologati {
-    min-width: 3em;
-    min-height: 3em;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .bottoni_omologati {
-    min-width: 2.5em;
-    min-height: 2.5em;
+    min-width: 3.5em;
+    min-height: 3.5em;
   }
 }
 
 @media screen and (max-width: 480px) {
   .bottoni_omologati {
-    min-width: 2em;
-    min-height: 2em;
+    min-width: 3em;
+    min-height: 3em;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .bottoni_omologati {
+    min-width: 2.5em;
+    min-height: 2.5em;
   }
 }
 
@@ -533,7 +533,7 @@ img {
   border: 1rem solid var(--squeal-green);
 }
 .pfp-small {
-  border: 0.2em solid var(--squeal-green);
+  border: 0.2rem solid var(--squeal-green);
 }
 
 .pfp-vip {

@@ -105,58 +105,50 @@ function MatchRole({
     setNewValue(4);
   }
 
-  /*
-<input
-            type="number"
-            value={newValue}
-            onChange={(e) => setNewValue(e.target.value)}
-          />
-  */
-
   return (
     <div>
       <button
-        className="custom-button box"
+        className="custom-button box cool-font-medium"
         onClick={() => setModalIsOpen(true)}
       >
         {
           <>
             {ruoloIndex === 0
-              ? "ATTESA"
+              ? "ATTESA 🕓"
               : ruoloIndex === 1
-              ? "LETTORE"
+              ? "LETTORE 📖"
               : ruoloIndex === 2
-              ? "SCRITTORE"
+              ? "SCRITTORE ✒️"
               : ruoloIndex === 3
-              ? "ADMIN"
+              ? "ADMIN ⚔️"
               : ruoloIndex === 4
-              ? "CREATORE"
+              ? "CREATORE 👑"
               : "NOT GOOD"}
           </>
         }
         {(ruoloIndex === 2 || ruoloIndex === 1 || ruoloIndex === 0) && <></>}
       </button>
       <Modal show={modalIsOpen} onHide={closeModal}>
-        <Modal.Header closeButton className="modal-change-header">
-          <Modal.Title>Modifica Valore</Modal.Title>
+        <Modal.Header closeButton className="modal-change-header cool-font-medium" style={{color: "#e0bb76"}}>
+          <Modal.Title>MODIFICA RUOLO</Modal.Title>
         </Modal.Header>
         <Modal.Body className="modal-change-body">
           
-          <div className="d-flex flex-column justify-content-center align-items-center">
-            <button className="green-button box" onClick={() => attesa}>
-              IN ATTESA
+          <div className="d-flex flex-column justify-content-center align-items-center cool-font-medium">
+            <button className="green-button box  w-100 m-2" onClick={() => attesa}>
+              IN ATTESA 🕓
             </button>
-            <button className="green-button box" onClick={() => lettore()}>
-              LETTORE
+            <button className="green-button box  w-100 m-2" onClick={() => lettore()}>
+              LETTORE 📖
             </button>
-            <button className="green-button box" onClick={() => scrittore()}>
-              SCRITTORE
+            <button className="green-button box  w-100 m-2" onClick={() => scrittore()}>
+              SCRITTORE ✒️
             </button>
-            <button className="green-button box" onClick={() => admin()}>
-              ADMIN
+            <button className="green-button box  w-100 m-2" onClick={() => admin()}>
+              ADMIN ⚔️
             </button>
-            <button className="green-button box" onClick={() => creatore()}>
-              CREATORE
+            <button className="green-button box  w-100 m-2" onClick={() => creatore()}>
+              CREATORE 👑
             </button>
           </div>
         </Modal.Body>
@@ -164,10 +156,10 @@ function MatchRole({
           className="my-foot d-flex justify-content-center"
           style={footerStyle}
         >
-          <button className="blue-button box" onClick={handleModificaValore}>
+          <button className="blue-button box cool-font-medium w-100" onClick={handleModificaValore}>
             CAMBIA
           </button>
-          <button className="red-button box" onClick={closeModal}>
+          <button className="red-button box cool-font-medium w-100" onClick={closeModal}>
             ANNULLA
           </button>
         </Modal.Footer>
@@ -177,25 +169,3 @@ function MatchRole({
 }
 
 export default MatchRole;
-
-/*
-  const controllaPresenzaInArray = (stringa, array) => {
-    return array.includes(stringa);
-  };
-
-  const trovaArrayEVisualizzaBottone = () => {
-    if (controllaPresenzaInArray(inputString, array1)) {
-      return <button>ATTESA</button>;
-    } else if (controllaPresenzaInArray(inputString, array2)) {
-      return <button>LETTORE</button>;
-    } else if (controllaPresenzaInArray(inputString, array3)) {
-      return <button>SCRITTORE</button>;
-    } else if (controllaPresenzaInArray(inputString, array4)) {
-      return <button>ADMIN</button>;
-    } else if (controllaPresenzaInArray(inputString, array5)) {
-      return <button>CREATORE</button>;
-    } else {
-      return <p>NOT GOOD</p>;
-    }
-  };
-  */

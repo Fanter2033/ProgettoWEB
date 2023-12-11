@@ -45,8 +45,8 @@ const Dest = ({ onDestinatariSubmit }) => {
 
   return (
     <div className="">
-      <form onSubmit={handleDestinatariSubmit} className="row d-flex align-items-center m-1">
-        <div className="col-10 mb-2">
+      <form onSubmit={handleDestinatariSubmit} className="row d-flex align-items-center p-1 mb-0">
+        <div className="col-10">
           <label
             htmlFor="destinatariInput"
             className="form-label cool-font-details-md"
@@ -56,20 +56,20 @@ const Dest = ({ onDestinatariSubmit }) => {
           <input
             style={{ color: "#072f38", backgroundColor: "#528b57" }}
             type="text"
-            className="form-control"
+            className="form-control box cool-font-link"
             id="destinatariInput"
             value={destinatari}
             onChange={handleDestinatariChange}
           />
-          <p className="text-wrap cool-font-details">
+          <p className="text-wrap cool-font-details mt-1">
             INSERISCILI SEPARATI DA VIRGOLE
           </p>
         </div>
 
-        <div className="col-2 mb-4">
+        <div className="col-2 mb-4 ">
           <button
             type="submit"
-            className="custom-button center box cool-font-medium text-center"
+            className="bottoni_omologati center box cool-font-medium text-center"
           >
             +
           </button>
@@ -87,7 +87,7 @@ const Dest = ({ onDestinatariSubmit }) => {
         <div className="row d-flex justify-content-center align-items-center">
           <ul className="list-unstyled">
             {destinatariArray.map((destinatario, index) => (
-              <li key={index}>{destinatario}</li>
+              <li className="cool-font-details-md" key={index}>{destinatario}</li>
             ))}
           </ul>
 

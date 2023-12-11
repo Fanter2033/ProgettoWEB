@@ -112,27 +112,28 @@ function ChangeNameChannel() {
 
   return (
     <>
-      <button className="yellow-button mb-2 box" onClick={handleShow}>
+      <button className="cool-font-link yellow-button mb-2 box  w-100" onClick={handleShow}>
         CAMBIO NOME CANALE
       </button>
 
       <Modal show={show} onHide={handleClose} centered>
-        <Modal.Header closeButton className="modal-change-header">
-          <Modal.Title style={{ textAlign: "center" }}>
-            Cambia nome canale
+        <Modal.Header closeButton className="modal-change-header cool-font-medium">
+          <Modal.Title  style={{ textAlign: "center", color: "#e0bb76" }}>
+            CAMBIA NOME CANALE
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body className="modal-change-body">
+        <Modal.Body className="modal-change-body p-5">
           <Form>
             <Form.Group
               as={Row}
               className="mb-4"
               controlId="exampleForm.ControlInput1"
             >
-              <Form.Label>Nuovo nome canale</Form.Label>
+              <Form.Label className="cool-font-medium">NUOVO NOME CANALE</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="inserisci qui"
+                className="cool-font-small text-center"
                 name="nuovoUsername"
                 value={newName}
                 onChange={(e) => {
@@ -144,10 +145,10 @@ function ChangeNameChannel() {
         </Modal.Body>
 
         <Modal.Footer style={footerStyle}>
-          <button className="blue-button box" onClick={handleChangeChannelName}>
+          <button className="blue-button box cool-font-medium w-100" onClick={handleChangeChannelName}>
             CAMBIA
           </button>
-          <button className="red-button box" onClick={handleClose}>
+          <button className="red-button box cool-font-medium w-100" onClick={handleClose}>
             ANNULLA
           </button>
           <ToastContainer />
