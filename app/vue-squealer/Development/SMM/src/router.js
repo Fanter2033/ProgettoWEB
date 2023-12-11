@@ -3,6 +3,9 @@ import Login from "./components/Login.vue";
 import DashBoard from "./components/dashboard/DashBoard.vue";
 import Chart from "@/components/dashboard/Chart.vue";
 import Quote from "@/components/dashboard/Quote.vue";
+import LinkedAccounts from "@/components/LinkedAccounts.vue";
+
+
 
 const routes = [
   {
@@ -10,6 +13,11 @@ const routes = [
     name: "Login",
     component: Login,
   },
+      {
+        path: "/my-vips/",
+        name: "My-Vips",
+        component: LinkedAccounts,
+      },
       {
         path: "/dashboard",
         name: "Smm-DashBoard",

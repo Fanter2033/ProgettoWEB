@@ -164,6 +164,7 @@ onUpdated(()=>{
   if(actualSqueal.value.type === 'POSITION'){
     initMap(actualSqueal.value.lat, actualSqueal.value.lng);
   }
+
 })
 
 

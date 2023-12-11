@@ -14,7 +14,7 @@ export default {
   name: "DashBoard",
 
   methods: {
-    fetchVips: function () {
+    fetchVips:  function () {
       console.log("user: " + store.getters.getUserZero);
       const vipsUri =
         VueConfig.base_url_requests +
@@ -41,6 +41,7 @@ export default {
           console.error("network error", error);
         });
     },
+
   },
 
   computed: {
@@ -54,8 +55,8 @@ export default {
 
   components: {NavAndSide, LineChart, SideBar, Nav },
 
-  beforeMount() {
-    this.fetchVips();
+   beforeMount() {
+     this.fetchVips();
   },
 };
 </script>

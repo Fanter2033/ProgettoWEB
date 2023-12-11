@@ -9,7 +9,7 @@
       </div>
 
       <div class="col-9 justify-content-center pt-4">
-        <h2>Popolarità positiva e negativa degli squeal</h2>
+        <h2>Popolarità degli squeal di <b>{{this.$route.params.vip}}</b></h2>
         <div class="d-flex justify-content-center ">
           <div class="container-fluid border rounded border-secondary border-2 p-1" style="background-color: whitesmoke">
             <LineChart style="background-color: whitesmoke"/>
@@ -41,7 +41,7 @@
             </div>
           </div>
         </div>
-        <h2>Squeal - statistiche</h2>
+        <h2>Squeals di <b>{{this.$route.params.vip}}</b></h2>
         <DoughnutChart class="mt-3 border rounded p-1"></DoughnutChart>
       </div>
 
@@ -50,12 +50,13 @@
 </template>
 
 <script>
-import {defineComponent} from "vue";
+import {defineComponent, ref, watch} from "vue";
 import VueConfig from "@/config/VueConfig";
 import SideBar from "@/components/dashboard/SideBar.vue";
 import Nav from "../Nav.vue";
 import LineChart from "@/components/dashboard/LineChart.vue";
 import DoughnutChart from "@/components/dashboard/DoughnutChart.vue";
+
 
 export default defineComponent({
   components: {SideBar, Nav, LineChart, DoughnutChart},
@@ -132,7 +133,11 @@ export default defineComponent({
   mounted() {
     this.$store.commit('setLineChartData', {})
     this.updateSquealData(this.$route.params.vip);
-  }
+  },
+  updated() {
+    this.$store.commit('setLineChartData', {})
+    this.updateSquealData(this.$route.params.vip);
+  },
 
 });
 </script>
