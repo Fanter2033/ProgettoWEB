@@ -8,7 +8,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 
-createApp(App)
+const Vue = createApp(App)
     .use(router)
     .use(store)
     .use(Toast, {

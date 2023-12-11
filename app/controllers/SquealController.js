@@ -898,13 +898,19 @@ module.exports = class SquealController extends Controller {
         let output = this.getDefaultOutput();
         squealDto.sender = vipUsername;
 
-        if (false && this.isObjectVoid(authenticatedSmm)) {
+        if (this.isObjectVoid(authenticatedSmm)) {
             output['code'] = 403;
             output['msg'] = 'Please Login.'
             return output;
         }
 
-        //TODO: controllo che quel vip sia effettivamente linkato al SMM
+        //check if the User's smm is the effective sender
+        let userCtrl = new UserController(new UserModel());
+        if((await userCtrl.getSmm(vipUsername)).content !== authenticatedSmm.username){
+            output['code'] = 403;
+            output['msg'] = 'User is not linked to this Smm'
+            return output;
+        }
 
         if (!this.checkSquealType(squealDto.message_type)) {
             output['code'] = 400;
@@ -933,10 +939,16 @@ module.exports = class SquealController extends Controller {
             squealDto.quote_cost = 125;
         }
 
-        if (squealDto.message_type === 'IMAGE' && this.isBase64(squealDto.content) === false) {
-            output['code'] = 400;
-            output['msg'] = 'Content is not base64';
-            return output;
+        if (squealDto.message_type === 'IMAGE') {
+            //roba mia dato che vue ci aggiunge data
+            const base64DataRegex = /^data:[\w\/\+:]+;base64,/;
+
+            squealDto.content = String(squealDto.content).replace(base64DataRegex, '');
+            if (this.isBase64(squealDto.content) === false) {
+                output['code'] = 400;
+                output['msg'] = 'Content is not base64';
+                return output;
+            }
         }
 
         if (squealDto.message_type === 'VIDEO_URL' && this.isYoutubeVideo(squealDto.content) === false) {
@@ -990,7 +1002,7 @@ module.exports = class SquealController extends Controller {
         }
 
         //CONTROLLI OK DEVO SCALARE LA QUOTA ED EFFETTUARE LE RELAZIONI
-        let ctrlOut = await quoteCtrl.chargeLimitQuota(squealDto.sender, squealDto.quote_cost);
+        let ctrlOut = await quoteCtrl.chargeDebitQuota(squealDto.sender, squealDto.quote_cost);
         if (ctrlOut.code !== 200) {
             output['code'] = 500;
             output['msg'] = 'Internal server error.';

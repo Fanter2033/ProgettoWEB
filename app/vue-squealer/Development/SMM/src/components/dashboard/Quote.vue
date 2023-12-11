@@ -9,7 +9,7 @@
       </div>
 
       <div class="col-10 pt-sm-5 pt-3">
-        <h1>Quote's situation of <b>{{ VipName }}</b></h1>
+        <h1>Situazione quota di  <b>{{ VipName }}</b></h1>
         <button
             id="greenButton"
             class="btn"
@@ -21,10 +21,6 @@
         <div class="card mt-3">
           <div class="card-body">
             <h4>Daily quote remaining: <b>{{ quote.rem_daily }}</b></h4>
-            <!--            <div style="height: 50px">-->
-            <!--              <Pie :data="data" :options="options"  />-->
-            <!--            </div>-->
-
             <h4>Weekly quote remaining: <b>{{ quote.rem_weekly }}</b></h4>
             <h4>Monthly quote remaining: <b>{{ quote.rem_monthly }}</b></h4>
           </div>
@@ -61,7 +57,8 @@
                 </lord-icon>
               </div>
               <div class="modal-body">
-                <h3>Instant refill of quota {{quote.limit_daily - quote.rem_daily}}</h3>
+                <h3>Riempimento istantanea di quota:  {{quote.limit_daily - quote.rem_daily}}</h3>
+                <h5>prezzo: </h5>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-danger" id="close" @click="closeModal">
@@ -90,16 +87,12 @@ import {useRoute} from 'vue-router'
 import {onMounted, onUpdated, reactive, watch} from "vue";
 import {ref} from "vue";
 
-import {Chart as ChartJS, ArcElement, Tooltip, Legend} from 'chart.js'
-//import { Pie } from 'vue-chartjs'
-
 const route = useRoute();
 const VipName = ref('');
 const isMouseOver = ref(false);
 const state = reactive({
   modal_demo: null,
 });
-
 
 onMounted(() => {
   VipName.value = route.params.vip;
@@ -126,7 +119,6 @@ watch(VipName, () => {
 })
 
 let quote = ref({});
-
 async function getQuoteInfo() {
   const uri = VueConfig.base_url_requests +
       '/user/' +
@@ -134,7 +126,9 @@ async function getQuoteInfo() {
       '/quote';
   console.log(uri);
   fetch(uri, {
-    method: 'GET'
+    method: 'GET',
+    credentials: 'include',
+    mode: 'cors'
   })
       .then((res) => {
         if (res.ok)
@@ -142,7 +136,6 @@ async function getQuoteInfo() {
         console.error("Error fetching quote data");
       })
       .then((data) => {
-        console.log(data);
         quote.value = {
           limit_daily: data.limit_daily,
           limit_weekly: data.limit_weekly,
@@ -163,7 +156,13 @@ async function refillQuote() {
       VipName.value +
       '/quote/refill/';
   fetch(uri, {
-    method: 'PUT'
+    method: 'PUT',
+    credentials: 'include',
+    mode: 'cors',
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+    },
   })
       .then((res) => {
         if (res.ok) {
@@ -174,20 +173,6 @@ async function refillQuote() {
       .catch((error) => {
         console.error("Network error", error)
       })
-}
-
-/*optional chart*/
-ChartJS.register(ArcElement, Tooltip, Legend)
-const data = {
-  datasets: [
-    {
-      backgroundColor: ['#272a27', '#ffffff'],
-      data: [(quote.value.rem_daily) / 10, 50]
-    }
-  ]
-}
-const options = {
-  responsive: true,
 }
 </script>
 
