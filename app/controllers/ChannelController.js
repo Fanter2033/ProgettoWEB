@@ -843,5 +843,34 @@ module.exports = class ChannelController extends Controller {
         return output;
     }
 
+    async createSquealerChannels() {
+        let nasaChannel = new ChannelDto();
+
+        nasaChannel.channel_name = 'NASA_OFFICIAL';
+        nasaChannel.type = autoload.config._CHANNEL_TYPE_OFFICIAL;
+        nasaChannel.description = 'Canale della NASA. Automatizzato con API';
+        let check_promise_nasa = this.channelExists(nasaChannel);
+
+        let numberApiChannel = new ChannelDto();
+        numberApiChannel.channel_name = 'NUMBER_API_OFFICIAL';
+        numberApiChannel.type = autoload.config._CHANNEL_TYPE_OFFICIAL;
+        numberApiChannel.description = 'Canale dei NUMBER API. Automatizzato con API';
+        let check_promise_number = this.channelExists(numberApiChannel);
+
+        check_promise_nasa = await check_promise_nasa;
+        if (check_promise_nasa === false) {
+            this.#_model.createChannel(nasaChannel);
+            this.#_model.changeChannelDescription(nasaChannel)
+        }
+
+
+        check_promise_number = await check_promise_number;
+        if (check_promise_number === false) {
+            this.#_model.createChannel(numberApiChannel);
+            this.#_model.changeChannelDescription(numberApiChannel)
+        }
+
+    }
+
 
 }
