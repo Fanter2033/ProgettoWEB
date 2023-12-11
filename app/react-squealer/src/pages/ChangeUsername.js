@@ -139,6 +139,8 @@ function ChangeUsername() {
           })
           .catch((error) => {
             console.error("Cambio username failed, error:", error);
+            //notify_error_server();
+
           });
       } catch (error) {
         console.error(error);
@@ -189,8 +191,11 @@ function ChangeUsername() {
 
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton className="modal-change-header">
-          <Modal.Title style={{ textAlign: "center" }} className="cool-font-medium">
-            Cambia username
+          <Modal.Title
+            style={{ textAlign: "center", color: "#e0bb76" }}
+            className="cool-font-medium"
+          >
+            CAMBIA USERNAME
           </Modal.Title>
         </Modal.Header>
         <Modal.Body className="modal-change-body cool-font-medium">
@@ -200,18 +205,23 @@ function ChangeUsername() {
               className="mb-4"
               controlId="exampleForm.ControlInput1"
             >
-              <Form.Label>Nuovo username</Form.Label>
+              <Form.Label style={{ color: "#e0bb76" }}>
+                NUOVO USERNAME
+              </Form.Label>
               <Form.Control
                 type="text"
                 placeholder="inserisci qui"
                 className="text-center"
+                style={{ color: "#072f38", backgroundColor: "#e0bb76" }}
                 name="nuovoUsername"
                 value={newUsername}
                 onChange={(e) => {
                   setNewUsername(e.target.value);
                 }}
               />
-              <Form.Label>Dopo l'operazione sarete deautenticati</Form.Label>
+              <Form.Label style={{ color: "#072f38" }}>
+                Dopo l'operazione sarete deautenticati
+              </Form.Label>
             </Form.Group>
           </Form>
         </Modal.Body>
@@ -225,6 +235,12 @@ function ChangeUsername() {
             onClick={cambioU}
           >
             CAMBIA
+          </button>
+          <button
+            className="red-button cool-font-medium box col-6"
+            onClick={handleClose}
+          >
+            ANNULLA
           </button>
         </Modal.Footer>
       </Modal>

@@ -4,7 +4,7 @@ import ReactConfig from "../config/ReactConfig";
 
 import "../css/App.css";
 
-function Reactions({ squeal }) {
+function Reactions({ squeal, reaction }) {
   const [loveMe, setLove] = useState(0);
   const [likeMe, setLike] = useState(0);
   const [doNotLikeMe, setDoNotLike] = useState(0);
@@ -68,38 +68,187 @@ function Reactions({ squeal }) {
 
   return (
     <div className="mt-2">
-      <div className="card-footer d-flex justify-content-center ">
-        <button
-          id="bottone1"
-          className=" my-blu  bottoni_omologati m-1"
-          onClick={love}
-        >
-          😍
-        </button>
+      {reaction === "LIKE_A_LOT" && (
+        <>
+          <div className="card-footer d-flex justify-content-center ">
+            <button
+              id="bottone1"
+              className="my-blu bottoni_omologati m-1"
+              onClick={love}
+            >
+              😍
+            </button>
 
-        <button
-          id="bottone2"
-          className=" my-blu  bottoni_omologati m-1"
-          onClick={like}
-        >
-          🙂
-        </button>
+            <button
+              id="bottone2"
+              className="bottoni_omologati m-1"
+              onClick={like}
+            >
+              🙂
+            </button>
 
-        <button
-          id="bottone4"
-          className="my-blu bottoni_omologati m-1"
-          onClick={doNotLike}
-        >
-          ☹️
-        </button>
-        <button
-          id="bottone5"
-          className="my-blu bottoni_omologati m-1"
-          onClick={hate}
-        >
-          😡
-        </button>
-      </div>
+            <button
+              id="bottone4"
+              className=" bottoni_omologati m-1"
+              onClick={doNotLike}
+            >
+              ☹️
+            </button>
+            <button
+              id="bottone5"
+              className=" bottoni_omologati m-1"
+              onClick={hate}
+            >
+              😡
+            </button>
+          </div>
+        </>
+      )}
+      {reaction === "LIKE" && (
+        <>
+          <div className="card-footer d-flex justify-content-center ">
+            <button
+              id="bottone1"
+              className="bottoni_omologati m-1"
+              onClick={love}
+            >
+              😍
+            </button>
+
+            <button
+              id="bottone2"
+              className="my-blu bottoni_omologati m-1"
+              onClick={like}
+            >
+              🙂
+            </button>
+
+            <button
+              id="bottone4"
+              className="bottoni_omologati m-1"
+              onClick={doNotLike}
+            >
+              ☹️
+            </button>
+            <button
+              id="bottone5"
+              className="bottoni_omologati m-1"
+              onClick={hate}
+            >
+              😡
+            </button>
+          </div>
+        </>
+      )}
+      {reaction === "DO_NOT_LIKE" && (
+        <>
+          <div className="card-footer d-flex justify-content-center ">
+            <button
+              id="bottone1"
+              className="   bottoni_omologati m-1"
+              onClick={love}
+            >
+              😍
+            </button>
+
+            <button
+              id="bottone2"
+              className="   bottoni_omologati m-1"
+              onClick={like}
+            >
+              🙂
+            </button>
+
+            <button
+              id="bottone4"
+              className="my-blu bottoni_omologati m-1"
+              onClick={doNotLike}
+            >
+              ☹️
+            </button>
+            <button
+              id="bottone5"
+              className="bottoni_omologati m-1"
+              onClick={hate}
+            >
+              😡
+            </button>
+          </div>
+        </>
+      )}
+      {reaction === "DISGUSTED" && (
+        <>
+          <div className="card-footer d-flex justify-content-center ">
+            <button
+              id="bottone1"
+              className="   bottoni_omologati m-1"
+              onClick={love}
+            >
+              😍
+            </button>
+
+            <button
+              id="bottone2"
+              className="   bottoni_omologati m-1"
+              onClick={like}
+            >
+              🙂
+            </button>
+
+            <button
+              id="bottone4"
+              className=" bottoni_omologati m-1"
+              onClick={doNotLike}
+            >
+              ☹️
+            </button>
+            <button
+              id="bottone5"
+              className="my-blu bottoni_omologati m-1"
+              onClick={hate}
+            >
+              😡
+            </button>
+          </div>
+        </>
+      )}
+
+      {reaction === "NONE" && (
+        <>
+          <div className="card-footer d-flex justify-content-center ">
+            <button
+              id="bottone1"
+              className="   bottoni_omologati m-1"
+              onClick={love}
+            >
+              😍
+            </button>
+
+            <button
+              id="bottone2"
+              className="   bottoni_omologati m-1"
+              onClick={like}
+            >
+              🙂
+            </button>
+
+            <button
+              id="bottone4"
+              className=" bottoni_omologati m-1"
+              onClick={doNotLike}
+            >
+              ☹️
+            </button>
+            <button
+              id="bottone5"
+              className=" bottoni_omologati m-1"
+              onClick={hate}
+            >
+              😡
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }

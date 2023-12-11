@@ -181,113 +181,128 @@ function DetailsChannel() {
                 >
                   <path d="M15 8a6.973 6.973 0 0 0-1.71-4.584l-9.874 9.875A7 7 0 0 0 15 8M2.71 12.584l9.874-9.875a7 7 0 0 0-9.874 9.874ZM16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0" />
                 </svg>
-                <div className="cool-font-medium altro"> &nbsp;BLOCCATO</div>
+                <div className="cool-font-medium altro"> &nbsp;BLOCCATO&nbsp;</div>
+                <div>NON SI PUO SCRIVERE</div>
               </div>
             </>
           )}
         </div>
 
-        <div>
-          <h3 className="cool-font-medium">
-            NOME CANALE: {channel.channel_name}
-          </h3>
+        <Card className="offers mt-3">
+          <Card.Header>
+            <h3 className="cool-font-medium">
+              NOME CANALE: {channel.channel_name}
+            </h3>
+          </Card.Header>
 
-          {channel.type !== "CHANNEL_HASHTAG" && (
-            <p className="cool-font-small mb-0">CREATORE: {channel.owner}</p>
-          )}
+          <Card.Body>
+            <h3 className="cool-font-medium">
+              DESCRIZIONE: {channel.description}
+            </h3>
 
-          <p className="cool-font-small mb-0">
-            NUMERO SQUEALS: {channel.posts}
-          </p>
-
-          <div className="d-flex flex-row justify-content-center align-items-center cool-font-small">
             {channel.type === "CHANNEL_USERS" && (
-              <>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  className="bi bi-person-raised-hand"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M6 6.207v9.043a.75.75 0 0 0 1.5 0V10.5a.5.5 0 0 1 1 0v4.75a.75.75 0 0 0 1.5 0v-8.5a.25.25 0 1 1 .5 0v2.5a.75.75 0 0 0 1.5 0V6.5a3 3 0 0 0-3-3H6.236a.998.998 0 0 1-.447-.106l-.33-.165A.83.83 0 0 1 5 2.488V.75a.75.75 0 0 0-1.5 0v2.083c0 .715.404 1.37 1.044 1.689L5.5 5c.32.32.5.754.5 1.207" />
-                  <path d="M8 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3" />
-                </svg>
-                <div>&nbsp;CANALE UTENTE</div>
-              </>
+              <p className="cool-font-small mb-0">CREATORE: {channel.owner}</p>
             )}
-            {channel.type === "CHANNEL_OFFICIAL" && (
-              <>
-                <img
-                  src={squeal_logo}
-                  alt="logo_squeal"
-                  width="40"
-                  height="40"
-                  className="my-yellow"
-                />
-                <div>&nbsp;CANALE UFFICIALE</div>
-              </>
-            )}
-            {channel.type === "CHANNEL_HASHTAG" && (
-              <>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  className="bi bi-tag-fill"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M2 1a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l4.586-4.586a1 1 0 0 0 0-1.414l-7-7A1 1 0 0 0 6.586 1zm4 3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
-                </svg>
-                <div>&nbsp;CANALE TAG</div>
-              </>
-            )}
-          </div>
 
-          <div className="d-flex flex-row justify-content-center align-items-center cool-font-small">
-            {channel.private === true ? (
-              <>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  className="bi bi-lock-fill"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2" />
-                </svg>
-                <div> &nbsp;PRIVATO</div>
-              </>
-            ) : (
-              <>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  className="bi bi-unlock-fill"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2" />
-                </svg>
-                <div> &nbsp;PUBBLICO</div>
-              </>
-            )}
-          </div>
-        </div>
+            <p className="cool-font-small mb-0">
+              NUMERO SQUEALS: {channel.posts}
+            </p>
+          </Card.Body>
+
+          <Card.Footer>
+            <div>
+              <div className="d-flex flex-row justify-content-center align-items-center cool-font-small">
+                {channel.type === "CHANNEL_USERS" && (
+                  <>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      className="bi bi-person-raised-hand"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M6 6.207v9.043a.75.75 0 0 0 1.5 0V10.5a.5.5 0 0 1 1 0v4.75a.75.75 0 0 0 1.5 0v-8.5a.25.25 0 1 1 .5 0v2.5a.75.75 0 0 0 1.5 0V6.5a3 3 0 0 0-3-3H6.236a.998.998 0 0 1-.447-.106l-.33-.165A.83.83 0 0 1 5 2.488V.75a.75.75 0 0 0-1.5 0v2.083c0 .715.404 1.37 1.044 1.689L5.5 5c.32.32.5.754.5 1.207" />
+                      <path d="M8 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3" />
+                    </svg>
+                    <div>&nbsp;CANALE UTENTE</div>
+                  </>
+                )}
+                {channel.type === "CHANNEL_OFFICIAL" && (
+                  <>
+                    <img
+                      src={squeal_logo}
+                      alt="logo_squeal"
+                      width="40"
+                      height="40"
+                      className="currentColor"
+                    />
+                    <div>&nbsp;CANALE UFFICIALE</div>
+                  </>
+                )}
+                {channel.type === "CHANNEL_HASHTAG" && (
+                  <>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      className="bi bi-tag-fill"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M2 1a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l4.586-4.586a1 1 0 0 0 0-1.414l-7-7A1 1 0 0 0 6.586 1zm4 3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                    </svg>
+                    <div>&nbsp;CANALE TAG</div>
+                  </>
+                )}
+              </div>
+
+              {channel.type === "CHANNEL_USERS" && (
+                <div className="d-flex flex-row justify-content-center align-items-center cool-font-small">
+                  {channel.private === true ? (
+                    <>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        className="bi bi-lock-fill"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2" />
+                      </svg>
+                      <div> &nbsp;PRIVATO</div>
+                    </>
+                  ) : (
+                    <>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        className="bi bi-unlock-fill"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2" />
+                      </svg>
+                      <div> &nbsp;PUBBLICO</div>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+          </Card.Footer>
+        </Card>
 
         {channel.owner === userGlobal.username &&
-          channel.type !== "CHANNEL_HASHTAG" && (
+          channel.type === "CHANNEL_USERS" && (
             <div className="row">
-              <h2>Per il creatore del canale</h2>
+              <h2 className="cool-font-medium mt-3">PER IL CREATORE DEL CANALE</h2>
 
-              <div className="row">
+              <div className="">
                 <ChangeNameChannel />{" "}
               </div>
-              <div className="row">
+              <div className="">
                 {" "}
                 <ChannelDeleteModal />
               </div>
@@ -297,7 +312,9 @@ function DetailsChannel() {
         {channel.type === "CHANNEL_USERS" && (
           <>
             <div className="mt-3 mb-5">
-              <h3 className="cool-font-medium">ISCRITTI: {channel.subscribers}</h3>
+              <h3 className="cool-font-medium">
+                ISCRITTI: {channel.subscribers}
+              </h3>
 
               <Container>
                 <Row>
@@ -305,23 +322,23 @@ function DetailsChannel() {
                     <Col lg={12} key={user.id} className="mb-4">
                       <Card className="w-100 squeal">
                         {" "}
-                        <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
-                        <Link to="/infou" state={user}>
-                          <button className="ms-4 me-4 custom-button box">
-                            <b> {user} </b>
+                        <Card.Body className="mb-4 d-flex flex-column justify-content-center align-items-center">
+                          <Link to="/infou" state={user}>
+                            <button className="ms-4 me-4 custom-button box mb-3">
+                              <b> {user} </b>
 
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="16"
-                              height="16"
-                              fill="currentColor"
-                              className="bi bi-info-circle-fill"
-                              viewBox="0 0 16 16"
-                            >
-                              <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
-                            </svg>
-                          </button>
-                        </Link>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                fill="currentColor"
+                                className="bi bi-info-circle-fill"
+                                viewBox="0 0 16 16"
+                              >
+                                <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
+                              </svg>
+                            </button>
+                          </Link>
                           {(roles3.includes(userGlobal.username) ||
                             roles4.includes(userGlobal.username)) && (
                             <>

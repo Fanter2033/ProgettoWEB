@@ -346,7 +346,7 @@ function Navbar() {
 
       {/*SCHERMI SMALL-----------------------------------------------------------------------------*/}
       <nav className="fixed-bottom d-sm-none navbar navbar-expand-sm nav-pc p-2 ">
-        <ul className="navbar-nav d-flex flex-row justify-content-evenly">
+        <ul className="navbar-nav d-flex flex-row justify-content-evenly align-items-center">
           <li className="nav-item">
             <NavLink
               style={({ isActive }) => {

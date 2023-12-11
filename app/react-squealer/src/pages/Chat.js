@@ -54,31 +54,36 @@ function Chat() {
       <div className="container-flex pb-5">
         <div className="row ">
           <div className="col-12 justify-content-center align-items-center">
-            <h1 className="cool-font-medium">CHAT</h1>
+            <h1 className="cool-font">CHAT</h1>
             <Container className="">
               <Row className="">
                 {squeals.map((squeal) => (
                   <Col lg={12} className="mb-4" key={squeal._id}>
                     <Card style={{ width: "100%" }} className="squeal">
-                      <Card.Header className="d-flex flex-col justify-content-center align-items-center">
-                        {" "}
-                        <b> DA: </b>
-                        <Link to="/infou" state={squeal.sender}>
-                          <button className="ms-4 me-4 custom-button box">
-                            <b>{squeal.sender} </b>
+                      <Card.Header className="d-flex flex-column justify-content-center align-items-center">
+                        <div className="row">
+                          <b> DA: </b>
+                          <Link to="/infou" state={squeal.sender}>
+                            <button className="ms-4 me-4 custom-button box">
+                              <b>{squeal.sender} </b>
 
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="16"
-                              height="16"
-                              fill="currentColor"
-                              className="bi bi-info-circle-fill"
-                              viewBox="0 0 16 16"
-                            >
-                              <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
-                            </svg>
-                          </button>
-                        </Link>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                fill="currentColor"
+                                className="bi bi-info-circle-fill"
+                                viewBox="0 0 16 16"
+                              >
+                                <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
+                              </svg>
+                            </button>
+                          </Link>
+                        </div>
+                        <div className="row cool-font-details mt-2">
+                          <div>Id: {squeal._id}</div>
+                          <TypeSqueal typeSqueal={squeal.message_type} />
+                        </div>
                       </Card.Header>
                       <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
                         <SquealContent
@@ -87,10 +92,6 @@ function Chat() {
                         />
                       </Card.Body>
                       <Card.Footer>
-                        <div className="cool-font-details">
-                          Id: {squeal._id}
-                        </div>
-                        <TypeSqueal typeSqueal={squeal.message_type} />
                         <Comment squeal={squeal._id} />
                         <ShowComment arrayComment={squeal.comments} />
                       </Card.Footer>
@@ -102,7 +103,9 @@ function Chat() {
           </div>
           {squeals.length === 0 && (
             <>
-              <h1>NON hai nessuno squeal privato per ora </h1>
+              <h1 className="cool-font-medium ">
+                NON HAI NESSUNO SQUEAL PRIVATO
+              </h1>
             </>
           )}
         </div>

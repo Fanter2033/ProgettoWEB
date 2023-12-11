@@ -8,7 +8,7 @@ function TypeSqueal({ typeSqueal }) {
       {typeSqueal === "MESSAGE_TEXT" && (
         <>
           <div className="cool-font-details">
-            MESSAGGIO
+            TIPO: MESSAGGIO
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -25,7 +25,7 @@ function TypeSqueal({ typeSqueal }) {
       {typeSqueal === "IMAGE" && (
         <>
           <div className="cool-font-details">
-            IMMAGINE
+          TIPO: IMMAGINE
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -44,7 +44,7 @@ function TypeSqueal({ typeSqueal }) {
         <>
           <div className="cool-font-details d-flex justify-content-center">
             <div>
-              VIDEO
+            TIPO: VIDEO
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -63,7 +63,7 @@ function TypeSqueal({ typeSqueal }) {
       {typeSqueal === "POSITION" && (
         <>
           <div className="cool-font-details">
-            POSIZIONE
+          TIPO: POSIZIONE
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -81,7 +81,7 @@ function TypeSqueal({ typeSqueal }) {
       {typeSqueal === "TEXT_AUTO" && (
         <>
           <div className="cool-font-details">
-            MESSAGGIO A TEMPO
+            TIPO: MESSAGGIO A TEMPO
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -101,7 +101,7 @@ function TypeSqueal({ typeSqueal }) {
         <>
           <div className="cool-font-details d-flex justify-content-center">
             <div>
-              MAPPA A TEMPO
+            TIPO: MAPPA A TEMPO
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"

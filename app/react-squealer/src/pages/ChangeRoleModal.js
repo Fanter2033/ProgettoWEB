@@ -63,7 +63,7 @@ function ChangeRoleModal({ closeRole, newRoleModel, username, channel }) {
       <div>
         <Modal show={newRoleModel} onHide={closeRole} centered>
           <Modal.Header closeButton className="modal-buy-header">
-            <Modal.Title className="">Cambia Ruolo</Modal.Title>
+            <Modal.Title className="">CAMBIA RUOLO</Modal.Title>
           </Modal.Header>
           <Modal.Body className="modal-buy-body">
             {[0, 1, 2, 3, 4].map((value) => (
@@ -80,11 +80,11 @@ function ChangeRoleModal({ closeRole, newRoleModel, username, channel }) {
             className="my-foot d-flex justify-content-center"
             style={footerStyle}
           >
-            <button className="blue-button box" onClick={closeRole}>
-              Annulla
-            </button>
-            <button className="green-button box" onClick={changeRoleSub}>
+            <button className="green-button box cool-font-medium w-100" onClick={changeRoleSub}>
               CAMBIA
+            </button>
+            <button className="blue-button box cool-font-medium w-100" onClick={closeRole}>
+              ANNULLA
             </button>
           </Modal.Footer>
         </Modal>

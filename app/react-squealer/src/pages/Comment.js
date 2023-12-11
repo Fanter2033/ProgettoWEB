@@ -16,7 +16,7 @@ function Comment({ squeal }) {
   return (
     <>
       <button
-        className="green-button cool-font-small w-100"
+        className="green-button cool-font-small w-50 box"
         onClick={handleOpenComment}
       >
         COMMENTA

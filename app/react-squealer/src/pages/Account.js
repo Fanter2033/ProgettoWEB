@@ -347,9 +347,6 @@ function Account() {
           <h3>TODO:</h3>
           <ul className="list-group col-md-4">
             <li className="list-group-item list">
-              if owner of ch toast for DELETE
-            </li>
-            <li className="list-group-item list">
               FAI RICOMPARIRE IL BOTTONE COMPRA TRA 1 ANNO
             </li>
             <li className="list-group-item list">GET SMM INFO</li>
@@ -373,7 +370,7 @@ function Account() {
               <img
                 src={"data:image/png;base64," + userData.pfp}
                 alt="Foto Profilo"
-                className="rounded-circle pfp-vip box"
+                className="rounded-circle pfp-small box"
                 onClick={() => handleImageClick()}
               />
             )}
@@ -422,6 +419,8 @@ function Account() {
                   <h2 className="cool-font-medium">
                     {userData.first_name} {userData.last_name}
                   </h2>
+                  <h3 className="m-2 cool-font-medium">{userData.email}</h3>
+
                   <button className="yellow-button box col-12 mb-3">
                     N SQUEALS PUBBLICI: {squealsLogger.length}
                   </button>
@@ -476,7 +475,7 @@ function Account() {
           </div>
         </div>
 
-        <div className="row mb-4 cool-font-text">
+        <div className="row cool-font-text">
           <div className="col-6">
             <div className="row">
               <h3 className="cool-font-medium">QUOTA RIMANENTE</h3>
@@ -501,28 +500,15 @@ function Account() {
                 </button>
               </div>
             </div>
-
-            {show && (
-              <button
-                id="buy-button"
-                className="box w-50"
-                onClick={() => setBuyModal(true)}
-              >
-                COMPRA
-              </button>
-            )}
-
-            {buyModal && (
-              <BuyQuoteModal
-                onInternalButtonClick={handleInternalButtonClick}
-                closeBuyModal={closeBuyModal}
-              />
-            )}
           </div>
 
+
           <div className="col-6">
-            <div className="col-12 mt-3">
-              <h3 className="cool-font-medium">LIMIT</h3>
+            <div className="row">
+              <h3 className="cool-font-medium">QUOTA LIMITE</h3>
+            </div>
+
+            <div className="col-12 mt-2">
               <h4 className="cool-font-medium mt-2">Giornaliero</h4>
               <button className="yellow-button box w-50">
                 {userQuote.limit_daily}
@@ -540,11 +526,29 @@ function Account() {
                 {userQuote.limit_monthly}
               </button>
             </div>
-            <h4 className="mt-5 cool-font-medium">EMAIL: {userData.email}</h4>
           </div>
         </div>
 
-        <div className=" mb-5">
+        <div className="">
+          {show && (
+            <button
+              id="buy-button"
+              className="box cool-font-medium w-100"
+              onClick={() => setBuyModal(true)}
+            >
+              COMPRA QUOTA
+            </button>
+          )}
+
+          {buyModal && (
+            <BuyQuoteModal
+              onInternalButtonClick={handleInternalButtonClick}
+              closeBuyModal={closeBuyModal}
+            />
+          )}
+        </div>
+
+        <div className=" mb-5 mt-3">
           <div className=" d-flex flex-column justify-content-center align-items-center ">
             <button
               className="user_button mb-2 box cool-font-text"
@@ -560,179 +564,156 @@ function Account() {
                 <div className="row">
                   <div className="col-12">
                     <Row className="ms-4 me-4">
-                      {roleUser.map((channel) => (
-                        <Col
-                          key={channel.channel_name}
-                          lg={12}
-                          className="mb-4 d-flex justify-content-center align-items-center"
-                        >
-                          {channel.role === 0 && (
-                            <>
-                              <Card className="w-100 offers">
-                                <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
-                                  <Link to="/infoc" state={channel}>
-                                    <button className="ms-4 me-4 custom-button box">
-                                      <b>{channel.channel_name} </b>
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="16"
-                                        height="16"
-                                        fill="currentColor"
-                                        className="bi bi-info-circle-fill"
-                                        viewBox="0 0 16 16"
-                                      >
-                                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
-                                      </svg>
-                                    </button>
-                                  </Link>
-                                </Card.Header>
-                                <Card.Body className=" d-flex flex-row justify-content-evenly">
-                                  <Card.Title className="ms-4 me-4 cool-font-text">
-                                    RUOLO: IN ATTESA 🕓
-                                  </Card.Title>
-                                </Card.Body>
-                                <Card.Footer>
-                                  <p className="cool-font-text">
-                                    Tipo: {channel.type}
-                                  </p>
-                                </Card.Footer>
-                              </Card>
-                            </>
-                          )}
-                          {channel.role === 1 && (
-                            <>
-                              <Card className="w-100 offers">
-                                <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
-                                  <Link to="/infoc" state={channel}>
-                                    <button className="ms-4 me-4 custom-button box">
-                                      <b>{channel.channel_name} </b>
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="16"
-                                        height="16"
-                                        fill="currentColor"
-                                        className="bi bi-info-circle-fill"
-                                        viewBox="0 0 16 16"
-                                      >
-                                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
-                                      </svg>
-                                    </button>
-                                  </Link>
-                                </Card.Header>
-                                <Card.Body className=" d-flex flex-row justify-content-evenly">
-                                  <Card.Title className="ms-4 me-4 cool-font-text">
-                                    RUOLO: LETTORE 📖
-                                  </Card.Title>
-                                </Card.Body>
-                                <Card.Footer>
-                                  <p className="cool-font-text">
-                                    Tipo: {channel.type}
-                                  </p>
-                                </Card.Footer>
-                              </Card>
-                            </>
-                          )}
-                          {channel.role === 2 && (
-                            <>
-                              <Card className="w-100 offers">
-                                <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
-                                  <Link to="/infoc" state={channel}>
-                                    <button className="ms-4 me-4 custom-button box">
-                                      <b>{channel.channel_name} </b>
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="16"
-                                        height="16"
-                                        fill="currentColor"
-                                        className="bi bi-info-circle-fill"
-                                        viewBox="0 0 16 16"
-                                      >
-                                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
-                                      </svg>
-                                    </button>
-                                  </Link>
-                                </Card.Header>
-                                <Card.Body className=" d-flex flex-row justify-content-evenly">
-                                  <Card.Title className="ms-4 me-4 cool-font-text">
-                                    RUOLO: SCRITTORE ✒️
-                                  </Card.Title>
-                                </Card.Body>
-                                <Card.Footer>
-                                  <p className="cool-font-text">
-                                    Tipo: {channel.type}
-                                  </p>
-                                </Card.Footer>
-                              </Card>
-                            </>
-                          )}
-                          {channel.role === 3 && (
-                            <>
-                              <Card className="w-100 offers">
-                                <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
-                                  <Link to="/infoc" state={channel}>
-                                    <button className="ms-4 me-4 custom-button box">
-                                      <b>{channel.channel_name} </b>
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="16"
-                                        height="16"
-                                        fill="currentColor"
-                                        className="bi bi-info-circle-fill"
-                                        viewBox="0 0 16 16"
-                                      >
-                                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
-                                      </svg>
-                                    </button>
-                                  </Link>
-                                </Card.Header>
-                                <Card.Body className=" d-flex flex-row justify-content-evenly">
-                                  <Card.Title className="ms-4 me-4 cool-font-text">
-                                    RUOLO: ADMIN ⚔️
-                                  </Card.Title>
-                                </Card.Body>
-                                <Card.Footer>
-                                  <p className="cool-font-text">
-                                    Tipo: {channel.type}
-                                  </p>
-                                </Card.Footer>
-                              </Card>
-                            </>
-                          )}
-                          {channel.role === 4 && (
-                            <>
-                              <Card className="w-100 offers">
-                                <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
-                                  <Link to="/infoc" state={channel}>
-                                    <button className="ms-4 me-4 custom-button box">
-                                      <b>{channel.channel_name} </b>
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="16"
-                                        height="16"
-                                        fill="currentColor"
-                                        className="bi bi-info-circle-fill"
-                                        viewBox="0 0 16 16"
-                                      >
-                                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
-                                      </svg>
-                                    </button>
-                                  </Link>
-                                </Card.Header>
-                                <Card.Body className=" d-flex flex-row justify-content-evenly">
-                                  <Card.Title className="ms-4 me-4 cool-font-text">
-                                    RUOLO: CREATORE 👑
-                                  </Card.Title>
-                                </Card.Body>
-                                <Card.Footer>
-                                  <p className="cool-font-text">
-                                    Tipo: {channel.type}
-                                  </p>
-                                </Card.Footer>
-                              </Card>
-                            </>
-                          )}
-                        </Col>
-                      ))}
+                      {roleUser
+                        .map((channel) => (
+                          <Col
+                            key={channel.channel_name}
+                            lg={12}
+                            className="mb-4 d-flex justify-content-center align-items-center"
+                          >
+                            {channel.role === 0 && (
+                              <>
+                                <Card className="w-100 offers">
+                                  <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
+                                    <Link to="/infoc" state={channel}>
+                                      <button className="ms-4 me-4 custom-button box">
+                                        <b>{channel.channel_name} </b>
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          width="16"
+                                          height="16"
+                                          fill="currentColor"
+                                          className="bi bi-info-circle-fill"
+                                          viewBox="0 0 16 16"
+                                        >
+                                          <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
+                                        </svg>
+                                      </button>
+                                    </Link>
+                                  </Card.Header>
+                                  <Card.Body className=" d-flex flex-row justify-content-evenly">
+                                    <Card.Title className="ms-4 me-4 cool-font-text">
+                                      RUOLO: IN ATTESA 🕓
+                                    </Card.Title>
+                                  </Card.Body>
+                                </Card>
+                              </>
+                            )}
+                            {channel.role === 1 && (
+                              <>
+                                <Card className="w-100 offers">
+                                  <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
+                                    <Link to="/infoc" state={channel}>
+                                      <button className="ms-4 me-4 custom-button box">
+                                        <b>{channel.channel_name} </b>
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          width="16"
+                                          height="16"
+                                          fill="currentColor"
+                                          className="bi bi-info-circle-fill"
+                                          viewBox="0 0 16 16"
+                                        >
+                                          <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
+                                        </svg>
+                                      </button>
+                                    </Link>
+                                  </Card.Header>
+                                  <Card.Body className=" d-flex flex-row justify-content-evenly">
+                                    <Card.Title className="ms-4 me-4 cool-font-text">
+                                      RUOLO: LETTORE 📖
+                                    </Card.Title>
+                                  </Card.Body>
+                                </Card>
+                              </>
+                            )}
+                            {channel.role === 2 && (
+                              <>
+                                <Card className="w-100 offers">
+                                  <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
+                                    <Link to="/infoc" state={channel}>
+                                      <button className="ms-4 me-4 custom-button box">
+                                        <b>{channel.channel_name} </b>
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          width="16"
+                                          height="16"
+                                          fill="currentColor"
+                                          className="bi bi-info-circle-fill"
+                                          viewBox="0 0 16 16"
+                                        >
+                                          <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
+                                        </svg>
+                                      </button>
+                                    </Link>
+                                  </Card.Header>
+                                  <Card.Body className=" d-flex flex-row justify-content-evenly">
+                                    <Card.Title className="ms-4 me-4 cool-font-text">
+                                      RUOLO: SCRITTORE ✒️
+                                    </Card.Title>
+                                  </Card.Body>
+                                </Card>
+                              </>
+                            )}
+                            {channel.role === 3 && (
+                              <>
+                                <Card className="w-100 offers">
+                                  <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
+                                    <Link to="/infoc" state={channel}>
+                                      <button className="ms-4 me-4 custom-button box">
+                                        <b>{channel.channel_name} </b>
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          width="16"
+                                          height="16"
+                                          fill="currentColor"
+                                          className="bi bi-info-circle-fill"
+                                          viewBox="0 0 16 16"
+                                        >
+                                          <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
+                                        </svg>
+                                      </button>
+                                    </Link>
+                                  </Card.Header>
+                                  <Card.Body className=" d-flex flex-row justify-content-evenly">
+                                    <Card.Title className="ms-4 me-4 cool-font-text">
+                                      RUOLO: ADMIN ⚔️
+                                    </Card.Title>
+                                  </Card.Body>
+                                </Card>
+                              </>
+                            )}
+                            {channel.role === 4 && (
+                              <>
+                                <Card className="w-100 offers">
+                                  <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
+                                    <Link to="/infoc" state={channel}>
+                                      <button className="ms-4 me-4 custom-button box">
+                                        <b>{channel.channel_name} </b>
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          width="16"
+                                          height="16"
+                                          fill="currentColor"
+                                          className="bi bi-info-circle-fill"
+                                          viewBox="0 0 16 16"
+                                        >
+                                          <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
+                                        </svg>
+                                      </button>
+                                    </Link>
+                                  </Card.Header>
+                                  <Card.Body className=" d-flex flex-row justify-content-evenly">
+                                    <Card.Title className="ms-4 me-4 cool-font-text">
+                                      RUOLO: CREATORE 👑
+                                    </Card.Title>
+                                  </Card.Body>
+                                </Card>
+                              </>
+                            )}
+                          </Col>
+                        ))
+                        .reverse()}
                     </Row>
                   </div>
                 </div>
