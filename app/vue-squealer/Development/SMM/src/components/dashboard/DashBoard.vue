@@ -1,5 +1,8 @@
 <template>
   <NavAndSide :user-zero="userZero" is-dashboard="true"/>
+  <div class="container-fluid d-flex justify-content-end align-items-end justify-content-end align-content-end">
+    <img src="/media/SforSqueal.jpeg" alt="Responsive image" class="img-fluid position-static">
+  </div>
 </template>
 
 <script>
