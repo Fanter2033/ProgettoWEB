@@ -9,6 +9,8 @@ import "../css/App.css";
 
 function SquealContent({ content, type, id }) {
 
+  //!attenzione al parametro formale id
+  //TODO GET squeal mappe temporizzate
   async function getSqueal() {
     if (type === "POSITION_AUTO") {
       /*

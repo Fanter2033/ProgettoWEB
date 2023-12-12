@@ -7,8 +7,8 @@ function RenderMap({ coordinates }) {
   
   if (!Array.isArray(coordinates)) {
     console.log(coordinates);
-    console.error("Coordinate non valide.");
-    return null;
+    //console.error("Coordinate non valide.");
+    return(<><p>non riesco a visualizzare la mappa</p></>)
   }
 
   const skater = new L.Icon({

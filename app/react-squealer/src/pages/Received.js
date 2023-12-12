@@ -61,7 +61,6 @@ function Received() {
       };
 
       let result = await fetch(uri, options);
-      //console.log(result);
 
       if (result.ok) {
         let json = await result.json();
@@ -75,17 +74,12 @@ function Received() {
     }
   }
 
-  //console.log("DDDDDDDDDDDDDASH", dash);
-
   useEffect(() => {
     getDashboard();
-    //getComments();
     const intervalId1 = setInterval(getDashboard, 5000); //10 sec
-    //const intervalId2 = setInterval(getDashboard, 10000); //10 sec
 
     return () => {
       clearInterval(intervalId1);
-      //clearInterval(intervalId2);
     };
   }, []);
 
@@ -104,7 +98,7 @@ function Received() {
         </div>
         <div className="row">
           <div className="col-12 col-md-8">
-            <h1 className="cool-font">CANALI SEGUITI</h1>
+            <h1 className="cool-font-medium">CANALI SEGUITI</h1>
 
             <Container className="pb-5">
               <Row className=" ">
@@ -145,7 +139,7 @@ function Received() {
                             </div>
                           </div>
                           <div className="col-12 d-flex flex-row justify-content-start align-items-center">
-                            <b>PER:</b>
+                            <b className="cool-font-details">PER:</b>
                             <ShowDest arrayDest={squeal.destinations} />
                           </div>
                           <div className="col-12 cool-font-details d-flex flex-column justify-content-start align-items-start mt-2">
@@ -154,7 +148,11 @@ function Received() {
                           </div>
                         </Card.Header>
                         <Card.Body className="mb-4 d-flex flex-col justify-content-evenly align-items-center">
-                          <div>{squeal.content}</div>
+                          <SquealContent
+                            content={squeal.content}
+                            type={squeal.message_type}
+                            id={squeal._id}
+                          />
                         </Card.Body>
                         <Card.Footer className="w-100">
                           <div>
@@ -207,10 +205,10 @@ function Received() {
 export default Received;
 
 /*
- <SquealContent
-   content={squeal.content}
-   type={squeal.message_type}
-   id={squeal._id}
- />
+ 
+ 
+ 
+ 
+ 
 
 */

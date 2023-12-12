@@ -66,6 +66,7 @@ console.log('Secondi in un anno:', secondiInUnAnno);
 //TODO PUT SQUEAL /squeal/{identifier_id}  SOLO mappeeeeeeeee------------------------------------------------------------------------------------------------------------
 function Squeal() {
   const { userGlobal, setUserGlobal } = useUserContext();
+  let [currentUser, setCurrentUser] = useState({});
 
   const navigate = useNavigate();
 
@@ -83,25 +84,18 @@ function Squeal() {
       })
       .then((data) => {
         console.log("Tutto ok, io sono:", data);
-        const updated = {
-          ...userGlobal,
-          username: data.username,
-        };
-        setUserGlobal(updated);
+        setCurrentUser(data);
       })
       .catch((error) => {
         console.error(error);
       });
   }
 
-  if (userGlobal.username === undefined || userGlobal.username === "") {
-    //navigate("/");
-    whoAmI().then(() => {
-      getUserData();
-      getUserQuote();
-      log();
-    });
-  }
+  useEffect(() => {
+    getUserQuote();
+    getUserData();
+    log();
+  }, [currentUser]);
 
   const notify_quote = () =>
     toast.error("Quota esaurita", {
@@ -182,6 +176,7 @@ function Squeal() {
   const [userData, setUserData] = useState("");
 
   async function getUserData() {
+    if (typeof currentUser.username === "undefined") return;
     try {
       const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}`;
       const options = {
@@ -212,6 +207,7 @@ function Squeal() {
   const [userQuote, setUserQuote] = useState("");
 
   async function getUserQuote() {
+    if (typeof currentUser.username === "undefined") return;
     try {
       const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}/quote`;
 
@@ -241,6 +237,8 @@ function Squeal() {
   const [squealsLogger, setSquealsLogger] = useState([]);
 
   async function log() {
+    if (typeof currentUser.username === "undefined") return;
+
     try {
       const url = `${ReactConfig.base_url_requests}/utils/squeals/${userGlobal.username}`;
       const options = {
@@ -266,17 +264,18 @@ function Squeal() {
   }
 
   useEffect(() => {
+    getUserData();
     getUserQuote();
-    //whoAmI();
+    whoAmI();
     log();
 
     const intervalId = setInterval(getUserQuote, 5000); //30 sec
-    //const intervalId1 = setInterval(whoAmI, 30000); //30 sec
+    const intervalId1 = setInterval(whoAmI, 30000); //30 sec
     const intervalId2 = setInterval(getUserData, 5000); //10 sec
 
     return () => {
       clearInterval(intervalId);
-      //clearInterval(intervalId1);
+      clearInterval(intervalId1);
       clearInterval(intervalId2);
     };
   }, []);
@@ -676,22 +675,6 @@ function Squeal() {
     setAutoCoordinates()
     */
   }
-
-  /*
-
-  async function eseguiOgni5Secondi(iterazioneCorrente, lim) {
-    console.log(
-      "aaaaaaaaaaa iterazione num: " + iterazioneCorrente
-    );
-    iterazioneCorrente++;
-
-    if (iterazioneCorrente <= lim) {
-      // richiama la funzione dopo 5 sec
-      setTimeout(() => eseguiOgni5Secondi(iterazioneCorrente, lim), 5000);
-    }
-  }
-
-  */
 
   const [userLocation, setUserLocation] = useState(null);
 
@@ -1176,7 +1159,11 @@ function Squeal() {
                       <b>{squeal.sender}</b>
                     </Card.Header>
                     <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
-                      <div>{squeal.content}</div>
+                      <SquealContent
+                        content={squeal.content}
+                        type={squeal.message_type}
+                        id={squeal._id}
+                      />
                     </Card.Body>
                     <Card.Footer>
                       <div className="cool-font-details">Id: {squeal._id}</div>
@@ -1195,14 +1182,3 @@ function Squeal() {
 }
 
 export default Squeal;
-
-/*
- 
- <SquealContent
-                        content={squeal.content}
-                        type={squeal.message_type}
-                        id={squeal._id}
-                      />
- 
- 
-*/

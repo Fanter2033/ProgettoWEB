@@ -38,11 +38,10 @@ function Chat() {
     } catch (error) {
       console.error("Errore nella fetch:", error);
     }
-    //console.log("CHAAAAAAAAAT", squeals);
   }
 
   useEffect(() => {
-    const intervalId1 = setInterval(chatReq, 10000); //10 sec
+    const intervalId1 = setInterval(chatReq, 10000);
     chatReq();
     return () => {
       clearInterval(intervalId1);
@@ -54,7 +53,7 @@ function Chat() {
       <div className="container-flex pb-5">
         <div className="row ">
           <div className="col-12 justify-content-center align-items-center">
-            <h1 className="cool-font">CHAT</h1>
+            <h1 className="cool-font-medium">CHAT</h1>
             <Container className="">
               <Row className="">
                 {squeals.map((squeal) => (
@@ -85,7 +84,7 @@ function Chat() {
                           <TypeSqueal typeSqueal={squeal.message_type} />
                         </div>
                       </Card.Header>
-                      <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
+                      <Card.Body className="mb-4 d-flex flex-column justify-content-center align-items-center">
                         <SquealContent
                           content={squeal.content}
                           type={squeal.message_type}

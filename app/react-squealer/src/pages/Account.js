@@ -1,15 +1,11 @@
-import React, {useEffect} from "react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { useUserContext } from "../config/UserContext";
-
-import Geo from "./Geo";
 
 import ChangePfp from "./ChangePfp.js";
 import ChangeUsername from "./ChangeUsername";
@@ -49,29 +45,25 @@ function Account() {
   //per il logout
   const navigate = useNavigate();
 
-  //const navigate_logout = useNavigate();
-
   async function whoAmI() {
-    //if (userGlobal.username === undefined || userGlobal.username === "") {
-      //GET WHO AM I--------------------------------------------------------------------------------
-      const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
-      fetch(uri, {
-        mode: "cors",
-        credentials: "include",
+    //GET WHO AM I--------------------------------------------------------------------------------
+    const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
+    fetch(uri, {
+      mode: "cors",
+      credentials: "include",
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
       })
-        .then((res) => {
-          if (res.ok) {
-            return res.json();
-          }
-        })
-        .then((data) => {
-          console.log("Tutto ok, io sono:", data);
-          setCurrentUser(data);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    //}
+      .then((data) => {
+        console.log("Tutto ok, io sono:", data);
+        setCurrentUser(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   useEffect(() => {
@@ -119,7 +111,6 @@ function Account() {
   const handleInternalButtonClick = () => {
     console.log("Bottone interno cliccato");
     closeBuyModal();
-    //setShow(false);
   };
 
   //SMM connect modalssssssssss
@@ -135,7 +126,6 @@ function Account() {
   const [isCliccato, setIsCliccato] = useState(true);
   const handleCliccatoChange = (val) => {
     setIsCliccato(val);
-    //console.log(isCliccato, "cccccccccccccccccclick")
   };
 
   //ANIMATION----------------------------------------------------------------------------------------------------------------
@@ -161,8 +151,7 @@ function Account() {
   const [userData, setUserData] = useState("");
 
   async function getUserData() {
-      if(typeof currentUser.username === 'undefined')
-          return;
+    if (typeof currentUser.username === "undefined") return;
     try {
       const uri = `${ReactConfig.base_url_requests}/user/${currentUser.username}`;
       const options = {
@@ -192,8 +181,7 @@ function Account() {
   const [userQuote, setUserQuote] = useState("");
 
   async function getUserQuote() {
-      if(typeof currentUser.username === 'undefined')
-          return;
+    if (typeof currentUser.username === "undefined") return;
     try {
       const uri = `${ReactConfig.base_url_requests}/user/${currentUser.username}/quote`;
 
@@ -224,8 +212,7 @@ function Account() {
   const [squealsLogger, setSquealsLogger] = useState([]);
 
   async function log() {
-      if(typeof currentUser.username === 'undefined')
-          return;
+    if (typeof currentUser.username === "undefined") return;
     try {
       const url = `${ReactConfig.base_url_requests}/utils/squeals/${currentUser.username}`;
       const options = {
@@ -250,12 +237,11 @@ function Account() {
     }
   }
 
-  //GET /user/{username}/roles/
+  //GET /user/{username}/roles/-----------------------------------------------------------------------
   const [roleUser, setRoleUser] = useState([]);
 
   async function getRoles() {
-      if(typeof currentUser.username === 'undefined')
-          return;
+    if (typeof currentUser.username === "undefined") return;
     try {
       const uri = `${ReactConfig.base_url_requests}/user/${currentUser.username}/roles`;
       const options = {
@@ -281,24 +267,17 @@ function Account() {
     }
   }
 
-  //console.log("RRRRRRRRRRRRROLE", roleUser);
-
   useEffect(() => {
     whoAmI();
 
-    //showVulture();
-
-    const intervalId = setInterval(getUserData, 5000); //10 sec
-    //const intervalId2 = setInterval(getSmm, 10000); //10 sec
-    const intervalId3 = setInterval(getRoles, 10000); //10 sec
-    const intervalId4 = setInterval(getUserQuote, 10000); //10 sec
-    const intervalId5 = setInterval(whoAmI, 10000); //10 sec
+    const intervalId = setInterval(getUserData, 5000); 
+    const intervalId3 = setInterval(getRoles, 10000); 
+    const intervalId4 = setInterval(getUserQuote, 10000); 
+    const intervalId5 = setInterval(whoAmI, 10000); 
 
     // per evitare memory leaks
-
     return () => {
       clearInterval(intervalId);
-      //clearInterval(intervalId2);
       clearInterval(intervalId3);
       clearInterval(intervalId4);
       clearInterval(intervalId5);

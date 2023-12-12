@@ -11,19 +11,20 @@ import Comment from "./Comment";
 import ShowDest from "./ShowDest";
 import ShowComment from "./ShowComment";
 
-import { Container, Card, Col, Row } from "react-bootstrap";
+import { Card, Col, Row } from "react-bootstrap";
 import "../css/App.css";
 import notification from ".//media/message.mp3";
-import { map } from "leaflet";
 
 function InfoChannel() {
   const location = useLocation();
 
   const [channel, setChannel] = useState(location.state);
   console.log(channel);
+  let [currentUser, setCurrentUser] = useState({});
+
+  /*
   if (channel.owner === "") {
     //GET /channel/{type}/{name}/ LISTA INFO CANALE
-
     try {
       const uri = `${ReactConfig.base_url_requests}/channel/${channel.type}/${channel.channel_name}/`;
       const options = {
@@ -49,12 +50,40 @@ function InfoChannel() {
     }
     //console.log("Successo nella richiesta dei ruoli UTENTE", roleUser);
   }
+  */
+
+  //GET WHO AM I--------------------------------------------------------------------------------
+  async function whoAmI() {
+    const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
+    fetch(uri, {
+      mode: "cors",
+      credentials: "include",
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+      })
+      .then((data) => {
+        console.log("Tutto ok, io sono:", data);
+        setCurrentUser(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  useEffect(() => {
+    logPast();
+    getRoles();
+  }, [currentUser]);
 
   const { userGlobal, setUserGlobal } = useUserContext();
 
   //GET /user/{username}/roles/ LISTA CANALI SEGUITI E IL REALATIVO RUOLO DELL'UTENTE
   const [roleUser, setRoleUser] = useState([]);
   async function getRoles() {
+    if (typeof currentUser.username === "undefined") return;
     try {
       const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}/roles/`;
       const options = {
@@ -138,8 +167,8 @@ function InfoChannel() {
   const [newMessageNotification, setNewMessageNotification] = useState(false);
 
   async function logPast() {
-    //console.log("aaaaaaaaaaaaaaaa", channel.channel_name);
-    console.log(channel.type);
+    if (typeof currentUser.username === "undefined") return;
+
     try {
       const url = `${ReactConfig.base_url_requests}/utils/squeals/${channel.type}/${channel.channel_name}`;
       const options = {
@@ -175,6 +204,8 @@ function InfoChannel() {
   }
 
   useEffect(() => {
+    whoAmI();
+
     logPast();
     getRoles();
     //const intervalId1 = setInterval(logPast, 10000); //10 sec
@@ -392,7 +423,7 @@ function InfoChannel() {
                           <b>PER:</b>
                           <ShowDest arrayDest={squeal.destinations} />
                         </div>
-                        <div  className="col-12 d-flex flex-column justify-content-start align-items-start">
+                        <div className="col-12 d-flex flex-column justify-content-start align-items-start">
                           <TypeSqueal typeSqueal={squeal.message_type} />
                           <div className="cool-font-details">
                             ID:{squeal._id}
@@ -517,7 +548,7 @@ function InfoChannel() {
                           <b>PER:</b>
                           <ShowDest arrayDest={squeal.destinations} />
                         </div>
-                        <div  className="col-12 d-flex flex-column justify-content-start align-items-start">
+                        <div className="col-12 d-flex flex-column justify-content-start align-items-start">
                           <TypeSqueal typeSqueal={squeal.message_type} />
                           <div className="cool-font-details">
                             ID:{squeal._id}
@@ -581,7 +612,7 @@ function InfoChannel() {
                           <b>PER:</b>
                           <ShowDest arrayDest={squeal.destinations} />
                         </div>
-                        <div  className="col-12 d-flex flex-column justify-content-start align-items-start">
+                        <div className="col-12 d-flex flex-column justify-content-start align-items-start">
                           <TypeSqueal typeSqueal={squeal.message_type} />
                           <div className="cool-font-details">
                             ID:{squeal._id}
@@ -650,7 +681,7 @@ function InfoChannel() {
                   <b>PER:</b>
                   <ShowDest arrayDest={squeal.destinations} />
                 </div>
-                <div  className="col-12 d-flex flex-column justify-content-start align-items-start">
+                <div className="col-12 d-flex flex-column justify-content-start align-items-start">
                   <TypeSqueal typeSqueal={squeal.message_type} />
                   <div className="cool-font-details"> ID:{squeal._id}</div>
                 </div>
@@ -707,7 +738,7 @@ function InfoChannel() {
                   <b>PER:</b>
                   <ShowDest arrayDest={squeal.destinations} />
                 </div>
-                <div  className="col-12 d-flex flex-column justify-content-start align-items-start">
+                <div className="col-12 d-flex flex-column justify-content-start align-items-start">
                   <TypeSqueal typeSqueal={squeal.message_type} />
                   <div className="cool-font-details"> ID:{squeal._id}</div>
                 </div>

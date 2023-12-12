@@ -109,6 +109,7 @@ function ConnectSMM({ openConnect, closeConnect }) {
     backgroundColor: "#e0bb76",
   };
 
+  //TODO non funzia
   //GET /user/{username}/my-smm-----------------------------------------------------------------------------------------------------
   const [mySmm, setMySmm] = useState("");
   async function getSmm() {
@@ -116,13 +117,15 @@ function ConnectSMM({ openConnect, closeConnect }) {
 
     await fetch(uri)
       .then((res) => {
+        console.log(res);
         if (res.ok) {
-          let data = res.body;
-          setMySmm(data);
+          let data = res.json;
+          console.log(data);
+          //setMySmm(data);
         } else {
           console.error("Errore nella richiesta:", res.statusText);
         }
-        console.log(mySmm);
+        //console.log(mySmm);
       })
       .catch((error) => {
         console.error("Network error", error);
