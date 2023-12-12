@@ -1,20 +1,5 @@
 <template>
-  <div class="container-fluid mx-0 px-0">
-    <div class="row">
-      <Nav />
-    </div>
-    <div class="row d-flex">
-      <div class="col-2">
-        <SideBar />
-      </div>
-
-      <div class="col-10">
-        <h1>Welcome Back <b> {{userZero}} </b> :)</h1>
-
-      </div>
-
-    </div>
-  </div>
+  <NavAndSide :user-zero="userZero" is-dashboard="true"/>
 </template>
 
 <script>
@@ -23,12 +8,13 @@ import SideBar from "@/components/dashboard/SideBar.vue";
 import VueConfig from "@/config/VueConfig";
 import { store } from "@/store";
 import LineChart from "@/components/dashboard/LineChart.vue";
+import NavAndSide from "@/components/NavAndSide.vue";
 
 export default {
   name: "DashBoard",
 
   methods: {
-    fetchVips: function () {
+    fetchVips:  function () {
       console.log("user: " + store.getters.getUserZero);
       const vipsUri =
         VueConfig.base_url_requests +
@@ -39,6 +25,8 @@ export default {
 
       fetch(vipsUri, {
         method: "GET",
+        credentials: 'include',
+        mode: 'cors'
       })
         .then((res) => {
           if (res.ok)
@@ -53,6 +41,7 @@ export default {
           console.error("network error", error);
         });
     },
+
   },
 
   computed: {
@@ -64,10 +53,10 @@ export default {
     },
   },
 
-  components: {LineChart, SideBar, Nav },
+  components: {NavAndSide, LineChart, SideBar, Nav },
 
-  beforeMount() {
-    this.fetchVips();
+   beforeMount() {
+     this.fetchVips();
   },
 };
 </script>

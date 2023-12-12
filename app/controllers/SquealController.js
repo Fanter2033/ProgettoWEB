@@ -879,9 +879,14 @@ module.exports = class SquealController extends Controller {
         //No controls to do here
         let squeals = await this._model.getSquealsFromSender(user);
         output.content = [];
-        for (const squeal of squeals)
+        for (const squeal of squeals) {
+            let channelDtos = await this.#squealToChannelModel.getDestinationsChannels(squeal.id);
+            for (const channelDto of channelDtos)
+                squeal.insertDestination(channelDto);
             if (await this.isSquealPublic(squeal.id))
-                output.content.push(squeal.getDocument());
+                output.content.push(squeal.getDocument(true));
+        }
+
         return output;
     }
 
@@ -898,13 +903,19 @@ module.exports = class SquealController extends Controller {
         let output = this.getDefaultOutput();
         squealDto.sender = vipUsername;
 
-        if (false && this.isObjectVoid(authenticatedSmm)) {
+        if (this.isObjectVoid(authenticatedSmm)) {
             output['code'] = 403;
             output['msg'] = 'Please Login.'
             return output;
         }
 
-        //TODO: controllo che quel vip sia effettivamente linkato al SMM
+        //check if the User's smm is the effective sender
+        let userCtrl = new UserController(new UserModel());
+        if((await userCtrl.getSmm(vipUsername)).content !== authenticatedSmm.username){
+            output['code'] = 403;
+            output['msg'] = 'User is not linked to this Smm'
+            return output;
+        }
 
         if (!this.checkSquealType(squealDto.message_type)) {
             output['code'] = 400;
@@ -933,10 +944,16 @@ module.exports = class SquealController extends Controller {
             squealDto.quote_cost = 125;
         }
 
-        if (squealDto.message_type === 'IMAGE' && this.isBase64(squealDto.content) === false) {
-            output['code'] = 400;
-            output['msg'] = 'Content is not base64';
-            return output;
+        if (squealDto.message_type === 'IMAGE') {
+            //roba mia dato che vue ci aggiunge data
+            const base64DataRegex = /^data:[\w\/\+:]+;base64,/;
+
+            squealDto.content = String(squealDto.content).replace(base64DataRegex, '');
+            if (this.isBase64(squealDto.content) === false) {
+                output['code'] = 400;
+                output['msg'] = 'Content is not base64';
+                return output;
+            }
         }
 
         if (squealDto.message_type === 'VIDEO_URL' && this.isYoutubeVideo(squealDto.content) === false) {
@@ -990,7 +1007,7 @@ module.exports = class SquealController extends Controller {
         }
 
         //CONTROLLI OK DEVO SCALARE LA QUOTA ED EFFETTUARE LE RELAZIONI
-        let ctrlOut = await quoteCtrl.chargeLimitQuota(squealDto.sender, squealDto.quote_cost);
+        let ctrlOut = await quoteCtrl.chargeDebitQuota(squealDto.sender, squealDto.quote_cost);
         if (ctrlOut.code !== 200) {
             output['code'] = 500;
             output['msg'] = 'Internal server error.';
@@ -1056,7 +1073,6 @@ module.exports = class SquealController extends Controller {
             autoSqueal.id = squealDto.id;
             autoSqueal.quota_update_cost = this.countPlaceHolders(squealDto.content);
             autoSqueal.original_content = squealDto.content;
-            //TODO MOSTRARE DIRETTAMENTE UNO SQUEAL AGGIORNATO
             let result = await tmpModel.createScheduledOperation(autoSqueal, this.getCurrentTimestampSeconds() + 3);
             if (result === false) {
                 output['code'] = 500;
@@ -1195,11 +1211,18 @@ module.exports = class SquealController extends Controller {
      * @return {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
     async changeDestinations(authUser, squeal_id, destinations){
+        let output = this.getDefaultOutput();
+
+        if(isNaN(squeal_id)){
+            output['code'] = 400;
+            output['msg'] = 'Bad request';
+            return output;
+        }
+
         let getSqueal = await this.getSqueal(squeal_id, authUser, '', true);
+
         if(getSqueal.code !== 200)
             return getSqueal;
-
-        let output = this.getDefaultOutput();
 
         if(this.isAuthenticatedUser(authUser) === false){
             output['code'] = 403;
@@ -1292,6 +1315,13 @@ module.exports = class SquealController extends Controller {
      */
     async changeReactionValues(authUser, squeal_id, positive_value, negative_value){
         let output = this.getDefaultOutput();
+
+        if(isNaN(squeal_id)){
+            output['code'] = 400;
+            output['msg'] = 'Bad request';
+            return output;
+        }
+
         let getSqueal = await this.getSqueal(squeal_id, authUser, '', true);
         if(getSqueal.code !== 200)
             return getSqueal;
@@ -1336,6 +1366,8 @@ module.exports = class SquealController extends Controller {
             output['msg'] = 'Cannot update (2)';
             return output;
         }
+
+        await this.handleReactions(getSqueal.content.sender);
 
         return output;
     }

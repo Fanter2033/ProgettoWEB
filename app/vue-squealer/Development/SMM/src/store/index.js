@@ -13,14 +13,15 @@ export const store = new Vuex.Store({
             squeals:[],
             popularity:[]
         },
-        squealInputCoor: []
+        doughnutChart: [],
+        squealInputCoor: [],
     },
     getters: {
         getUserZero: (state) => {return state.userZero},
         getVips: (state) => { return state.myVips},
         getLineChartData: (state) => {return state.LineChartData},
-        getSInCoor: (state) => {return state.squealInputCoor}
-
+        getSInCoor: (state) => {return state.squealInputCoor},
+        getDoughnutChart: (state) => {return state.doughnutChart},
     },
     mutations:{
         setUserZero(state, user){
@@ -34,7 +35,10 @@ export const store = new Vuex.Store({
         },
         setSInCoor(state, newCoor) {
             state.squealInputCoor = newCoor;
-        }
+        },
+        setDoughnutChart(state, array){
+            state.doughnutChart = array;
+        },
     },
     plugins:[vuexLocal.plugin]
 });

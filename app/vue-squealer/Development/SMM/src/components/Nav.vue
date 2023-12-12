@@ -5,12 +5,13 @@
         <div class="container-fluid">
             <div class="navbar-header">
               <div class="navbar-brand">
-                <img src="/media/Nav_logo.png" alt="Logo" width="60" >
-                <span class="mx-3"> Squealer <b>Smm</b> </span>
+                <router-link to="/dashboard"><img src="/media/Nav_logo.png" alt="Logo" width="60" > </router-link>
+
+                <span class="mx-3 d-none d-lg-inline"> Squealer <b>Smm</b> </span>
               </div>
             </div>
             <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link"><router-link to="/dashboard/">Linked Accounts</router-link></a></li>
+                <li class="nav-item"><a class="nav-link"><router-link to="/my-vips/">Linked Accounts</router-link></a></li>
                 <li class="nav-item"><a class="nav-link"><router-link to="/dashboard">Settings</router-link></a></li>
             </ul>
         </div>

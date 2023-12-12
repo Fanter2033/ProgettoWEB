@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Squealer - Moderator Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+            crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../../css/squealer.css">
     <script src="../../libraries/jquery/jquery.js"></script>
     <!-- Page defined scripts -->
@@ -34,7 +37,8 @@
 </div>
 <!-- Fine modale visualizza commenti -->
 <!-- Inizio modale visualizza commenti-->
-<div class="modal fade" id="modalMostraContenuti" tabindex="-1" role="dialog" aria-labelledby="modalMostraContenutiTitle"
+<div class="modal fade" id="modalMostraContenuti" tabindex="-1" role="dialog"
+     aria-labelledby="modalMostraContenutiTitle"
      aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -53,11 +57,69 @@
     </div>
 </div>
 <!-- Fine modale visualizza commenti -->
+<!-- Inizio modale modifica destinatari-->
+<div class="modal fade" id="modalModificaDestinatari" tabindex="-1" role="dialog" aria-labelledby="modalModificaDest"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="modalModificaDest">Modifica destinatari</h6>
+            </div>
+            <div class="modal-body">
+                <div class="card-text text-left">
+                    <div class="mb-3">
+                        <label for="squealDests" class="form-label">Destinatari (Separarli da una ,)</label>
+                        <textarea class="form-control" id="squealDests" rows="3" placeholder="Destinatari"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                <button type="button" class="btn btn-warning" name="saveOperations" onclick="updateDestinationsSqueal()"
+                        data-bs-dismiss="modal">Aggiorna destinatari
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fine modale modifica destinatari -->
+<!-- Inizio modale modifica reazioni-->
+<div class="modal fade" id="modalModificaReazioni" tabindex="-1" role="dialog" aria-labelledby="modalModificaReaz"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="modalModificaReaz">Modifica Reazioni</h6>
+            </div>
+            <div class="modal-body">
+                <div class="card-text text-left">
+                    <div class="mb-3">
+                        <label for="reazioniPos" class="form-label">Reazioni positive</label>
+                        <input type="text" class="form-control" id="reazioniPos" placeholder="Reazioni positive">
+                    </div>
+                    <div class="mb-3">
+                        <label for="reazioniNeg" class="form-label">Reazioni negative</label>
+                        <input type="text" class="form-control" id="reazioniNeg" placeholder="Reazioni negative">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                <button type="button" class="btn btn-success" name="saveOperations" onclick="updateReactionSqueal()"
+                        data-bs-dismiss="modal">Aggiorna reazioni
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fine modale modifica reazioni -->
 <!-- Fine modali -->
 <div class="d-flex flex-nowrap" style="height: 100vh;">
     <div class="d-flex flex-column flex-shrink-0 p-3" style="width: 280px;">
         <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-theme-adaptive text-decoration-none">
-            <svg class="bi pe-none me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+            <svg class="bi pe-none me-2" width="40" height="32">
+                <use xlink:href="#bootstrap"></use>
+            </svg>
             <span class="fs-4">Squealer</span>
         </a>
         <hr>
@@ -85,7 +147,8 @@
         </ul>
         <hr>
         <div class="dropdown">
-            <a href="#" class="d-flex align-items-center text-theme-adaptive text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <a href="#" class="d-flex align-items-center text-theme-adaptive text-decoration-none dropdown-toggle"
+               data-bs-toggle="dropdown" aria-expanded="false">
                 Passa a...
             </a>
             <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
@@ -98,8 +161,11 @@
     <div class="d-flex flex-column w-100">
         <div class="container">
             <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-                <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-                    <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+                <a href="/"
+                   class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+                    <svg class="bi me-2" width="40" height="32">
+                        <use xlink:href="#bootstrap"></use>
+                    </svg>
                     <span class="header-title">Squealer - Moderator Dashboard</span>
                 </a>
 
@@ -112,7 +178,9 @@
                 </span>
                     </li>
                     &nbsp;
-                    <li class="nav-item"><button type="button" class="btn btn-light" onclick="executeLogout();">Logout</button></li>
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-light" onclick="executeLogout();">Logout</button>
+                    </li>
                 </ul>
             </header>
             <div>
@@ -171,6 +239,65 @@
     function notifyError(msg) {
         document.getElementById('toasFailProblem').innerHTML = msg;
         $('#toastFailGeneric').toast('show');
+    }
+
+    function updateDestinationsSqueal(squeal_id) {
+        let dests = $('#squealDests').val();
+        dests = dests.split(',');
+        let clean_dests = [];
+        for (const dest of dests)
+            clean_dests.push(dest.trim());
+
+        fetch(`../../squeal/${squeal_id}/destinations`, {
+            method: 'PUT',
+            body: JSON.stringify({
+                destinations: clean_dests,
+            }),
+            headers: {
+                "Content-Type": "application/json",
+            }
+        }).then((response) => {
+            if (response.ok) {
+                $('#toastSuccess').toast('show');
+                st.askData2Server();
+                st.executeSearch('', '');
+            } else {
+                notifyError('Si è verificato un errore');
+            }
+        });
+    }
+
+    function updateReactionSqueal(squeal_id){
+        let negative_value = $('#reazioniNeg').val();
+        let positive_value = $('#reazioniPos').val();
+
+        negative_value = parseInt(negative_value);
+        positive_value = parseInt(positive_value);
+
+        if(isNaN(positive_value) || isNaN(negative_value)){
+            notifyError('Inserire solo valori numerici');
+            return
+        }
+
+
+        fetch(`../../squeal/${squeal_id}/reactions`, {
+            method: 'PUT',
+            body: JSON.stringify({
+                negative_value: negative_value,
+                positive_value: positive_value
+            }),
+            headers: {
+                "Content-Type": "application/json",
+            }
+        }).then((response) => {
+            if (response.ok) {
+                $('#toastSuccess').toast('show');
+                st.askData2Server();
+                st.executeSearch('', '');
+            } else {
+                notifyError('Si è verificato un errore');
+            }
+        });
     }
 
 </script>

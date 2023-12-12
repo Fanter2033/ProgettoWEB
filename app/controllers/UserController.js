@@ -1,6 +1,6 @@
 const Controller = require("./Controller");
-const QuoteController = require ("./QuoteController");
-const QuoteModel = require ("../models/QuoteModel");
+const QuoteController = require("./QuoteController");
+const QuoteModel = require("../models/QuoteModel");
 const ChannelRolesController = require("./ChannelRolesController");
 const ChannelRolesModel = require("../models/ChannelRolesModel");
 const SquealToUserModel = require("../models/SquealToUserModel");
@@ -10,6 +10,7 @@ const VipController = require("./VipController");
 const VipModel = require("../models/VipModel");
 const VipDto = require("../entities/dtos/VipDto");
 const CommentModel = require("../models/CommentModel");
+const UserDto = require("../entities/dtos/UserDto");
 
 module.exports = class UserController extends Controller {
 
@@ -69,7 +70,7 @@ module.exports = class UserController extends Controller {
 
         let channelRoleController = new ChannelRolesController(new ChannelRolesModel());
 
-        if(escapeControl === false){
+        if (escapeControl === false) {
             if (this.isObjectVoid(authenticatedUser) || (!authenticatedUser.isAdmin && authenticatedUser.username !== username)) {
                 output['code'] = 403;
                 output['msg'] = 'Forbidden.';
@@ -86,7 +87,7 @@ module.exports = class UserController extends Controller {
 
         let vipCtrl = new VipController(new VipModel());
         let vipCtrlOut = await vipCtrl.getVip(username);
-        if(vipCtrlOut['code'] !== 200){
+        if (vipCtrlOut['code'] !== 200) {
             //To delete it should be 404
             output['code'] = 412;
             output['msg'] = 'Downgrade from VIP.';
@@ -96,7 +97,7 @@ module.exports = class UserController extends Controller {
         //Before deleting quote information we should delete all channel relationship.
         let roleCtrlOut = await channelRoleController.deleteUserRole(username, authenticatedUser);
 
-        if(roleCtrlOut['code'] !== 200){
+        if (roleCtrlOut['code'] !== 200) {
             //Errors!
             output['code'] = 500;
             output['sub_code'] = 2;
@@ -105,7 +106,7 @@ module.exports = class UserController extends Controller {
 
         let quoteController = new QuoteController(new QuoteModel())
         let deleteQuotaResult = await quoteController.deleteQuote(username);
-        if(deleteQuotaResult['code'] !== 200){
+        if (deleteQuotaResult['code'] !== 200) {
             //Errors!
             output['code'] = 500;
             output['sub_code'] = 1;
@@ -127,7 +128,7 @@ module.exports = class UserController extends Controller {
 
         //Now squeals
         let result = await squealModel.deleteUser(username);
-        if(result === false){
+        if (result === false) {
             output['code'] = 500;
             output['msg'] = 'Internal server error UserController::deleteUser - 1';
             return output;
@@ -135,7 +136,7 @@ module.exports = class UserController extends Controller {
 
         //Now impression and reactions
         result = await squealImpressionReactions.deleteUser(username);
-        if(result === false){
+        if (result === false) {
             output['code'] = 500;
             output['msg'] = 'Internal server error UserController::deleteUser - 2';
             return output;
@@ -143,14 +144,14 @@ module.exports = class UserController extends Controller {
 
         //Now squeals to user
         result = await squealToUserModel.deleteUser(username);
-        if(result === false){
+        if (result === false) {
             output['code'] = 500;
             output['msg'] = 'Internal server error UserController::deleteUser - 3';
             return output;
         }
 
         result = await commentModel.deleteUsers(username);
-        if(result === false) {
+        if (result === false) {
             output['code'] = 500;
             output['msg'] = 'Internal server error UserController::deleteUser - 4';
             return output;
@@ -186,7 +187,7 @@ module.exports = class UserController extends Controller {
             return output;
         }
 
-        if(userObj.isAdmin && this.isObjectVoid(authenticatedUser) && !authenticatedUser.isAdmin){
+        if (userObj.isAdmin && this.isObjectVoid(authenticatedUser) && !authenticatedUser.isAdmin) {
             userObj.isAdmin = false;
         }
 
@@ -209,11 +210,11 @@ module.exports = class UserController extends Controller {
         else {
             output['code'] = 500;
             output['msg'] = 'Error inserting into DB.';
-            return  output;
+            return output;
         }
 
         let quoteCtrl = await quoteController.createQuote(userObj.username);
-        if(quoteCtrl.code !== 200){
+        if (quoteCtrl.code !== 200) {
             //if we are in this case we should revert all and throw an error
             output['code'] = 500;
             output['msg'] = 'Warning! Cannot create associate quota. Operation failed';
@@ -289,12 +290,12 @@ module.exports = class UserController extends Controller {
         newUser.locked = oldUserObj.locked;
         newUser.reset = oldUserObj.reset;
 
-        if(authenticatedUser.isAdmin === false){
+        if (authenticatedUser.isAdmin === false) {
             newUser.isAdmin = oldUserObj.isAdmin;
             newUser.isSmm = oldUserObj.isSmm;
         }
 
-        if(newUser.pfp === null)
+        if (newUser.pfp === null)
             newUser.pfp = oldUserObj.pfp;
         else {
             let base64 = newUser.pfp;
@@ -315,7 +316,7 @@ module.exports = class UserController extends Controller {
             }
         }
 
-        if(newUser.psw_shadow !== '') //if password isn't set, save the old password
+        if (newUser.psw_shadow !== '') //if password isn't set, save the old password
             newUser.psw_shadow = await this.crypt(newUser.psw_shadow);
         else //Password set, save new in the database.
             newUser.psw_shadow = oldUserObj.psw_shadow;
@@ -329,10 +330,10 @@ module.exports = class UserController extends Controller {
             output['msg'] = 'Error updating into DB.';
         }
 
-        if(newUser.username !== oldUsername){
+        if (newUser.username !== oldUsername) {
 
             let isSmm = await this.getSmm(oldUsername);
-            if(isSmm.code === 200){
+            if (isSmm.code === 200) {
                 output['code'] = 409;
                 output['req_error'] = -6;
                 output['msg'] = 'Vip cannot change their name.';
@@ -342,7 +343,7 @@ module.exports = class UserController extends Controller {
             //Updating references entities. Let's start by quote
             let quoteController = new QuoteController(new QuoteModel())
             let result = await quoteController.changeUsernameQuota(oldUsername, newUser.username);
-            if(result['code'] !== 200){
+            if (result['code'] !== 200) {
                 output['code'] = 500;
                 output['msg'] = 'Internal server error UserController::updateUser - 1';
                 return output;
@@ -351,7 +352,7 @@ module.exports = class UserController extends Controller {
             //Now channel
             let channelRoleController = new ChannelRolesController(new ChannelRolesModel());
             result = await channelRoleController.substituteUser(oldUsername, newUser.username);
-            if(result['code'] !== 200){
+            if (result['code'] !== 200) {
                 output['code'] = 500;
                 output['msg'] = 'Internal server error UserController::updateUser - 2';
                 return output;
@@ -363,7 +364,7 @@ module.exports = class UserController extends Controller {
 
             //Now squeals
             result = await squealModel.replaceUser(oldUsername, newUser.username);
-            if(result === false){
+            if (result === false) {
                 output['code'] = 500;
                 output['msg'] = 'Internal server error UserController::updateUser - 3';
                 return output;
@@ -371,7 +372,7 @@ module.exports = class UserController extends Controller {
 
             //Now impression and reactions
             result = await squealImpressionReactions.replaceUser(oldUsername, newUser.username);
-            if(result === false){
+            if (result === false) {
                 output['code'] = 500;
                 output['msg'] = 'Internal server error UserController::updateUser - 4';
                 return output;
@@ -379,7 +380,7 @@ module.exports = class UserController extends Controller {
 
             //Now squeals to user
             result = await squealToUserModel.replaceUser(oldUsername, newUser.username);
-            if(result === false){
+            if (result === false) {
                 output['code'] = 500;
                 output['msg'] = 'Internal server error UserController::updateUser - 5';
                 return output;
@@ -388,7 +389,7 @@ module.exports = class UserController extends Controller {
             //Now comments
             let commentModel = new CommentModel();
             result = await commentModel.substituteUsers(oldUsername, newUser.username);
-            if(result === false){
+            if (result === false) {
                 output['code'] = 500;
                 output['msg'] = 'Internal server error UserController::updateUser - 5';
                 return output;
@@ -421,12 +422,12 @@ module.exports = class UserController extends Controller {
         if (this.isEmail(email) === false)
             return -2;
 
-        if(userObj.isUser !== true && userObj.isUser !== false) return -3;
-        if(userObj.isSmm !== true && userObj.isSmm !== false) return -3;
-        if(userObj.isAdmin !== true && userObj.isAdmin !== false) return -3;
+        if (userObj.isUser !== true && userObj.isUser !== false) return -3;
+        if (userObj.isSmm !== true && userObj.isSmm !== false) return -3;
+        if (userObj.isAdmin !== true && userObj.isAdmin !== false) return -3;
 
-        if(this.containsWhiteSpace(username)) return -4;
-        if(this.containsOneLetter(username) === false) return -5;
+        if (this.containsWhiteSpace(username)) return -4;
+        if (this.containsOneLetter(username) === false) return -5;
 
         userObj.username = username;
         userObj.psw_shadow = password;
@@ -499,7 +500,7 @@ module.exports = class UserController extends Controller {
      * @return {Promise<boolean>}
      * Return true if the user exists, false otherwise.
      */
-    async userExists(username){
+    async userExists(username) {
         return await this._model.userExists(username);
     }
 
@@ -509,7 +510,7 @@ module.exports = class UserController extends Controller {
      * @param {UserDto} authUser
      * @return {Promise<{msg: string, code: number, sub_code: number,content: {}}>}
      */
-    async toggleLock(username, authUser){
+    async toggleLock(username, authUser) {
         let output = this.getDefaultOutput();
 
         let userExists = await this._model.userExists(username);
@@ -551,15 +552,15 @@ module.exports = class UserController extends Controller {
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      * Siam sicuri di mantenere questa funzione qui? Si dai
      */
-    async getPopularityStats(username, fromTimestamp, toTimestamp){
+    async getPopularityStats(username, fromTimestamp, toTimestamp) {
         let output = this.getDefaultOutput();
         let squealModel = new SquealModel();
 
-        if(isNaN(fromTimestamp)) fromTimestamp = 0;
-        if(isNaN(toTimestamp)) toTimestamp = 0;
+        if (isNaN(fromTimestamp)) fromTimestamp = 0;
+        if (isNaN(toTimestamp)) toTimestamp = 0;
 
         let exists = await this.userExists(username);
-        if(exists === false){
+        if (exists === false) {
             output['code'] = 404;
             output['msg'] = 'User not found.';
             return output;
@@ -576,11 +577,11 @@ module.exports = class UserController extends Controller {
      * @param username {string}
      * @return {Promise<{msg: string, code: number, sub_code: number,content: {}}>}
      */
-    async getUserRoles(username){
+    async getUserRoles(username) {
         let output = this.getDefaultOutput();
 
         let exists = await this.userExists(username);
-        if(exists === false){
+        if (exists === false) {
             output['code'] = 404;
             output['msg'] = 'User not found.';
             return output;
@@ -608,19 +609,19 @@ module.exports = class UserController extends Controller {
             return output;
         }
 
-        if(reset === ''){
+        if (reset === '') {
             output['code'] = 403;
             output['msg'] = 'Reset string does not match. - 1';
             return output;
         }
 
-        if(password === '' || user.reset === null || user.reset === ''){
+        if (password === '' || user.reset === null || user.reset === '') {
             output['code'] = 400;
             output['msg'] = 'Missing password.';
             return output;
         }
 
-        if(user.reset !== reset){
+        if (user.reset !== reset) {
             output['code'] = 403;
             output['msg'] = 'Reset string does not match. - 2';
             return output;
@@ -630,7 +631,7 @@ module.exports = class UserController extends Controller {
         let psw_shadow = await this.crypt(password);
         let result = this._model.updatePassword(username, psw_shadow);
 
-        if(result === false){
+        if (result === false) {
             output['code'] = 500;
             output['msg'] = 'Internal server error';
             return output;
@@ -647,10 +648,10 @@ module.exports = class UserController extends Controller {
      * @param authenticatedUser {{}|UserDto}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
-    async toggleVip(username, authenticatedUser){
+    async toggleVip(username, authenticatedUser) {
         let output = this.getDefaultOutput();
 
-        if(!(await this._model.userExists(username))){
+        if (!(await this._model.userExists(username))) {
             output['code'] = 404;
             output['msg'] = 'User not found.';
             return output;
@@ -664,26 +665,26 @@ module.exports = class UserController extends Controller {
         let userObj = await this._model.getUser(username);
         let vipCtrl = new VipController(new VipModel())
         let newVIPStatus = !userObj.vip;
-        if(newVIPStatus === true){
+        if (newVIPStatus === true) {
             //create the VIP entity
             let res = await vipCtrl.createVip(username);
-            if(res['code'] !== 200)
+            if (res['code'] !== 200)
                 return res;
         } else {
             //delete the VIP entity if was not a smm
-            if(userObj.isSmm === true){
+            if (userObj.isSmm === true) {
                 output['code'] = 403
                 output['msg'] = 'Forbidden, you have some linked accounts, disable smm first'
                 return output;
             }
             let res = await vipCtrl.deleteVip(username);
-            if(res['code'] !== 200)
+            if (res['code'] !== 200)
                 return res;
         }
 
         //switch the toggle (true->false or false->true)
         let result = this._model.changeVipStatus(userObj, newVIPStatus);
-        if(result === false){
+        if (result === false) {
             output['code'] = 500;
             output['msg'] = 'Internal server error.';
             return output;
@@ -697,11 +698,11 @@ module.exports = class UserController extends Controller {
      * @param authenticatedUser {{}|UserDto}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
-    async toggleSmm(authenticatedUser){
+    async toggleSmm(authenticatedUser) {
         let output = this.getDefaultOutput();
         let username = authenticatedUser.username;
 
-        if( !(await this._model.userExists(username)) ){
+        if (!(await this._model.userExists(username))) {
             output['code'] = 404;
             output['msg'] = 'User not found.';
             return output;
@@ -714,7 +715,7 @@ module.exports = class UserController extends Controller {
 
         //check if the user is Vip
         let isVip = authenticatedUser.vip;
-        if(isVip === false){
+        if (isVip === false) {
             output['code'] = 412
             output['msg'] = "Precondition Failed, user is not a VIP"
             return output;
@@ -723,26 +724,26 @@ module.exports = class UserController extends Controller {
         let userObj = await this._model.getUser(username);
         let newSmmStatus = !userObj.isSmm;
         let vipCtrl = new VipController(new VipModel());
-        if(newSmmStatus === false){
+        if (newSmmStatus === false) {
             //user is NO longer SMM, clear the linked users list,
 
             //for each account remove the linkedSmm from it
             let userList = await this.getLinkedUsers(username);
             userList = userList.content;
-            for(let i=0; i < userList.length; i++){
+            for (let i = 0; i < userList.length; i++) {
                 let remSmmFromVip = await vipCtrl.removeSmm(userList[i]);
-                if(remSmmFromVip['code'] !== 200){
+                if (remSmmFromVip['code'] !== 200) {
                     return remSmmFromVip;
                 }
             }
             let clearLinkedUsers = vipCtrl.disableSmm(username);
-            if(clearLinkedUsers['code'] === 500){
+            if (clearLinkedUsers['code'] === 500) {
                 return clearLinkedUsers;
             }
         } else if (newSmmStatus === true) {
             //user is becoming a smm, check if she/he has smm already
             let vipObj = await vipCtrl.getVip(authenticatedUser.username);
-            if(vipObj['content'].linkedSmm !== ""){
+            if (vipObj['content'].linkedSmm !== "") {
                 output['code'] = 403;
                 output['msg'] = 'Forbidden, warning: you have a linked smm'
                 return output;
@@ -750,8 +751,8 @@ module.exports = class UserController extends Controller {
         }
 
         //toggle isSmm
-        let res = this._model.changeSmmStatus(userObj,newSmmStatus);
-        if(res === false){
+        let res = this._model.changeSmmStatus(userObj, newSmmStatus);
+        if (res === false) {
             output['code'] = 500;
             output['msg'] = 'Internal server error.';
         }
@@ -778,21 +779,21 @@ module.exports = class UserController extends Controller {
         let username = authenticatedUser['username'];
         let vipCtrl = new VipController(new VipModel());
         let vipObj = await vipCtrl.getVip(username);
-        if(vipObj['code'] !== 200){
+        if (vipObj['code'] !== 200) {
             output['code'] = 412
             output['msg'] = "Precondition Failed, user is not a VIP"
             return output;
         }
 
         //check if vip has already a smm
-        if (vipObj.content['linkedSmm'] !== ""){
+        if (vipObj.content['linkedSmm'] !== "") {
             output['code'] = 412
             output['msg'] = "Precondition Failed, user has already a smm"
             return output;
         }
 
         //check the user is not a smm
-        if(vipObj['content'].isSmm === true){
+        if (vipObj['content'].isSmm === true) {
             output['code'] = 412
             output['msg'] = "Precondition Failed, user is a Smm"
             return output;
@@ -800,14 +801,14 @@ module.exports = class UserController extends Controller {
 
         //check the Smm is a Vip an a smm
         let SmmObj = await vipCtrl.getVip(SmmUsername);
-        if(SmmObj['code'] !== 200){
+        if (SmmObj['code'] !== 200) {
             output['code'] = 412
             output['msg'] = "Precondition Failed, Smm is not a VIP"
             return output;
         }
         let smmObj = await this.getUser(SmmUsername);
         smmObj = smmObj['content'];
-        if(smmObj.isSmm === false){
+        if (smmObj.isSmm === false) {
             output['code'] = 412
             output['msg'] = "Precondition Failed, the user you select is not a Smm"
             return output;
@@ -815,7 +816,7 @@ module.exports = class UserController extends Controller {
 
         //check if the Smm has more than five linked users, not yet tested
         let otherVips = await this.getLinkedUsers(SmmUsername);
-        if(otherVips['content'].length >= 5){
+        if (otherVips['content'].length >= 5) {
             output['code'] = 412
             output['msg'] = "Precondition Failed, Smm has reach linkedUsers limit"
             return output;
@@ -825,7 +826,7 @@ module.exports = class UserController extends Controller {
         let smmDto = new VipDto(SmmObj.content);
 
         let res = vipCtrl.pickSmm(vipDto, smmDto);
-        if(res['code'] !== 200){
+        if (res['code'] !== 200) {
             return res;
         }
         return output;
@@ -836,7 +837,7 @@ module.exports = class UserController extends Controller {
      * @param authenticatedUser {{}|UserDto}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
-    async removeSmm(authenticatedUser){
+    async removeSmm(authenticatedUser) {
         let output = this.getDefaultOutput();
 
         //check authentication
@@ -850,14 +851,14 @@ module.exports = class UserController extends Controller {
         let username = authenticatedUser['username'];
         let vipCtrl = new VipController(new VipModel());
         let vipObj = await vipCtrl.getVip(username);
-        if(vipObj['code'] !== 200){
+        if (vipObj['code'] !== 200) {
             output['code'] = 412
             output['msg'] = "Precondition Failed, user is not a VIP"
             return output;
         }
 
-        let vipResRemoved =  await vipCtrl.removeSmm(username);
-        if(vipResRemoved['code'] !== 200){
+        let vipResRemoved = await vipCtrl.removeSmm(username);
+        if (vipResRemoved['code'] !== 200) {
             return vipResRemoved;
         }
         return output;
@@ -868,12 +869,12 @@ module.exports = class UserController extends Controller {
      * @param username {String}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
-    async getSmm(username){
+    async getSmm(username) {
         username = username.trim().toLowerCase();
         let vipCtrl = new VipController(new VipModel());
         let vipExists = await vipCtrl.getVip(username);
 
-        if(vipExists['code'] !== 200)
+        if (vipExists['code'] !== 200)
             return vipExists;
 
         let output = this.getDefaultOutput();
@@ -889,15 +890,15 @@ module.exports = class UserController extends Controller {
      * @return {Promise<boolean>}
      * If newPop = -1 or newUnPop = -1 then the respective fields are not update.
      */
-    async updateVerbalizedPopularity(username, newPop= -1, newUnPop= -1){
-        if(newPop !== -1){
+    async updateVerbalizedPopularity(username, newPop = -1, newUnPop = -1) {
+        if (newPop !== -1) {
             let result = await this._model.updateUserField(username, 'verbalized_popularity', newPop);
-            if(result === false)
+            if (result === false)
                 return false;
         }
-        if(newUnPop !== -1) {
+        if (newUnPop !== -1) {
             let result = await this._model.updateUserField(username, 'verbalized_unpopularity', newUnPop);
-            if(result === false)
+            if (result === false)
                 return false;
         }
         return true;
@@ -909,17 +910,17 @@ module.exports = class UserController extends Controller {
      * @param username {String}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
-    async getLinkedUsers(username){
+    async getLinkedUsers(username) {
         username = username.trim().toLowerCase();
         let vipCtrl = new VipController(new VipModel());
         let smmExists = await vipCtrl.getVip(username);
 
-        if(smmExists['code']!==200)
+        if (smmExists['code'] !== 200)
             return smmExists;
 
         let output = this.getDefaultOutput();
         let isSmm = await this.getUser(username);
-        if(isSmm['content'].isSmm === false){
+        if (isSmm['content'].isSmm === false) {
             output['code'] = 412
             output['msg'] = 'User is not a Smm'
             return output
@@ -927,6 +928,33 @@ module.exports = class UserController extends Controller {
         output['content'] = smmExists['content'].linkedUsers;
         return output;
     }
+
+    async createSquealerD() {
+        let res = await this.userExists('squealerd');
+        if (res === true)
+            return;
+
+        let quoteController = new QuoteController(new QuoteModel())
+        let userObj = new UserDto();
+        userObj.username = 'squealerd';
+        userObj.email = 'squealerd@squealer.it';
+        userObj.first_name = 'Squealer';
+        userObj.last_name = 'Daemon';
+        userObj.registration_timestamp = this.getCurrentTimestampSeconds();
+        userObj.psw_shadow = await this.crypt('ciaociao');
+        userObj.isAdmin = true;
+        userObj.isUser = false;
+        userObj.vip = false;
+        userObj.isSmm = false;
+        userObj.locked = false;
+        userObj.verbalized_popularity = 0;
+        userObj.verbalized_unpopularity = 0;
+        userObj.pfp = '';
+
+        await this._model.createUser(userObj);
+        await quoteController.createQuote(userObj.username);
+    }
+
 }
 
 

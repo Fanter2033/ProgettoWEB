@@ -1,5 +1,5 @@
-import React from "react";
-import { useEffect, useState } from "react";
+import React, {useEffect} from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
@@ -44,6 +44,7 @@ const { firstname, lastname, username, email, password } = userData;
 
 function Account() {
   const { userGlobal, setUserGlobal } = useUserContext();
+  let [currentUser, setCurrentUser] = useState({});
 
   //per il logout
   const navigate = useNavigate();
@@ -51,7 +52,7 @@ function Account() {
   //const navigate_logout = useNavigate();
 
   async function whoAmI() {
-    if (userGlobal.username === undefined || userGlobal.username === "") {
+    //if (userGlobal.username === undefined || userGlobal.username === "") {
       //GET WHO AM I--------------------------------------------------------------------------------
       const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
       fetch(uri, {
@@ -65,14 +66,20 @@ function Account() {
         })
         .then((data) => {
           console.log("Tutto ok, io sono:", data);
-
-          setUserGlobal(data);
+          setCurrentUser(data);
         })
         .catch((error) => {
           console.error(error);
         });
-    }
+    //}
   }
+
+  useEffect(() => {
+    log();
+    getUserData();
+    getRoles();
+    getUserQuote();
+  }, [currentUser]);
 
   //VIP modalssssssss
   const [showModal, setShowModal] = useState(false);
@@ -154,8 +161,10 @@ function Account() {
   const [userData, setUserData] = useState("");
 
   async function getUserData() {
+      if(typeof currentUser.username === 'undefined')
+          return;
     try {
-      const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}`;
+      const uri = `${ReactConfig.base_url_requests}/user/${currentUser.username}`;
       const options = {
         method: "GET",
         headers: {
@@ -183,8 +192,10 @@ function Account() {
   const [userQuote, setUserQuote] = useState("");
 
   async function getUserQuote() {
+      if(typeof currentUser.username === 'undefined')
+          return;
     try {
-      const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}/quote`;
+      const uri = `${ReactConfig.base_url_requests}/user/${currentUser.username}/quote`;
 
       const options = {
         method: "GET",
@@ -213,8 +224,10 @@ function Account() {
   const [squealsLogger, setSquealsLogger] = useState([]);
 
   async function log() {
+      if(typeof currentUser.username === 'undefined')
+          return;
     try {
-      const url = `${ReactConfig.base_url_requests}/utils/squeals/${userGlobal.username}`;
+      const url = `${ReactConfig.base_url_requests}/utils/squeals/${currentUser.username}`;
       const options = {
         method: "GET",
         headers: {
@@ -241,8 +254,10 @@ function Account() {
   const [roleUser, setRoleUser] = useState([]);
 
   async function getRoles() {
+      if(typeof currentUser.username === 'undefined')
+          return;
     try {
-      const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}/roles`;
+      const uri = `${ReactConfig.base_url_requests}/user/${currentUser.username}/roles`;
       const options = {
         method: "GET",
         headers: {
@@ -269,12 +284,9 @@ function Account() {
   //console.log("RRRRRRRRRRRRROLE", roleUser);
 
   useEffect(() => {
-    log();
-    getUserData();
-    getRoles();
-    getUserQuote();
-    //showVulture();
     whoAmI();
+
+    //showVulture();
 
     const intervalId = setInterval(getUserData, 5000); //10 sec
     //const intervalId2 = setInterval(getSmm, 10000); //10 sec

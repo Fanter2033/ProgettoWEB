@@ -1,13 +1,13 @@
 <template>
   <!-- Contenitore principale -->
-  <div class="container-fluid">
+  <div class="container-fluid" style="height: 100%">
     <!-- Riga principale con flex-nowrap (senza wrap) -->
-    <div class="row flex-nowrap">
+    <div class="row flex-nowrap" style="height: 100%">
       <!-- Colonna laterale sinistra (barra laterale) -->
-      <div class="col-auto px-sm-2 px-0 bg-dark">
+      <div class="col-auto px-sm-2 px-0 bg-dark" >
         <!-- Contenuto della barra laterale -->
         <div
-          class="d-flex flex-column align-items-center align-items-md-start px-3 pt-2 text-white min-vh-100"
+          class="d-flex flex-column align-items-center align-items-md-start pt-2 text-white min-vh-100"
         >
           <!-- Logo o link alla home -->
           <div
@@ -47,5 +47,4 @@ export default {
 </script>
 
 <style>
-
 </style>
