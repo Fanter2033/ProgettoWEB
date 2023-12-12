@@ -5,20 +5,18 @@ import L from "leaflet";
 
 import { useUserContext } from "../config/UserContext";
 
-import SearchMap from "./SearchMap";
-
-import { SearchControl, OpenStreetMapProvider } from "leaflet-geosearch";
 import "leaflet-control-geocoder/dist/Control.Geocoder.js";
 
 import "leaflet-control-geocoder/dist/Control.Geocoder.css";
 import "leaflet/dist/leaflet.css";
 import "../css/App.css";
+import "./media/MapMarker.png";
 
 const MapComponent = ({ onLocationChange }) => {
   const { userGlobal, setUserGlobal } = useUserContext();
 
   const skater = new L.Icon({
-    iconUrl: require("./media/icone/geo.png"),
+    iconUrl: require("./media/MapMarker.png"),
     iconSize: [25, 25],
   });
 
