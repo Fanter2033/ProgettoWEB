@@ -282,12 +282,15 @@ module.exports = class QuoteController extends Controller {
         }
 
         let smm = await userCtrl.getSmm(username);
+
         if (smm.code !== 200 && userAuth.isAdmin === false) {
             output['code'] = 401;
             output['msg'] = 'Not authorized - 1';
             return output;
         }
-        let linkedUser = smm.content;
+        smm = smm['content'].smm;
+
+        let linkedUser = smm;
         if (linkedUser.trim() === '' && userAuth.isAdmin === false) {
             output['code'] = 401;
             output['msg'] = 'Not authorized - 2';

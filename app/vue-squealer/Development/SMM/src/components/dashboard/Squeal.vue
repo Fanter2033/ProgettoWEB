@@ -341,6 +341,7 @@ function postSqueal() {
       .then((res)=>{
         if(res.ok){
           showToast('success');
+          setTimeout(()=>{location.reload()},2000);
         } else {
           console.error("Error during post");
           showToast('warning');

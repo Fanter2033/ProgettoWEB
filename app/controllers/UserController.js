@@ -877,7 +877,7 @@ module.exports = class UserController extends Controller {
             return vipExists;
 
         let output = this.getDefaultOutput();
-        output['content'] = vipExists['content'].linkedSmm;
+        output['content'] = {smm: vipExists['content'].linkedSmm};
         return output;
     }
 

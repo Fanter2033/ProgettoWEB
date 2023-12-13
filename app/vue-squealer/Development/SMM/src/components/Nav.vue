@@ -16,7 +16,7 @@
                     <i class="bi bi-person-check"></i>
                   <span class="mx-3 d-none d-lg-inline">Linked Accounts </span>
                 </router-link></a></li>
-                <li class="nav-item"><a class="nav-link" onclick="this.logOut()">
+                <li class="nav-item"><a class="nav-link" @onclick="this.logOut()">
                   <router-link to="/">
                     <i class="bi bi-box-arrow-right"></i>
                     <span class="mx-3 d-none d-lg-inline">Log Out</span>
