@@ -1,7 +1,7 @@
 <template>
   <NavAndSide :user-zero="userZero" is-dashboard="true"/>
-  <div class="container-fluid d-flex justify-content-end align-items-end justify-content-end align-content-end">
-    <img src="/media/SforSqueal.jpeg" alt="Responsive image" class="img-fluid position-static">
+  <div class="container-fluid d-flex justify-content-end align-items-end justify-content-end align-content-end m-0 p-0">
+    <img src="/media/SforSqueal.jpeg" alt="Responsive image" class="img-fluid position-static m-0">
   </div>
 </template>
 
@@ -65,7 +65,4 @@ export default {
 </script>
 
 <style>
-body{
-  background-color: #e0bb76;
-}
 </style>

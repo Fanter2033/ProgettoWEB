@@ -12,7 +12,7 @@
         <div class="container-fluid d-flex flex-wrap justify-content-center">
           <div v-for="vip in myVipsData">
             <div class="row m-3">
-              <div class="card d-flex align-items-center" style="width: 20rem; height: 25rem">
+              <div class="card d-flex align-items-center chill-font-small" style="width: 20rem; height: 25rem">
                 <img
                     class="card-img-top m-2 border border-2 border-dark"
                     style="border-radius: 50%; height: 50%; width: 40%"
@@ -27,10 +27,10 @@
                   </div>
 
                 </div>
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item">nome completo: {{vip.first_name}} {{vip.last_name}}</li>
-                  <li class="list-group-item">email: {{vip.email}}</li>
-                  <li class="list-group-item">attiv* dal: {{fixDate(vip.registration_timestamp)}}</li>
+                <ul class="list-group list-group-flush reg-font-small" style="text-align: start;">
+                  <li class="list-group-item">nome completo: <b>{{vip.first_name}} {{vip.last_name}}</b></li>
+                  <li class="list-group-item">email: <b>{{vip.email}}</b></li>
+                  <li class="list-group-item">attiv* dal: <b>{{fixDate(vip.registration_timestamp)}}</b></li>
                 </ul>
               </div>
             </div>

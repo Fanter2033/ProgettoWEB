@@ -1,12 +1,12 @@
 <template>
 
   <div id = "app">
-    <nav class="navbar navbar-expand-sm navbar-dark " style="width: 100%;">
+    <nav class="navbar navbar-expand-sm navbar-dark chill-font-xsm" style="width: 100%; font-size:large">
         <div class="container-fluid" style="width: 100%;">
             <div class="navbar-header">
               <div class="navbar-brand">
                 <router-link to="/dashboard"><img src="/media/Nav_logo.png" alt="Logo" width="60" > </router-link>
-                <span class="mx-3 d-none d-lg-inline"> Squealer <b>Smm</b> </span>
+                <span class="mx-3 d-none d-lg-inline cool-font-xsm"> Squealer <b>Smm</b> </span>
               </div>
             </div>
 
@@ -56,7 +56,7 @@
 <style>
 
 a{
-  color: darkgrey;
+  color: var(--squeal-yellow);
   text-decoration: none;
 }
 

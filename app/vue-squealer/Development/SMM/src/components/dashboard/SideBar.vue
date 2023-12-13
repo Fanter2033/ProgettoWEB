@@ -1,6 +1,6 @@
 <template>
   <!-- Contenitore principale -->
-  <div class="container-fluid" style="height: 100%">
+  <div class="container-fluid " style="height: 100%;">
     <!-- Riga principale con flex-nowrap (senza wrap) -->
     <div class="row flex-nowrap" style="height: 100%">
       <!-- Colonna laterale sinistra (barra laterale) -->
@@ -13,7 +13,7 @@
           <div
             class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none"
           >
-            <span class="fs-5 d-none d-sm-inline">Your Vips</span>
+            <span class="fs-5 d-none d-sm-inline cool-font-xsm">Your Vips</span>
           </div>
           <!-- Lista di elementi di navigazione (menu) -->
           <ul

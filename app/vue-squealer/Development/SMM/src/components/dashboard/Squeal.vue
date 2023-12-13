@@ -1,5 +1,5 @@
 <template>
-  <button id="squealButton" class="btn" type="button" @click="openModal">
+  <button id="squealButton" class="btn green-button w-75 m-2" type="button" @click="openModal">
     <i class="bi bi-send-plus"></i>
     <span class="d-none d-lg-inline">Quick Squeal</span>
   </button>
@@ -9,7 +9,12 @@
       <div class="modal-content">
         <div class="modal-header">
           <h3 class="modal-title"><b>Quick Squeal</b></h3>
-          <h6>Quote available:</h6>
+          <lord-icon
+              src="https://cdn.lordicon.com/ayhtotha.json"
+              trigger="in"
+              colors="primary:#e0bb76"
+              style="width:50px;height:50px">
+          </lord-icon>
         </div>
         <div class="modal-body">
           <form>
@@ -155,7 +160,7 @@
           <div class="modal-footer">
             <button
               id="closeBtn"
-              class="btn btn-secondary"
+              class="btn"
               type="button"
               @click="closeModal"
             >
@@ -356,10 +361,6 @@ function postSqueal() {
 <style>
 .modal-title {
   color: #e0bb76;
-}
-
-.btn {
-  background-color: #528b57;
 }
 
 .modal-content {

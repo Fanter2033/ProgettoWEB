@@ -1,4 +1,4 @@
-<template>
+<template class="cool-font-small">
   <div class="container-fluid mx-0 px-0">
     <div class="row">
       <Nav/>
@@ -9,30 +9,33 @@
       </div>
 
       <div class="col-9 justify-content-center pt-4">
-        <h2>Popolarità degli squeal di <b>{{this.$route.params.vip}}</b></h2>
+        <h2 class="chill-font-small">Popolarità degli squeal di <u>{{ this.$route.params.vip }}</u></h2>
         <div class="d-flex justify-content-center ">
-          <div class="container-fluid border rounded border-secondary border-2 p-1" style="background-color: whitesmoke">
-            <LineChart style="background-color: whitesmoke"/>
-            <div class="container border rounded ">
+          <div class="container-fluid box border rounded border-secondary border-2 p-1"
+               style="background-color: rgb(220,209,187) ">
+            <LineChart style="background-color: rgb(220,209,187)"/>
+            <div class="container">
               <div class="d-flex justify-content-start ">
 
                 <div>
                   <form class="mx-sm-auto p-1">
-                    <label for="fromDate">From</label>
+                    <label class="cool-font-xms" for="fromDate" style="color: #262525"><b>From</b></label>
                     <input id="fromDate"
                            v-model="fromTimeForm"
-                           class="row border rounded"
+                           class="row box border rounded"
                            type="date">
-                    <label class="mt-2" for="toDate">To</label>
+                    <label class="mt-2 cool-font-xms" for="toDate" style="color: #262525"><b>To</b></label>
                     <input id="toDate"
                            v-model="toTimeForm"
-                           class="row border rounded"
+                           class="row box border rounded"
                            type="date">
                   </form>
                 </div>
 
-                <div class="justify-content-center m-5">
-                  <button class="btn" @click="this.updatePopData(this.$route.params.vip);">update data</button>
+                <div class="justify-content-center m-5 chill-font-xsm ">
+                  <button class="btn green-button box" @click="this.updatePopData(this.$route.params.vip);">Update
+                    Data
+                  </button>
                 </div>
 
               </div>
@@ -41,8 +44,8 @@
             </div>
           </div>
         </div>
-        <h2>Squeals di <b>{{this.$route.params.vip}}</b></h2>
-        <DoughnutChart class="mt-3 border rounded p-1"></DoughnutChart>
+        <h2 class="chill-font-small">Squeals di <u>{{ this.$route.params.vip }}</u></h2>
+        <DoughnutChart class="mt-3 p-1"></DoughnutChart>
       </div>
 
     </div>

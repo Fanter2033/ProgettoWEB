@@ -7,22 +7,22 @@
         </button>
       </div>
 
-      <div class="card " style="width: 18rem;">
+      <div class="card box squeal chill-font-xsm" style="width: 18rem;">
         <div class="card-header"><h5>Squeal del {{ actualSqueal.date }}</h5></div>
         <div class="card-body">
           <div v-if="actualSqueal.type === 'MESSAGE_TEXT'"><p
-              class="card-text border rounded p-1"> {{ actualSqueal.content }}
+              class="card-text border rounded border-dark p-1 bg-white reg-font-xsm" style="text-align: start; color: #282c34"> {{ actualSqueal.content }}
           </p></div>
 
           <div v-else-if="actualSqueal.type === 'IMAGE'"><img
-              :src="'data:image/jpeg;base64,' + actualSqueal.content" alt="squeal image" class="border rounded">
+              :src="'data:image/jpeg;base64,' + actualSqueal.content" alt="squeal image" class="border rounded border-dark box">
           </div>
 
           <div v-else-if="actualSqueal.type === 'VIDEO_URL'">
             <div class="row">
               <iframe :src=" '//www.youtube.com/embed/' + fixYTUrl(actualSqueal.content)"
                       allow="accelerometer; autoplay; web-share" allowfullscreen
-                      class="col-lg-12 col-md-12 col-sm-12"
+                      class="col-lg-12 col-md-12 col-sm-12 box bg-dark"
                       title="YouTube video player"></iframe>
             </div>
           </div>
@@ -33,11 +33,11 @@
           </div>
 
         </div>
-        <div class="card-footer text-muted">
+        <div class="card-footer text-muted chill-font-xsm" style="text-align: start">
           costo: {{ actualSqueal.cost }}
         </div>
       </div>
-      <div class="card" style="width: 18rem;">
+      <div class="card box squeal" style="width: 18rem">
         <div class="card-body">
           <Doughnut
               ref="chart"
@@ -175,6 +175,6 @@ onUpdated(()=>{
   .nav-button{
     border-radius: 50%;
     height: fit-content;
-
+    background-color: #528b57;
   }
 </style>
