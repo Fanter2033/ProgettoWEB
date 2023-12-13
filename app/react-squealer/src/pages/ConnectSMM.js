@@ -119,7 +119,7 @@ function ConnectSMM({ openConnect, closeConnect }) {
       .then((res) => {
         console.log(res);
         if (res.ok) {
-          let data = res.json;
+          let data = res.json();
           console.log(data);
           //setMySmm(data);
         } else {
