@@ -20,6 +20,7 @@ const ChannelRoleDto = require("../entities/dtos/ChannelRoleDto");
 const CommentModel = require("../models/CommentModel");
 const CommentDto = require("../entities/dtos/CommentDto");
 
+
 module.exports = class SquealController extends Controller {
 
 
@@ -208,13 +209,14 @@ module.exports = class SquealController extends Controller {
      * @param authenticatedUser {UserDto}
      * @param autoSqueal {SquealTextAutoDto}
      * @param fromAdmin {boolean}
+     * @param fromSmm {boolean}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
-    async postSqueal(squealDto, authenticatedUser, autoSqueal, fromAdmin = false) {
+    async postSqueal(squealDto, authenticatedUser, autoSqueal, fromAdmin = false, fromSmm = false) {
         let output = this.getDefaultOutput();
         squealDto.sender = authenticatedUser.username;
 
-        if (this.isObjectVoid(authenticatedUser)) {
+        if (fromSmm === false && this.isObjectVoid(authenticatedUser)) {
             output['code'] = 403;
             output['msg'] = 'Please Login.'
             return output;
@@ -432,6 +434,41 @@ module.exports = class SquealController extends Controller {
 
         output['content'] = squealDto.getDocument();
         return output;
+    }
+
+
+    /**
+     *
+     * @param squealDto
+     * @param authenticatedSmm
+     * @param autoSqueal
+     * @param vipUsername
+     * @param fromAdmin
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async postSquealFromSmm(squealDto, authenticatedSmm, autoSqueal, vipUsername, fromAdmin = false) {
+        let output = this.getDefaultOutput();
+        squealDto.sender = vipUsername;
+        let userCtrl = new UserController(new UserModel());
+
+        if (this.isObjectVoid(authenticatedSmm)) {
+            output['code'] = 403;
+            output['msg'] = 'Please Login.'
+            return output;
+        }
+
+        const authenticatedUser = await userCtrl.getUser(vipUsername);
+        const authUserDto = new UserDto(authenticatedUser.content)
+
+        const postSquealRes = await this.postSqueal(squealDto, authUserDto, autoSqueal, fromAdmin,true);
+
+        if (postSquealRes['code'] !== 200){
+            output['code'] = postSquealRes['code'];
+            output['msg'] = postSquealRes['msg'];
+            return output;
+        }
+
+        return postSquealRes;
     }
 
     /**
@@ -897,194 +934,10 @@ module.exports = class SquealController extends Controller {
      * @param authenticatedSmm {UserDto}
      * @param autoSqueal
      * @param vipUsername {string}
+     * @param fromAdmin
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
-    async postSquealFromSmm(squealDto, authenticatedSmm, autoSqueal, vipUsername) {
-        let output = this.getDefaultOutput();
-        squealDto.sender = vipUsername;
 
-        if (this.isObjectVoid(authenticatedSmm)) {
-            output['code'] = 403;
-            output['msg'] = 'Please Login.'
-            return output;
-        }
-
-        //check if the User's smm is the effective sender
-        let userCtrl = new UserController(new UserModel());
-        if((await userCtrl.getSmm(vipUsername)).content !== authenticatedSmm.username){
-            output['code'] = 403;
-            output['msg'] = 'User is not linked to this Smm'
-            return output;
-        }
-
-        if (!this.checkSquealType(squealDto.message_type)) {
-            output['code'] = 400;
-            output['msg'] = 'Invalid type of Squeal. Bad request'
-            return output;
-        }
-
-        let quoteCtrl = new QuoteController(new QuoteModel());
-        let quoteRes = await quoteCtrl.getQuote(vipUsername);
-        quoteRes = new QuoteDto(quoteRes.content);
-
-        squealDto.content = squealDto.content.trim();
-        squealDto.quote_cost = squealDto.content.length;
-
-        //Let's check if the destinations exists all
-        if (Array.isArray(squealDto.destinations) === false || squealDto.destinations.length === 0) {
-            output['code'] = 400;
-            output['msg'] = 'Invalid destinations';
-            return output;
-        }
-
-        if (squealDto.message_type === 'IMAGE' ||
-            squealDto.message_type === 'VIDEO_URL' ||
-            squealDto.message_type === 'POSITION' ||
-            squealDto.message_type === 'POSITION_AUTO') {
-            squealDto.quote_cost = 125;
-        }
-
-        if (squealDto.message_type === 'IMAGE') {
-            //roba mia dato che vue ci aggiunge data
-            const base64DataRegex = /^data:[\w\/\+:]+;base64,/;
-
-            squealDto.content = String(squealDto.content).replace(base64DataRegex, '');
-            if (this.isBase64(squealDto.content) === false) {
-                output['code'] = 400;
-                output['msg'] = 'Content is not base64';
-                return output;
-            }
-        }
-
-        if (squealDto.message_type === 'VIDEO_URL' && this.isYoutubeVideo(squealDto.content) === false) {
-            output['code'] = 400;
-            output['msg'] = 'Link is not YT url';
-            return output;
-        }
-
-        //TODO FARE CONTROLLI SU POSIZIONE ETC ETC
-
-        let checkResult = await this.checkDestinations(squealDto.destinations);
-
-        if (!checkResult) {
-            output['code'] = 404;
-            output['msg'] = 'At least one destination do not exists.';
-            return output;
-        }
-
-
-        if (quoteRes.remaining_daily < squealDto.quote_cost) {
-            output['code'] = 412;
-            output['msg'] = 'Daily quote not available';
-            return output;
-        }
-
-        if (quoteRes.remaining_weekly < squealDto.quote_cost) {
-            output['code'] = 412;
-            output['msg'] = 'Weekly quote not available';
-            return output;
-        }
-
-        if (quoteRes.remaining_monthly < squealDto.quote_cost) {
-            output['code'] = 412;
-            output['msg'] = 'Monthly quote not available';
-            return output;
-        }
-
-        if (squealDto.message_type === 'TEXT_AUTO') {
-            //Execute controls over scheduled things
-            if (isNaN(autoSqueal.next_scheduled_operation) || autoSqueal.next_scheduled_operation < 1) {
-                output['code'] = 400;
-                output['msg'] = 'Invalid next scheduled operation';
-                return output;
-            }
-
-            if (isNaN(autoSqueal.iteration_end) || autoSqueal.iteration_end < 1) {
-                output['code'] = 400;
-                output['msg'] = 'Invalid number of iterations';
-                return output;
-            }
-        }
-
-        //CONTROLLI OK DEVO SCALARE LA QUOTA ED EFFETTUARE LE RELAZIONI
-        let ctrlOut = await quoteCtrl.chargeDebitQuota(squealDto.sender, squealDto.quote_cost);
-        if (ctrlOut.code !== 200) {
-            output['code'] = 500;
-            output['msg'] = 'Internal server error.';
-            return output;
-        }
-
-        //Controls ended. Let's insert
-        squealDto.id = await this._model.getNextId();
-        squealDto.date = this.getCurrentTimestampSeconds();
-        squealDto.critical_mass = 0;
-        squealDto.negative_value = 0;
-        squealDto.positive_value = 0;
-        squealDto.reactions = [];
-
-        let modelOutput = await this._model.postSqueal(squealDto);
-
-        if (modelOutput === false) {
-            output['code'] = 500;
-            output['msg'] = 'Internal server error';
-            return output;
-        }
-
-        //Adesso che ho gli id posso inserire l'associazione della quota per ogni utente.
-        for (const dest of squealDto.destinations)
-            if (this.isDestUserFormat(dest)) {
-                let dto = new Squeal2UserDto();
-                let searchValue = dest.substring(1);
-                dto.squeal_id = squealDto.id;
-                dto.destination_username = searchValue;
-                let result = await this.#squealToUserModel.createAssocSquealUser(dto);
-                if (result === false) {
-                    output['code'] = 500;
-                    output['msg'] = 'Internal server error (2)';
-                    return output;
-                }
-            } else if (this.isDestChannelFormat(dest)) {
-                let dto = new Squeal2ChannelDto();
-                let searchValue = dest.substring(1);
-                dto.squeal_id = squealDto.id;
-                dto.channel_name = searchValue;
-                if (dest.charAt(0) === '#')
-                    dto.channel_type = autoload.config._CHANNEL_TYPE_HASHTAG;
-                else if (dest.charAt(0) === '§' && searchValue === searchValue.toUpperCase())
-                    dto.channel_type = autoload.config._CHANNEL_TYPE_OFFICIAL;
-                else
-                    dto.channel_type = autoload.config._CHANNEL_TYPE_USER;
-                let result = await this.#squealToChannelModel.createAssocSquealChannel(dto);
-                if (result === false) {
-                    output['code'] = 500;
-                    output['msg'] = 'Internal server error (4)';
-                    return output;
-                }
-            } else {
-                output['code'] = 500;
-                output['msg'] = 'Internal server error (3)';
-                return output;
-            }
-
-
-        if (squealDto.message_type === 'TEXT_AUTO') {
-            //create the scheduled operation
-            let tmpModel = new SquealTextAutoModel();
-            autoSqueal.id = squealDto.id;
-            autoSqueal.quota_update_cost = this.countPlaceHolders(squealDto.content);
-            autoSqueal.original_content = squealDto.content;
-            let result = await tmpModel.createScheduledOperation(autoSqueal, this.getCurrentTimestampSeconds() + 3);
-            if (result === false) {
-                output['code'] = 500;
-                output['msg'] = 'Internal server error (5)';
-                return output;
-            }
-        }
-
-
-        output['content'] = squealDto.getDocument();
-        return output;
-    }
 
     checkSquealType(type) {
         return type === 'MESSAGE_TEXT' ||
