@@ -591,7 +591,7 @@ module.exports = class ChannelController extends Controller {
 
         let channel_promise = await this.#_model.getChannel(channelDto);
 
-        if(channel_promise.private === true && user.isAdmin === false){
+        if(channel_promise.lock === true && user.isAdmin === false){
             let response = new ChannelRoleDto();
             response.role = autoload.config._CHANNEL_ROLE_WAITING_ACCEPT;
             response.type = channelDto.type;
