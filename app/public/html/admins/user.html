@@ -18,12 +18,12 @@
 <body>
 <!-- Inizio modali -->
 <!-- Inizio modale registrazione-->
-<div class="modal fade" id="modalAggiungiUtente" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+<div class="modal fade" id="modalAggiungiUtente" tabindex="-1" role="dialog" aria-labelledby="modalAggiungiUtenteTitle"
      aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title" id="exampleModalLongTitle">Aggiungi utente</h6>
+                <h6 class="modal-title" id="modalAggiungiUtenteTitle">Aggiungi utente</h6>
             </div>
             <div class="modal-body">
                 <div class="card-text text-left">
@@ -84,7 +84,7 @@
 </div>
 <!-- Fine modale registrazione -->
 <!-- Inizio modale eliminazione-->
-<div class="modal fade" id="modalEliminaUtente" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+<div class="modal fade" id="modalEliminaUtente" tabindex="-1" role="dialog" aria-labelledby="modalEliminaUtenteTitle"
      aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -107,12 +107,12 @@
 </div>
 <!-- Fine modale eliminazione -->
 <!-- Inizio modale modifica quota-->
-<div class="modal fade" id="modalCambiaQuota" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+<div class="modal fade" id="modalCambiaQuota" tabindex="-1" role="dialog" aria-labelledby="modalCambiaQuotaTitle"
      aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title">Modifica quota utente</h6>
+                <h6 class="modal-title" id="modalCambiaQuotaTitle">Modifica quota utente</h6>
             </div>
             <div class="modal-body">
                 <div class="card-text text-left">
@@ -263,7 +263,7 @@
     }
 
     function cleanModalAddUser() {
-        document.getElementById('exampleModalLongTitle').innerHTML = 'Aggiungi utente';
+        document.getElementById('modalAggiungiUtenteTitle').innerHTML = 'Aggiungi utente';
         document.getElementById('registerUsername').value = '';
         document.getElementById('registerEmail').value = '';
         document.getElementById('registerFirstName').value = '';
