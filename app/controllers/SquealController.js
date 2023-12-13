@@ -690,8 +690,13 @@ module.exports = class SquealController extends Controller {
             squeal.negative_value = squeal.negative_value + amount;
 
         if(this.isSquealControversial(squeal)){
-            //CONTROVERSO. OCCORRE AGGIUNGERLO AL CANALE CONTROVERSIAL
-            //TODO
+            let dto = new Squeal2ChannelDto();
+            dto.squeal_id = squeal.id;
+            dto.channel_name = 'CONTROVERSIAL';
+            dto.channel_type = autoload.config._CHANNEL_TYPE_OFFICIAL;
+            let checked_relation = await this.#squealToChannelModel.checkAssocSquealChannel(dto);
+            if(checked_relation === false)
+                await this.#squealToChannelModel.createAssocSquealChannel(dto);
         }
 
         let result = await this._model.replaceSqueal(squeal, squeal_id);
@@ -1369,6 +1374,17 @@ module.exports = class SquealController extends Controller {
             output['code'] = 500;
             output['msg'] = 'Cannot update (2)';
             return output;
+        }
+
+        let squealDto = new SquealDto(getSqueal.content);
+        if(this.isSquealControversial(squealDto)){
+            let dto = new Squeal2ChannelDto();
+            dto.squeal_id = squealDto.id;
+            dto.channel_name = 'CONTROVERSIAL';
+            dto.channel_type = autoload.config._CHANNEL_TYPE_OFFICIAL;
+            let checked_relation = await this.#squealToChannelModel.checkAssocSquealChannel(dto);
+            if(checked_relation === false)
+                await this.#squealToChannelModel.createAssocSquealChannel(dto);
         }
 
         await this.handleReactions(getSqueal.content.sender);

@@ -589,6 +589,19 @@ module.exports = class ChannelController extends Controller {
         }
         user = new UserDto(user.content);
 
+        let channel_promise = await this.#_model.getChannel(channelDto);
+
+        if(channel_promise.private === true && user.isAdmin === false){
+            let response = new ChannelRoleDto();
+            response.role = autoload.config._CHANNEL_ROLE_WAITING_ACCEPT;
+            response.type = channelDto.type;
+            response.channel_name = channelDto.channel_name;
+            response.role_since = 0;
+            response.username = username;
+            output['content'] = response.getDocument();
+            return output;
+        }
+
         //Note: the Type hashtag channels exists in everytime by definition. Escape useless controls.
         if (channelDto.type === autoload.config._CHANNEL_TYPE_HASHTAG) {
             let response = new ChannelRoleDto();

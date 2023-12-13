@@ -193,5 +193,20 @@ module.exports = class SquealToChannelModel extends Model {
         }
     }
 
+    /**
+     * @param {Squeal2ChannelDto} dto
+     * @return {Promise<boolean>}
+     */
+    async checkAssocSquealChannel(dto) {
+        await this.checkMongoose("squeal_to_channels", SquealChannel);
+        let doc = this.mongo_escape(dto.getDocument());
+        try {
+            let count = new this.entityMongooseModel.find(doc).count();
+            return count === 1;
+
+        } catch (ignored) {
+            return false;
+        }
+    }
 
 }

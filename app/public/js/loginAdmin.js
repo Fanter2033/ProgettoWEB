@@ -21,7 +21,7 @@ function requestLogin() {
         dataType: 'json',
         contentType: "application/json",
         success: function () {
-            location.reload();
+            location.href = './users';
         },
         error: function (data) {
             switch (data.status) {
