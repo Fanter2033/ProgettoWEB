@@ -681,12 +681,18 @@ module.exports = class SquealController extends Controller {
             output['msg'] = 'Not found';
             return output;
         }
+
         squeal = new SquealDto(squeal.content);
 
         if (positiveValue)
             squeal.positive_value = squeal.positive_value + amount;
         else
             squeal.negative_value = squeal.negative_value + amount;
+
+        if(this.isSquealControversial(squeal)){
+            //CONTROVERSO. OCCORRE AGGIUNGERLO AL CANALE CONTROVERSIAL
+            //TODO
+        }
 
         let result = await this._model.replaceSqueal(squeal, squeal_id);
         if (result === false) {
@@ -1368,6 +1374,16 @@ module.exports = class SquealController extends Controller {
         await this.handleReactions(getSqueal.content.sender);
 
         return output;
+    }
+
+    /**
+     * @param {SquealDto} squeal
+     * @return {boolean}
+     */
+    isSquealControversial(squeal) {
+        if(squeal.positive_value > squeal.critical_mass && squeal.negative_value > squeal.critical_mass)
+            return true;
+        return false;
     }
 
 }
