@@ -83,7 +83,7 @@ cronDaemon.schedule("0 12 * * *", async function () {
     fetch(`https://api.nasa.gov/planetary/apod?api_key=UFkR4tAXDin0uS4RP7HrKHyWrnio1rvi13v4c3b8&date=${year}-${month}-${day}`).then((r) => {
         return (r.json());
     }).then((json) => {
-        nasaApiSqueal.content = `EHI! IL NUOVO SQUEAL GIOENALIERO DELLA NASA E' QUI! : <a href="${json.url}" target="_blank">Apri il link!</a>`;
+        nasaApiSqueal.content = `EHI! IL NUOVO SQUEAL GIOENALIERO DELLA NASA E' QUI! : ${json.url}`;
         squealCtrl.postSqueal(nasaApiSqueal, userObj.getDocument(), null, true);
     })
 
