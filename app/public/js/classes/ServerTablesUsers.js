@@ -292,6 +292,7 @@ class ServerTablesUsers {
         document.getElementById('isUser').checked = userDto.isUser;
         document.getElementById('isMod').checked = userDto.isAdmin;
         document.getElementById('isSmm').checked = userDto.isSmm;
+        document.getElementById('isVip').checked = userDto.vip;
         document.getElementById('executeOperation').setAttribute('onclick', `applicaCambiamentiUtente('${username}')`);
         document.getElementById('executeOperation').innerHTML = 'Modifica utente';
     }
@@ -334,7 +335,7 @@ class ServerTablesUsers {
         let html = `<ul>`;
         if (userRowElement.isUser)
             html = html + `<li>User</li>`;
-        if(userRowElement.pro)
+        if(userRowElement.vip)
             html = html + `<li>VIP</li>`;
         if (userRowElement.isSmm)
             html = html + `<li>Social Media Manager</li>`;

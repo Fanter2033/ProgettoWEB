@@ -48,6 +48,7 @@ userDriver.post('/', async function (req, res) {
     let password = (typeof req.body.user.password !== 'undefined' ? req.body.user.password : '');
     let isUser = (typeof req.body.user.isUser !== 'undefined' ? req.body.user.isUser : null);
     let isSmm = (typeof req.body.user.isSmm !== 'undefined' ? req.body.user.isSmm : null);
+    let vip = (typeof req.body.user.vip !== 'undefined' ? req.body.user.vip : false);
     let isMod = (typeof req.body.user.isMod !== 'undefined' ? req.body.user.isMod : null);
     let reset = (typeof req.body.user.reset !== 'undefined' ? req.body.user.reset : null);
 
@@ -58,6 +59,7 @@ userDriver.post('/', async function (req, res) {
     user.last_name = lastname;
     user.psw_shadow = password;
     user.isUser = isUser;
+    user.vip = vip;
     user.isSmm = isSmm;
     user.isAdmin = isMod;
     user.reset = reset;
@@ -88,6 +90,7 @@ userDriver.put('/:username', async function (req, res) {
     let isUser = (typeof req.body.user.isUser !== 'undefined' ? req.body.user.isUser : null);
     let isSmm = (typeof req.body.user.isSmm !== 'undefined' ? req.body.user.isSmm : null);
     let isMod = (typeof req.body.user.isMod !== 'undefined' ? req.body.user.isMod : null);
+    let vip = (typeof req.body.user.vip !== 'undefined' ? req.body.user.vip : null);
     let pfp = (typeof req.body.user.pfp !== 'undefined' ? req.body.user.pfp : null);
 
     let username_old = req.params['username'];
@@ -102,6 +105,7 @@ userDriver.put('/:username', async function (req, res) {
     user.isSmm = isSmm;
     user.isAdmin = isMod;
     user.pfp = pfp;
+    user.vip = vip;
     let ctrl = await controller.updateUser(user, username_old, await authController.getAuthenticatedUser(req));
     if (ctrl.code === 200)
         res.status(ctrl.code).send(ctrl.content);

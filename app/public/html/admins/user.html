@@ -60,6 +60,9 @@
                             <input type="checkbox" class="btn-check" id="isUser" autocomplete="off">
                             <label class="btn btn-outline-light" for="isUser">Utente</label>
 
+                            <input type="checkbox" class="btn-check" id="isVip" autocomplete="off">
+                            <label class="btn btn-outline-light" for="isVip">V.I.P.</label>
+
                             <input type="checkbox" class="btn-check" id="isSmm" autocomplete="off">
                             <label class="btn btn-outline-light" for="isSmm">Social Media Manager</label>
 
@@ -270,6 +273,7 @@
         document.getElementById('isUser').checked = false;
         document.getElementById('isSmm').checked = false;
         document.getElementById('isMod').checked = false;
+        document.getElementById('isVip').checked = false;
         document.getElementById('executeOperation').setAttribute('onclick', 'applicaCambiamentiUtente()');
         document.getElementById('executeOperation').innerHTML = 'Aggiungi utente';
     }
@@ -289,6 +293,7 @@
         let isUser = document.getElementById('isUser').checked;
         let isSmm = document.getElementById('isSmm').checked;
         let isMod = document.getElementById('isMod').checked;
+        let isVip = document.getElementById('isVip').checked;
 
         username = username.trim();
         email = email.trim();
@@ -324,6 +329,11 @@
             uri = uri + oldUsername;
         }
 
+        if(isSmm && !isVip){
+            notifyError("Se si inserisce uno SMM occorre che l'utente sia vip");
+            return;
+        }
+
         let dataReq = JSON.stringify({
             user: {
                 username: username,
@@ -333,7 +343,8 @@
                 password: password,
                 isUser: isUser,
                 isSmm: isSmm,
-                isMod: isMod
+                isMod: isMod,
+                vip: isVip
             }
         });
 

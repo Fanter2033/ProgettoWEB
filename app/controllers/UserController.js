@@ -85,14 +85,18 @@ module.exports = class UserController extends Controller {
             return output;
         }
 
+        let deletingUser = await this.getUser(username);
+        if(deletingUser.code !== 200){
+            return deletingUser;
+        }
+        deletingUser = new UserDto(deletingUser.content);
+
         let vipCtrl = new VipController(new VipModel());
         let vipCtrlOut = await vipCtrl.getVip(username);
         if (vipCtrlOut['code'] !== 404) {
-            //To delete it should be 404
-            output['code'] = 412;
-            output['msg'] = 'Downgrade from VIP.';
-            output['sub_code'] = 3;
-            return output;
+            if(deletingUser.isSmm)
+                await this.toggleSmm(deletingUser.getDocument());
+            await this.toggleVip(username, authenticatedUser);
         }
 
         //Before deleting quote information we should delete all channel relationship.
@@ -199,11 +203,23 @@ module.exports = class UserController extends Controller {
             return output;
         }
 
+        if (!userObj.vip && userObj.isSmm) {
+            output['code'] = 400;
+            output['req_error'] = -3;
+            output['msg'] = 'If u are smm u should be VIP.';
+            return output;
+        }
+
         //Salt! - A lot of SALT!!!
         userObj.psw_shadow = await this.crypt(userObj.psw_shadow);
-        userObj.vip = false;
         userObj.locked = false;
         userObj.pfp = autoload.defaultImageBase64;
+
+        let shouldCreateVip = userObj.vip;
+        let shouldCreateSmm = userObj.isSmm;
+
+        userObj.vip = false;
+        userObj.isSmm = false;
 
         let databaseResponse = await this._model.createUser(userObj);
         if (databaseResponse)
@@ -220,6 +236,14 @@ module.exports = class UserController extends Controller {
             output['code'] = 500;
             output['msg'] = 'Warning! Cannot create associate quota. Operation failed';
             await this.deleteUser(userObj.username, null, true);
+        }
+
+        //Ok, now we should create a vip or smm let's create it.
+        if(shouldCreateVip) {
+            await this.toggleVip(userObj.username, userObj.getDocument());
+            userObj.vip = true;
+            if (shouldCreateSmm)
+                await this.toggleSmm(userObj.getDocument());
         }
 
         return output;
@@ -287,13 +311,31 @@ module.exports = class UserController extends Controller {
         }
 
         newUser.registration_timestamp = oldUserObj.registration_timestamp;
-        newUser.vip = oldUserObj.vip
         newUser.locked = oldUserObj.locked;
         newUser.reset = oldUserObj.reset;
 
         if (authenticatedUser.isAdmin === false) {
             newUser.isAdmin = oldUserObj.isAdmin;
             newUser.isSmm = oldUserObj.isSmm;
+        }
+
+        if(newUser.isSmm && !newUser.vip){
+            output['code'] = 400;
+            output['req_error'] = -3;
+            output['msg'] = 'If u are smm u should be VIP.';
+            return output;
+        }
+
+        if(newUser.isSmm === null)
+            newUser.isSmm = oldUserObj.isSmm;
+        else if(oldUserObj.isSmm !== newUser.isSmm){
+            await this.toggleSmm(oldUserObj.getDocument());
+        }
+
+        if(newUser.vip === null)
+            newUser.vip = oldUserObj.vip;
+        else if(oldUserObj.vip !== newUser.vip){
+            await this.toggleVip(oldUserObj.username, oldUserObj.getDocument());
         }
 
         if (newUser.pfp === null)
@@ -426,6 +468,7 @@ module.exports = class UserController extends Controller {
         if (userObj.isUser !== true && userObj.isUser !== false) return -3;
         if (userObj.isSmm !== true && userObj.isSmm !== false) return -3;
         if (userObj.isAdmin !== true && userObj.isAdmin !== false) return -3;
+        if (userObj.vip !== true && userObj.vip !== false) return -3;
 
         if (this.containsWhiteSpace(username)) return -4;
         if (this.containsOneLetter(username) === false) return -5;
@@ -684,19 +727,19 @@ module.exports = class UserController extends Controller {
         }
 
         //switch the toggle (true->false or false->true)
-        let result = this._model.changeVipStatus(userObj, newVIPStatus);
+        let result = await this._model.changeVipStatus(userObj, newVIPStatus);
         if (result === false) {
             output['code'] = 500;
             output['msg'] = 'Internal server error.';
             return output;
         }
-        //output['content'] =
+
         return output;
     }
 
     /**
      * Enable/Disable the smm status
-     * @param authenticatedUser {{}|UserDto}
+     * @param authenticatedUser {UserDto}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
     async toggleSmm(authenticatedUser) {
@@ -744,7 +787,7 @@ module.exports = class UserController extends Controller {
         } else if (newSmmStatus === true) {
             //user is becoming a smm, check if she/he has smm already
             let vipObj = await vipCtrl.getVip(authenticatedUser.username);
-            if (vipObj['content'].linkedSmm !== "") {
+            if (vipObj['content'].linkedSmm !== "" && vipObj['content'].linkedSmm !== undefined) {
                 output['code'] = 403;
                 output['msg'] = 'Forbidden, warning: you have a linked smm'
                 return output;
@@ -752,10 +795,11 @@ module.exports = class UserController extends Controller {
         }
 
         //toggle isSmm
-        let res = this._model.changeSmmStatus(userObj, newSmmStatus);
+        let res = await this._model.changeSmmStatus(userObj, newSmmStatus);
         if (res === false) {
             output['code'] = 500;
             output['msg'] = 'Internal server error.';
+            return output;
         }
         return output;
     }
