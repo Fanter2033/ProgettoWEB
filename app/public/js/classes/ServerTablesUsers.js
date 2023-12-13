@@ -282,7 +282,7 @@ class ServerTablesUsers {
         if (userDto === null)
             return userDto;
 
-        document.getElementById('exampleModalLongTitle').innerHTML = 'Modifica utente';
+        document.getElementById('modalAggiungiUtenteTitle').innerHTML = 'Modifica utente';
         document.getElementById('registerUsername').value = userDto.username;
         document.getElementById('registerEmail').value = userDto.email;
         document.getElementById('registerFirstName').value = userDto.first_name;
