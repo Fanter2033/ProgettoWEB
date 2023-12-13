@@ -76,7 +76,7 @@ class ServerTablesOC {
         let html = `
         <div class="row w-100">
             <div class="col-md-2">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAggiungiCanale" onclick="cleanModalAddChannel('CHANNEL_OFFICIAL')">
+                <button type="button" class="btn green-button" data-bs-toggle="modal" data-bs-target="#modalAggiungiCanale" onclick="cleanModalAddChannel('CHANNEL_OFFICIAL')">
                 Aggiungi</button>
             </div>
             <div class="col-md-4 offset-md-6 col-sm-12">
@@ -129,8 +129,6 @@ class ServerTablesOC {
         await this.askData2Server();
         this.drawData();
     }
-
-    //TODO FARE QUESTA TABELLA ACCESSIBILE!
 
     drawNavigationButtons() {
         switch (this.getNumberOfButtonsRequired()) {
@@ -223,11 +221,11 @@ class ServerTablesOC {
 
         if (Object.keys(this.#assoc_json).includes('actions')) {
             html = html + `<td>
-                <button type="button" class="btn btn-warning" onclick="${this.#variableName}.updateChannel('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#modalAggiungiCanale">Modifica</button>
+                <button type="button" style="width: auto" class="btn yellow-button" onclick="${this.#variableName}.updateChannel('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#modalAggiungiCanale">Modifica</button>
                 &nbsp;
-                <button type="button" class="btn btn-danger" onclick="${this.#variableName}.deleteChannel('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#modalEliminaCanale">Elimina</button>
+                <button type="button" style="width: auto" class="btn red-button" onclick="${this.#variableName}.deleteChannel('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#modalEliminaCanale">Elimina</button>
                 &nbsp;
-                <button type="button" class="btn btn-success" onclick="${this.#variableName}.newSqueal('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#nuovoSqueal">Crea squeal</button>
+                <button type="button" style="width: auto" class="btn green-button" onclick="${this.#variableName}.newSqueal('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#nuovoSqueal">Crea squeal</button>
                 </td>`;
         }
 

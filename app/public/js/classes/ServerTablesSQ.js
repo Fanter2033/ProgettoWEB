@@ -55,13 +55,16 @@ class ServerTablesSQ {
     }
 
     async askData2Server() {
+        let search = this.#search;
+        let sd = this.#searchDest;
+
         const response = await fetch(`../../squeal/?orderBy=${this.#orderBy}&orderDir=${this.#orderDir}&search_sender=${this.#search}&search_dest=${this.#searchDest}&offset=${this.getOffset()}&limit=${this.#limit}`, {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
             }
         });
-        if (response.ok) {
+        if (response.ok && this.#search === search && sd === this.#searchDest) {
             let temp = await response.json();
             this.#data = temp.squeals;
             this.#userCount = temp.totalCount;
@@ -147,8 +150,6 @@ class ServerTablesSQ {
         await this.askData2Server();
         this.drawData();
     }
-
-    //TODO FARE QUESTA TABELLA ACCESSIBILE!
 
     drawNavigationButtons() {
         switch (this.getNumberOfButtonsRequired()) {
@@ -239,13 +240,13 @@ class ServerTablesSQ {
 
         if (Object.keys(this.#assoc_json).includes('actions')) {
             html = html + `<td>
-                <button type="button" class="btn btn-primary mb-1" onclick="${this.#variableName}.seeContent(${squealRow._id})">Visualizza</button>
+                <button type="button" style="width: auto" class="btn blue-button mb-1" onclick="${this.#variableName}.seeContent(${squealRow._id})">Visualizza</button>
                 &nbsp;
-                <button type="button" class="btn btn-warning mb-1" onclick="${this.#variableName}.updateDestinations(${squealRow._id})" data-bs-toggle="modal" data-bs-target="#modalModificaDestinatari">Modifica destinatari</button>
+                <button type="button" style="width: auto" class="btn yellow-button mb-1" onclick="${this.#variableName}.updateDestinations(${squealRow._id})" data-bs-toggle="modal" data-bs-target="#modalModificaDestinatari">Modifica destinatari</button>
                 &nbsp;
-                <button type="button" class="btn btn-success mb-1" onclick="${this.#variableName}.updateReactions(${squealRow._id})" data-bs-toggle="modal" data-bs-target="#modalModificaReazioni">Modifica reazioni</button>
+                <button type="button" style="width: auto" class="btn green-button mb-1" onclick="${this.#variableName}.updateReactions(${squealRow._id})" data-bs-toggle="modal" data-bs-target="#modalModificaReazioni">Modifica reazioni</button>
                 &nbsp;
-                <button type="button" class="btn btn-danger mb-1" onclick="${this.#variableName}.seeComments(${squealRow._id})">Mostra commenti</button>
+                <button type="button" style="width: auto" class="btn pink-button mb-1" onclick="${this.#variableName}.seeComments(${squealRow._id})">Mostra commenti</button>
                
                 </td>`;
         }
@@ -315,7 +316,6 @@ class ServerTablesSQ {
 
     seeComments(id){
         let data = this.getDataJson(id);
-
         let comments = data.comments;
         if(comments.length === 0) {
             notifyError('Nessun commento presente');

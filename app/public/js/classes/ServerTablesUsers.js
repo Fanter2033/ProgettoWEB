@@ -83,7 +83,7 @@ class ServerTablesUsers {
         containerNode.innerHTML = `
         <div class="row w-100">
             <div class="col-md-2">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAggiungiUtente" onclick="cleanModalAddUser()">
+                <button type="button" class="w-75 btn green-button" data-bs-toggle="modal" data-bs-target="#modalAggiungiUtente" onclick="cleanModalAddUser()">
                 Aggiungi</button>
             </div>
             <div class="col-md-4 offset-md-1 col-sm-12">
@@ -158,8 +158,6 @@ class ServerTablesUsers {
         await this.askData2Server();
         this.drawData();
     }
-
-    //TODO FARE QUESTA TABELLA ACCESSIBILE!
 
     drawNavigationButtons() {
         switch (this.getNumberOfButtonsRequired()) {
@@ -249,13 +247,13 @@ class ServerTablesUsers {
 
         if (Object.keys(this.#assoc_json).includes('actions')) {
             html = html + `<td>
-                <button type="button" class="btn btn-warning" onclick="${this.#variableName}.updateUser('${userRow.username}')" data-bs-toggle="modal" data-bs-target="#modalAggiungiUtente">Modifica</button>
+                <button type="button" class="btn yellow-button mb-1" onclick="${this.#variableName}.updateUser('${userRow.username}')" data-bs-toggle="modal" data-bs-target="#modalAggiungiUtente" style="width: auto">Modifica</button>
                 &nbsp;
-                <button type="button" class="btn btn-danger" onclick="${this.#variableName}.deleteUser('${userRow.username}')" data-bs-toggle="modal" data-bs-target="#modalEliminaUtente">Elimina</button>
+                <button type="button" class="btn red-button mb-1" onclick="${this.#variableName}.deleteUser('${userRow.username}')" data-bs-toggle="modal" data-bs-target="#modalEliminaUtente" style="width: auto">Elimina</button>
                 &nbsp;
-                <button type="button" class="btn btn-success" onclick="${this.#variableName}.changeQuotaUser('${userRow.username}')" data-bs-toggle="modal" data-bs-target="#modalCambiaQuota">Cambia quota</button>
+                <button type="button" class="btn green-button mb-1" onclick="${this.#variableName}.changeQuotaUser('${userRow.username}')" data-bs-toggle="modal" data-bs-target="#modalCambiaQuota" style="width: auto">Cambia quota</button>
                 &nbsp;
-                <button type="button" class="btn btn-light" onclick="lockUser('${userRow.username}', ${userRow.locked})" data-bs-toggle="modal" data-bs-target="#modalToggleLock">
+                <button type="button" class="btn pink-button mb-1" onclick="lockUser('${userRow.username}', ${userRow.locked})" data-bs-toggle="modal" data-bs-target="#modalToggleLock"  style="width: auto">
                     ${userRow.locked ? 'Sblocca' : 'Blocca'}
                 </button>
                 </td>`;

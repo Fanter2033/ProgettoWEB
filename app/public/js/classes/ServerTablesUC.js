@@ -76,7 +76,7 @@ class ServerTablesUC {
         let html = `
         <div class="row w-100">
             <div class="col-md-2">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAggiungiCanale" onclick="cleanModalAddChannel('CHANNEL_USERS')">
+                <button type="button" class="btn green-button" data-bs-toggle="modal" data-bs-target="#modalAggiungiCanale" onclick="cleanModalAddChannel('CHANNEL_USERS')">
                 Aggiungi</button>
             </div>
             <div class="col-md-4 offset-md-6 col-sm-12">
@@ -129,8 +129,6 @@ class ServerTablesUC {
         await this.askData2Server();
         this.drawData();
     }
-
-    //TODO FARE QUESTA TABELLA ACCESSIBILE!
 
     drawNavigationButtons() {
         switch (this.getNumberOfButtonsRequired()) {
@@ -223,13 +221,13 @@ class ServerTablesUC {
 
         if (Object.keys(this.#assoc_json).includes('actions')) {
             html = html + `<td>
-                <button type="button" class="btn btn-warning" onclick="${this.#variableName}.updateChannel('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#modalAggiungiCanale">Modifica</button>
+                <button type="button" style="width: auto" class="btn yellow-button mb-1" onclick="${this.#variableName}.updateChannel('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#modalAggiungiCanale">Modifica</button>
                 &nbsp;
-                <button type="button" class="btn btn-danger" onclick="${this.#variableName}.deleteChannel('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#modalEliminaCanale">Elimina</button>
+                <button type="button" style="width: auto" class="btn red-button mb-1" onclick="${this.#variableName}.deleteChannel('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#modalEliminaCanale">Elimina</button>
                 &nbsp;
-                <button type="button" class="btn btn-success" onclick="changeRolesChannel('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#modificaRuoliCanale">Cambia ruoli</button>
+                <button type="button" style="width: auto" class="btn green-button mb-1" onclick="changeRolesChannel('${channelRow.channel_name}')" data-bs-toggle="modal" data-bs-target="#modificaRuoliCanale">Cambia ruoli</button>
                 &nbsp;
-                <button type="button" class="btn btn-light" onclick="lockChannel('CHANNEL_USERS', '${channelRow.channel_name}', ${channelRow.locked})" data-bs-toggle="modal" data-bs-target="#modalToggleLock">
+                <button type="button" style="width: auto" class="btn pink-button mb-1" onclick="lockChannel('CHANNEL_USERS', '${channelRow.channel_name}', ${channelRow.locked})" data-bs-toggle="modal" data-bs-target="#modalToggleLock">
                     ${channelRow.locked ? 'Sblocca' : 'Blocca'}
                 </button>
                 </td>`;

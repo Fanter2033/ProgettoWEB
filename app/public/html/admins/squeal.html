@@ -9,6 +9,7 @@
             integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
             crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../../css/squealer.css">
+    <link rel="stylesheet" href="../../css/App.css">
     <script src="../../libraries/jquery/jquery.js"></script>
     <!-- Page defined scripts -->
     <script src="../../js/dashboardAdmin.js"></script>
@@ -30,7 +31,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                <button type="button" class="btn red-button" data-bs-dismiss="modal">Chiudi</button>
             </div>
         </div>
     </div>
@@ -51,7 +52,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                <button type="button" class="btn red-button" data-bs-dismiss="modal">Chiudi</button>
             </div>
         </div>
     </div>
@@ -74,8 +75,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
-                <button type="button" class="btn btn-warning" name="saveOperations" onclick="updateDestinationsSqueal()"
+                <button type="button" class="btn red-button" data-bs-dismiss="modal">Chiudi</button>
+                <button type="button" class="btn yellow-button" name="saveOperations" onclick="updateDestinationsSqueal()"
                         data-bs-dismiss="modal">Aggiorna destinatari
                 </button>
             </div>
@@ -104,8 +105,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
-                <button type="button" class="btn btn-success" name="saveOperations" onclick="updateReactionSqueal()"
+                <button type="button" class="btn red-button" data-bs-dismiss="modal">Chiudi</button>
+                <button type="button" class="btn green-button" name="saveOperations" onclick="updateReactionSqueal()"
                         data-bs-dismiss="modal">Aggiorna reazioni
                 </button>
             </div>
@@ -115,47 +116,29 @@
 <!-- Fine modale modifica reazioni -->
 <!-- Fine modali -->
 <div class="d-flex flex-nowrap" style="height: 100vh;">
-    <div class="d-flex flex-column flex-shrink-0 p-3" style="width: 280px;">
-        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-theme-adaptive text-decoration-none">
-            <svg class="bi pe-none me-2" width="40" height="32">
-                <use xlink:href="#bootstrap"></use>
-            </svg>
-            <span class="fs-4">Squealer</span>
-        </a>
-        <hr>
+    <div class="d-flex flex-column flex-shrink-0 p-3" style="width: 20%;">
         <ul class="nav nav-pills flex-column mb-auto">
             <li>
-                <a href="/admin/users" class="nav-link text-theme-adaptive">
+                <a href="/admin/users" class="nav-link yellow-button cool-font-xsm w-100 mb-1">
                     Utenti
                 </a>
             </li>
             <li>
-                <a href="/admin/squeal" class="nav-link active">
+                <a href="/admin/squeal" class="nav-link green-button cool-font-xsm w-100 mb-1">
                     Squeal
                 </a>
             </li>
             <li>
-                <a href="/admin/ochannels" class="nav-link text-theme-adaptive">
-                    §CANALI (Canali ufficiali)
+                <a href="/admin/ochannels" class="nav-link  yellow-button cool-font-xsm w-100 mb-1">
+                    §UFFICIALI
                 </a>
             </li>
             <li>
-                <a href="/admin/uchannels" class="nav-link text-theme-adaptive">
-                    §canali (Canali degli utenti)
+                <a href="/admin/uchannels" class="nav-link  yellow-button cool-font-xsm w-100 mb-1">
+                    §utenti
                 </a>
             </li>
         </ul>
-        <hr>
-        <div class="dropdown">
-            <a href="#" class="d-flex align-items-center text-theme-adaptive text-decoration-none dropdown-toggle"
-               data-bs-toggle="dropdown" aria-expanded="false">
-                Passa a...
-            </a>
-            <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                <li><a class="dropdown-item" href="#">Utente</a></li>
-                <li><a class="dropdown-item" href="#">Social Media Moderator</a></li>
-            </ul>
-        </div>
     </div>
     <div class="b-example-divider b-example-vr border border-secondary"></div>
     <div class="d-flex flex-column w-100">
@@ -166,7 +149,7 @@
                     <svg class="bi me-2" width="40" height="32">
                         <use xlink:href="#bootstrap"></use>
                     </svg>
-                    <span class="header-title">Squealer - Moderator Dashboard</span>
+                    <span class="header-title cool-font-medium color-my-yellow">Squealer - Moderator Dashboard</span>
                 </a>
 
                 <ul class="nav nav-pills">
@@ -179,7 +162,7 @@
                     </li>
                     &nbsp;
                     <li class="nav-item">
-                        <button type="button" class="btn btn-light" onclick="executeLogout();">Logout</button>
+                        <button type="button" class="btn red-button w-100" onclick="executeLogout();">Logout</button>
                     </li>
                 </ul>
             </header>

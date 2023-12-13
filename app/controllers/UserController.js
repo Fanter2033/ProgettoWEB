@@ -87,11 +87,12 @@ module.exports = class UserController extends Controller {
 
         let vipCtrl = new VipController(new VipModel());
         let vipCtrlOut = await vipCtrl.getVip(username);
-        if (vipCtrlOut['code'] !== 200) {
+        if (vipCtrlOut['code'] !== 404) {
             //To delete it should be 404
             output['code'] = 412;
             output['msg'] = 'Downgrade from VIP.';
             output['sub_code'] = 3;
+            return output;
         }
 
         //Before deleting quote information we should delete all channel relationship.

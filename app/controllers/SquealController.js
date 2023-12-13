@@ -962,8 +962,6 @@ module.exports = class SquealController extends Controller {
             return output;
         }
 
-        //TODO FARE CONTROLLI SU POSIZIONE ETC ETC
-
         let checkResult = await this.checkDestinations(squealDto.destinations);
 
         if (!checkResult) {
