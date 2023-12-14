@@ -8,7 +8,7 @@
         <SideBar/>
       </div>
       <div class="col-9 justify-content-center pt-4">
-        <div class="container-fluid d-flex justify-content-center">
+        <div class="container-fluid justify-content-center">
           <div class="">
             <div class="">
               <h3 ><b>Quick Squeal</b></h3>
@@ -22,15 +22,18 @@
             <div class="">
               <form>
                 <div class="form-group">
-                  <label class="col-form-label" for="recipient-name"
-                  >Destinatari:</label
-                  >
-                  <input
-                      id="dest"
-                      v-model="inputDest"
-                      class="form-control"
-                      type="text"
-                  />
+                  <div class="container-sm d-flex flex-column">
+                    <label class="col-form-label" for="recipient-name"
+                    >Destinatari:
+                    </label>
+                    <input
+                        id="dest"
+                        v-model="inputDest"
+                        class="form-control"
+                        type="text"
+                    />
+                  </div>
+
                 </div>
 
                 <!--input type-->

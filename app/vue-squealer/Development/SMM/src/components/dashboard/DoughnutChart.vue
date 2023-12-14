@@ -218,6 +218,10 @@ function switchView() {
 //navigate
 async function nextSqueal() {
   if (index.value < store.getters.getDoughnutChart.length - 1) {
+    try {
+      map.remove();
+    } catch (e){
+    }
     index.value = index.value + 1;
     console.log(index.value);
     await getSquealData(store.getters.getDoughnutChart[index.value]);
@@ -247,16 +251,21 @@ function fixYTUrl(url) {
   }
 }
 
+//build the map for the position's squeal
 function initMap(lat, lng) {
-  const map = L.map("map", {
-    center: L.latLng(lat, lng),
-    zoom: 14,
-  });
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: "© OpenStreetMap",
-  }).addTo(map)
+  try{
+    const map = L.map("map", {
+      center: L.latLng(lat, lng),
+      zoom: 14,
+    });
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "© OpenStreetMap",
+    }).addTo(map)
+    console.log("mapping")
+    L.marker([lat, lng]).addTo(map)
+  } catch (e) {
+  }
 
-  L.marker([lat, lng]).addTo(map)
 }
 
 //e quiiii aspettiamo le funzioni di Denis
@@ -278,6 +287,8 @@ onUpdated(() => {
     initMap(actualSqueal.value.lat, actualSqueal.value.lng);
   }
 })
+
+
 
 
 </script>
