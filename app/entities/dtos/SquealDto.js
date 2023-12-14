@@ -47,7 +47,7 @@ module.exports = class SquealDto {
         }
     }
 
-    getComments(){
+    getComments() {
         let out = [];
         for (const comment of this.#comments)
             out.push(comment.getDocumentAttachSqueal());
@@ -88,7 +88,7 @@ module.exports = class SquealDto {
                 out.destinations.push(dst);
         }
 
-        if(getReaction){
+        if (getReaction) {
             out['reaction'] = this.#reaction
         }
 
@@ -113,7 +113,13 @@ module.exports = class SquealDto {
      * @param {ChannelDto} cDto
      */
     insertDestination(cDto) {
-        this.#destinations.push(cDto);
+        let found = false;
+        for (const cDtoElement of this.#destinations)
+            if (cDtoElement.type === cDto.type && cDtoElement.channel_name === cDto.channel_name)
+                found = true;
+
+        if (found === false)
+            this.#destinations.push(cDto);
     }
 
     /**
