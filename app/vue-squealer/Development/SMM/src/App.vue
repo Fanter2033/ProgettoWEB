@@ -318,6 +318,16 @@ body {
   cursor: pointer;
 }
 
+.green-button-static {
+  background-color: var(--squeal-green);
+  color: var(--squeal-yellow);
+
+  border: none;
+
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
 .red-button:hover {
   background-color: var(--squeal-yellow);
 }

@@ -108,6 +108,7 @@ export default defineComponent({
           })
     },
 
+    //get the squeals id of a user
     updateSquealData(vipName) {
       const squealDataUri = VueConfig.base_url_requests +
           "/utils/squeals/" +
@@ -125,15 +126,19 @@ export default defineComponent({
             console.error("Error fetching data");
           })
           .then((data) => {
-            this.$store.commit('setDoughnutChart', data);
-            console.log(data[0]);
+            let arrayToCommit = [];
+            for(let i=0; i< data.length; i++){
+              arrayToCommit.push(data[i]._id);
+            }
+            this.$store.commit('setDoughnutChart', arrayToCommit);
+            console.log(this.$store.getters.getDoughnutChart[0]);
           })
           .catch((error) => {
             console.error("Network error", error);
           })
     }
   },
-  mounted() {
+  beforeMount() {
     this.$store.commit('setLineChartData', {})
     this.updateSquealData(this.$route.params.vip);
   },

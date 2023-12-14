@@ -16,11 +16,10 @@
                     <i class="bi bi-person-check"></i>
                   <span class="mx-3 d-none d-lg-inline">Linked Accounts </span>
                 </router-link></a></li>
-                <li class="nav-item"><a class="nav-link" @onclick="this.logOut()">
-                  <router-link to="/">
+                <li class="nav-item"><a class="nav-link" @click="logOut">
                     <i class="bi bi-box-arrow-right"></i>
                     <span class="mx-3 d-none d-lg-inline">Log Out</span>
-                  </router-link></a></li>
+                </a></li>
             </ul>
         </div>
     </nav>
@@ -30,20 +29,26 @@
 
 <script>
     import VueConfig from "@/config/VueConfig";
+    import router from "../router"
 
     export default {
         name : 'Nav',
         methods: {
           logOut(){
+            console.log("bye");
             const uri = VueConfig.base_url_requests +'/auth/logout';
             fetch(uri,{
               method: 'POST',
               credentials: 'include',
               mode: 'cors',
+              headers: {
+                "Content-Type": "application/json",
+              }
             })
                 .then((res)=>{
-                  if(!res.ok)
-                    console.error("Error logging out")
+                  if(res.ok){
+                    router.push("/")
+                  }
                 })
                 .catch((error)=>{
                   console.error("Network error", error);

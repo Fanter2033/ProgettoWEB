@@ -27,11 +27,13 @@
           ><span class="d-none d-lg-inline">Quote</span>
         </router-link>
       </li>
-      <li>
-        <div>
-          <Squeal :vip="vipName"/>
-        </div>
+      <li class="py-1" >
+        <router-link :to="{ name:'Squeal', params: {vip: vipName} }" class="border rounded p-1 border-warning box" style="background-color: #528b57"  >
+          <i class="bi bi-send"></i>
+          <span class="d-none d-lg-inline">Quick Squeal</span>
+        </router-link>
       </li>
+      
     </ul>
   </li>
 </template>

@@ -86,6 +86,7 @@ import VueConfig from "@/config/VueConfig";
 import {useRoute} from 'vue-router'
 import {onMounted, onUpdated, reactive, watch} from "vue";
 import {ref} from "vue";
+import {useToast} from "vue-toastification";
 
 const route = useRoute();
 const VipName = ref('');
@@ -93,6 +94,7 @@ const isMouseOver = ref(false);
 const state = reactive({
   modal_demo: null,
 });
+const toast = useToast();
 
 onMounted(() => {
   VipName.value = route.params.vip;
@@ -102,6 +104,27 @@ onMounted(() => {
       {},
   );
 })
+
+function showToast(type,msg) {
+  const options = {
+    position: "top-right",
+    timeout: 5000,
+    closeOnClick: true,
+    pauseOnFocusLoss: true,
+    pauseOnHover: true,
+    draggable: true,
+    draggablePercent: 0.6,
+    showCloseButtonOnHover: false,
+    hideProgressBar: true,
+    closeButton: "button",
+    icon: true,
+    rtl: false
+  }
+  if (type === 'success')
+    toast.success(msg, options);
+  else if (type === 'warning')
+    toast.warning(msg, options);
+}
 
 function openModal() {
   state.modal_demo.show();
@@ -166,8 +189,10 @@ async function refillQuote() {
   })
       .then((res) => {
         if (res.ok) {
+          showToast('success', "Quote Refilled")
           return res.json();
         }
+        showToast('warning', "Ops, qualcosa è andato storto")
         console.error("Error refill quote");
       })
       .catch((error) => {

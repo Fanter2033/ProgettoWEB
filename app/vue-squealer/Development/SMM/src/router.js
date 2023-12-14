@@ -4,7 +4,7 @@ import DashBoard from "./components/dashboard/DashBoard.vue";
 import Chart from "@/components/dashboard/Chart.vue";
 import Quote from "@/components/dashboard/Quote.vue";
 import LinkedAccounts from "@/components/LinkedAccounts.vue";
-
+import Squeal from "@/components/dashboard/Squeal.vue"
 
 
 const routes = [
@@ -33,6 +33,11 @@ const routes = [
             name: "Quote",
             component: Quote
           },
+          {
+            path: "/dashboard/squeal/:vip",
+            name: "Squeal",
+            component: Squeal
+          }
 ];
 
 const router = createRouter({
