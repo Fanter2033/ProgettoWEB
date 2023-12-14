@@ -1,174 +1,185 @@
 <template>
-  <button id="squealButton" class="btn" type="button" @click="openModal">
-    <i class="bi bi-send-plus"></i>
-    <span class="d-none d-lg-inline">Quick Squeal</span>
-  </button>
-
-  <div id="quickSqueal" aria-hidden="true" class="modal fade" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3 class="modal-title"><b>Quick Squeal</b></h3>
-          <h6>Quote available:</h6>
-        </div>
-        <div class="modal-body">
-          <form>
-            <div class="form-group">
-              <label class="col-form-label" for="recipient-name"
-                >Destinatari:</label
-              >
-              <input
-                id="dest"
-                v-model="inputDest"
-                class="form-control"
-                type="text"
-              />
+  <div class="container-fluid mx-0 px-0">
+    <div class="row">
+      <Nav/>
+    </div>
+    <div class="row d-flex">
+      <div class="col-2">
+        <SideBar/>
+      </div>
+      <div class="col-9 justify-content-center pt-4">
+        <div class="container-fluid d-flex justify-content-center">
+          <div class="">
+            <div class="">
+              <h3 ><b>Quick Squeal</b></h3>
+              <lord-icon
+                  src="https://cdn.lordicon.com/ayhtotha.json"
+                  trigger="in"
+                  colors="primary:#e0bb76"
+                  style="width:50px;height:50px">
+              </lord-icon>
             </div>
+            <div class="">
+              <form>
+                <div class="form-group">
+                  <label class="col-form-label" for="recipient-name"
+                  >Destinatari:</label
+                  >
+                  <input
+                      id="dest"
+                      v-model="inputDest"
+                      class="form-control"
+                      type="text"
+                  />
+                </div>
 
-            <!--input type-->
-            <div class="mb-3 mt-3 d-flex flex-column align-items-center">
-              <div class="tipsText">
-                <p v-if="viewTips !== ''">{{ viewTips }}</p>
-              </div>
-              <div class="btn-group p-2" role="group">
-                <button
-                  class="bottoni_omologati"
-                  type="button"
-                  @click="inputType = 'MESSAGE_TEXT'"
-                  @mouseover="viewTips = 'message text'"
-                >
-                  <i class="bi bi-pencil-fill inputIco"></i>
-                </button>
-                <button
-                  class="bottoni_omologati"
-                  type="button"
-                  @click="inputType = 'IMAGE'"
-                  @mouseover="viewTips = 'image'"
-                >
-                  <i class="bi bi-card-image inputIco"></i>
-                </button>
-                <button
-                  class="bottoni_omologati"
-                  type="button"
-                  @click="inputType = 'VIDEO_URL'"
-                  @mouseover="viewTips = 'YouTube video'"
-                >
-                  <i class="bi bi-youtube inputIco"></i>
-                </button>
-                <button
-                  class="bottoni_omologati"
-                  type="button"
-                  @click="inputType = 'POSITION'"
-                  @mouseover="viewTips = 'any position'"
-                >
-                  <i class="bi bi-globe-europe-africa inputIco"></i>
-                </button>
-                <button
-                  class="bottoni_omologati"
-                  type="button"
-                  @click="inputType = 'TEXT_AUTO'"
-                  @mouseover="viewTips = 'timed message'"
-                >
-                  <i class="bi bi-clock-history inputIco"></i>
-                </button>
-              </div>
-            </div>
+                <!--input type-->
+                <div class="mb-3 mt-3 d-flex flex-column align-items-center">
+                  <div class="tipsText">
+                    <p v-if="viewTips !== ''">{{ viewTips }}</p>
+                  </div>
+                  <div class="btn-group p-2" role="group">
+                    <button
+                        class="bottoni_omologati"
+                        type="button"
+                        @click="inputType = 'MESSAGE_TEXT'"
+                        @mouseover="viewTips = 'message text'"
+                    >
+                      <i class="bi bi-pencil-fill inputIco"></i>
+                    </button>
+                    <button
+                        class="bottoni_omologati"
+                        type="button"
+                        @click="inputType = 'IMAGE'"
+                        @mouseover="viewTips = 'image'"
+                    >
+                      <i class="bi bi-card-image inputIco"></i>
+                    </button>
+                    <button
+                        class="bottoni_omologati"
+                        type="button"
+                        @click="inputType = 'VIDEO_URL'"
+                        @mouseover="viewTips = 'YouTube video'"
+                    >
+                      <i class="bi bi-youtube inputIco"></i>
+                    </button>
+                    <button
+                        class="bottoni_omologati"
+                        type="button"
+                        @click="inputType = 'POSITION'"
+                        @mouseover="viewTips = 'any position'"
+                    >
+                      <i class="bi bi-globe-europe-africa inputIco"></i>
+                    </button>
+                    <button
+                        class="bottoni_omologati"
+                        type="button"
+                        @click="inputType = 'TEXT_AUTO'"
+                        @mouseover="viewTips = 'timed message'"
+                    >
+                      <i class="bi bi-clock-history inputIco"></i>
+                    </button>
+                  </div>
+                </div>
 
-            <!--input form-->
-            <div class="form-group">
-              <div v-if="inputType === 'MESSAGE_TEXT'">
-                <label class="col-form-label" for="message-text"
-                  >Write something</label
-                >
-                <textarea
-                  id="message-text"
-                  v-model="inputContent"
-                  class="form-control"
-                  name="message-text"
-                ></textarea>
-              </div>
+                <!--input form-->
+                <div class="form-group">
+                  <div v-if="inputType === 'MESSAGE_TEXT'">
+                    <label class="col-form-label" for="message-text"
+                    >Write something</label
+                    >
+                    <textarea
+                        id="message-text"
+                        v-model="inputContent"
+                        class="form-control"
+                        name="message-text"
+                    ></textarea>
+                  </div>
 
-              <div v-else-if="inputType === 'IMAGE'">
-                <label for="message-image">Share a image</label>
-                <br />
-                <input
-                  id="message-image"
-                  accept="image/png, image/jpeg"
-                  class="col-form-label"
-                  name="message-image"
-                  type="file"
-                  @change="handelImage"
-                />
-              </div>
-
-              <div v-else-if="inputType === 'VIDEO_URL'" class="p-2">
-                <label class="col-form-label" for="message-video"
-                  >Share a YouTube video</label
-                >
-                <br />
-                <input
-                  id="message-video"
-                  v-model="inputContent"
-                  name="message-video"
-                  type="url"
-                />
-              </div>
-
-              <div v-else-if="inputType === 'POSITION'">
-                <Map />
-              </div>
-
-              <div v-else-if="inputType === 'TEXT_AUTO'">
-                <div>
-                  <div class="d-flex flex-nowrap justify-content-between mb-1">
-                    <label class="me-2" for="number1">
-                      Quante ripetizioni?
-                    </label>
+                  <div v-else-if="inputType === 'IMAGE'">
+                    <label for="message-image">Share a image</label>
+                    <br />
                     <input
-                      id="number1"
-                      v-model="inputNumberRep"
-                      min="1"
-                      type="number"
-                      class="border rounded"
+                        id="message-image"
+                        accept="image/png, image/jpeg"
+                        class="col-form-label"
+                        name="message-image"
+                        type="file"
+                        @change="handelImage"
                     />
                   </div>
-                  <div class="d-flex flex-nowrap justify-content-between mb-1">
-                    <label class="me-2" for="number2">
-                      Ogni quanti secondi?
-                    </label>
+
+                  <div v-else-if="inputType === 'VIDEO_URL'" class="p-2">
+                    <label class="col-form-label" for="message-video"
+                    >Share a YouTube video</label
+                    >
+                    <br />
                     <input
-                        id="number2"
-                        v-model="inputSecRep"
-                        type="number"
-                        class="border rounded"
-                        min="1"/>
+                        id="message-video"
+                        v-model="inputContent"
+                        name="message-video"
+                        type="url"
+                    />
                   </div>
-                  <textarea
-                    class="container border rounded"
-                    placeholder="Inserisci il testo del post..."
-                    v-model="inputContent"
-                  ></textarea>
+
+                  <div v-else-if="inputType === 'POSITION'">
+                    <Map />
+                  </div>
+
+                  <div v-else-if="inputType === 'TEXT_AUTO'">
+                    <div>
+                      <div class="d-flex flex-nowrap justify-content-between mb-1">
+                        <label class="me-2" for="number1">
+                          Quante ripetizioni?
+                        </label>
+                        <input
+                            id="number1"
+                            v-model="inputNumberRep"
+                            min="1"
+                            type="number"
+                            class="border rounded"
+                        />
+                      </div>
+                      <div class="d-flex flex-nowrap justify-content-between mb-1">
+                        <label class="me-2" for="number2">
+                          Ogni quanti secondi?
+                        </label>
+                        <input
+                            id="number2"
+                            v-model="inputSecRep"
+                            type="number"
+                            class="border rounded"
+                            min="1"/>
+                      </div>
+                      <textarea
+                          class="container border rounded"
+                          placeholder="Inserisci il testo del post..."
+                          v-model="inputContent"
+                      ></textarea>
+                    </div>
+                  </div>
                 </div>
+              </form>
+              <div class="">
+                <button
+                    id="closeBtn"
+                    class="btn"
+                    type="button"
+                >
+                  Close
+                </button>
+                <button class="btn btn-primary" type="button" @click="postSqueal">
+                  Post from {{ vipName }}
+                </button>
               </div>
             </div>
-          </form>
-          <div class="modal-footer">
-            <button
-              id="closeBtn"
-              class="btn btn-secondary"
-              type="button"
-              @click="closeModal"
-            >
-              Close
-            </button>
-            <button class="btn btn-primary" type="button" @click="postSqueal">
-              Post from {{ vipName }}
-            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+
 </template>
 
 <script setup>
@@ -178,8 +189,12 @@ import { ref } from "vue";
 import { store } from "@/store";
 import Map from "@/components/dashboard/Map.vue";
 import {useToast} from "vue-toastification";
+import {useRouter, useRoute} from "vue-router"
+import Nav from "@/components/Nav.vue";
+import SideBar from "@/components/dashboard/SideBar.vue";
 
 const toast = useToast()
+const route = useRoute();
 function showToast(type){
   const options = {
     position: "top-right",
@@ -207,33 +222,14 @@ const components = defineComponent({
 const props = defineProps({
   vip: String,
 });
-const vipName = ref("");
+const vipName = ref(route.params.vip);
 const viewTips = ref("message text");
-const state = reactive({
-  modal_demo: null,
-});
 const inputType = ref("MESSAGE_TEXT");
 const inputDest = ref([]);
 const inputContent = ref("");
 const inputNumberRep = ref(1);
 const inputSecRep = ref(0);
 
-onMounted(() => {
-  vipName.value = props.vip;
-  state.modal_demo = new bootstrap.Modal(
-    document.getElementById("quickSqueal"),
-    {},
-  );
-});
-
-/*modal functions*/
-function openModal() {
-  state.modal_demo.show();
-}
-
-function closeModal() {
-  state.modal_demo.hide();
-}
 
 /*check dei destinatari*/
 function checkDest() {
@@ -290,14 +286,14 @@ function assembleContent() {
         store.getters.getSInCoor[0] != null &&
         store.getters.getSInCoor[1] != null
       )
-        body = String([
+        body = [
           store.getters.getSInCoor[0],
           store.getters.getSInCoor[1],
-        ]);
+        ];
       else body = null;
       break;
     case "TEXT_AUTO":
-      if(inputContent.value.length > 0 && inputNumberRep > 0 && inputSecRep > 0)
+      if(inputContent.value.length > 0 && inputNumberRep.value > 0 && inputSecRep.value > 0)
         body = inputContent.value;
       break;
   }
@@ -341,6 +337,7 @@ function postSqueal() {
       .then((res)=>{
         if(res.ok){
           showToast('success');
+          setTimeout(()=>{location.reload()},2000);
         } else {
           console.error("Error during post");
           showToast('warning');
@@ -353,17 +350,6 @@ function postSqueal() {
 </script>
 
 <style>
-.modal-title {
-  color: #e0bb76;
-}
-
-.btn {
-  background-color: #528b57;
-}
-
-.modal-content {
-  background-color: #072f38;
-}
 
 .bottoni_omologati {
   width: 3em;

@@ -20,6 +20,7 @@ const ChannelRoleDto = require("../entities/dtos/ChannelRoleDto");
 const CommentModel = require("../models/CommentModel");
 const CommentDto = require("../entities/dtos/CommentDto");
 
+
 module.exports = class SquealController extends Controller {
 
 
@@ -215,13 +216,14 @@ module.exports = class SquealController extends Controller {
      * @param authenticatedUser {UserDto}
      * @param autoSqueal {SquealTextAutoDto}
      * @param fromAdmin {boolean}
+     * @param fromSmm {boolean}
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
-    async postSqueal(squealDto, authenticatedUser, autoSqueal, fromAdmin = false) {
+    async postSqueal(squealDto, authenticatedUser, autoSqueal, fromAdmin = false, fromSmm = false) {
         let output = this.getDefaultOutput();
         squealDto.sender = authenticatedUser.username;
 
-        if (this.isObjectVoid(authenticatedUser)) {
+        if (fromSmm === false && this.isObjectVoid(authenticatedUser)) {
             output['code'] = 403;
             output['msg'] = 'Please Login.'
             return output;
@@ -439,6 +441,41 @@ module.exports = class SquealController extends Controller {
 
         output['content'] = squealDto.getDocument();
         return output;
+    }
+
+
+    /**
+     *
+     * @param squealDto
+     * @param authenticatedSmm
+     * @param autoSqueal
+     * @param vipUsername
+     * @param fromAdmin
+     * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
+     */
+    async postSquealFromSmm(squealDto, authenticatedSmm, autoSqueal, vipUsername, fromAdmin = false) {
+        let output = this.getDefaultOutput();
+        squealDto.sender = vipUsername;
+        let userCtrl = new UserController(new UserModel());
+
+        if (this.isObjectVoid(authenticatedSmm)) {
+            output['code'] = 403;
+            output['msg'] = 'Please Login.'
+            return output;
+        }
+
+        const authenticatedUser = await userCtrl.getUser(vipUsername);
+        const authUserDto = new UserDto(authenticatedUser.content)
+
+        const postSquealRes = await this.postSqueal(squealDto, authUserDto, autoSqueal, fromAdmin,true);
+
+        if (postSquealRes['code'] !== 200){
+            output['code'] = postSquealRes['code'];
+            output['msg'] = postSquealRes['msg'];
+            return output;
+        }
+
+        return postSquealRes;
     }
 
     /**
@@ -915,6 +952,7 @@ module.exports = class SquealController extends Controller {
      * @param authenticatedSmm {UserDto}
      * @param autoSqueal
      * @param vipUsername {string}
+     * @param fromAdmin
      * @returns {Promise<{msg: string, code: number, sub_code: number, content: {}}>}
      */
     async postSquealFromSmm(squealDto, authenticatedSmm, autoSqueal, vipUsername) {

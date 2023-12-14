@@ -8,34 +8,34 @@
         <SideBar/>
       </div>
 
-      <div class="col-10 pt-sm-5 pt-3">
-        <h1>Situazione quota di  <b>{{ VipName }}</b></h1>
+      <div class="col-10 pt-sm-5 pt-3 cool-font-xsm ">
+        <h1>Situazione quota di  <u>{{ VipName }}</u></h1>
         <button
             id="greenButton"
-            class="btn"
+            class="btn green-button m-4 p-3"
             @click="getQuoteInfo">
           <i class="bi bi-arrow-clockwise"></i>
-          Refresh
+          <span class="d-none d-lg-inline">Refresh</span>
         </button>
 
-        <div class="card mt-3">
+        <div class="card bg-dark mt-3 m-5 d-flex justify-content-center align-items-center box">
           <div class="card-body">
-            <h4>Daily quote remaining: <b>{{ quote.rem_daily }}</b></h4>
-            <h4>Weekly quote remaining: <b>{{ quote.rem_weekly }}</b></h4>
-            <h4>Monthly quote remaining: <b>{{ quote.rem_monthly }}</b></h4>
+            <h4>Daily quote remaining: <u>{{ quote.rem_daily }}</u></h4>
+            <h4>Weekly quote remaining: <u>{{ quote.rem_weekly }}</u></h4>
+            <h4>Monthly quote remaining: <u>{{ quote.rem_monthly }}</u></h4>
           </div>
         </div>
 
-        <div class="card mt-3">
-          <div class="card-body">
-            <h4>Daily quote limit: <b>{{ quote.limit_daily }}</b></h4>
-            <h4>Weekly quote limit: <b>{{ quote.limit_weekly }}</b></h4>
-            <h4>Monthly quote limit: <b>{{ quote.limit_monthly }}</b></h4>
+        <div class="card bg-dark mt-3 m-5 d-flex justify-content-center align-items-center box">
+          <div class="card-body" >
+            <h4>Daily quote limit: <u>{{ quote.limit_daily }}</u></h4>
+            <h4>Weekly quote limit: <u>{{ quote.limit_weekly }}</u></h4>
+            <h4>Monthly quote limit: <u>{{ quote.limit_monthly }}</u></h4>
           </div>
         </div>
 
 
-        <button class="btn bg-warning mt-3" @mouseover="isMouseOver=true" @mouseleave="isMouseOver=false"
+        <button class="btn yellow-button" @mouseover="isMouseOver=true" @mouseleave="isMouseOver=false"
                 @click="openModal">
           <i v-if="!isMouseOver" class="bi bi-lightning"></i>
           <i v-if="isMouseOver" class="bi bi-lightning-fill"></i>
@@ -61,11 +61,11 @@
                 <h5>prezzo: </h5>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-danger" id="close" @click="closeModal">
-                  Close
+                <button type="button" class="btn red-button w-25" id="close" @click="closeModal">
+                  <span>Close</span>
                 </button>
-                <button type="button" class="btn" id="submit" @click="refillQuote">
-                  Confirm
+                <button type="button" class="btn green-button w-25" id="submit" @click="refillQuote">
+                  <span class="m-1">Refill</span>
                 </button>
 
               </div>
@@ -86,6 +86,7 @@ import VueConfig from "@/config/VueConfig";
 import {useRoute} from 'vue-router'
 import {onMounted, onUpdated, reactive, watch} from "vue";
 import {ref} from "vue";
+import {useToast} from "vue-toastification";
 
 const route = useRoute();
 const VipName = ref('');
@@ -93,6 +94,7 @@ const isMouseOver = ref(false);
 const state = reactive({
   modal_demo: null,
 });
+const toast = useToast();
 
 onMounted(() => {
   VipName.value = route.params.vip;
@@ -102,6 +104,27 @@ onMounted(() => {
       {},
   );
 })
+
+function showToast(type,msg) {
+  const options = {
+    position: "top-right",
+    timeout: 5000,
+    closeOnClick: true,
+    pauseOnFocusLoss: true,
+    pauseOnHover: true,
+    draggable: true,
+    draggablePercent: 0.6,
+    showCloseButtonOnHover: false,
+    hideProgressBar: true,
+    closeButton: "button",
+    icon: true,
+    rtl: false
+  }
+  if (type === 'success')
+    toast.success(msg, options);
+  else if (type === 'warning')
+    toast.warning(msg, options);
+}
 
 function openModal() {
   state.modal_demo.show();
@@ -166,8 +189,10 @@ async function refillQuote() {
   })
       .then((res) => {
         if (res.ok) {
+          showToast('success', "Quote Refilled")
           return res.json();
         }
+        showToast('warning', "Ops, qualcosa è andato storto")
         console.error("Error refill quote");
       })
       .catch((error) => {

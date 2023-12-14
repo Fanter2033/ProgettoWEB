@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container mb-5">
     <div class="d-flex justify-content-around">
       <div class="d-flex align-items-center">
         <button class="btn nav-button" @click="prevSqueal">
@@ -7,22 +7,27 @@
         </button>
       </div>
 
-      <div class="card " style="width: 18rem;">
-        <div class="card-header"><h5>Squeal del {{ actualSqueal.date }}</h5></div>
+      <div class="card box squeal chill-font-xsm" style="width: 18rem;">
+        <div class="card-header">
+          <h5>Squeal del {{ actualSqueal.date }}</h5>
+          <h6>Desinazioni: {{ actualSqueal.dest }}</h6>
+        </div>
         <div class="card-body">
-          <div v-if="actualSqueal.type === 'MESSAGE_TEXT'"><p
-              class="card-text border rounded p-1"> {{ actualSqueal.content }}
+          <div v-if="actualSqueal.type === 'MESSAGE_TEXT' || actualSqueal.type === 'TEXT_AUTO'"><p
+              class="card-text border rounded border-dark p-1 bg-white reg-font-xsm"
+              style="text-align: start; color: #282c34"> {{ actualSqueal.content }}
           </p></div>
 
           <div v-else-if="actualSqueal.type === 'IMAGE'"><img
-              :src="'data:image/jpeg;base64,' + actualSqueal.content" alt="squeal image" class="border rounded">
+              :src="'data:image/jpeg;base64,' + actualSqueal.content" alt="squeal image"
+              class="border rounded border-dark box">
           </div>
 
           <div v-else-if="actualSqueal.type === 'VIDEO_URL'">
             <div class="row">
               <iframe :src=" '//www.youtube.com/embed/' + fixYTUrl(actualSqueal.content)"
                       allow="accelerometer; autoplay; web-share" allowfullscreen
-                      class="col-lg-12 col-md-12 col-sm-12"
+                      class="col-lg-12 col-md-12 col-sm-12 box bg-dark"
                       title="YouTube video player"></iframe>
             </div>
           </div>
@@ -33,16 +38,39 @@
           </div>
 
         </div>
-        <div class="card-footer text-muted">
-          costo: {{ actualSqueal.cost }}
+        <div class="card-footer text-muted reg-font-xsm d-flex justify-content-between align-items-center"
+             style="text-align: start">
+          <div>
+            costo: {{ actualSqueal.cost }}
+          </div>
+          <div>
+            <!--change view button-->
+            <button class="btn align-items-center border rounded border-dark" @click="switchView">
+              <i class="bi bi-chat-text" v-if="!showComments"></i>
+              <i class="bi bi-pie-chart" v-else-if="showComments"></i>
+            </button>
+          </div>
+          <div>
+            {{ index + 1 }} di {{ listLength }}
+          </div>
         </div>
       </div>
-      <div class="card" style="width: 18rem;">
+
+      <div class="card box squeal" style="width: 18rem">
         <div class="card-body">
-          <Doughnut
-              ref="chart"
-              :data="chartData"
-              :options="chartOptions"/>
+          <div v-if="!showComments">
+            <Doughnut
+                ref="chart"
+                :data="chartData"
+                :options="chartOptions"/>
+
+          </div>
+          <div v-else-if="showComments" class="overflow-auto">
+            <h3 class="chill-font-small">Commenti</h3>
+            <div v-for="comment in commentsToPrint" class="rounded">
+              <p><b>{{comment.username}}</b> - {{comment.comment}}</p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -57,49 +85,108 @@
 </template>
 
 <script setup>
-import {onMounted, onUpdated, ref, watch} from "vue";
+import {onBeforeMount, onMounted, onUpdated, ref, watch} from "vue";
 import {Chart as ChartJS, ArcElement, Tooltip, Legend} from 'chart.js'
 import {Doughnut} from "vue-chartjs";
 import {useStore} from "vuex";
 import L from "leaflet"
+import {func} from "joi";
+import VueConfig from "@/config/VueConfig";
 
 const store = useStore();
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const actualSqueal = ref({});
+const actualFetched = ref({});
+const actualComments = ref({});
+const showComments = ref(false);
 const index = ref(0);
+const listLength = ref(store.getters.getDoughnutChart.length)
 const loaded = ref(false);
-const chartData = ref( {
+const chartData = ref({
   labels: ['pos', 'neg'],
   datasets: [{
     backgroundColor: ['#498bff', '#de2525'],
-    data: [store.getters.getDoughnutChart[index.value].positive_value,
-      store.getters.getDoughnutChart[index.value].negative_value],
+    data: [actualFetched.value.positive_value,
+      actualFetched.value.negative_value],
   }]
 });
 
-watch(index, ()=>{
+watch(actualFetched, () => {
   chartData.value = {
     labels: ['pos', 'neg'],
     datasets: [{
       backgroundColor: ['#498bff', '#de2525'],
-      data: [store.getters.getDoughnutChart[index.value].positive_value,
-        store.getters.getDoughnutChart[index.value].negative_value],
+      data: [actualFetched.value.positive_value,
+        actualFetched.value.negative_value],
     }],
   };
 })
 
-function assebleSqueal() {
+//fetch the squeal given the id
+async function getSquealData(id) {
+  const uri = VueConfig.base_url_requests +
+      "/squeal/" + id;
+  await fetch(uri, {
+    method: 'GET',
+    mode: 'cors',
+    credentials: 'include'
+  })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          console.error("Error fetching squeal");
+        }
+      }).then((data) => {
+        actualFetched.value = data;
+        console.log("actual fetched from fetch" + actualFetched.value);
+      })
+      .catch((error) => {
+        console.error("Network error", error);
+      })
+}
+
+//get the comments
+async function getSquealComments(id) {
+  const uri = VueConfig.base_url_requests +
+      "/squeal/" + id + "/comment/";
+  await fetch(uri, {
+    method: 'GET',
+    mode: 'cors',
+    credentials: 'include'
+  })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          console.error("Error fetching squeal");
+        }
+      }).then((data) => {
+        actualComments.value = data;
+        console.log("comments" + actualComments.value);
+      })
+      .catch((error) => {
+        console.error("Network error", error);
+      })
+}
+
+
+function assebleSqueal(squealFromServer) {
+  console.log("squeal from server:" + squealFromServer);
   loaded.value = false;
-  const squealDate = new Date(store.getters.getDoughnutChart[index.value].date * 1000);
+  const squealDate = new Date(squealFromServer.date * 1000);
   actualSqueal.value = {
     date: squealDate.getDate() + '/' + (squealDate.getMonth() + 1) + '/' + squealDate.getFullYear(),
-    content: store.getters.getDoughnutChart[index.value].content,
-    cost: store.getters.getDoughnutChart[index.value].quote_cost,
-    type: store.getters.getDoughnutChart[index.value].message_type,
+    content: squealFromServer.content,
+    cost: squealFromServer.quote_cost,
+    type: squealFromServer.message_type,
+    dest: squealFromServer.destinations,
   }
-  if(store.getters.getDoughnutChart[index.value].message_type === 'POSITION'){
-    let coordinates = (store.getters.getDoughnutChart[index.value].content).split(',');
+  if (squealFromServer.message_type === 'POSITION') {
+    let coorFromSqueal = squealFromServer.content;
+    console.log("coor:" + coorFromSqueal);
+    let coordinates = String(coorFromSqueal).split(',');
     let lat = coordinates[0];
     let lng = coordinates[1];
     actualSqueal.value.lat = lat;
@@ -108,19 +195,44 @@ function assebleSqueal() {
   loaded.value = true;
 }
 
-function nextSqueal() {
-  if (index.value < store.getters.getDoughnutChart.length - 1) {
-    index.value = index.value + 1;
-    console.log(index.value)
-    assebleSqueal();
+const commentsToPrint = ref([]);
+function assebleComments(commentsFromServer) {
+  for(let i=0; i<commentsFromServer.length; i++){
+    let iter = {
+      username: commentsFromServer[i].username,
+      comment: commentsFromServer[i].comment,
+    }
+    commentsToPrint.value.push(iter);
   }
 }
 
-function prevSqueal() {
+
+function switchView() {
+  if(showComments.value === false){
+    assebleComments(actualComments.value)
+  }
+  showComments.value = !showComments.value;
+  console.log(showComments.value);
+}
+
+//navigate
+async function nextSqueal() {
+  if (index.value < store.getters.getDoughnutChart.length - 1) {
+    index.value = index.value + 1;
+    console.log(index.value);
+    await getSquealData(store.getters.getDoughnutChart[index.value]);
+    await getSquealComments(store.getters.getDoughnutChart[index.value])
+    assebleSqueal(actualFetched.value);
+  }
+}
+
+async function prevSqueal() {
   if (index.value > 0) {
     index.value = index.value - 1;
     console.log(index.value)
-    assebleSqueal();
+    await getSquealData(store.getters.getDoughnutChart[index.value]);
+    await getSquealComments(store.getters.getDoughnutChart[index.value])
+    assebleSqueal(actualFetched.value);
   }
 }
 
@@ -135,9 +247,9 @@ function fixYTUrl(url) {
   }
 }
 
-function initMap(lat,lng){
-  const map = L.map("map",{
-    center: L.latLng(lat,lng),
+function initMap(lat, lng) {
+  const map = L.map("map", {
+    center: L.latLng(lat, lng),
     zoom: 14,
   });
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -154,27 +266,28 @@ const chartOptions = ref({
   maintainAspectRatio: false
 })
 
-onMounted(() => {
+onBeforeMount(async () => {
   index.value = 0;
-  console.log('i ' + index.value)
-  assebleSqueal()
+  await getSquealData(store.getters.getDoughnutChart[index.value]);
+  await getSquealComments(store.getters.getDoughnutChart[index.value])
+  assebleSqueal(actualFetched.value);
 })
 
-onUpdated(()=>{
-  if(actualSqueal.value.type === 'POSITION'){
+onUpdated(() => {
+  if (actualSqueal.value.type === 'POSITION') {
     initMap(actualSqueal.value.lat, actualSqueal.value.lng);
   }
-
 })
 
 
 </script>
 
 <style>
-  @import "leaflet/dist/leaflet.css";
-  .nav-button{
-    border-radius: 50%;
-    height: fit-content;
+@import "leaflet/dist/leaflet.css";
 
-  }
+.nav-button {
+  border-radius: 50%;
+  height: fit-content;
+  background-color: #528b57;
+}
 </style>
