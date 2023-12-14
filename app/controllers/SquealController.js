@@ -46,6 +46,13 @@ module.exports = class SquealController extends Controller {
     async getSqueal(identifier, authenticatedUser, session_id, escapeAddImpression = false) {
         let output = this.getDefaultOutput();
 
+        identifier = parseInt(identifier);
+        if(isNaN(identifier)){
+            output['code'] = 400;
+            output['msg'] = 'Bad request.';
+            return output;
+        }
+
         let squeal = await this._model.getSqueal(identifier);
         if (!(squeal instanceof SquealDto)) {
             output['code'] = 404;
