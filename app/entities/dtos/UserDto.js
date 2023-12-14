@@ -46,7 +46,7 @@ module.exports = class UserDto {
             this.#vip = documentFromMongoose.vip;
             this.#locked = documentFromMongoose.locked;
             this.#verbalized_popularity = documentFromMongoose.verbalized_popularity;
-            this.#verbalized_unpopularity = documentFromMongoose.verbalized_popularity;
+            this.#verbalized_unpopularity = documentFromMongoose.verbalized_unpopularity;
             if(typeof documentFromMongoose.verbalized_popularity !== 'undefined')
                 this.#reset = documentFromMongoose.reset;
             else
