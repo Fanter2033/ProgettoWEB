@@ -1227,6 +1227,8 @@ module.exports = class SquealController extends Controller {
         }
 
         let squealDto = new SquealDto(getSqueal.content);
+        squealDto.positive_value = positive_value;
+        squealDto.negative_value = negative_value;
         if(this.isSquealControversial(squealDto)){
             let dto = new Squeal2ChannelDto();
             dto.squeal_id = squealDto.id;
