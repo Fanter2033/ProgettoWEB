@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 
 import ReactConfig from "../config/ReactConfig";
+import { useUserContext } from "../config/UserContext";
 
 import { Modal } from "react-bootstrap";
 
@@ -21,6 +22,7 @@ function MatchRole({
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [newValue, setNewValue] = useState(-1);
   const [content, setContent] = useState("");
+  const { userGlobal, setUserGlobal } = useUserContext();
 
   const controllaPresenzaInArray = (stringa, array) => {
     return array.includes(stringa);
@@ -107,47 +109,76 @@ function MatchRole({
 
   return (
     <div>
-      <button
-        className="custom-button box cool-font-medium"
-        onClick={() => setModalIsOpen(true)}
-      >
-        {
-          <>
-            {ruoloIndex === 0
-              ? "ATTESA 🕓"
-              : ruoloIndex === 1
-              ? "LETTORE 📖"
-              : ruoloIndex === 2
-              ? "SCRITTORE ✒️"
-              : ruoloIndex === 3
-              ? "ADMIN ⚔️"
-              : ruoloIndex === 4
-              ? "CREATORE 👑"
-              : "NOT GOOD"}
-          </>
-        }
-        {(ruoloIndex === 2 || ruoloIndex === 1 || ruoloIndex === 0) && <></>}
-      </button>
+      {inputString !== userGlobal.username && (
+        <>
+          {ruoloIndex === 4 ? (
+            <>
+              <button className="custom-button box cool-font-medium">
+                {<>{ruoloIndex === 4 && "CREATORE 👑"}</>}
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                className="custom-button box cool-font-medium"
+                onClick={() => setModalIsOpen(true)}
+              >
+                {
+                  <>
+                    {ruoloIndex === 0
+                      ? "ATTESA 🕓"
+                      : ruoloIndex === 1
+                      ? "LETTORE 📖"
+                      : ruoloIndex === 2
+                      ? "SCRITTORE ✒️"
+                      : ruoloIndex === 3
+                      ? "ADMIN ⚔️"
+                      : "NOT GOOD"}
+                  </>
+                }
+              </button>
+            </>
+          )}
+        </>
+      )}
       <Modal show={modalIsOpen} onHide={closeModal}>
-        <Modal.Header closeButton className="modal-change-header cool-font-medium" style={{color: "#e0bb76"}}>
+        <Modal.Header
+          closeButton
+          className="modal-change-header cool-font-medium"
+          style={{ color: "#e0bb76" }}
+        >
           <Modal.Title>MODIFICA RUOLO</Modal.Title>
         </Modal.Header>
         <Modal.Body className="modal-change-body">
-          
           <div className="d-flex flex-column justify-content-center align-items-center cool-font-medium">
-            <button className="green-button box  w-100 m-2" onClick={() => attesa}>
+            <button
+              className="green-button box  w-100 m-2"
+              onClick={() => attesa}
+            >
               IN ATTESA 🕓
             </button>
-            <button className="green-button box  w-100 m-2" onClick={() => lettore()}>
+            <button
+              className="green-button box  w-100 m-2"
+              onClick={() => lettore()}
+            >
               LETTORE 📖
             </button>
-            <button className="green-button box  w-100 m-2" onClick={() => scrittore()}>
+            <button
+              className="green-button box  w-100 m-2"
+              onClick={() => scrittore()}
+            >
               SCRITTORE ✒️
             </button>
-            <button className="green-button box  w-100 m-2" onClick={() => admin()}>
+            <button
+              className="green-button box  w-100 m-2"
+              onClick={() => admin()}
+            >
               ADMIN ⚔️
             </button>
-            <button className="green-button box  w-100 m-2" onClick={() => creatore()}>
+            <button
+              className="green-button box  w-100 m-2"
+              onClick={() => creatore()}
+            >
               CREATORE 👑
             </button>
           </div>
@@ -156,10 +187,16 @@ function MatchRole({
           className="my-foot d-flex justify-content-center"
           style={footerStyle}
         >
-          <button className="blue-button box cool-font-medium w-100" onClick={handleModificaValore}>
+          <button
+            className="blue-button box cool-font-medium w-100"
+            onClick={handleModificaValore}
+          >
             CAMBIA
           </button>
-          <button className="red-button box cool-font-medium w-100" onClick={closeModal}>
+          <button
+            className="red-button box cool-font-medium w-100"
+            onClick={closeModal}
+          >
             ANNULLA
           </button>
         </Modal.Footer>

@@ -207,9 +207,9 @@ function Search() {
                   </Card.Header>
                   <Card.Body className="mb-4  w-100 d-flex flex-column justify-content-center align-items-center">
                     <div className="d-flex flex-column justify-content-center align-items-center">
-                      {roleUser.map((role) => (
+                      {roleUser.map((role, index) => (
                         <>
-                        <Col key={role._id}>
+                        <Col key={index}>
                         
                           <Row
                             

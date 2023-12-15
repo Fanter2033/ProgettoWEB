@@ -418,30 +418,44 @@ function Squeal() {
   //TEXT_AUTO bottoni ------------------------------------------------------------------------
   const [postText, setPostText] = useState("");
   const [clickedButtons, setClickedButtons] = useState([]);
+  const handleAutoText = (e) => {
+    const autoText = e.target.value;
+    const autoLenght = autoText.length;
 
-  const handleButtonClick = (buttonText) => {
-    // aggiungi il testo del bottone cliccato al testo del post
-    setPostText((prevText) => prevText + buttonText);
-
-    // aggiungi il testo del bottone alla lista dei bottoni cliccati
-    setClickedButtons((prevButtons) => [...prevButtons, buttonText]);
-
-    const inputText = postText;
-    console.log("auto text cost", postText);
-
-    const inputLength = inputText.length;
-
+    setPostText(autoText);
     // quota rimanente dopo il post
-    const remainingLimitD = liveDay - inputLength;
-    const remainingLimitW = liveWeek - inputLength;
-    const remainingLimitM = liveMonth - inputLength;
-
-    console.log("auto text cost", inputLength);
-
-    setUserInput(inputText);
+    let remainingLimitD = liveDay - autoLenght;
+    let remainingLimitW = liveWeek - autoLenght;
+    let remainingLimitM = liveMonth - autoLenght;
     setNewDay(remainingLimitD);
     setNewWeek(remainingLimitW);
     setNewMonth(remainingLimitM);
+  };
+
+  const handleButtonClick = (buttonText) => {
+    const wordButton = buttonText.length;
+    // aggiungi il testo del bottone cliccato al testo del post
+    setPostText((prevText) => prevText + buttonText);
+    // aggiungi il testo del bottone alla lista dei bottoni cliccati
+    setClickedButtons((prevButtons) => [...prevButtons, buttonText]);
+
+    if (newDay === 0) {
+      let remainingLimitD = liveDay - wordButton;
+      let remainingLimitW = liveWeek - wordButton;
+      let remainingLimitM = liveMonth - wordButton;
+
+      setNewDay(remainingLimitD);
+      setNewWeek(remainingLimitW);
+      setNewMonth(remainingLimitM);
+    } else {
+      let remainingLimitD = newDay - wordButton;
+      let remainingLimitW = newWeek - wordButton;
+      let remainingLimitM = newMonth - wordButton;
+
+      setNewDay(remainingLimitD);
+      setNewWeek(remainingLimitW);
+      setNewMonth(remainingLimitM);
+    }
   };
 
   //POSITION_AUTO --------------------------------------------------------------------------------
@@ -584,7 +598,7 @@ function Squeal() {
           placeholder="MINIMO 5 SECONDI"
           value={postText}
           className="form-control box cool-font-link"
-          onChange={(e) => setPostText(e.target.value)}
+          onChange={handleAutoText}
         />
         <div className="text-wrap mt-2">
           <button

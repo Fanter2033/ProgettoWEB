@@ -56,7 +56,7 @@ function SquealContent({ content, type, id }) {
       )}
       {type === "VIDEO_URL" && (
         <>
-          <a href={content} className="cool-font-link youtube-link text-break">
+          <a href={content} className="cool-font-link text-break">
             {content}
           </a>
         </>

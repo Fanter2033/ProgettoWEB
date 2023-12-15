@@ -145,7 +145,7 @@ function DetailsChannel() {
 
   return (
     <>
-      <div className="container pt-2">
+      <div className="container pt-2 pb-5">
         <div className="row d-flex flex-row justify-content-center align-items-content mt-3">
           <button
             className="red-button box w-25"
@@ -327,8 +327,8 @@ function DetailsChannel() {
 
               <Container>
                 <Row>
-                  {following.map((user) => (
-                    <Col lg={12} key={user.id} className="mb-4">
+                  {following.map((user, index) => (
+                    <Col lg={12} key={index} className="mb-4">
                       <Card className="w-100 squeal">
                         {" "}
                         <Card.Body className="mb-4 d-flex flex-column justify-content-center align-items-center">
@@ -348,8 +348,22 @@ function DetailsChannel() {
                               </svg>
                             </button>
                           </Link>
-                          {(roles3.includes(userGlobal.username) ||
-                            roles4.includes(userGlobal.username)) && (
+                          {roles3.includes(userGlobal.username) && (
+                            <>
+                              <MatchRole
+                                inputString={user}
+                                array1={roles0}
+                                array2={roles1}
+                                array3={roles2}
+                                array4={roles3}
+                                array5={roles4}
+                                name={channel.channel_name}
+                                type={channel.type}
+                                onInputPresenceChange={handleInputPresence}
+                              />
+                            </>
+                          )}
+                          {roles4.includes(userGlobal.username) && (
                             <>
                               <MatchRole
                                 inputString={user}
