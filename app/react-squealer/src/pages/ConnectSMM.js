@@ -121,6 +121,7 @@ function ConnectSMM({ openConnect, closeConnect }) {
         if (res.ok) {
           let data = res.json();
           console.log(data);
+          console.log(data.smm);
           //setMySmm(data);
         } else {
           console.error("Errore nella richiesta:", res.statusText);
