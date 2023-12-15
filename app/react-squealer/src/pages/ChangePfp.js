@@ -167,10 +167,21 @@ function ChangePfp() {
               style={{ color: "#072f38", backgroundColor: "#e0bb76" }}
               accept="image/*"
               onChange={handleImageUpload}
-              className="form-control box cool-font-link"
+              className="form-control box cool-font-link mb-3"
             />
           </form>
-          {base64Image && <img src={base64Image} alt="Selected" />}
+          {base64Image && (
+            <>
+              <figure className="cool-font-link">
+                <img
+                  src={base64Image}
+                  alt="Selected new profile photo"
+                  aria-label="Questa è la foto che vorresti mettere come foto profilo"
+                />
+                <figcaption>Foto profilo che hai scelto</figcaption>
+              </figure>
+            </>
+          )}
           <div className="cool-font-link mt-2">
             NB: È CONSIGLIATO L'USO DI FOTO QUADRATE
           </div>

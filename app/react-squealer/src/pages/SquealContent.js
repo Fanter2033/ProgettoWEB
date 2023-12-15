@@ -8,7 +8,6 @@ import TextLink from "./TextLink";
 import "../css/App.css";
 
 function SquealContent({ content, type, id }) {
-
   //!attenzione al parametro formale id
   //TODO GET squeal mappe temporizzate
   async function getSqueal() {
@@ -51,7 +50,13 @@ function SquealContent({ content, type, id }) {
       )}
       {type === "IMAGE" && (
         <>
-          <img src={`data:image/png;base64,${content}`} alt="Image" />
+          
+            <img
+              src={`data:image/png;base64,${content}`}
+              alt="Photo received"
+              aria-label="L'immagine che vedi è ciò che ti è stato inviato da un canale da te seguito oppure da un tuo amico"
+            />
+          
         </>
       )}
       {type === "VIDEO_URL" && (
@@ -73,6 +78,7 @@ function SquealContent({ content, type, id }) {
       )}
       {type === "POSITION_AUTO" && (
         <>
+          <p>temporizzata</p>
           <RenderMap coordinates={content} />
         </>
       )}

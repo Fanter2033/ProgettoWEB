@@ -360,6 +360,7 @@ function Account() {
             {userData.isAdmin && (
               <>
                 <svg
+                  aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   width="40"
                   height="40"
@@ -378,7 +379,11 @@ function Account() {
           </div>
 
           <div className={`image-container`}>
-            <img src={avvoltoio} alt="Avvoltoio animato" />
+            <img
+              src={avvoltoio}
+              alt="Avvoltoio animato"
+              aria-label="Animazione di un avvoltoio che attraversa lo schermo da destra a sinistra orizzontalmente"
+            />
           </div>
 
           <div className="row">
@@ -388,7 +393,12 @@ function Account() {
                   <h1 className="d-flex flex-col align-items-center justify-content-center cool-font-medium mt-2 mb-2">
                     {userData.username}
                     {userData.vip && (
-                      <img src={pink} style={{ width: "10%" }} />
+                      <img
+                        src={pink}
+                        style={{ width: "10%" }}
+                        alt="avvolotio per vip"
+                        aria-label="Questa icona è renderizzata in maniera condizionale ed è visibile unicamente agli utenti vip"
+                      />
                     )}
                   </h1>
                   {userData.locked && (
@@ -484,7 +494,9 @@ function Account() {
 
           <div className="col-6">
             <div className="row">
-              <h3 className="cool-font-medium">QUOTA LIMITE</h3>
+              <h3 className="cool-font-medium">
+                QUOTA <br /> LIMITE
+              </h3>
             </div>
 
             <div className="col-12 mt-2">
@@ -555,7 +567,10 @@ function Account() {
                                 <Card className="w-100 offers">
                                   <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
                                     <Link to="/infoc" state={channel}>
-                                      <button className="ms-4 me-4 custom-button box">
+                                      <button
+                                        className="ms-4 me-4 custom-button box"
+                                        aria-label="clicca se vuoi avere informazioni sul canale"
+                                      >
                                         <b>{channel.channel_name} </b>
                                         <svg
                                           xmlns="http://www.w3.org/2000/svg"
@@ -583,7 +598,10 @@ function Account() {
                                 <Card className="w-100 offers">
                                   <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
                                     <Link to="/infoc" state={channel}>
-                                      <button className="ms-4 me-4 custom-button box">
+                                      <button
+                                        className="ms-4 me-4 custom-button box"
+                                        aria-label="clicca se vuoi avere informazioni sul canale"
+                                      >
                                         <b>{channel.channel_name} </b>
                                         <svg
                                           xmlns="http://www.w3.org/2000/svg"
@@ -611,7 +629,10 @@ function Account() {
                                 <Card className="w-100 offers">
                                   <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
                                     <Link to="/infoc" state={channel}>
-                                      <button className="ms-4 me-4 custom-button box">
+                                      <button
+                                        className="ms-4 me-4 custom-button box"
+                                        aria-label="clicca se vuoi avere informazioni sul canale"
+                                      >
                                         <b>{channel.channel_name} </b>
                                         <svg
                                           xmlns="http://www.w3.org/2000/svg"
@@ -639,7 +660,10 @@ function Account() {
                                 <Card className="w-100 offers">
                                   <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
                                     <Link to="/infoc" state={channel}>
-                                      <button className="ms-4 me-4 custom-button box">
+                                      <button
+                                        className="ms-4 me-4 custom-button box"
+                                        aria-label="clicca se vuoi avere informazioni sul canale"
+                                      >
                                         <b>{channel.channel_name} </b>
                                         <svg
                                           xmlns="http://www.w3.org/2000/svg"
@@ -667,7 +691,10 @@ function Account() {
                                 <Card className="w-100 offers">
                                   <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
                                     <Link to="/infoc" state={channel}>
-                                      <button className="ms-4 me-4 custom-button box">
+                                      <button
+                                        className="ms-4 me-4 custom-button box"
+                                        aria-label="clicca se vuoi avere informazioni sul canale"
+                                      >
                                         <b>{channel.channel_name} </b>
                                         <svg
                                           xmlns="http://www.w3.org/2000/svg"

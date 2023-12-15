@@ -4,11 +4,14 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
 function RenderMap({ coordinates }) {
-  
   if (!Array.isArray(coordinates)) {
     console.log(coordinates);
     //console.error("Coordinate non valide.");
-    return(<><p>non riesco a visualizzare la mappa</p></>)
+    return (
+      <>
+        <p>non riesco a visualizzare la mappa</p>
+      </>
+    );
   }
 
   const skater = new L.Icon({
@@ -41,16 +44,15 @@ con il verde
   */
 
   return (
-    
     <MapContainer
       center={coordinates}
       zoom={13}
       style={{ height: "200px", width: "100%" }}
     >
       <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
 
       <Marker position={coordinates} icon={skater} />
     </MapContainer>

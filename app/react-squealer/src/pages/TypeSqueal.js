@@ -63,7 +63,7 @@ function TypeSqueal({ typeSqueal }) {
       {typeSqueal === "POSITION" && (
         <>
           <div className="cool-font-details">
-          TIPO: POSIZIONE
+          TIPO: MAPPA
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"

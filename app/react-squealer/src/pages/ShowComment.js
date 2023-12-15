@@ -25,7 +25,7 @@ function ShowComment({ arrayComment }) {
             <Col key={index}>
               <Card className="offers m-2">
                 <Card.Header className="d-flex flex-row justify-content-center align-items-center">
-                  <Link to="/infou" state={comment.username} className="link-comment">
+                  <Link to="/infou" state={comment.username} className="link-comment" aria-label="clicca se vuoi avere più informazioni su questo utente">
                       <b > {comment.username} </b>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

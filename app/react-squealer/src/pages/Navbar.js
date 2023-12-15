@@ -45,10 +45,13 @@ function Navbar() {
                 <li className="nav-item">
                   <NavLink
                     style={({ isActive }) => {
-                      return isActive ? { backgroundColor: "#072f38", borderRadius: "0.5rem" } : {};
+                      return isActive
+                        ? { backgroundColor: "#072f38", borderRadius: "0.5rem" }
+                        : {};
                     }}
                     className="navbar-brand cool-font-nav text-sm"
                     to={ReactConfig.pathFunction("/post")}
+                    aria-label="clicca se vuoi andare nell'area post"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -76,7 +79,9 @@ function Navbar() {
                 <li className="nav-item">
                   <NavLink
                     style={({ isActive }) => {
-                      return isActive ? { backgroundColor: "#072f38", borderRadius: "0.5rem" } : {};
+                      return isActive
+                        ? { backgroundColor: "#072f38", borderRadius: "0.5rem" }
+                        : {};
                     }}
                     className="navbar-brand cool-font-nav"
                     to={ReactConfig.pathFunction("/received")}
@@ -84,6 +89,7 @@ function Navbar() {
                     <button
                       type="button"
                       className="btn icon-nav me-1 p-0 mb-1"
+                      aria-label="clicca se vuoi andare nell'area dei messaggi ricevuti"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -110,7 +116,9 @@ function Navbar() {
                 <li className="nav-item">
                   <NavLink
                     style={({ isActive }) => {
-                      return isActive ? { backgroundColor: "#072f38", borderRadius: "0.5rem" } : {};
+                      return isActive
+                        ? { backgroundColor: "#072f38", borderRadius: "0.5rem" }
+                        : {};
                     }}
                     className="navbar-brand cool-font-nav"
                     to={ReactConfig.pathFunction("/channels")}
@@ -118,6 +126,7 @@ function Navbar() {
                     <button
                       type="button"
                       className="btn icon-nav me-1 p-0 mb-1"
+                      aria-label="clicca se vuoi andare nell'area home, dove puoi seguire i canali ed esplorare la nostra app"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -140,7 +149,11 @@ function Navbar() {
                   <NavLink
                     style={({ isActive }) => {
                       return isActive
-                        ? { backgroundColor: "#072f38", borderRadius: "0.5rem", fill: "#072f38" }
+                        ? {
+                            backgroundColor: "#072f38",
+                            borderRadius: "0.5rem",
+                            fill: "#072f38",
+                          }
                         : {};
                     }}
                     className="navbar-brand cool-font-nav"
@@ -149,6 +162,7 @@ function Navbar() {
                     <button
                       type="button"
                       className="btn icon-nav me-1 p-0 mb-1"
+                      aria-label="clicca se vuoi andare nella tua area personale"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -201,7 +215,11 @@ function Navbar() {
                     }}
                     to={ReactConfig.pathFunction("/post")}
                   >
-                    <button type="button" className="btn icon-nav">
+                    <button
+                      type="button"
+                      className="btn icon-nav"
+                      aria-label="clicca se vuoi andare nell'area di scrittura di un messaggio"
+                    >
                       <div className="pb-2">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -235,7 +253,11 @@ function Navbar() {
                     className="navbar-brand cool-font-nav"
                     to={ReactConfig.pathFunction("/received")}
                   >
-                    <button type="button" className="btn icon-nav">
+                    <button
+                      type="button"
+                      className="btn icon-nav"
+                      aria-label="clicca se vuoi andare nell'area degi messagi postati dai canali che segui"
+                    >
                       <div className="pb-2">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -268,7 +290,11 @@ function Navbar() {
                     }}
                     to={ReactConfig.pathFunction("/channels")}
                   >
-                    <button type="button" className="btn icon-nav ">
+                    <button
+                      type="button"
+                      className="btn icon-nav "
+                      aria-label="clicca se vuoi andare nell'area home, dove puoi seguire i canali ed esplorare la nostra app"
+                    >
                       <div className="pb-2">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -297,7 +323,11 @@ function Navbar() {
                     className="navbar-brand"
                     to={ReactConfig.pathFunction("/chat")}
                   >
-                    <button type="button" className="btn icon-nav ">
+                    <button
+                      type="button"
+                      className="btn icon-nav "
+                      aria-label="clicca se vuoi andare nell'area dei tuoi messaggi privati"
+                    >
                       <div className="pb-2">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -329,7 +359,11 @@ function Navbar() {
                     }}
                     to={ReactConfig.pathFunction("/account")}
                   >
-                    <button type="button" className="btn icon-nav ">
+                    <button
+                      type="button"
+                      className="btn icon-nav "
+                      aria-label="clicca se vuoi andare nella tua area personale"
+                    >
                       <div className="pb-2">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -372,7 +406,10 @@ function Navbar() {
               className="navbar-brand"
               to={ReactConfig.pathFunction("/post")}
             >
-              <button className="btn icon-nav">
+              <button
+                className="btn icon-nav"
+                aria-label="clicca se vuoi andare nell'area post"
+              >
                 <div className="pb-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -406,7 +443,10 @@ function Navbar() {
               className="navbar-brand cool-font-nav"
               to={ReactConfig.pathFunction("/received")}
             >
-              <button className="btn icon-nav">
+              <button
+                className="btn icon-nav"
+                aria-label="clicca se vuoi andare nell'area degli squeal pubblici ricevuti"
+              >
                 <div className="pb-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -440,7 +480,11 @@ function Navbar() {
               className="navbar-brand"
               to={ReactConfig.pathFunction("/channels")}
             >
-              <button type="button" className="btn icon-nav ">
+              <button
+                type="button"
+                className="btn icon-nav "
+                aria-label="clicca se vuoi andare nell'area home, dove puoi seguire i canali ed esplorare la nostra app"
+              >
                 <div className="pb-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -469,7 +513,11 @@ function Navbar() {
               className="navbar-brand"
               to={ReactConfig.pathFunction("/chat")}
             >
-              <button type="button" className="btn icon-nav">
+              <button
+                type="button"
+                className="btn icon-nav"
+                aria-label="clicca se vuoi andare nell'area degli squeal privati ricevuti "
+              >
                 <div className="pb-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -502,7 +550,11 @@ function Navbar() {
               className="navbar-brand"
               to={ReactConfig.pathFunction("/account")}
             >
-              <button type="button" className="btn icon-nav">
+              <button
+                type="button"
+                className="btn icon-nav"
+                aria-label="clicca se vuoi andare nella tua area personale"
+              >
                 <div className="pb-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

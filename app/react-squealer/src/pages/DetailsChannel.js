@@ -150,6 +150,7 @@ function DetailsChannel() {
           <button
             className="red-button box w-25"
             onClick={() => window.history.back()}
+            aria-label="clicca se vuoi tornare alla pagina precedente"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -333,7 +334,7 @@ function DetailsChannel() {
                         {" "}
                         <Card.Body className="mb-4 d-flex flex-column justify-content-center align-items-center">
                           <Link to="/infou" state={user}>
-                            <button className="ms-4 me-4 custom-button box mb-3">
+                            <button className="ms-4 me-4 custom-button box mb-3" aria-label="clicca se vuoi avere informazioni sull'utente">
                               <b> {user} </b>
 
                               <svg

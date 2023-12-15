@@ -163,7 +163,7 @@ function Search() {
                 <Card style={{ height: "100%" }} className="squeal mb-4">
                   <Card.Header className="d-flex justify-content-center align-items-center">
                     <Link to="/infoc" state={channel}>
-                      <button className="custom-button me-2 box cool-font-small">
+                      <button className="custom-button me-2 box cool-font-small" aria-label="clicca se vuoi avere più informazioni su questo utente">
                         <b className="">{channel.channel_name} &nbsp;</b>
 
                         <svg

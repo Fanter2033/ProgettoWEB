@@ -63,7 +63,7 @@ function Chat() {
                         <div>
                           <b className="cool-font-details"> DA: </b>
                           <Link to="/infou" state={squeal.sender}>
-                            <button className=" ms-2 custom-button box">
+                            <button className=" ms-2 custom-button box" aria-label="clicca se vuoi avere informazioni sull'utente">
                               <b>{squeal.sender} </b>
 
                               <svg

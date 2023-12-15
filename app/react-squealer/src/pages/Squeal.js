@@ -511,9 +511,20 @@ function Squeal() {
           style={{ color: "#072f38", backgroundColor: "#528b57" }}
           accept="image/*"
           onChange={costImage}
-          className="form-control box cool-font-link"
+          className="form-control box cool-font-link mb-3"
         />
-        {base64Image && <img src={base64Image} alt="Selected" />}
+        {base64Image && (
+          <>
+            <figure className="cool-font-details">
+              <img
+                src={base64Image}
+                alt="Photo you want to post"
+                aria-label="Questa è l'immagine o foto che vorresti mandare a un tuo amico o postare su un canale"
+              />
+              <figcaption>Immagine che stai per postare</figcaption>
+            </figure >
+          </>
+        )}
       </div>
     );
   } else if (inputType === "VIDEO_URL") {
@@ -864,18 +875,6 @@ function Squeal() {
             auto_seconds_delay: numero2,
           },
         };
-        if (numero1 === "" || numero2 === "") {
-          notify3();
-          return;
-        }
-        if (numero1 < 5) {
-          notify4();
-          return;
-        }
-        if (numero2 < 2) {
-          notify5();
-          return;
-        }
 
         //console.log("aaaaaaaaaaaaaaaaaaaa", markerCoordinates);
       } else if (inputType === "TEXT_AUTO") {
@@ -982,6 +981,7 @@ function Squeal() {
                     inputType === "MESSAGE_TEXT" ? "active" : ""
                   }`}
                   onClick={() => setInputType("MESSAGE_TEXT")}
+                  aria-label="messaggio"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -1001,6 +1001,7 @@ function Squeal() {
                     inputType === "IMAGE" ? "active" : ""
                   }`}
                   onClick={() => setInputType("IMAGE")}
+                  aria-label="immagine"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -1021,6 +1022,7 @@ function Squeal() {
                     inputType === "VIDEO_URL" ? "active" : ""
                   }`}
                   onClick={() => setInputType("VIDEO_URL")}
+                  aria-label="video"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -1041,6 +1043,7 @@ function Squeal() {
                     inputType === "POSITION" ? "active" : ""
                   }`}
                   onClick={() => setInputType("POSITION")}
+                  aria-label="posizionr"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -1061,6 +1064,7 @@ function Squeal() {
                     inputType === "TEXT_AUTO" ? "active" : ""
                   }`}
                   onClick={() => setInputType("TEXT_AUTO")}
+                  aria-label="messaggi temporizzati"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -1082,6 +1086,7 @@ function Squeal() {
                     inputType === "POSITION_AUTO" ? "active" : ""
                   }`}
                   onClick={() => setInputType("POSITION_AUTO")}
+                  aria-label="posizione temporizzata"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

@@ -103,10 +103,10 @@ function Received() {
             <Container className="pb-5">
               <Row className=" ">
                 {dash
-                  .map((squeal, index) => (
+                  .map((squeal) => (
                     <Col
                       lg={12}
-                      key={index}
+                      key={squeal._id}
                       className="mb-4 d-flex justify-content-center align-items-center"
                     >
                       <Card
@@ -118,7 +118,7 @@ function Received() {
                             <div>
                               <b className="cool-font-details">DA:</b>
                               <Link to="/infou" state={squeal.sender}>
-                                <button className=" ms-2 custom-button box ">
+                                <button className=" ms-2 custom-button box "  aria-label="clicca se vuoi avere più informazioni su questo utente">
                                   <b>{squeal.sender} </b>
 
                                   <svg
@@ -147,7 +147,7 @@ function Received() {
                             <TypeSqueal typeSqueal={squeal.message_type} />
                           </div>
                         </Card.Header>
-                        <Card.Body className="mb-4 d-flex flex-col justify-content-evenly align-items-center">
+                        <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
                           <SquealContent
                             content={squeal.content}
                             type={squeal.message_type}
