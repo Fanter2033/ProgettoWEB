@@ -109,28 +109,24 @@ function ConnectSMM({ openConnect, closeConnect }) {
     backgroundColor: "#e0bb76",
   };
 
-  //TODO non funzia
   //GET /user/{username}/my-smm-----------------------------------------------------------------------------------------------------
   const [mySmm, setMySmm] = useState("");
   async function getSmm() {
     const uri = `${ReactConfig.base_url_requests}/user/${userData.username}/my-smm`;
 
-    await fetch(uri)
-      .then((res) => {
-        console.log(res);
-        if (res.ok) {
-          let data = res.json();
-          console.log(data);
-          console.log(data.smm);
-          //setMySmm(data);
-        } else {
-          console.error("Errore nella richiesta:", res.statusText);
-        }
-        //console.log(mySmm);
-      })
-      .catch((error) => {
-        console.error("Network error", error);
-      });
+    try {
+      const res = await fetch(uri);
+
+      if (res.ok) {
+        let data = await res.json();
+        let smm = data.smm;
+        setMySmm(smm);
+      } else {
+        console.error("Errore nella richiesta:", res.statusText);
+      }
+    } catch (error) {
+      console.error("Errore di rete:", error);
+    }
   }
 
   return (
@@ -171,6 +167,11 @@ function ConnectSMM({ openConnect, closeConnect }) {
               >
                 VAI
               </button>
+              {mySmm && (
+                <>
+                  <button className=" mt-2 cool-font-details blue-button w-100">{mySmm}</button>
+                </>
+              )}
 
               <p style={{ color: "#b45656" }} className="mt-4">
                 RIMUOVI SMM

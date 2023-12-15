@@ -270,10 +270,10 @@ function Account() {
   useEffect(() => {
     whoAmI();
 
-    const intervalId = setInterval(getUserData, 5000); 
-    const intervalId3 = setInterval(getRoles, 10000); 
-    const intervalId4 = setInterval(getUserQuote, 10000); 
-    const intervalId5 = setInterval(whoAmI, 10000); 
+    const intervalId = setInterval(getUserData, 5000);
+    const intervalId3 = setInterval(getRoles, 10000);
+    const intervalId4 = setInterval(getUserQuote, 10000);
+    const intervalId5 = setInterval(whoAmI, 10000);
 
     // per evitare memory leaks
     return () => {
@@ -334,12 +334,7 @@ function Account() {
   return (
     <div className="container pb-5">
       <div className="row" onLoad={getUserData}>
-        <div className="row d-flex justify-content-center">
-          <h3>TODO:</h3>
-          <ul className="list-group col-md-4">
-            <li className="list-group-item list">GET SMM INFO</li>
-          </ul>
-        </div>
+        <div className="row d-flex justify-content-center"></div>
         <div className="mb-3 mt-4">
           <div className="col-12 d-flex flex-col align-items-center justify-content-center">
             {userData.pfp && userData.vip && (
