@@ -18,31 +18,31 @@ import "../css/App.css";
 
 function Received() {
   const { userGlobal, setUserGlobal } = useUserContext();
+  let [currentUser, setCurrentUser] = useState({});
+
   const navigate = useNavigate();
 
-  if (userGlobal.username === undefined || userGlobal.username === "") {
-    //GET WHO AM I--------------------------------------------------------------------------------
+  async function whoAmI() {
     const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
     fetch(uri, {
       mode: "cors",
       credentials: "include",
     })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-      })
-      .then((data) => {
-        console.log("Tutto ok, io sono:", data);
-        const updated = {
-          ...userGlobal,
-          username: data.username,
-        };
-        setUserGlobal(updated);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+        .then((res) => {
+          if (res.ok) {
+            return res.json();
+          } else {
+            navigate('../');
+          }
+        })
+        .then((data) => {
+          setCurrentUser(data);
+          setUserGlobal(data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    //}
   }
 
   //GET /dashboard/ ------------------------------------------------------------------------------------------------------------
@@ -78,15 +78,16 @@ function Received() {
   //console.log("DDDDDDDDDDDDDASH", dash);
 
   useEffect(() => {
-    getDashboard();
-    //getComments();
-    const intervalId1 = setInterval(getDashboard, 5000); //10 sec
-    //const intervalId2 = setInterval(getDashboard, 10000); //10 sec
-
-    return () => {
-      clearInterval(intervalId1);
-      //clearInterval(intervalId2);
-    };
+    whoAmI().then((r) => {
+      getDashboard();
+      //getComments();
+      const intervalId1 = setInterval(getDashboard, 5000); //10 sec
+      //const intervalId2 = setInterval(getDashboard, 10000); //10 sec
+      return () => {
+        clearInterval(intervalId1);
+        //clearInterval(intervalId2);
+      };
+    });
   }, []);
 
   return (

@@ -23,35 +23,37 @@ jADiaT60QVDL3bR4I8etxbYBbxT3YtnMOIq2r4LD
 */
 function Channels() {
   const { userGlobal, setUserGlobal } = useUserContext();
+  let [currentUser, setCurrentUser] = useState({});
 
   const navigate = useNavigate();
-  if (userGlobal.username === undefined || userGlobal.username === "") {
-    //GET WHO AM I--------------------------------------------------------------------------------
+
+  async function whoAmI() {
     const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
     fetch(uri, {
       mode: "cors",
       credentials: "include",
     })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-      })
-      .then((data) => {
-        console.log("Tutto ok, io sono:", data);
-
-        userGlobal.username = data.username;
-        console.log("userGlobal", userGlobal);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+        .then((res) => {
+          if (res.ok) {
+            return res.json();
+          } else {
+            navigate('../');
+          }
+        })
+        .then((data) => {
+          setCurrentUser(data);
+          setUserGlobal(data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    //}
   }
 
   //GET USER INFO ------------------------------------------------------
   async function getUserData() {
     try {
-      const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}`;
+      const uri = `${ReactConfig.base_url_requests}/user/${currentUser.username}`;
       const options = {
         method: "GET",
         headers: {
@@ -194,7 +196,7 @@ function Channels() {
 
   useEffect(() => {
     if (!functionsCalled) {
-      getUserData();
+      whoAmI();
       setFunctionsCalled(true);
     }
   }, [functionsCalled]);
@@ -235,15 +237,15 @@ function Channels() {
           <div className="row d-flex justify-content-center ms-1 me-1 w-100">
             <h3>TODO:</h3>
             <ul className="list-group col-md-4">
-              <li className="list-group-item list">
+              <li key="a1" className="list-group-item list">
                 GESTIONE RUOLI AMIN: PATCH new_role
               </li>
-              <li className="list-group-item list">CREARE 3 CANALI API</li>
-              <li className="list-group-item list">URL: limit, offset</li>
-              <li className="list-group-item list">
+              <li key="a2" className="list-group-item list">CREARE 3 CANALI API</li>
+              <li key="a3" className="list-group-item list">URL: limit, offset</li>
+              <li key="a4" className="list-group-item list">
                 criterio squeals appartenenza canale
               </li>
-              <li className="list-group-item list">
+              <li key="a5" className="list-group-item list">
                 canali silenziabili o popolari??
               </li>
             </ul>
@@ -317,7 +319,7 @@ function Channels() {
                                 </svg>
                               </button>
                             </Link>
-                            {u.owner === userGlobal.username && (
+                            {u.owner === currentUser.username && (
                               <button className="red-button">TUO</button>
                             )}
                           </Card.Header>
@@ -399,7 +401,7 @@ function Channels() {
                                 </svg>
                               </button>
                             </Link>
-                            {u.owner === userGlobal.username && (
+                            {u.owner === currentUser.username && (
                               <button className="red-button">TUO</button>
                             )}
                           </Card.Header>
@@ -481,7 +483,7 @@ function Channels() {
                                 </svg>
                               </button>
                             </Link>
-                            {u.owner === userGlobal.username && (
+                            {u.owner === currentUser.username && (
                               <button className="red-button">TUO</button>
                             )}
                           </Card.Header>

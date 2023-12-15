@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, {useState, useRef, useEffect} from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 
@@ -14,6 +14,7 @@ import "../css/LoginForm.css";
 function LoginForm() {
   const navigate = useNavigate();
   const { userGlobal, setUserGlobal } = useUserContext();
+  const [currentUser, setCurrentUser] = useState({});
 
   const [usernameForm, setUsernameForm] = useState("");
   const [passwordForm, setPasswordForm] = useState("");
@@ -44,13 +45,42 @@ function LoginForm() {
       theme: "colored",
     });
 
-  const login = async () => {
+  async function whoAmI() {
+    //if (userGlobal.username === undefined || userGlobal.username === "") {
+    //GET WHO AM I--------------------------------------------------------------------------------
+    const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
+    fetch(uri, {
+      mode: "cors",
+      credentials: "include",
+    })
+        .then((res) => {
+          console.log('Hey ris', res);
+          if (res.ok) {
+            navigate(`./received`);
+          }
+        })
+        .then((data) => {
+          if(typeof data === 'undefined') return;
+          setCurrentUser(data);
+          setUserGlobal(data);
+        })
+        .catch((error) => {
+
+        });
+    //}
+  }
+
+  useEffect(() => {
+    whoAmI();
+  }, []);
+
+  const login = async (t1) => {
     //corrected with love by @romanellas
     //URI: where I want ot send the POST
     //according to Swagger specifics, the username is sent in path, with the requested role.
 
-    const data = { password: userGlobal.password };
-    const uri = `${ReactConfig.base_url_requests}/auth/${userGlobal.username}/0`;
+    const data = { password: t1.password };
+    const uri = `${ReactConfig.base_url_requests}/auth/${t1.username}/0`;
     const options = {
       method: "POST",
       mode: "cors",
@@ -140,13 +170,20 @@ function LoginForm() {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    let tmp = userGlobal;
-    tmp.username = usernameForm;
-    tmp.password = passwordForm;
+    if(typeof userGlobal !== 'undefined') {
+      let tmp = userGlobal;
+      tmp.username = usernameForm;
+      tmp.password = passwordForm;
+      setUserGlobal(tmp);
+    }
 
-    setUserGlobal(tmp);
+    let t1 = {
+      username: usernameForm,
+      password: passwordForm
+    }
+    setCurrentUser(t1);
 
-    await login();
+    await login(t1);
   };
 
   //*MUOVITI CON I TASTI

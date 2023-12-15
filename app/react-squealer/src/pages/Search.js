@@ -1,5 +1,5 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, {useEffect} from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 
@@ -12,6 +12,7 @@ import squeal_logo from "./media/icone/Nav_logo.png";
 //GET /channel  list of channels ------------------------------------------------------------------------------------------------------------
 function Search() {
   const { userGlobal, setUserGlobal } = useUserContext();
+  let [currentUser, setCurrentUser] = useState({});
 
   //SEARCH FETCH
   const [inputValue, setInputValue] = useState("");
@@ -48,7 +49,8 @@ function Search() {
   const [roleUser, setRoleUser] = useState([]);
   async function getRoles() {
     try {
-      const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}/roles/`;
+      if(typeof currentUser.username === 'undefined') return;
+      const uri = `${ReactConfig.base_url_requests}/user/${currentUser.username}/roles/`;
       const options = {
         method: "GET",
         headers: {
@@ -73,9 +75,36 @@ function Search() {
     //console.log("Successo nella richiesta dei ruoli UTENTE", roleUser);
   }
 
+  async function whoAmI() {
+    const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
+    fetch(uri, {
+      mode: "cors",
+      credentials: "include",
+    })
+        .then((res) => {
+          if (res.ok) {
+            return res.json();
+          } else {
+            return;
+          }
+        })
+        .then((data) => {
+          setCurrentUser(data);
+          setUserGlobal(data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    //}
+  }
+
+  useEffect(() => {
+    whoAmI();
+  }, []);
+
   useEffect(() => {
     getRoles();
-  }, []);
+  }, [currentUser]);
 
   //PATCH /channel/{type}/{channel_name}  FOLLOW CHANNEL
   async function follow(type, channel_name) {
@@ -92,6 +121,7 @@ function Search() {
     fetch(url, options)
       .then((res) => {
         console.log(res);
+        getRoles();
         if (res.ok) {
           return res.json();
         }

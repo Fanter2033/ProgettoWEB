@@ -49,42 +49,33 @@ di andare a capo su più righe se lo spazio orizzontale è limitato.
 //TODO PUT SQUEAL /squeal/{identifier_id}  SOLO mappeeeeeeeee------------------------------------------------------------------------------------------------------------
 function Squeal() {
   const { userGlobal, setUserGlobal } = useUserContext();
+  let [currentUser, setCurrentUser] = useState({});
 
   const navigate = useNavigate();
 
   //GET WHO AM I--------------------------------------------------------------------------------
-  async function whoAmI() {
-    const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
-    fetch(uri, {
-      mode: "cors",
-      credentials: "include",
-    })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-      })
-      .then((data) => {
-        console.log("Tutto ok, io sono:", data);
-        const updated = {
-          ...userGlobal,
-          username: data.username,
-        };
-        setUserGlobal(updated);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
-
-  if (userGlobal.username === undefined || userGlobal.username === "") {
-    //navigate("/");
-    whoAmI().then(() => {
-      getUserData();
-      getUserQuote();
-      log();
-    });
-  }
+    async function whoAmI() {
+        const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
+        fetch(uri, {
+            mode: "cors",
+            credentials: "include",
+        })
+            .then((res) => {
+                if (res.ok) {
+                    return res.json();
+                } else {
+                    navigate('../');
+                }
+            })
+            .then((data) => {
+                setCurrentUser(data);
+                setUserGlobal(data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+        //}
+    }
 
   const notify = () =>
     toast.error("Manca desinatario. Riprovare", {
@@ -154,7 +145,8 @@ function Squeal() {
 
   async function getUserData() {
     try {
-      const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}`;
+      if(typeof currentUser.username === 'undefined') return;
+      const uri = `${ReactConfig.base_url_requests}/user/${currentUser.username}`;
       const options = {
         method: "GET",
         headers: {
@@ -183,7 +175,8 @@ function Squeal() {
 
   async function getUserQuote() {
     try {
-      const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}/quote`;
+      if(typeof currentUser.username === 'undefined') return;
+      const uri = `${ReactConfig.base_url_requests}/user/${currentUser.username}/quote`;
 
       const options = {
         method: "GET",
@@ -212,7 +205,8 @@ function Squeal() {
 
   async function log() {
     try {
-      const url = `${ReactConfig.base_url_requests}/utils/squeals/${userGlobal.username}`;
+        if(typeof currentUser.username === 'undefined') return;
+      const url = `${ReactConfig.base_url_requests}/utils/squeals/${currentUser.username}`;
       const options = {
         method: "GET",
         headers: {
@@ -236,20 +230,25 @@ function Squeal() {
   }
 
   useEffect(() => {
-    getUserQuote();
-    //whoAmI();
-    log();
+      whoAmI();
 
-    const intervalId = setInterval(getUserQuote, 5000); //30 sec
-    //const intervalId1 = setInterval(whoAmI, 30000); //30 sec
-    const intervalId2 = setInterval(getUserData, 5000); //10 sec
+      const intervalId = setInterval(getUserQuote, 5000); //30 sec
+      //const intervalId1 = setInterval(whoAmI, 30000); //30 sec
+      const intervalId2 = setInterval(getUserData, 5000); //10 sec
 
-    return () => {
-      clearInterval(intervalId);
-      //clearInterval(intervalId1);
-      clearInterval(intervalId2);
-    };
+      return () => {
+          clearInterval(intervalId);
+          //clearInterval(intervalId1);
+          clearInterval(intervalId2);
+      };
+
   }, []);
+
+    useEffect(() => {
+        getUserData();
+        getUserQuote();
+        log();
+    }, [currentUser]);
 
   //LIVE QUOTA-----------------------------------------------------------------------------------
   const liveDay = userQuote.remaining_daily;
@@ -691,7 +690,7 @@ function Squeal() {
         data = {
           squeal: {
             destinations: destinatariFromDest,
-            sender: userGlobal.username,
+            sender: currentUser.username,
             message_type: inputType,
             content: base64Image,
           },
@@ -702,7 +701,7 @@ function Squeal() {
         data = {
           squeal: {
             destinations: destinatariFromDest,
-            sender: userGlobal.username,
+            sender: currentUser.username,
             message_type: inputType,
             content: coordinates,
           },
@@ -717,7 +716,7 @@ function Squeal() {
         data = {
           squeal: {
             destinations: destinatariFromDest,
-            sender: userGlobal.username,
+            sender: currentUser.username,
             message_type: inputType,
             content: postText,
             auto_iterations: numero1,
@@ -742,7 +741,7 @@ function Squeal() {
         data = {
           squeal: {
             destinations: destinatariFromDest,
-            sender: userGlobal.username,
+            sender: currentUser.username,
             message_type: inputType,
             content: coordinates,
             auto_iterations: numero1,
@@ -768,7 +767,7 @@ function Squeal() {
         data = {
           squeal: {
             destinations: destinatariFromDest,
-            sender: userGlobal.username,
+            sender: currentUser.username,
             message_type: inputType,
             content: userInput,
           },
