@@ -5,7 +5,7 @@
         <div class="container-fluid" style="width: 100%;">
             <div class="navbar-header">
               <div class="navbar-brand">
-                <router-link to="/dashboard"><img src="/media/Nav_logo.png" alt="Logo" width="60" > </router-link>
+                <router-link to="/dashboard"> <img src="/media/Nav_logo.png" alt="Logo" width="60" class="img-fluid"> </router-link>
                 <span class="mx-3 d-none d-lg-inline cool-font-xsm"> Squealer <b>Smm</b> </span>
               </div>
             </div>
@@ -16,7 +16,7 @@
                     <i class="bi bi-person-check"></i>
                   <span class="mx-3 d-none d-lg-inline">Linked Accounts </span>
                 </router-link></a></li>
-                <li class="nav-item"><a class="nav-link" @click="logOut">
+                <li class="nav-item"><a class="nav-link link-warning" @click="logOut">
                     <i class="bi bi-box-arrow-right"></i>
                     <span class="mx-3 d-none d-lg-inline">Log Out</span>
                 </a></li>

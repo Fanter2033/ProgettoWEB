@@ -58,7 +58,7 @@
               </div>
               <div class="modal-body">
                 <h3>Riempimento istantanea di quota:  {{quote.limit_daily - quote.rem_daily}}</h3>
-                <h5>prezzo: </h5>
+                <h5>prezzo: € {{(quote.limit_daily - quote.rem_daily) * 0.03}} </h5>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn red-button w-25" id="close" @click="closeModal">
@@ -147,7 +147,6 @@ async function getQuoteInfo() {
       '/user/' +
       VipName.value +
       '/quote';
-  console.log(uri);
   fetch(uri, {
     method: 'GET',
     credentials: 'include',
