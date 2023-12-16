@@ -9,31 +9,20 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { Modal } from "react-bootstrap";
 import "../css/App.css";
+import alert from "bootstrap/js/src/alert";
 
 /*
   - [ ]  PATCH /channel/{type}/{name}/{username}
 - nel body: {"new_role": intero}
   */
 
-function ChangeRoleModal({ closeRole, newRoleModel, username, channel }) {
+function ChangeRoleModal({ closeRole, newRoleModel, username, channel, notify }) {
   console.log(username, channel);
 
   const { userGlobal, setUserGlobal } = useUserContext();
 
   //!se iscritto
   const [selectedValue, setSelectedValue] = useState(null);
-
-  const notify = () =>
-    toast.error("Non puoi cambiare il creatore", {
-      position: "bottom-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
 
   const changeRoleSub = (e) => {
     e.preventDefault();
@@ -56,8 +45,8 @@ function ChangeRoleModal({ closeRole, newRoleModel, username, channel }) {
     fetch(uri, options)
       .then((response) => {
         if (response.ok === 401) {
-          alert("puo' esserci un solo creatore");
-          notify();
+          // noinspection JSValidateTypes
+          alert('Errore. Non hai permessi per assegnare questo ruolo');
           console.error("PATCH cambio ruolo ERROR", response.statusText);
         } else {
           console.log(response);
@@ -85,35 +74,35 @@ function ChangeRoleModal({ closeRole, newRoleModel, username, channel }) {
           </Modal.Header>
           <Modal.Body className="modal-buy-body">
             {[0, 1, 2, 3, 4].map((value) => (
-              <button
-                key={value}
-                className="blue-button box"
-                onClick={() => handleButtonClick(value)}
-              >
-                {value}
-              </button>
+                <button
+                    key={value}
+                    className="blue-button box"
+                    onClick={() => handleButtonClick(value)}
+                >
+                  {value}
+                </button>
             ))}
           </Modal.Body>
           <Modal.Footer
-            className="my-foot d-flex justify-content-center"
-            style={footerStyle}
+              className="my-foot d-flex justify-content-center"
+              style={footerStyle}
           >
             <button
-              className="green-button box cool-font-medium w-100"
-              onClick={changeRoleSub}
+                className="green-button box cool-font-medium w-100"
+                onClick={changeRoleSub}
             >
               CAMBIA
             </button>
             <button
-              className="blue-button box cool-font-medium w-100"
-              onClick={closeRole}
+                className="blue-button box cool-font-medium w-100"
+                onClick={closeRole}
             >
               ANNULLA
             </button>
           </Modal.Footer>
         </Modal>
       </div>
-      <ToastContainer />
+      <ToastContainer/>
     </>
   );
 }

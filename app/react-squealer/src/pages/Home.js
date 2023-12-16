@@ -62,7 +62,7 @@ function Home() {
         <button className="ms-1 green-button mb-1 box col-6">
           <NavLink
             className="cool-font-small"
-            to={ReactConfig.pathFunction("/")}
+            to={ReactConfig.pathFunction("../")}
           >
             LOGIN
           </NavLink>

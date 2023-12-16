@@ -289,7 +289,7 @@ function Squeal() {
         console.error("Errore nella richiesta:", result.statusText);
       }
     } catch (error) {
-      console.error("Errore nella fetch:", error);
+
     }
   }
 

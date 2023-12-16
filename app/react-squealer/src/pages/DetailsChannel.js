@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, Link } from "react-router-dom";
+import {useLocation, Link, useNavigate, redirect} from "react-router-dom";
 
 import { useUserContext } from "../config/UserContext";
 import ReactConfig from "../config/ReactConfig";
@@ -12,18 +12,32 @@ import MatchRole from "./MatchRole";
 import { Container, Card, Col, Row } from "react-bootstrap";
 import "../css/App.css";
 import squeal_logo from "./media/icone/Nav_logo.png";
+import {toast} from "react-toastify";
 
 function DetailsChannel() {
   const location = useLocation();
+  const navigate = useNavigate();
+
   const channel = location.state;
 
   const { userGlobal, setUserGlobal } = useUserContext();
-
-  //una variabile booleana
-  const isOwner = channel.owner === userGlobal.username;
+  const [localUser, setLocalUser] = useState({});
 
   //GET /channel/{type}/{channel_name}/users/     list of following
   const [following, setFollowing] = useState([]);
+
+  const notifyCannotChange = () =>
+      toast.error("Non puoi cambiare il creatore", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+
   const subscribersList = () => {
     const url = `${ReactConfig.base_url_requests}/channel/${channel.type}/${channel.channel_name}/users/`;
     fetch(url)
@@ -41,7 +55,9 @@ function DetailsChannel() {
   const [roleUser, setRoleUser] = useState([]);
   async function getRoles() {
     try {
-      const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}/roles/`;
+      if(typeof localUser === 'undefined' || typeof localUser.username === 'undefined')
+        return;
+      const uri = `${ReactConfig.base_url_requests}/user/${localUser.username}/roles/`;
       const options = {
         method: "GET",
         headers: {
@@ -100,7 +116,37 @@ function DetailsChannel() {
     }
   };
 
+  async function whoAmI() {
+    //GET WHO AM I--------------------------------------------------------------------------------
+    const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
+    fetch(uri, {
+      mode: "cors",
+      credentials: "include",
+    })
+        .then((res) => {
+          if (res.ok) {
+            return res.json();
+          } else {
+            redirect('channels');
+          }
+        })
+        .then((data) => {
+          console.log('DATAAAAAAA', data);
+          setLocalUser(data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+  }
+
   useEffect(() => {
+
+    console.log('HELLO GUYS!!!', channel);
+    whoAmI();
+    if(channel.channel_name === '' || typeof channel === 'undefined' || typeof channel.channel_name === 'undefined'){
+      navigate('channels');
+    }
+
     fetchData(channel.channel_name, 0);
     fetchData(channel.channel_name, 1);
     fetchData(channel.channel_name, 2);
@@ -125,7 +171,7 @@ function DetailsChannel() {
   useEffect(() => {
     getRoles();
     subscribersList();
-  }, []);
+  }, [localUser]);
 
   //Role modalssssssss
   const [newRoleModal, setNewRoleModal] = useState(false);
@@ -302,7 +348,7 @@ function DetailsChannel() {
           </Card.Footer>
         </Card>
 
-        {channel.owner === userGlobal.username &&
+        {channel.owner === localUser.username &&
           channel.type === "CHANNEL_USERS" && (
             <div className="row">
               <h2 className="cool-font-medium mt-3">
@@ -349,7 +395,7 @@ function DetailsChannel() {
                               </svg>
                             </button>
                           </Link>
-                          {roles3.includes(userGlobal.username) && (
+                          {roles3.includes(localUser.username) && (
                             <>
                               <MatchRole
                                 inputString={user}
@@ -364,7 +410,7 @@ function DetailsChannel() {
                               />
                             </>
                           )}
-                          {roles4.includes(userGlobal.username) && (
+                          {roles4.includes(localUser.username) && (
                             <>
                               <MatchRole
                                 inputString={user}
@@ -386,6 +432,7 @@ function DetailsChannel() {
                         newRoleModel={newRoleModal}
                         username={user}
                         channel={channel.type}
+                        notify={notifyCannotChange}
                       />
                     </Col>
                   ))}

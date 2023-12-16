@@ -85,7 +85,7 @@ squealDriver.get('/', async function (req, res) {
 squealDriver.put('/:id', async function(req, res) {
     let authUser = authController.getAuthenticatedUser(req);
     let id = req.params['id'];
-    let newCords = (typeof req.body.new_position !== 'undefined' ? req.body.new_position: [0, 0]);
+    let newCords = (typeof req.body.squeal.new_position !== 'undefined' ? req.body.squeal.new_position: [0, 0]);
     if(Array.isArray(newCords) === false){
         newCords = [0,0];
     }

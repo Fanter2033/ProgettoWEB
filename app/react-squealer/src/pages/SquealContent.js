@@ -78,7 +78,6 @@ function SquealContent({ content, type, id }) {
       )}
       {type === "POSITION_AUTO" && (
         <>
-          <p>temporizzata</p>
           <RenderMap coordinates={content} />
         </>
       )}

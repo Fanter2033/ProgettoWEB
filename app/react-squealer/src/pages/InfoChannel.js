@@ -83,9 +83,9 @@ function InfoChannel() {
   //GET /user/{username}/roles/ LISTA CANALI SEGUITI E IL REALATIVO RUOLO DELL'UTENTE
   const [roleUser, setRoleUser] = useState([]);
   async function getRoles() {
-    if (typeof currentUser.username === "undefined") return;
+    if (typeof currentUser === "undefined" || typeof currentUser.username === 'undefined') return;
     try {
-      const uri = `${ReactConfig.base_url_requests}/user/${userGlobal.username}/roles/`;
+      const uri = `${ReactConfig.base_url_requests}/user/${currentUser.username}/roles/`;
       const options = {
         method: "GET",
         headers: {
@@ -138,7 +138,7 @@ function InfoChannel() {
 
   //DELETE /channel/{type}/{name}/users/{username}/ unfollow
   async function unfollow() {
-    const uri = `${ReactConfig.base_url_requests}/channel/${channel.type}/${channel.channel_name}/users/${userGlobal.username}`;
+    const uri = `${ReactConfig.base_url_requests}/channel/${channel.type}/${channel.channel_name}/users/${currentUser.username}`;
     const options = {
       method: "DELETE",
       headers: {
@@ -167,7 +167,8 @@ function InfoChannel() {
   const [newMessageNotification, setNewMessageNotification] = useState(false);
 
   async function logPast() {
-    if (typeof currentUser.username === "undefined") return;
+    if(channel.type === 'CHANNEL_USERS')
+      if (typeof currentUser === "undefined" || typeof currentUser.username === 'undefined') return;
 
     try {
       const url = `${ReactConfig.base_url_requests}/utils/squeals/${channel.type}/${channel.channel_name}`;
@@ -206,8 +207,6 @@ function InfoChannel() {
   useEffect(() => {
     whoAmI();
 
-    logPast();
-    getRoles();
     //const intervalId1 = setInterval(logPast, 10000); //10 sec
     const intervalId2 = setInterval(getRoles, 10000); //10 sec
     const intervalId3 = setInterval(logPast, 5000); //10 sec
@@ -756,7 +755,7 @@ function InfoChannel() {
                 <div>
                   <Reactions squeal={squeal._id} reaction={squeal.reaction} />
                 </div>
-                {userGlobal.username !== "" && (
+                {currentUser.username !== "" && (
                   <>
                     <Comment squeal={squeal._id} />
                     <ShowComment arrayComment={squeal.comments} />

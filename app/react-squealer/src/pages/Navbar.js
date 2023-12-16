@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { Outlet, NavLink } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 
@@ -23,6 +23,42 @@ none: opposto
 */
 
 function Navbar() {
+
+  const [isLogged, setIsLogged] = useState(false);
+
+  async function whoAmI() {
+    const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
+    fetch(uri, {
+      mode: "cors",
+      credentials: "include",
+    })
+        .then((res) => {
+          if (res.ok) {
+            setIsLogged(true);
+          } else {
+            setIsLogged(false);
+          }
+        })
+        .then((data) => {
+
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    //}
+  }
+
+  useEffect(() => {
+    whoAmI();
+  }, []);
+
+
+  if(isLogged === false){
+    return (
+        <div></div>
+    )
+  }
+
   return (
     <>
       {/*SCHERMI LARGE-----------------------------------------------------------------------------*/}

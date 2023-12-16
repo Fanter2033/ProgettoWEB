@@ -1051,10 +1051,13 @@ module.exports = class SquealController extends Controller {
             return output;
         }
 
+        newCords[0] = parseFloat(newCords[0]);
+        newCords[1] = parseFloat(newCords[1]);
+
         let tmp = newCords.join(',');
         tmp = `[${tmp}]`;
         newCords = tmp;
-        let result = await this._model.changeFieldMongoDB(squealDto.id, 'content', newCords);
+        let result = await this._model.changeFieldMongoDB(squealDto.id, 'content', newCords, true);
         if(result === false){
             output['code'] = 500;
             output['msg'] = 'Internal server error';

@@ -344,14 +344,16 @@ module.exports = class SquealModel extends Model {
      * @param {number} squeal_id
      * @param {string} field
      * @param {*} newValue
+     * @param {boolean} escapeControl
      * @return {Promise<boolean>}
      */
-    async changeFieldMongoDB(squeal_id, field, newValue){
+    async changeFieldMongoDB(squeal_id, field, newValue, escapeControl = false){
         await this.checkMongoose("Squeal", Squeal);
 
         squeal_id = this.mongo_escape(squeal_id);
         field = this.mongo_escape(field);
-        newValue = this.mongo_escape(newValue);
+        if(escapeControl === false)
+            newValue = this.mongo_escape(newValue);
 
         let filter = {_id: squeal_id}
         let update = {};

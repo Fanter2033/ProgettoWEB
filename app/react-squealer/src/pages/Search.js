@@ -21,7 +21,7 @@ function Search() {
   const searchChannel = () => {
     const url = `${
       ReactConfig.base_url_requests
-    }/channel?search=${encodeURIComponent(inputValue)}`;
+    }/channel?search=${encodeURIComponent(inputValue)}&limit=100`;
 
     fetch(url)
       .then((response) => response.json())
@@ -189,7 +189,7 @@ function Search() {
         {
           <Container>
             {channels.map((channel) => (
-              <Col lg={12} key={channel.channel_name}>
+              <Col lg={12} key={channel.type + channel.channel_name}>
                 <Card style={{ height: "100%" }} className="squeal mb-4">
                   <Card.Header className="d-flex justify-content-center align-items-center">
                     <Link to="/infoc" state={channel}>
