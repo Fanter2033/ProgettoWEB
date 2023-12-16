@@ -46,6 +46,23 @@ di andare a capo su più righe se lo spazio orizzontale è limitato.
               </div>
 */
 
+/*
+
+const secondiInUnMinuto = 60;
+const secondiInUnOra = 60 * secondiInUnMinuto;
+const secondiInUnGiorno = 24 * secondiInUnOra;
+const giorniInUnMese = 30; // un'approssimazione media
+const secondiInUnMese = giorniInUnMese * secondiInUnGiorno;
+const giorniInUnAnno = 365; // un'approssimazione media, non considerando anni bisestili
+const secondiInUnAnno = giorniInUnAnno * secondiInUnGiorno;
+
+console.log('Secondi in un minuto:', secondiInUnMinuto);
+console.log('Secondi in un'ora:', secondiInUnOra);
+console.log('Secondi in un giorno:', secondiInUnGiorno);
+console.log('Secondi in un mese:', secondiInUnMese);
+console.log('Secondi in un anno:', secondiInUnAnno);
+
+*/
 //TODO PUT SQUEAL /squeal/{identifier_id}  SOLO mappeeeeeeeee------------------------------------------------------------------------------------------------------------
 function Squeal() {
   const { userGlobal, setUserGlobal } = useUserContext();
@@ -76,6 +93,24 @@ function Squeal() {
             });
         //}
     }
+
+    useEffect(() => {
+        getUserQuote();
+        getUserData();
+        log();
+    }, [currentUser]);
+
+    const notify_quote = () =>
+        toast.error("Quota esaurita", {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+        });
 
   const notify = () =>
     toast.error("Manca desinatario. Riprovare", {
@@ -144,6 +179,7 @@ function Squeal() {
   const [userData, setUserData] = useState("");
 
   async function getUserData() {
+    if (typeof currentUser.username === "undefined") return;
     try {
       if(typeof currentUser.username === 'undefined') return;
       const uri = `${ReactConfig.base_url_requests}/user/${currentUser.username}`;
@@ -168,12 +204,14 @@ function Squeal() {
     } catch (error) {
       console.error("Errore nella fetch:", error);
     }
+    console.log(userData);
   }
 
   //GET QUOTE-----------------------------------------------------------------------------------------------
   const [userQuote, setUserQuote] = useState("");
 
   async function getUserQuote() {
+    if (typeof currentUser.username === "undefined") return;
     try {
       if(typeof currentUser.username === 'undefined') return;
       const uri = `${ReactConfig.base_url_requests}/user/${currentUser.username}/quote`;
@@ -204,6 +242,8 @@ function Squeal() {
   const [squealsLogger, setSquealsLogger] = useState([]);
 
   async function log() {
+    if (typeof currentUser.username === "undefined") return;
+
     try {
         if(typeof currentUser.username === 'undefined') return;
       const url = `${ReactConfig.base_url_requests}/utils/squeals/${currentUser.username}`;
@@ -231,17 +271,19 @@ function Squeal() {
 
   useEffect(() => {
       whoAmI();
+      getUserData();
+      getUserQuote();
+      log();
 
       const intervalId = setInterval(getUserQuote, 5000); //30 sec
-      //const intervalId1 = setInterval(whoAmI, 30000); //30 sec
+      const intervalId1 = setInterval(whoAmI, 30000); //30 sec
       const intervalId2 = setInterval(getUserData, 5000); //10 sec
 
       return () => {
           clearInterval(intervalId);
-          //clearInterval(intervalId1);
+          clearInterval(intervalId1);
           clearInterval(intervalId2);
       };
-
   }, []);
 
     useEffect(() => {
@@ -388,49 +430,59 @@ function Squeal() {
   //TEXT_AUTO bottoni ------------------------------------------------------------------------
   const [postText, setPostText] = useState("");
   const [clickedButtons, setClickedButtons] = useState([]);
+  const handleAutoText = (e) => {
+    const autoText = e.target.value;
+    const autoLenght = autoText.length;
 
-  const handleButtonClick = (buttonText) => {
-    // aggiungi il testo del bottone cliccato al testo del post
-    setPostText((prevText) => prevText + buttonText);
-
-    // aggiungi il testo del bottone alla lista dei bottoni cliccati
-    setClickedButtons((prevButtons) => [...prevButtons, buttonText]);
-
-    const inputText = postText;
-    console.log("auto text cost", postText);
-
-    const inputLength = inputText.length;
-
+    setPostText(autoText);
     // quota rimanente dopo il post
-    const remainingLimitD = liveDay - inputLength;
-    const remainingLimitW = liveWeek - inputLength;
-    const remainingLimitM = liveMonth - inputLength;
-
-    console.log("auto text cost", inputLength);
-
-    setUserInput(inputText);
+    let remainingLimitD = liveDay - autoLenght;
+    let remainingLimitW = liveWeek - autoLenght;
+    let remainingLimitM = liveMonth - autoLenght;
     setNewDay(remainingLimitD);
     setNewWeek(remainingLimitW);
     setNewMonth(remainingLimitM);
   };
 
-  //TODO:CHANGE
+  const handleButtonClick = (buttonText) => {
+    const wordButton = buttonText.length;
+    // aggiungi il testo del bottone cliccato al testo del post
+    setPostText((prevText) => prevText + buttonText);
+    // aggiungi il testo del bottone alla lista dei bottoni cliccati
+    setClickedButtons((prevButtons) => [...prevButtons, buttonText]);
+
+    if (newDay === 0) {
+      let remainingLimitD = liveDay - wordButton;
+      let remainingLimitW = liveWeek - wordButton;
+      let remainingLimitM = liveMonth - wordButton;
+
+      setNewDay(remainingLimitD);
+      setNewWeek(remainingLimitW);
+      setNewMonth(remainingLimitM);
+    } else {
+      let remainingLimitD = newDay - wordButton;
+      let remainingLimitW = newWeek - wordButton;
+      let remainingLimitM = newMonth - wordButton;
+
+      setNewDay(remainingLimitD);
+      setNewWeek(remainingLimitW);
+      setNewMonth(remainingLimitM);
+    }
+  };
+
   //POSITION_AUTO --------------------------------------------------------------------------------
   const [autoCoordinates, setAutoCoordinates] = useState(null);
   const handleAutoMaps = (position) => {
     setAutoCoordinates(position);
 
-    const iteration = 125 * numero1;
+    //console.log("Coordinate utente:", position);
 
-    const remainingLimitD = liveDay - iteration;
-    const remainingLimitW = liveWeek - iteration;
-    const remainingLimitM = liveMonth - iteration;
-
+    const remainingLimitD = liveDay - 125;
+    const remainingLimitW = liveWeek - 125;
+    const remainingLimitM = liveMonth - 125;
     setNewDay(remainingLimitD);
     setNewWeek(remainingLimitW);
     setNewMonth(remainingLimitM);
-
-    //console.log("Coordinate utente:", position);
   };
 
   //TYPE INPUT---------------------------------------------------------------------------------
@@ -471,9 +523,20 @@ function Squeal() {
           style={{ color: "#072f38", backgroundColor: "#528b57" }}
           accept="image/*"
           onChange={costImage}
-          className="form-control box cool-font-link"
+          className="form-control box cool-font-link mb-3"
         />
-        {base64Image && <img src={base64Image} alt="Selected" />}
+        {base64Image && (
+          <>
+            <figure className="cool-font-details">
+              <img
+                src={base64Image}
+                alt="Photo you want to post"
+                aria-label="Questa è l'immagine o foto che vorresti mandare a un tuo amico o postare su un canale"
+              />
+              <figcaption>Immagine che stai per postare</figcaption>
+            </figure >
+          </>
+        )}
       </div>
     );
   } else if (inputType === "VIDEO_URL") {
@@ -558,7 +621,7 @@ function Squeal() {
           placeholder="MINIMO 5 SECONDI"
           value={postText}
           className="form-control box cool-font-link"
-          onChange={(e) => setPostText(e.target.value)}
+          onChange={handleAutoText}
         />
         <div className="text-wrap mt-2">
           <button
@@ -621,23 +684,6 @@ function Squeal() {
               onChange={handleNumero1Change}
             />
           </div>
-          <div className="">
-            <label htmlFor="numero2" className="me-2 cool-font-details">
-              OGNI QUANTI SECONDI?
-            </label>
-            <input
-              type="number"
-              id="numero2"
-              value={numero2}
-              style={{
-                width: "20%",
-                color: "#072f38",
-                backgroundColor: "#528b57",
-                borderRadius: "0.5rem",
-              }}
-              onChange={handleNumero2Change}
-            />
-          </div>
         </label>
 
         <MapComponent onLocationChange={handleAutoMaps} />
@@ -667,9 +713,142 @@ function Squeal() {
     */
   }
 
-  //TODO: POST SQUEAL /squeal/ per MAPPE TEMPORIZZATE------------------------------------------------------------------------------------------------------------
+  const [userLocation, setUserLocation] = useState(null);
+
+  const getLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const userLocation = [
+            position.coords.latitude,
+            position.coords.longitude,
+          ];
+          setUserLocation(userLocation);
+        },
+        (error) => {
+          console.error("Error getting user location:", error);
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+    }
+  };
+
+  useEffect(() => {
+    getLocation();
+  }, []);
+
+  async function eseguiOgni10Secondi(
+    iterazioneCorrente,
+    lim,
+    id,
+    autoCoordinates
+  ) {
+    //PUT SQUEAL /squeal/ per MAPPE TEMPORIZZATE------------------------------------------------------------------------------------------------------------
+    console.log("coordinate", autoCoordinates);
+
+    //per numero1 volte ongi 5sec
+    let data = {};
+    data = {
+      squeal: {
+        destinations: destinatariFromDest,
+        sender: userGlobal.username,
+        message_type: inputType,
+        new_position: userLocation,
+      },
+    };
+
+    const uri = `${ReactConfig.base_url_requests}/squeal/${id}`;
+    const options = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      mode: "cors",
+      body: JSON.stringify(data),
+    };
+
+    fetch(uri, options)
+      .then((res) => {
+        //console.log(res);
+        if (res.ok) {
+          //creation ok
+          return res.json();
+        }
+      })
+      .then((data) => {
+        console.log("Cambio mappa went good");
+      })
+      .catch((error) => {
+        console.error("Cambio mappa failed, error:", error);
+      });
+
+    iterazioneCorrente++;
+    if (iterazioneCorrente <= lim) {
+      setTimeout(
+        () => eseguiOgni10Secondi(iterazioneCorrente, lim, id, userLocation),
+        10000
+      );
+    }
+  }
+
+  //POST SQUEAL /squeal/ MAPPE TEMPORIZZATE------------------------------------------------------------------------------------------------------------
+  async function postAuto() {
+    let data = {};
+    const coordinates = autoCoordinates;
+    data = {
+      squeal: {
+        destinations: destinatariFromDest,
+        sender: userGlobal.username,
+        message_type: inputType,
+        content: coordinates,
+      },
+    };
+
+    //console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbb", coordinates);
+    //console.log("aaaaaaaaaaaaaaaaaaaa", markerCoordinates);
+
+    const uri = `${ReactConfig.base_url_requests}/squeal/`;
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      mode: "cors",
+      body: JSON.stringify(data),
+    };
+
+    fetch(uri, options)
+      .then((response) => {
+        if (response.ok) {
+          //console.log("POST mappa temporizzatra riuscita con successo");
+          return response.json();
+        }
+      })
+      .then((json) => {
+        //console.log(json, "PALLE");
+        // Avvia la prima esecuzione
+        const id = json._id;
+        eseguiOgni10Secondi(1, numero1, id, coordinates);
+      })
+      .catch((error) => {
+        console.error("Network error", error);
+      });
+  }
+
+  //POST SQUEAL /squeal/ ------------------------------------------------------------------------------------------------------------
   async function postSqueal(e) {
     e.preventDefault();
+    if (newDay < 0 || newWeek < 0 || newMonth < 0) {
+      notify_quote();
+
+      const extra = -newDay;
+      console.log(extra);
+      return null;
+    }
+
     /*
     squeal:{
       destinations
@@ -704,6 +883,8 @@ function Squeal() {
             sender: currentUser.username,
             message_type: inputType,
             content: coordinates,
+            auto_iterations: numero1,
+            auto_seconds_delay: numero2,
           },
         };
 
@@ -736,33 +917,8 @@ function Squeal() {
           return;
         }
       } else if (inputType === "POSITION_AUTO") {
-        //TODO:CHANGE
-        const coordinates = autoCoordinates;
-        data = {
-          squeal: {
-            destinations: destinatariFromDest,
-            sender: currentUser.username,
-            message_type: inputType,
-            content: coordinates,
-            auto_iterations: numero1,
-            auto_seconds_delay: numero2,
-          },
-        };
-        if (numero1 === "" || numero2 === "") {
-          notify3();
-          return;
-        }
-        if (numero1 < 5) {
-          notify4();
-          return;
-        }
-        if (numero2 < 2) {
-          notify5();
-          return;
-        }
-
-        console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbb", coordinates);
-        //console.log("aaaaaaaaaaaaaaaaaaaa", markerCoordinates);
+        postAuto();
+        return null;
       } else {
         data = {
           squeal: {
@@ -789,6 +945,7 @@ function Squeal() {
         .then((response) => {
           if (response.ok) {
             console.log("POST Squeal riuscita con successo");
+
             clear();
             navigate("/received");
           } else {
@@ -836,6 +993,7 @@ function Squeal() {
                     inputType === "MESSAGE_TEXT" ? "active" : ""
                   }`}
                   onClick={() => setInputType("MESSAGE_TEXT")}
+                  aria-label="messaggio"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -855,6 +1013,7 @@ function Squeal() {
                     inputType === "IMAGE" ? "active" : ""
                   }`}
                   onClick={() => setInputType("IMAGE")}
+                  aria-label="immagine"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -875,6 +1034,7 @@ function Squeal() {
                     inputType === "VIDEO_URL" ? "active" : ""
                   }`}
                   onClick={() => setInputType("VIDEO_URL")}
+                  aria-label="video"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -895,6 +1055,7 @@ function Squeal() {
                     inputType === "POSITION" ? "active" : ""
                   }`}
                   onClick={() => setInputType("POSITION")}
+                  aria-label="posizionr"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -915,6 +1076,7 @@ function Squeal() {
                     inputType === "TEXT_AUTO" ? "active" : ""
                   }`}
                   onClick={() => setInputType("TEXT_AUTO")}
+                  aria-label="messaggi temporizzati"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -936,6 +1098,7 @@ function Squeal() {
                     inputType === "POSITION_AUTO" ? "active" : ""
                   }`}
                   onClick={() => setInputType("POSITION_AUTO")}
+                  aria-label="posizione temporizzata"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -1027,7 +1190,11 @@ function Squeal() {
                       <b>{squeal.sender}</b>
                     </Card.Header>
                     <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
-                      <div className="cool-font-text">{squeal.content}</div>
+                      <SquealContent
+                        content={squeal.content}
+                        type={squeal.message_type}
+                        id={squeal._id}
+                      />
                     </Card.Body>
                     <Card.Footer>
                       <div className="cool-font-details">Id: {squeal._id}</div>
@@ -1046,10 +1213,3 @@ function Squeal() {
 }
 
 export default Squeal;
-
-/*
- <SquealContent
-   content={squeal.content}
-   type={squeal.message_type}
- />
-*/

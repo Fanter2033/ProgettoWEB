@@ -145,11 +145,12 @@ function DetailsChannel() {
 
   return (
     <>
-      <div className="container pt-2">
+      <div className="container pt-2 pb-5">
         <div className="row d-flex flex-row justify-content-center align-items-content mt-3">
           <button
             className="red-button box w-25"
             onClick={() => window.history.back()}
+            aria-label="clicca se vuoi tornare alla pagina precedente"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -181,7 +182,10 @@ function DetailsChannel() {
                 >
                   <path d="M15 8a6.973 6.973 0 0 0-1.71-4.584l-9.874 9.875A7 7 0 0 0 15 8M2.71 12.584l9.874-9.875a7 7 0 0 0-9.874 9.874ZM16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0" />
                 </svg>
-                <div className="cool-font-medium altro"> &nbsp;BLOCCATO&nbsp;</div>
+                <div className="cool-font-medium altro">
+                  {" "}
+                  &nbsp;BLOCCATO&nbsp;
+                </div>
                 <div>NON SI PUO SCRIVERE</div>
               </div>
             </>
@@ -196,9 +200,13 @@ function DetailsChannel() {
           </Card.Header>
 
           <Card.Body>
-            <h3 className="cool-font-medium">
-              DESCRIZIONE: {channel.description}
-            </h3>
+            {channel.channel_type === "CHANNEL_OFFICIAL" && (
+              <>
+                <h3 className="cool-font-medium">
+                  DESCRIZIONE: {channel.description}
+                </h3>
+              </>
+            )}
 
             {channel.type === "CHANNEL_USERS" && (
               <p className="cool-font-small mb-0">CREATORE: {channel.owner}</p>
@@ -297,7 +305,9 @@ function DetailsChannel() {
         {channel.owner === userGlobal.username &&
           channel.type === "CHANNEL_USERS" && (
             <div className="row">
-              <h2 className="cool-font-medium mt-3">PER IL CREATORE DEL CANALE</h2>
+              <h2 className="cool-font-medium mt-3">
+                PER IL CREATORE DEL CANALE
+              </h2>
 
               <div className="">
                 <ChangeNameChannel />{" "}
@@ -318,13 +328,13 @@ function DetailsChannel() {
 
               <Container>
                 <Row>
-                  {following.map((user) => (
-                    <Col lg={12} key={user.id} className="mb-4">
+                  {following.map((user, index) => (
+                    <Col lg={12} key={index} className="mb-4">
                       <Card className="w-100 squeal">
                         {" "}
                         <Card.Body className="mb-4 d-flex flex-column justify-content-center align-items-center">
                           <Link to="/infou" state={user}>
-                            <button className="ms-4 me-4 custom-button box mb-3">
+                            <button className="ms-4 me-4 custom-button box mb-3" aria-label="clicca se vuoi avere informazioni sull'utente">
                               <b> {user} </b>
 
                               <svg
@@ -339,8 +349,22 @@ function DetailsChannel() {
                               </svg>
                             </button>
                           </Link>
-                          {(roles3.includes(userGlobal.username) ||
-                            roles4.includes(userGlobal.username)) && (
+                          {roles3.includes(userGlobal.username) && (
+                            <>
+                              <MatchRole
+                                inputString={user}
+                                array1={roles0}
+                                array2={roles1}
+                                array3={roles2}
+                                array4={roles3}
+                                array5={roles4}
+                                name={channel.channel_name}
+                                type={channel.type}
+                                onInputPresenceChange={handleInputPresence}
+                              />
+                            </>
+                          )}
+                          {roles4.includes(userGlobal.username) && (
                             <>
                               <MatchRole
                                 inputString={user}

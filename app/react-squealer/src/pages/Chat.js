@@ -38,11 +38,10 @@ function Chat() {
     } catch (error) {
       console.error("Errore nella fetch:", error);
     }
-    //console.log("CHAAAAAAAAAT", squeals);
   }
 
   useEffect(() => {
-    const intervalId1 = setInterval(chatReq, 10000); //10 sec
+    const intervalId1 = setInterval(chatReq, 10000);
     chatReq();
     return () => {
       clearInterval(intervalId1);
@@ -54,17 +53,17 @@ function Chat() {
       <div className="container-flex pb-5">
         <div className="row ">
           <div className="col-12 justify-content-center align-items-center">
-            <h1 className="cool-font">CHAT</h1>
+            <h1 className="cool-font-medium">CHAT</h1>
             <Container className="">
               <Row className="">
                 {squeals.map((squeal) => (
                   <Col lg={12} className="mb-4" key={squeal._id}>
                     <Card style={{ width: "100%" }} className="squeal">
                       <Card.Header className="d-flex flex-column justify-content-center align-items-center">
-                        <div className="row">
-                          <b> DA: </b>
+                        <div>
+                          <b className="cool-font-details"> DA: </b>
                           <Link to="/infou" state={squeal.sender}>
-                            <button className="ms-4 me-4 custom-button box">
+                            <button className=" ms-2 custom-button box" aria-label="clicca se vuoi avere informazioni sull'utente">
                               <b>{squeal.sender} </b>
 
                               <svg
@@ -81,14 +80,15 @@ function Chat() {
                           </Link>
                         </div>
                         <div className="row cool-font-details mt-2">
-                          <div>Id: {squeal._id}</div>
+                          <div>ID: {squeal._id}</div>
                           <TypeSqueal typeSqueal={squeal.message_type} />
                         </div>
                       </Card.Header>
-                      <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
+                      <Card.Body className="mb-4 d-flex flex-column justify-content-center align-items-center">
                         <SquealContent
                           content={squeal.content}
                           type={squeal.message_type}
+                          id={squeal._id}
                         />
                       </Card.Body>
                       <Card.Footer>
@@ -115,3 +115,18 @@ function Chat() {
 }
 
 export default Chat;
+
+/*
+
+
+
+
+
+
+
+
+
+                         <div>
+ {squeal.content}
+ </div>
+*/

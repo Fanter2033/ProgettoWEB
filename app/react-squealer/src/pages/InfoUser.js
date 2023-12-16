@@ -132,8 +132,9 @@ function InfoUser() {
       <div className="container pb-5">
         <div className="col-12">
           <button
-            className="red-button box w-25"
+            className="red-button box w-25 mt-2"
             onClick={() => window.history.back()}
+            aria-label="clicca se vuoi tornare alla pagina precedente"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -171,7 +172,16 @@ function InfoUser() {
 
               <h1 className="cool-font-medium mt-4 mb-2">
                 USERNAME: {userData.username}
-                {userData.vip && <img src={pink} style={{ width: "10%" }} />}
+                {userData.vip && (
+                  <>
+                    <img
+                      src={pink}
+                      style={{ width: "10%" }}
+                      alt="profile foto of user"
+                      aria-label="Questa icona è renderizzata in maniera condizionale ed è visibile unicamente per utenti vip"
+                    />
+                  </>
+                )}
               </h1>
               <h2 className="cool-font-medium">NOME: {userData.first_name}</h2>
               <h2 className="cool-font-medium">

@@ -6,12 +6,6 @@ import { useUserContext } from "../config/UserContext";
 
 import { Modal } from "react-bootstrap";
 import "../css/App.css";
-//!vip
-/*
-user: string
-linked_smm: string
-linked_users: []
-*/
 
 function ConnectSMM({ openConnect, closeConnect }) {
   const { userGlobal } = useUserContext();
@@ -49,7 +43,7 @@ function ConnectSMM({ openConnect, closeConnect }) {
       console.error("Errore nella fetch:", error);
     }
   }
-  //console.log(userData);
+
   useEffect(() => {
     getUserData();
     const intervalId = setInterval(getUserData, 30000); //30 sec
@@ -115,26 +109,23 @@ function ConnectSMM({ openConnect, closeConnect }) {
     backgroundColor: "#e0bb76",
   };
 
-  const [mySmm, setMySmm] = useState("");
   //GET /user/{username}/my-smm-----------------------------------------------------------------------------------------------------
+  const [mySmm, setMySmm] = useState("");
   async function getSmm() {
+    const uri = `${ReactConfig.base_url_requests}/user/${userData.username}/my-smm`;
+
     try {
-      const uri = `${ReactConfig.base_url_requests}/user/${userData.username}/my-smm`;
+      const res = await fetch(uri);
 
-      let res = await fetch(uri);
-
-      console.log(res);
       if (res.ok) {
-        let data = res.body;
-        console.log(data);
-        setMySmm(data);
-        return data;
+        let data = await res.json();
+        let smm = data.smm;
+        setMySmm(smm);
       } else {
         console.error("Errore nella richiesta:", res.statusText);
       }
-      console.log(mySmm);
     } catch (error) {
-      console.error("Errore nella fetch:", error);
+      console.error("Errore di rete:", error);
     }
   }
 
@@ -142,14 +133,19 @@ function ConnectSMM({ openConnect, closeConnect }) {
     <div>
       <Modal show={openConnect} onHide={closeConnect} centered>
         <Modal.Header closeButton className="custom-modal-header">
-          <Modal.Title className="cool-font-medium" style= {{color:"#e0bb76"}}>
+          <Modal.Title
+            className="cool-font-medium"
+            style={{ color: "#e0bb76" }}
+          >
             GESTISCI SMM QUI
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body className="custom-modal-body cool-font-link" >
+        <Modal.Body className="custom-modal-body cool-font-link">
           <div className="row d-flex justify-content-center align-items-center">
             <div className="col-6">
-              <p style= {{color:"##528b57"}}>CONNETTI IL TUO SMM</p>
+              <p className="cool-font-details" style={{ color: "##528b57" }}>
+                CONNETTI IL TUO SMM
+              </p>
               <input
                 className="form-control cool-font-details text-center box"
                 type="text"
@@ -164,15 +160,22 @@ function ConnectSMM({ openConnect, closeConnect }) {
               >
                 CONNETTI
               </button>
-              <p style= {{color:"#072f38"}}>NOME DEL TUO SMM</p>
+              <p style={{ color: "#072f38" }}>NOME DEL TUO SMM</p>
               <button
                 className="blue-button box w-100 cool-font-small"
                 onClick={getSmm}
               >
                 VAI
               </button>
+              {mySmm && (
+                <>
+                  <button className=" mt-2 cool-font-details blue-button w-100">{mySmm}</button>
+                </>
+              )}
 
-              <p style= {{color:"#b45656"}} className="mt-4">RIMUOVI SMM</p>
+              <p style={{ color: "#b45656" }} className="mt-4">
+                RIMUOVI SMM
+              </p>
               <button
                 className="red-button mb-2 box w-100 cool-font-small"
                 onClick={removeSmm}

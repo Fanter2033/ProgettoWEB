@@ -1,9 +1,11 @@
 import React from "react";
-import { useLocation, Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import ReactConfig from "../config/ReactConfig";
 
 import { useUserContext } from "../config/UserContext";
+
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { Modal } from "react-bootstrap";
 import "../css/App.css";
@@ -21,7 +23,21 @@ function ChangeRoleModal({ closeRole, newRoleModel, username, channel }) {
   //!se iscritto
   const [selectedValue, setSelectedValue] = useState(null);
 
-  async function changeRoleSub() {
+  const notify = () =>
+    toast.error("Non puoi cambiare il creatore", {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
+  const changeRoleSub = (e) => {
+    e.preventDefault();
+
     const uri = `${ReactConfig.base_url_requests}/channel/${channel}/${username}`;
     const data = {
       new_role: selectedValue,
@@ -37,19 +53,21 @@ function ChangeRoleModal({ closeRole, newRoleModel, username, channel }) {
       body: JSON.stringify(data),
     };
 
-    await fetch(uri, options)
+    fetch(uri, options)
       .then((response) => {
-        if (response.ok) {
+        if (response.ok === 401) {
+          alert("puo' esserci un solo creatore");
+          notify();
+          console.error("PATCH cambio ruolo ERROR", response.statusText);
+        } else {
           console.log(response);
           console.log("PATCH cambio ruolo OK");
-        } else {
-          console.error("PATCH cambio ruolo ERROR", response.statusText);
         }
       })
       .catch((error) => {
         console.error("Network error", error);
       });
-  }
+  };
   const handleButtonClick = (value) => {
     setSelectedValue(value);
     console.log(selectedValue);
@@ -80,15 +98,22 @@ function ChangeRoleModal({ closeRole, newRoleModel, username, channel }) {
             className="my-foot d-flex justify-content-center"
             style={footerStyle}
           >
-            <button className="green-button box cool-font-medium w-100" onClick={changeRoleSub}>
+            <button
+              className="green-button box cool-font-medium w-100"
+              onClick={changeRoleSub}
+            >
               CAMBIA
             </button>
-            <button className="blue-button box cool-font-medium w-100" onClick={closeRole}>
+            <button
+              className="blue-button box cool-font-medium w-100"
+              onClick={closeRole}
+            >
               ANNULLA
             </button>
           </Modal.Footer>
         </Modal>
       </div>
+      <ToastContainer />
     </>
   );
 }

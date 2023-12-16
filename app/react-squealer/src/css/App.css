@@ -48,16 +48,6 @@ body {
   background-color: var(--squeal-blue);
   color: var(--squeal-yellow);
 }
-#elemento-espanso {
-  position: absolute; /* Posizionamento assoluto rispetto alla view*/
-  top: 0; /* Inizia dall'alto della viewport */
-  right: 0; /* Finisce a destra della viewport */
-  bottom: 0; /* Finisce in basso della viewport */
-  left: 0; /* Inizia da sinistra della viewport */
-  width: 100vw;
-  background-color: var(--squeal-yellow);
-}
-
 /* -----------------SQUEAL CARD STUFF------------------ */
 .squeal {
   background-color: var(--squeal-yellow) !important;
@@ -69,7 +59,7 @@ body {
   color: var(--squeal-blue) !important;
 }
 
-/* -----------------FONT STUFF------------------ */
+/* -----------------CHUBBY FONT STUFF------------------ */
 .cool-font {
   font-family: "Cool-Font", sans-serif;
   font-size: 10vw;
@@ -123,6 +113,48 @@ body {
   src: url("../../public/ArchivoBlack-Regular.ttf");
 }
 
+/* -----------------REGULAR FONT STUFF------------------ */
+@font-face {
+  font-family: "Cool-Regular";
+  src: url("../../public/Archivo-Regular.ttf");
+}
+.cool-regular {
+  font-family: "Cool-Regular", sans-serif;
+  font-size: 3vw;
+}
+
+/* -----------------MEDIUM FONT STUFF------------------ */
+@font-face {
+  font-family: "Cool-Medium";
+  src: url("../../public/Archivo-Medium.ttf");
+}
+.cool-medium {
+  font-family: "Cool-Medium", sans-serif;
+  font-size: 4vw;
+  color: var(--squeal-blue)
+}
+
+/* -----------------LIGHT FONT STUFF------------------ */
+@font-face {
+  font-family: "Cool-Light";
+  src: url("../../public/Archivo-Light.ttf");
+}
+.cool-light {
+  font-family: "Cool-Light", sans-serif;
+  font-size: 3vw;
+}
+
+/* -----------------ITALIC FONT STUFF------------------ */
+@font-face {
+  font-family: "Cool-Italic";
+  src: url("../../public/Archivo-Italic.ttf");
+}
+.cool-italic {
+  font-family: "Cool-Italic", sans-serif;
+  font-size: 3vw;
+}
+
+/* -----------------3D------------------ */
 .text-3d {
   font-family: "Cool-Font", sans-serif;
   font-size: 10vw;
@@ -132,6 +164,11 @@ body {
 
   transform: perspective(400px) rotateX(20deg);
 }
+
+.box {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 1);
+}
+
 /* -----------------LIST STUFF------------------ */
 .list:hover {
   background-color: var(--squeal-blue);
@@ -139,11 +176,9 @@ body {
 }
 
 /* -----------------LINK STUFF------------------ */
-.youtube-link {
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.link-comment {
+  text-decoration: none; /* Rimuove la sottolineatura */
+  color: var(--squeal-blu);
 }
 
 /* -------------------- BUTTON STUFF ------------------*/
@@ -397,11 +432,6 @@ img {
     max-width: 70vw;
     max-height: 30vh; /* Riduci ulteriormente la larghezza dell'immagine al 60% del suo contenitore */
   }
-}
-
-/* -------------------- 3D EFFECT ------------------*/
-.box {
-  box-shadow: 0 0 10px rgba(0, 0, 0, 1);
 }
 
 /* --------------------VOLTURE ------------------*/

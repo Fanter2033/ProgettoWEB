@@ -3,7 +3,7 @@ import Creators from "./Creators";
 function About() {
   return (
     <div className="p-5">
-      <button className="red-button box" onClick={() => window.history.back()}>
+      <button className="red-button box" onClick={() => window.history.back()} aria-label="Go to previous page">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"
@@ -11,6 +11,7 @@ function About() {
           fill="currentColor"
           className="bi bi-arrow-left"
           viewBox="0 0 16 16"
+          aria-hidden="true"
         >
           <path
             fillRule="evenodd"

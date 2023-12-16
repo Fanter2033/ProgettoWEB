@@ -211,7 +211,7 @@ function LoginForm() {
       <div className="col-12 text-center pt-5 animated-title-container">
         <div className="row  ">
           <div className="col-12 d-flex flex-col justify-content-center align-items-center">
-            <h1 className="animated-title cool-font">Log in to</h1>
+            <h1 className="animated-title cool-font">Accedi a </h1>
             <h1 className="animated-squeal cool-font" aria-label="Squealer">
               &#129413;
             </h1>
@@ -222,13 +222,11 @@ function LoginForm() {
       <div className="row justify-content-center animated-top">
         <div className="col-6">
           <form onSubmit={handleLogin}>
-            <div className="form-group row p-2 mb-0">
+            <div className="form-group row  mb-0">
               <label
                 htmlFor="inputUsername"
                 className="form-label cool-font-medium"
-              >
-                Username
-              </label>
+              ></label>
               <input
                 type="text"
                 className="form-control cool-font-text text-center box"
@@ -236,6 +234,7 @@ function LoginForm() {
                 id="inputUsername"
                 aria-describedby="username"
                 autoComplete="on"
+                placeholder="Username"
                 value={usernameForm}
                 onChange={(e) => setUsernameForm(e.target.value)}
                 ref={input1Ref}
@@ -243,13 +242,11 @@ function LoginForm() {
               />
             </div>
 
-            <div className="form-group row p-2 mb-3">
+            <div className="form-group row  mb-3">
               <label
                 htmlFor="inputPassword5"
                 className="form-label cool-font-medium"
-              >
-                Password
-              </label>
+              ></label>
               <input
                 type="password"
                 id="inputPassword"
@@ -257,26 +254,27 @@ function LoginForm() {
                 style={{ color: "#072f38", backgroundColor: "#e0bb76" }}
                 aria-describedby="password"
                 autoComplete="on"
+                placeholder="Password"
                 value={passwordForm}
                 ref={input2Ref}
                 onChange={(e) => setPasswordForm(e.target.value)}
               />
             </div>
 
-            <div className="form-group row p-2">
+            <div className="form-group row ">
               <button
                 className="col-12 mb-3 green-button box cool-font-text box"
                 type="submit"
                 onKeyDown={handleKeyFinal}
               >
                 <ToastContainer />
-                LOGIN
+                ACCEDI
               </button>
               <button
                 className="red-button box cool-font-text mb-3 box"
                 onClick={resetPassword}
               >
-                Password <br/> dimenticata?
+                PASSWORD <br /> DIMENTICATA?
               </button>
             </div>
           </form>
@@ -284,41 +282,45 @@ function LoginForm() {
           {showReset && (
             <Modal show={showReset} onHide={closeReset} centered>
               <Modal.Header closeButton className="modal-delete-header">
-                <h1 className="cool-font-text">Recupero Password</h1>
+                <h1 className="cool-font-medium">RECUPERO PASSWORD</h1>
               </Modal.Header>
-              <Modal.Body className="modal-delete-body p-4 d-flex flex-row justify-content-center align-items-center">
-                <form onSubmit={resetPassword}>
-                  <label className="form-label cool-font-text">Username</label>
+              <form onSubmit={resetPassword}>
+                <Modal.Body className="modal-delete-body p-4 d-flex flex-column justify-content-center align-items-center">
+                  <label className="form-label cool-font-text">USERNAME</label>
                   <input
                     type="text"
                     style={{
                       width: "80%",
-                      color: "#072f38",
+                      color: "#e0bb76",
+
                       backgroundColor: "#072f38",
                       borderRadius: "0.5rem",
                     }}
                     value={usernameReset}
                     onChange={(e) => setUsernameReset(e.target.value)}
+                    className="cool-font-medium"
                   />
-                  <label className="form-label cool-font-text">
-                    Qual è il tuo hobby preferito?
+                  <label className="form-label cool-font-text mt-1">
+                    QUAL È IL TUO PASSANTEMPO PREFERITO?
                   </label>
                   <input
                     type="text"
                     style={{
                       width: "80%",
-                      color: "#072f38",
+                      color: "#e0bb76",
+
                       backgroundColor: "#072f38",
                       borderRadius: "0.5rem",
                     }}
                     value={reset}
                     onChange={handleInputChange}
+                    className="cool-font-medium"
                   />
                   <label
                     htmlFor="inputPassword5"
-                    className="form-label cool-font-text"
+                    className="form-label cool-font-text mt-4"
                   >
-                    Nuova password:
+                    NUOVA PASSWORD
                   </label>
                   <input
                     type="password"
@@ -326,41 +328,40 @@ function LoginForm() {
                     className="form-control cool-font-link text-center"
                     id="inputPassword"
                     style={{
-                      fontColor: "#b45656",
+                      width: "80%",
+                      color: "#e0bb76",
                       backgroundColor: "#072f38",
                       borderRadius: "0.5rem",
                     }}
                     value={newPassword}
                     aria-describedby="passwordHelpBlock"
-                    placeholder="Password"
                     onChange={(e) => setNewPassword(e.target.value)}
                     required
                   />
+                </Modal.Body>
 
+                <Modal.Footer
+                  style={footerStyle}
+                  className="d-flex justify-content-center"
+                >
                   <button
                     type="submit"
-                    className="blue-button box mt-3 cool-font-small col-6"
+                    className="blue-button box mt-3 cool-font-medium col-6"
                   >
                     ACCEDI
                   </button>
-                </form>
-              </Modal.Body>
-
-              <Modal.Footer
-                style={footerStyle}
-                className="d-flex justify-content-center"
-              >
-                <button
-                  className="red-button box cool-font-small col-6"
-                  onClick={closeReset}
-                >
-                  ANNULLA
-                </button>
-              </Modal.Footer>
+                  <button
+                    className="red-button box cool-font-medium col-6"
+                    onClick={closeReset}
+                  >
+                    ANNULLA
+                  </button>
+                </Modal.Footer>
+              </form>
             </Modal>
           )}
-          <div className="row p-2 mb-5">
-            <button className="col-12 mb-3 yellow-button">
+          <div className="row  mb-5">
+            <button className="col-12 mb-3 yellow-button box">
               <NavLink
                 className="cool-font-text"
                 to={ReactConfig.pathFunction("/registration")}
@@ -369,12 +370,12 @@ function LoginForm() {
               </NavLink>
             </button>
 
-            <button className="col-12 mb-5 yellow-button">
+            <button className="col-12 mb-5 yellow-button box">
               <NavLink
-                className="cool-font-text"
+                className="cool-font-text "
                 to={ReactConfig.pathFunction("/home")}
               >
-              SALTA IL LOGIN
+                SALTA IL LOGIN
               </NavLink>
             </button>
           </div>

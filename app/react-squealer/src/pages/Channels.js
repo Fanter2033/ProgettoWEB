@@ -14,13 +14,10 @@ import MenuTag from "./MenuTag";
 import "../css/LoginForm.css";
 import "react-toastify/dist/ReactToastify.css";
 
-import { Container, Card, Col, Row } from "react-bootstrap";
+import { Card, Row } from "react-bootstrap";
 import "../css/App.css";
 import squeal_logo from "./media/icone/Nav_logo.png";
 
-/*
-jADiaT60QVDL3bR4I8etxbYBbxT3YtnMOIq2r4LD
-*/
 function Channels() {
   const { userGlobal, setUserGlobal } = useUserContext();
   let [currentUser, setCurrentUser] = useState({});
@@ -237,23 +234,16 @@ function Channels() {
           <div className="row d-flex justify-content-center ms-1 me-1 w-100">
             <h3>TODO:</h3>
             <ul className="list-group col-md-4">
-              <li key="a1" className="list-group-item list">
-                GESTIONE RUOLI AMIN: PATCH new_role
+              <li key={"a1"} className="list-group-item list">GESTIONE CAMBIO RUOLI</li>
+              <li key={"a2"} className="list-group-item list">
+                extra: usare limit, offset
               </li>
-              <li key="a2" className="list-group-item list">CREARE 3 CANALI API</li>
-              <li key="a3" className="list-group-item list">URL: limit, offset</li>
-              <li key="a4" className="list-group-item list">
-                criterio squeals appartenenza canale
-              </li>
-              <li key="a5" className="list-group-item list">
-                canali silenziabili o popolari??
-              </li>
+              <li className="list-group-item list">extra: notifiche</li>
             </ul>
           </div>
           <div className="col-12 mt-5">
             <div>
               <div>
-                <div className="d-flex justify-content-evenly align-items-center"></div>
 
                 <div>
                   <Row>
@@ -304,7 +294,7 @@ function Channels() {
                         <Card key={u.id} className="squeal mb-4">
                           <Card.Header className="d-flex justify-content-center align-items-center">
                             <Link to="/infoc" state={u}>
-                              <button className="custom-button me-2">
+                              <button className="custom-button me-2" aria-label="clicca se vuoi avere informazioni sull'utente">
                                 <b className="">{u.channel_name} &nbsp;</b>
 
                                 <svg
@@ -386,7 +376,7 @@ function Channels() {
                         <Card key={u.id} className="squeal mb-4">
                           <Card.Header className="d-flex justify-content-center align-items-center">
                             <Link to="/infoc" state={u}>
-                              <button className="custom-button me-2">
+                              <button className="custom-button me-2" aria-label="clicca se vuoi avere informazioni sul canale">
                                 <b className="">{u.channel_name} &nbsp;</b>
 
                                 <svg
@@ -468,7 +458,7 @@ function Channels() {
                         <Card key={u.id} className="squeal mb-4">
                           <Card.Header className="d-flex justify-content-center align-items-center">
                             <Link to="/infoc" state={u}>
-                              <button className="custom-button me-2">
+                              <button className="custom-button me-2" aria-label="clicca se vuoi avere informazioni sul canale">
                                 <b className="">{u.channel_name} &nbsp;</b>
 
                                 <svg

@@ -2,7 +2,6 @@ import React from "react";
 import { useState } from "react";
 import "../css/App.css";
 
-//TODO: CHECK SE DEST ESISTE?
 const Dest = ({ onDestinatariSubmit }) => {
   const [destinatari, setDestinatari] = useState("");
   const [destinatariArray, setDestinatariArray] = useState([]);

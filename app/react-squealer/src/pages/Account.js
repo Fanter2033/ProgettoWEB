@@ -1,15 +1,11 @@
-import React, {useEffect} from "react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { useUserContext } from "../config/UserContext";
-
-import Geo from "./Geo";
 
 import ChangePfp from "./ChangePfp.js";
 import ChangeUsername from "./ChangeUsername";
@@ -49,29 +45,25 @@ function Account() {
   //per il logout
   const navigate = useNavigate();
 
-  //const navigate_logout = useNavigate();
-
   async function whoAmI() {
-    //if (userGlobal.username === undefined || userGlobal.username === "") {
-      //GET WHO AM I--------------------------------------------------------------------------------
-      const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
-      fetch(uri, {
-        mode: "cors",
-        credentials: "include",
+    //GET WHO AM I--------------------------------------------------------------------------------
+    const uri = `${ReactConfig.base_url_requests}/auth/whoami`;
+    fetch(uri, {
+      mode: "cors",
+      credentials: "include",
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
       })
-        .then((res) => {
-          if (res.ok) {
-            return res.json();
-          }
-        })
-        .then((data) => {
-          console.log("Tutto ok, io sono:", data);
-          setCurrentUser(data);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    //}
+      .then((data) => {
+        console.log("Tutto ok, io sono:", data);
+        setCurrentUser(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   useEffect(() => {
@@ -119,7 +111,6 @@ function Account() {
   const handleInternalButtonClick = () => {
     console.log("Bottone interno cliccato");
     closeBuyModal();
-    //setShow(false);
   };
 
   //SMM connect modalssssssssss
@@ -135,7 +126,6 @@ function Account() {
   const [isCliccato, setIsCliccato] = useState(true);
   const handleCliccatoChange = (val) => {
     setIsCliccato(val);
-    //console.log(isCliccato, "cccccccccccccccccclick")
   };
 
   //ANIMATION----------------------------------------------------------------------------------------------------------------
@@ -161,8 +151,7 @@ function Account() {
   const [userData, setUserData] = useState("");
 
   async function getUserData() {
-      if(typeof currentUser.username === 'undefined')
-          return;
+    if (typeof currentUser.username === "undefined") return;
     try {
       const uri = `${ReactConfig.base_url_requests}/user/${currentUser.username}`;
       const options = {
@@ -192,8 +181,7 @@ function Account() {
   const [userQuote, setUserQuote] = useState("");
 
   async function getUserQuote() {
-      if(typeof currentUser.username === 'undefined')
-          return;
+    if (typeof currentUser.username === "undefined") return;
     try {
       const uri = `${ReactConfig.base_url_requests}/user/${currentUser.username}/quote`;
 
@@ -224,8 +212,7 @@ function Account() {
   const [squealsLogger, setSquealsLogger] = useState([]);
 
   async function log() {
-      if(typeof currentUser.username === 'undefined')
-          return;
+    if (typeof currentUser.username === "undefined") return;
     try {
       const url = `${ReactConfig.base_url_requests}/utils/squeals/${currentUser.username}`;
       const options = {
@@ -250,12 +237,11 @@ function Account() {
     }
   }
 
-  //GET /user/{username}/roles/
+  //GET /user/{username}/roles/-----------------------------------------------------------------------
   const [roleUser, setRoleUser] = useState([]);
 
   async function getRoles() {
-      if(typeof currentUser.username === 'undefined')
-          return;
+    if (typeof currentUser.username === "undefined") return;
     try {
       const uri = `${ReactConfig.base_url_requests}/user/${currentUser.username}/roles`;
       const options = {
@@ -281,24 +267,17 @@ function Account() {
     }
   }
 
-  //console.log("RRRRRRRRRRRRROLE", roleUser);
-
   useEffect(() => {
     whoAmI();
 
-    //showVulture();
-
-    const intervalId = setInterval(getUserData, 5000); //10 sec
-    //const intervalId2 = setInterval(getSmm, 10000); //10 sec
-    const intervalId3 = setInterval(getRoles, 10000); //10 sec
-    const intervalId4 = setInterval(getUserQuote, 10000); //10 sec
-    const intervalId5 = setInterval(whoAmI, 10000); //10 sec
+    const intervalId = setInterval(getUserData, 5000);
+    const intervalId3 = setInterval(getRoles, 10000);
+    const intervalId4 = setInterval(getUserQuote, 10000);
+    const intervalId5 = setInterval(whoAmI, 10000);
 
     // per evitare memory leaks
-
     return () => {
       clearInterval(intervalId);
-      //clearInterval(intervalId2);
       clearInterval(intervalId3);
       clearInterval(intervalId4);
       clearInterval(intervalId5);
@@ -355,18 +334,7 @@ function Account() {
   return (
     <div className="container pb-5">
       <div className="row" onLoad={getUserData}>
-        <div className="row d-flex justify-content-center">
-          <h3>TODO:</h3>
-          <ul className="list-group col-md-4">
-            <li className="list-group-item list">
-              FAI RICOMPARIRE IL BOTTONE COMPRA TRA 1 ANNO
-            </li>
-            <li className="list-group-item list">GET SMM INFO</li>
-            <li className="list-group-item list">
-              cambio username, attenzione se esiste gia?
-            </li>
-          </ul>
-        </div>
+        <div className="row d-flex justify-content-center"></div>
         <div className="mb-3 mt-4">
           <div className="col-12 d-flex flex-col align-items-center justify-content-center">
             {userData.pfp && userData.vip && (
@@ -392,6 +360,7 @@ function Account() {
             {userData.isAdmin && (
               <>
                 <svg
+                  aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   width="40"
                   height="40"
@@ -410,7 +379,11 @@ function Account() {
           </div>
 
           <div className={`image-container`}>
-            <img src={avvoltoio} alt="Avvoltoio animato" />
+            <img
+              src={avvoltoio}
+              alt="Avvoltoio animato"
+              aria-label="Animazione di un avvoltoio che attraversa lo schermo da destra a sinistra orizzontalmente"
+            />
           </div>
 
           <div className="row">
@@ -420,7 +393,12 @@ function Account() {
                   <h1 className="d-flex flex-col align-items-center justify-content-center cool-font-medium mt-2 mb-2">
                     {userData.username}
                     {userData.vip && (
-                      <img src={pink} style={{ width: "10%" }} />
+                      <img
+                        src={pink}
+                        style={{ width: "10%" }}
+                        alt="avvolotio per vip"
+                        aria-label="Questa icona è renderizzata in maniera condizionale ed è visibile unicamente agli utenti vip"
+                      />
                     )}
                   </h1>
                   {userData.locked && (
@@ -494,19 +472,19 @@ function Account() {
             </div>
             <div className="row d-flex align-items-center justify-content-center mb-4">
               <div className="col-12">
-                <h4 className="cool-font-medium mt-2">Giornaliero</h4>
+                <h4 className="cool-font-small mt-2">GIORNALIERO</h4>
                 <button className="yellow-button box w-50">
                   {userQuote.remaining_daily}
                 </button>
               </div>
               <div className="col-12">
-                <h4 className="cool-font-medium mt-2">Settimanale</h4>
+                <h4 className="cool-font-small mt-2">SETTIMANALE</h4>
                 <button className="yellow-button box w-50">
                   {userQuote.remaining_weekly}
                 </button>
               </div>
               <div className="col-12">
-                <h4 className="cool-font-medium mt-2">Mensile</h4>
+                <h4 className="cool-font-small mt-2">MENSILE</h4>
                 <button className="yellow-button box w-50">
                   {userQuote.remaining_monthly}
                 </button>
@@ -514,26 +492,27 @@ function Account() {
             </div>
           </div>
 
-
           <div className="col-6">
             <div className="row">
-              <h3 className="cool-font-medium">QUOTA LIMITE</h3>
+              <h3 className="cool-font-medium">
+                QUOTA <br /> LIMITE
+              </h3>
             </div>
 
             <div className="col-12 mt-2">
-              <h4 className="cool-font-medium mt-2">Giornaliero</h4>
+              <h4 className="cool-font-small mt-2">GIORNALIERO</h4>
               <button className="yellow-button box w-50">
                 {userQuote.limit_daily}
               </button>
             </div>
             <div className="col-12">
-              <h4 className="cool-font-medium mt-2">Settimanale</h4>
+              <h4 className="cool-font-small mt-2">SETTIMANALE</h4>
               <button className="yellow-button box w-50">
                 {userQuote.limit_weekly}
               </button>
             </div>
             <div className="col-12">
-              <h4 className="cool-font-medium mt-2">Mensile</h4>
+              <h4 className="cool-font-small mt-2 ">MENSILE</h4>
               <button className="yellow-button box w-50">
                 {userQuote.limit_monthly}
               </button>
@@ -542,7 +521,7 @@ function Account() {
         </div>
 
         <div className="">
-          {show && (
+          {show && userData.vip && (
             <button
               id="buy-button"
               className="box cool-font-medium w-100"
@@ -588,7 +567,10 @@ function Account() {
                                 <Card className="w-100 offers">
                                   <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
                                     <Link to="/infoc" state={channel}>
-                                      <button className="ms-4 me-4 custom-button box">
+                                      <button
+                                        className="ms-4 me-4 custom-button box"
+                                        aria-label="clicca se vuoi avere informazioni sul canale"
+                                      >
                                         <b>{channel.channel_name} </b>
                                         <svg
                                           xmlns="http://www.w3.org/2000/svg"
@@ -616,7 +598,10 @@ function Account() {
                                 <Card className="w-100 offers">
                                   <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
                                     <Link to="/infoc" state={channel}>
-                                      <button className="ms-4 me-4 custom-button box">
+                                      <button
+                                        className="ms-4 me-4 custom-button box"
+                                        aria-label="clicca se vuoi avere informazioni sul canale"
+                                      >
                                         <b>{channel.channel_name} </b>
                                         <svg
                                           xmlns="http://www.w3.org/2000/svg"
@@ -644,7 +629,10 @@ function Account() {
                                 <Card className="w-100 offers">
                                   <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
                                     <Link to="/infoc" state={channel}>
-                                      <button className="ms-4 me-4 custom-button box">
+                                      <button
+                                        className="ms-4 me-4 custom-button box"
+                                        aria-label="clicca se vuoi avere informazioni sul canale"
+                                      >
                                         <b>{channel.channel_name} </b>
                                         <svg
                                           xmlns="http://www.w3.org/2000/svg"
@@ -672,7 +660,10 @@ function Account() {
                                 <Card className="w-100 offers">
                                   <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
                                     <Link to="/infoc" state={channel}>
-                                      <button className="ms-4 me-4 custom-button box">
+                                      <button
+                                        className="ms-4 me-4 custom-button box"
+                                        aria-label="clicca se vuoi avere informazioni sul canale"
+                                      >
                                         <b>{channel.channel_name} </b>
                                         <svg
                                           xmlns="http://www.w3.org/2000/svg"
@@ -700,7 +691,10 @@ function Account() {
                                 <Card className="w-100 offers">
                                   <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
                                     <Link to="/infoc" state={channel}>
-                                      <button className="ms-4 me-4 custom-button box">
+                                      <button
+                                        className="ms-4 me-4 custom-button box"
+                                        aria-label="clicca se vuoi avere informazioni sul canale"
+                                      >
                                         <b>{channel.channel_name} </b>
                                         <svg
                                           xmlns="http://www.w3.org/2000/svg"
@@ -737,7 +731,7 @@ function Account() {
 
             <button
               id="logout-button"
-              className=" mb-2 box cool-font-small"
+              className=" mb-2 box cool-font-link"
               onClick={logoutUser}
             >
               <ToastContainer />
@@ -745,14 +739,14 @@ function Account() {
             </button>
 
             {roleUser.some((role) => role.role === 4) ? (
-              <button id="delete-button" className=" mb-2 box cool-font-small">
+              <button id="delete-button" className=" mb-2 box cool-font-link">
                 PER CANCELLARTI NON DEVI ESSERE CREATORE
               </button>
             ) : (
               <>
                 <button
                   id="delete-button"
-                  className=" mb-2 box cool-font-xsm"
+                  className=" mb-2 box cool-font-link"
                   onClick={handleOpenDeleteModal}
                 >
                   CANCELLA ACCOUNT

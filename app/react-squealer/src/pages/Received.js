@@ -61,7 +61,6 @@ function Received() {
       };
 
       let result = await fetch(uri, options);
-      //console.log(result);
 
       if (result.ok) {
         let json = await result.json();
@@ -75,19 +74,14 @@ function Received() {
     }
   }
 
-  //console.log("DDDDDDDDDDDDDASH", dash);
-
   useEffect(() => {
-    whoAmI().then((r) => {
-      getDashboard();
-      //getComments();
-      const intervalId1 = setInterval(getDashboard, 5000); //10 sec
-      //const intervalId2 = setInterval(getDashboard, 10000); //10 sec
-      return () => {
-        clearInterval(intervalId1);
-        //clearInterval(intervalId2);
-      };
-    });
+    whoAmI();
+    getDashboard();
+    const intervalId1 = setInterval(getDashboard, 5000); //10 sec
+
+    return () => {
+      clearInterval(intervalId1);
+    };
   }, []);
 
   return (
@@ -105,15 +99,15 @@ function Received() {
         </div>
         <div className="row">
           <div className="col-12 col-md-8">
-            <h1 className="cool-font">CANALI SEGUITI</h1>
+            <h1 className="cool-font-medium">CANALI SEGUITI</h1>
 
             <Container className="pb-5">
               <Row className=" ">
                 {dash
-                  .map((squeal, index) => (
+                  .map((squeal) => (
                     <Col
                       lg={12}
-                      key={index}
+                      key={squeal._id}
                       className="mb-4 d-flex justify-content-center align-items-center"
                     >
                       <Card
@@ -123,9 +117,9 @@ function Received() {
                         <Card.Header className="w-100">
                           <div className="col-12 d-flex flex-row justify-content-between align-items-center">
                             <div>
-                              <b>DA:</b>
+                              <b className="cool-font-details">DA:</b>
                               <Link to="/infou" state={squeal.sender}>
-                                <button className=" ms-2 custom-button box ">
+                                <button className=" ms-2 custom-button box "  aria-label="clicca se vuoi avere più informazioni su questo utente">
                                   <b>{squeal.sender} </b>
 
                                   <svg
@@ -146,18 +140,19 @@ function Received() {
                             </div>
                           </div>
                           <div className="col-12 d-flex flex-row justify-content-start align-items-center">
-                            <b>PER:</b>
+                            <b className="cool-font-details">PER:</b>
                             <ShowDest arrayDest={squeal.destinations} />
                           </div>
                           <div className="col-12 cool-font-details d-flex flex-column justify-content-start align-items-start mt-2">
-                            <div>Id: {squeal._id}</div>
+                            <div>ID: {squeal._id}</div>
                             <TypeSqueal typeSqueal={squeal.message_type} />
                           </div>
                         </Card.Header>
-                        <Card.Body className="mb-4 d-flex flex-col justify-content-evenly align-items-center">
+                        <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
                           <SquealContent
                             content={squeal.content}
                             type={squeal.message_type}
+                            id={squeal._id}
                           />
                         </Card.Body>
                         <Card.Footer className="w-100">
@@ -209,3 +204,12 @@ function Received() {
 }
 
 export default Received;
+
+/*
+
+
+
+
+
+
+*/

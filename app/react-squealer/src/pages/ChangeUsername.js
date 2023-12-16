@@ -83,21 +83,15 @@ function ChangeUsername() {
   const cambioU = (e) => {
     e.preventDefault();
 
-    //TODO: se utente gia esiste error
     setUserGlobal({
       ...userGlobal,
       username: newUsername,
     });
-
-    //console.log("mimmooooooooooooooooooooooooooooooooo" + userGlobal.username);
-
+    
     if (newUsername === "") {
-      //TODO: se il campo è vuoto apri toast, non funge
       nofity_error();
-      handleClose();
     } else {
       try {
-        handleClose();
         const data = {
           user: {
             username: newUsername,
@@ -127,20 +121,15 @@ function ChangeUsername() {
             console.log(res);
             if (res.ok) {
               //creation ok
-              return res.json();
+              notify();
+              logoutUser();
+              navigate("../");
             } else {
               notify_error_server();
             }
           })
-          .then((data) => {
-            notify();
-            logoutUser();
-            navigate("../");
-          })
           .catch((error) => {
             console.error("Cambio username failed, error:", error);
-            //notify_error_server();
-
           });
       } catch (error) {
         console.error(error);
@@ -164,6 +153,7 @@ function ChangeUsername() {
         if (response.ok) {
           console.log("logout riuscito con successo");
           navigate(`/`);
+          handleClose();
         } else {
           notify();
           console.error("Logout failed", response.statusText);

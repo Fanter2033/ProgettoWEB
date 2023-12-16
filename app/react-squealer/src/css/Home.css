@@ -31,17 +31,6 @@ html {
   background-color: transparent;
 }
 
-
-/*---------------- SFONDO SU TUTTA LA PAGE --------------------*/
-#elemento-espanso {
-  position: absolute; /* Posizionamento assoluto rispetto alla viewport */
-  top: 0; /* Inizia dall'alto della viewport */
-  right: 0; /* Finisce a destra della viewport */
-  bottom: 0; /* Finisce in basso della viewport */
-  left: 0; /* Inizia da sinistra della viewport */
-  background-color: var(--squeal-yellow);
-}
-
 /* ------------ TODO STUFF -------------*/
 .list:hover {
   background-color: var(--squeal-green);
