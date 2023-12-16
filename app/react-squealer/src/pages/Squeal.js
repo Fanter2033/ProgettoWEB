@@ -175,6 +175,30 @@ function Squeal() {
       theme: "colored",
     });
 
+    const notifySquealStart = () =>
+        toast.success("Aggiornamento della posizione!", {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+        });
+
+    const notifySquealStart2 = () =>
+        toast.success("Non chiudere la pagina", {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+        });
+
   //GET USER DATA-----------------------------------------------------------------------------------------------
   const [userData, setUserData] = useState("");
 
@@ -738,14 +762,10 @@ function Squeal() {
     getLocation();
   }, []);
 
-  async function eseguiOgni10Secondi(
-    iterazioneCorrente,
-    lim,
-    id,
-    autoCoordinates
-  ) {
+  async function eseguiOgni10Secondi(iterazioneCorrente, lim, id, autoCoordinates) {
     //PUT SQUEAL /squeal/ per MAPPE TEMPORIZZATE------------------------------------------------------------------------------------------------------------
     console.log("coordinate", autoCoordinates);
+    getLocation();
 
     //per numero1 volte ongi 5sec
     let data = {};
@@ -785,11 +805,14 @@ function Squeal() {
       });
 
     iterazioneCorrente++;
+      console.log('ITERAZIONE ORA', iterazioneCorrente);
     if (iterazioneCorrente <= lim) {
       setTimeout(
         () => eseguiOgni10Secondi(iterazioneCorrente, lim, id, userLocation),
         10000
       );
+    } else {
+        navigate('../');
     }
   }
 
@@ -831,6 +854,8 @@ function Squeal() {
         //console.log(json, "PALLE");
         // Avvia la prima esecuzione
         const id = json._id;
+        notifySquealStart();
+        notifySquealStart2();
         eseguiOgni10Secondi(1, numero1, id, coordinates);
       })
       .catch((error) => {
