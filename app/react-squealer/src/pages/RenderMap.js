@@ -4,8 +4,16 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
 function RenderMap({ coordinates }) {
+
+  if(!Array.isArray(coordinates)){
+    try{
+      coordinates = JSON.parse(coordinates);
+    } catch (ignored) {
+
+    }
+  }
+
   if (!Array.isArray(coordinates)) {
-    console.log(coordinates);
     //console.error("Coordinate non valide.");
     return (
       <>

@@ -92,9 +92,9 @@ module.exports = class SquealToChannelModel extends Model {
             ]
         }
         let results = await this.entityMongooseModel.find(filter);
-        for (const result of results) {
-            ids.push(result._doc['squeal_id']);
-        }
+        for (const result of results)
+            if(ids.includes(result._doc['squeal_id']) === false)
+                ids.push(result._doc['squeal_id']);
         return ids;
     }
 

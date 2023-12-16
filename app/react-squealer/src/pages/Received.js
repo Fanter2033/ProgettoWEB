@@ -112,7 +112,7 @@ function Received() {
                     >
                       <Card
                         style={{ width: "80%" }}
-                        className="squeal d-flex flex-col align-items-center"
+                        className="squeal"
                       >
                         <Card.Header className="w-100">
                           <div className="col-12 d-flex flex-row justify-content-between align-items-center">
@@ -148,11 +148,11 @@ function Received() {
                             <TypeSqueal typeSqueal={squeal.message_type} />
                           </div>
                         </Card.Header>
-                        <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
+                        <Card.Body className="mb-4 d-flex flex-column justify-content-center align-items-center">
                           <SquealContent
-                            content={squeal.content}
-                            type={squeal.message_type}
-                            id={squeal._id}
+                              content={squeal.content}
+                              type={squeal.message_type}
+                              id={squeal._id}
                           />
                         </Card.Body>
                         <Card.Footer className="w-100">
