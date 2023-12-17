@@ -1,7 +1,7 @@
 <template>
   <NavAndSide :user-zero="userZero" is-dashboard="true"/>
   <div class="container-fluid d-flex justify-content-end align-items-end justify-content-end align-content-end m-0 p-0">
-    <img src="/media/SforSqueal.jpeg" alt="Responsive image" class="img-fluid position-static m-0">
+    <img alt="Responsive image" class="img-fluid position-static m-0" src="/media/SforSqueal.jpeg">
   </div>
 </template>
 
@@ -9,7 +9,7 @@
 import Nav from "../Nav.vue";
 import SideBar from "@/components/dashboard/SideBar.vue";
 import VueConfig from "@/config/VueConfig";
-import { store } from "@/store";
+import {store} from "@/store";
 import LineChart from "@/components/dashboard/LineChart.vue";
 import NavAndSide from "@/components/NavAndSide.vue";
 
@@ -17,29 +17,29 @@ export default {
   name: "DashBoard",
 
   methods: {
-    fetchVips:  function () {
+    fetchVips: function () {
       const vipsUri =
-        VueConfig.base_url_requests +
-        "/user/" +
-        store.getters.getUserZero +
-        "/my-users/";
+          VueConfig.base_url_requests +
+          "/user/" +
+          store.getters.getUserZero +
+          "/my-users/";
 
       fetch(vipsUri, {
         method: "GET",
         credentials: 'include',
         mode: 'cors'
       })
-        .then((res) => {
-          if (res.ok)
-            return res.json();
-          console.error("ERROR FETCHING VIPS", res.statusText);
-        })
-        .then((data) => {
-          this.$store.commit("setVips", data);
-        })
-        .catch((error) => {
-          console.error("network error", error);
-        });
+          .then((res) => {
+            if (res.ok)
+              return res.json();
+            console.error("ERROR FETCHING VIPS", res.statusText);
+          })
+          .then((data) => {
+            this.$store.commit("setVips", data);
+          })
+          .catch((error) => {
+            console.error("network error", error);
+          });
     },
 
   },
@@ -53,10 +53,10 @@ export default {
     },
   },
 
-  components: {NavAndSide, LineChart, SideBar, Nav },
+  components: {NavAndSide, LineChart, SideBar, Nav},
 
-   beforeMount() {
-     this.fetchVips();
+  beforeMount() {
+    this.fetchVips();
   },
 };
 </script>

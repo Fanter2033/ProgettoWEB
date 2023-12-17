@@ -16,24 +16,25 @@
         class="collapse nav flex-column ms-1 p-2 pt-0"
     >
       <li class="py-1">
-        <router-link :to="{ name:'Chart', params: {vip: vipName} }">
+        <router-link :to="{ name:'Chart', params: {vip: vipName} }" aria-label="grafici">
           <i class="fs-4 bi-file-bar-graph"></i>
           <span class="d-none d-lg-inline">Charts</span>
         </router-link>
       </li>
       <li class="py-1">
-        <router-link :to="{ name:'Quote', params: {vip: vipName} }">
+        <router-link :to="{ name:'Quote', params: {vip: vipName} }" aria-label="situazione quota">
           <i class="fs-4 bi-currency-euro"></i
           ><span class="d-none d-lg-inline">Quote</span>
         </router-link>
       </li>
-      <li class="py-1" >
-        <router-link :to="{ name:'Squeal', params: {vip: vipName} }" class="border rounded p-1 border-warning box" style="background-color: #528b57"  >
+      <li class="py-1">
+        <router-link :to="{ name:'Squeal', params: {vip: vipName} }" aria-label="scrivi uno squeal"
+                     class="border rounded p-1 border-warning box" style="background-color: #528b57">
           <i class="bi bi-send"></i>
           <span class="d-none d-lg-inline">Quick Squeal</span>
         </router-link>
       </li>
-      
+
     </ul>
   </li>
 </template>

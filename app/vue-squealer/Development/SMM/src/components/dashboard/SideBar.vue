@@ -1,28 +1,28 @@
 <template>
   <!-- Contenitore principale -->
-  <div class="container-fluid " style="height: 100%;">
+  <div class="container-fluid " role="navigation" style="height: 100%;">
     <!-- Riga principale con flex-nowrap (senza wrap) -->
     <div class="row flex-nowrap" style="height: 100%">
       <!-- Colonna laterale sinistra (barra laterale) -->
-      <div class="col-auto px-sm-2 px-0 bg-dark" >
+      <div class="col-auto px-sm-2 px-0 bg-dark">
         <!-- Contenuto della barra laterale -->
         <div
-          class="d-flex flex-column align-items-center align-items-md-start pt-2 text-white min-vh-100"
+            class="d-flex flex-column align-items-center align-items-md-start pt-2 text-white min-vh-100"
         >
           <!-- Logo o link alla home -->
           <div
-            class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none"
+              class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none"
           >
             <span class="fs-5 d-none d-sm-inline cool-font-xsm">Your Vips</span>
           </div>
           <!-- Lista di elementi di navigazione (menu) -->
           <ul
-            class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start"
-            id="menu"
+              id="menu"
+              class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start"
           >
 
             <template v-for="vip in myVips ">
-              <MyVip :vip-name = "vip" ></MyVip>
+              <MyVip :vip-name="vip"></MyVip>
             </template>
 
           </ul>
