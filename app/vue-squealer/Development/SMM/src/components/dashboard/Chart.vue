@@ -86,7 +86,6 @@ export default defineComponent({
             fromTimestamp: this.convertToTimeStamp(this.fromTimeForm),
             toTimestamp: this.convertToTimeStamp(this.toTimeForm)
           })
-      console.log("fetching: " + ChartDataUri);
       fetch(ChartDataUri, {
         method: "GET",
         credentials: 'include',
@@ -100,8 +99,6 @@ export default defineComponent({
           })
           .then((data) => {
             this.$store.commit("setLineChartData", data);
-            //console.log(data);
-            //console.log("Chart Data: " + this.$store.getters.getLineChartData);
           })
           .catch((error) => {
             console.error("Network error", error);
@@ -113,7 +110,6 @@ export default defineComponent({
       const squealDataUri = VueConfig.base_url_requests +
           "/utils/squeals/" +
           vipName;
-      console.log("fetching: " + squealDataUri);
       fetch(squealDataUri, {
         method: 'GET',
         credentials: 'include',
@@ -131,7 +127,6 @@ export default defineComponent({
               arrayToCommit.push(data[i]._id);
             }
             this.$store.commit('setDoughnutChart', arrayToCommit);
-            console.log(this.$store.getters.getDoughnutChart[0]);
           })
           .catch((error) => {
             console.error("Network error", error);

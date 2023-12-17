@@ -18,13 +18,11 @@ export default {
 
   methods: {
     fetchVips:  function () {
-      console.log("user: " + store.getters.getUserZero);
       const vipsUri =
         VueConfig.base_url_requests +
         "/user/" +
         store.getters.getUserZero +
         "/my-users/";
-      console.log("fetching: " + vipsUri);
 
       fetch(vipsUri, {
         method: "GET",
@@ -37,7 +35,6 @@ export default {
           console.error("ERROR FETCHING VIPS", res.statusText);
         })
         .then((data) => {
-          console.log("my vips: " + data);
           this.$store.commit("setVips", data);
         })
         .catch((error) => {

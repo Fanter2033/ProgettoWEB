@@ -14,7 +14,7 @@
             <div class="row m-3">
               <div class="card d-flex align-items-center chill-font-small" style="width: 20rem; height: 25rem">
                 <img
-                    class="card-img-top m-2 border border-2 border-dark"
+                    class="m-2 border border-2 border-dark"
                     style="border-radius: 50%; height: 50%; width: 40%"
                     :src=" 'data:image/jpeg;base64,' + vip.pfp "
                     alt="profile picture"/>
@@ -57,7 +57,6 @@ function getLinkedVips() {
   let uri = VueConfig.base_url_requests + '/user/';
   for (let i = 0; i < myVips.length; i++) {
     let v_uri = uri + myVips[i];
-    console.log('fetch: ' + v_uri);
     fetch(v_uri, {
       method: 'GET',
       credentials: 'include',
@@ -72,7 +71,6 @@ function getLinkedVips() {
         })
         .then((data) => {
           myVipsData.value.push(data);
-          console.log(data);
         })
         .catch((error) => {
           console.error("Network error", error);

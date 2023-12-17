@@ -97,10 +97,6 @@ export default {
       })
         .then((res) => {
           if (res.ok) {
-
-            const connectSidCookie = res.headers.get('set-cookie');
-            VueCookies.set('connect.sid', connectSidCookie);
-
             this.$store.commit('setUserZero',this.formLoginValues.username);
             router.push("/dashboard");
           } else console.error("Authentication failed", res.statusText);

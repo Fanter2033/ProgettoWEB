@@ -8,7 +8,7 @@
         <SideBar/>
       </div>
       <div class="col-9 justify-content-center pt-4">
-        <div class="container-fluid d-flex justify-content-center">
+        <div class="container-fluid justify-content-center">
           <div class="">
             <div class="">
               <h3 ><b>Quick Squeal</b></h3>
@@ -22,15 +22,18 @@
             <div class="">
               <form>
                 <div class="form-group">
-                  <label class="col-form-label" for="recipient-name"
-                  >Destinatari:</label
-                  >
-                  <input
-                      id="dest"
-                      v-model="inputDest"
-                      class="form-control"
-                      type="text"
-                  />
+                  <div class="container-sm d-flex flex-column">
+                    <label class="col-form-label" for="recipient-name"
+                    >Destinatari:
+                    </label>
+                    <input
+                        id="dest"
+                        v-model="inputDest"
+                        class="form-control"
+                        type="text"
+                    />
+                  </div>
+
                 </div>
 
                 <!--input type-->
@@ -83,10 +86,10 @@
                 </div>
 
                 <!--input form-->
-                <div class="form-group">
+                <div class="container form-group" >
                   <div v-if="inputType === 'MESSAGE_TEXT'">
                     <label class="col-form-label" for="message-text"
-                    >Write something</label
+                    >Scrivi qualcosa</label
                     >
                     <textarea
                         id="message-text"
@@ -97,12 +100,12 @@
                   </div>
 
                   <div v-else-if="inputType === 'IMAGE'">
-                    <label for="message-image">Share a image</label>
+                    <label for="message-image">Condividi qualcosa</label>
                     <br />
                     <input
                         id="message-image"
                         accept="image/png, image/jpeg"
-                        class="col-form-label"
+                        class="col-form-label rounded"
                         name="message-image"
                         type="file"
                         @change="handelImage"
@@ -111,7 +114,7 @@
 
                   <div v-else-if="inputType === 'VIDEO_URL'" class="p-2">
                     <label class="col-form-label" for="message-video"
-                    >Share a YouTube video</label
+                    >Condividi un video su YouTube</label
                     >
                     <br />
                     <input
@@ -161,15 +164,8 @@
                 </div>
               </form>
               <div class="">
-                <button
-                    id="closeBtn"
-                    class="btn"
-                    type="button"
-                >
-                  Close
-                </button>
-                <button class="btn btn-primary" type="button" @click="postSqueal">
-                  Post from {{ vipName }}
+                <button class="btn grn-btn-lite mt-3" type="button" @click="postSqueal">
+                  Post from <b>{{ vipName }}</b>
                 </button>
               </div>
             </div>
@@ -184,7 +180,7 @@
 
 <script setup>
 import VueConfig from "@/config/VueConfig";
-import { reactive, onMounted, defineComponent } from "vue";
+import {reactive, onMounted, defineComponent, watch, onUpdated} from "vue";
 import { ref } from "vue";
 import { store } from "@/store";
 import Map from "@/components/dashboard/Map.vue";
@@ -230,6 +226,17 @@ const inputContent = ref("");
 const inputNumberRep = ref(1);
 const inputSecRep = ref(0);
 
+watch(vipName, ()=>{
+  vipName.value = route.params.vip;
+})
+
+onMounted(()=>{
+  vipName.value = route.params.vip;
+})
+
+onUpdated(()=>{
+  vipName.value = route.params.vip;
+})
 
 /*check dei destinatari*/
 function checkDest() {
@@ -297,13 +304,11 @@ function assembleContent() {
         body = inputContent.value;
       break;
   }
-  console.log(body);
   return body;
 }
 
 // validation and fetch of the squeal
 function postSqueal() {
-  console.log("from:" + vipName.value)
   const uri = VueConfig.base_url_requests + "/squeal/from-smm/" + vipName.value;
   const destination = checkDest();
     if(destination == null)
@@ -332,18 +337,17 @@ function postSqueal() {
     },
     body: JSON.stringify(squealBody)
   }
-  console.log(JSON.stringify(squealBody))
   fetch(uri, options)
       .then((res)=>{
         if(res.ok){
           showToast('success');
-          setTimeout(()=>{location.reload()},2000);
         } else {
           console.error("Error during post");
           showToast('warning');
         }
       })
       .catch((error)=>{
+        showToast('warning')
         console.error('Network error', error)
       });
 }

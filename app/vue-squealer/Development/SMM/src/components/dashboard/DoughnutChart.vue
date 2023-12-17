@@ -1,16 +1,26 @@
 <template>
   <div class="container mb-5">
-    <div class="d-flex justify-content-around">
+
+    <div class="d-flex flex-column flex-lg-row justify-content-around">
+
       <div class="d-flex align-items-center">
         <button class="btn nav-button" @click="prevSqueal">
           <i class="bi bi-caret-left-fill"></i>
         </button>
       </div>
 
-      <div class="card box squeal chill-font-xsm" style="width: 18rem;">
+      <div class="card box squeal chill-font-xsm mb-3 mb-lg-0" style="width: 19rem;">
         <div class="card-header">
-          <h5>Squeal del {{ actualSqueal.date }}</h5>
-          <h6>Desinazioni: {{ actualSqueal.dest }}</h6>
+          <div class="d-flex justify-content-between flex-nowrap">
+            <div style="text-align: start">
+              <h5>Squeal del {{ actualSqueal.date }}</h5>
+              <p style="font-size: small">Desinazioni: <span style="color: #072f38"> {{ actualSqueal.dest }} </span></p>
+            </div>
+            <div class="flex-nowrap" style="color: var(--squeal-blue)">
+              <i class="bi bi-eye me-1"></i>
+              <span> {{actualSqueal.views}} </span>
+            </div>
+          </div>
         </div>
         <div class="card-body">
           <div v-if="actualSqueal.type === 'MESSAGE_TEXT' || actualSqueal.type === 'TEXT_AUTO'"><p
@@ -34,8 +44,9 @@
 
           <div v-else-if="actualSqueal.type === 'POSITION'">
             <div id="map"></div>
-
           </div>
+
+
 
         </div>
         <div class="card-footer text-muted reg-font-xsm d-flex justify-content-between align-items-center"
@@ -56,8 +67,9 @@
         </div>
       </div>
 
-      <div class="card box squeal" style="width: 18rem">
+      <div class="card box squeal  d-lg-inline" style="width: 18rem">
         <div class="card-body">
+          <div class="card-title"  v-if="!showComments"><h3 class="chill-font-small">Statistiche</h3></div>
           <div v-if="!showComments">
             <Doughnut
                 ref="chart"
@@ -69,6 +81,18 @@
             <h3 class="chill-font-small">Commenti</h3>
             <div v-for="comment in commentsToPrint" class="rounded">
               <p><b>{{comment.username}}</b> - {{comment.comment}}</p>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div v-if="!showComments">
+            <!--end of squeal body-->
+            <div class="mt-2">
+              <div v-if="actualSqueal.trend !== 'Nothing'">
+                <button v-if="actualSqueal.trend === 'Popular'" class="btn grn-btn-lite" > {{actualSqueal.trend}} </button>
+                <button v-else-if="actualSqueal.trend === 'Unpopular'" class="btn red-btn-lite"> {{actualSqueal.trend}} </button>
+                <button v-else class="btn blue-btn-lite"> {{actualSqueal.trend}} </button>
+              </div>
             </div>
           </div>
         </div>
@@ -140,7 +164,6 @@ async function getSquealData(id) {
         }
       }).then((data) => {
         actualFetched.value = data;
-        console.log("actual fetched from fetch" + actualFetched.value);
       })
       .catch((error) => {
         console.error("Network error", error);
@@ -164,7 +187,6 @@ async function getSquealComments(id) {
         }
       }).then((data) => {
         actualComments.value = data;
-        console.log("comments" + actualComments.value);
       })
       .catch((error) => {
         console.error("Network error", error);
@@ -173,8 +195,6 @@ async function getSquealComments(id) {
 
 
 function assebleSqueal(squealFromServer) {
-  console.log("squeal from server:" + squealFromServer);
-  loaded.value = false;
   const squealDate = new Date(squealFromServer.date * 1000);
   actualSqueal.value = {
     date: squealDate.getDate() + '/' + (squealDate.getMonth() + 1) + '/' + squealDate.getFullYear(),
@@ -182,17 +202,26 @@ function assebleSqueal(squealFromServer) {
     cost: squealFromServer.quote_cost,
     type: squealFromServer.message_type,
     dest: squealFromServer.destinations,
+    views: squealFromServer.critical_mass / 0.25
   }
   if (squealFromServer.message_type === 'POSITION') {
     let coorFromSqueal = squealFromServer.content;
-    console.log("coor:" + coorFromSqueal);
     let coordinates = String(coorFromSqueal).split(',');
     let lat = coordinates[0];
     let lng = coordinates[1];
     actualSqueal.value.lat = lat;
     actualSqueal.value.lng = lng;
   }
-  loaded.value = true;
+  //popular, unpopular, controversial
+  if(squealFromServer.critical_mass < squealFromServer.positive_value
+      && squealFromServer.critical_mass < squealFromServer.negative_value)
+    actualSqueal.value.trend = 'Controversial'
+  else if(squealFromServer.critical_mass < squealFromServer.positive_value)
+    actualSqueal.value.trend = 'Popular'
+  else if(squealFromServer.critical_mass < squealFromServer.negative_value)
+    actualSqueal.value.trend = 'Unpopular'
+  else
+    actualSqueal.value.trend = 'Nothing'
 }
 
 const commentsToPrint = ref([]);
@@ -212,14 +241,16 @@ function switchView() {
     assebleComments(actualComments.value)
   }
   showComments.value = !showComments.value;
-  console.log(showComments.value);
 }
 
 //navigate
 async function nextSqueal() {
   if (index.value < store.getters.getDoughnutChart.length - 1) {
+    try {
+      map.remove();
+    } catch (e){
+    }
     index.value = index.value + 1;
-    console.log(index.value);
     await getSquealData(store.getters.getDoughnutChart[index.value]);
     await getSquealComments(store.getters.getDoughnutChart[index.value])
     assebleSqueal(actualFetched.value);
@@ -229,7 +260,6 @@ async function nextSqueal() {
 async function prevSqueal() {
   if (index.value > 0) {
     index.value = index.value - 1;
-    console.log(index.value)
     await getSquealData(store.getters.getDoughnutChart[index.value]);
     await getSquealComments(store.getters.getDoughnutChart[index.value])
     assebleSqueal(actualFetched.value);
@@ -247,16 +277,21 @@ function fixYTUrl(url) {
   }
 }
 
+//build the map for the position's squeal
 function initMap(lat, lng) {
-  const map = L.map("map", {
-    center: L.latLng(lat, lng),
-    zoom: 14,
-  });
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: "© OpenStreetMap",
-  }).addTo(map)
+  try{
+    const map = L.map("map", {
+      center: L.latLng(lat, lng),
+      zoom: 14,
+    });
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "© OpenStreetMap",
+    }).addTo(map)
+    console.log("mapping")
+    L.marker([lat, lng]).addTo(map)
+  } catch (e) {
+  }
 
-  L.marker([lat, lng]).addTo(map)
 }
 
 //e quiiii aspettiamo le funzioni di Denis
@@ -278,6 +313,8 @@ onUpdated(() => {
     initMap(actualSqueal.value.lat, actualSqueal.value.lng);
   }
 })
+
+
 
 
 </script>
