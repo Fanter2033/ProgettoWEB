@@ -421,7 +421,7 @@ function Account() {
 
                       {!userData.isSmm ? (
                         <button
-                          className="col-6 upgrade-button mb-2 mt-2 box w-75"
+                          className="col-6 upgrade-button mt-2 box w-75"
                           onClick={openConnect}
                         >
                           MANAGE SMM
@@ -463,14 +463,15 @@ function Account() {
           </div>
         </div>
 
-        <div className="row cool-font-text">
+        <div className="cool-font-text d-flex align-content-center justify-content-center ">
           <div className="col-6">
             <div className="row">
               <h3 className="cool-font-medium">QUOTA RIMANENTE</h3>
             </div>
+
             <div className="row d-flex align-items-center justify-content-center mb-4">
               <div className="col-12">
-                <h4 className="cool-font-small mt-2">GIORNALIERO</h4>
+                <h4 className="cool-font-small  mt-2">GIORNALIERO</h4>
                 <button className="yellow-button box w-75">
                   {userQuote.remaining_daily}
                 </button>
@@ -497,23 +498,26 @@ function Account() {
               </h3>
             </div>
 
-            <div className="col-12 mt-2">
-              <h4 className="cool-font-small mt-2">GIORNALIERO</h4>
-              <button className="yellow-button box w-75">
-                {userQuote.limit_daily}
-              </button>
-            </div>
-            <div className="col-12">
-              <h4 className="cool-font-small mt-2">SETTIMANALE</h4>
-              <button className="yellow-button box w-75">
-                {userQuote.limit_weekly}
-              </button>
-            </div>
-            <div className="col-12">
-              <h4 className="cool-font-small mt-2 ">MENSILE</h4>
-              <button className="yellow-button box w-75">
-                {userQuote.limit_monthly}
-              </button>
+            <div className="row d-flex align-items-center justify-content-center mb-4">
+              <div className="col-12">
+                <h4 className="cool-font-small mt-2">GIORNALIERO</h4>
+                <button className="yellow-button box w-75">
+                  {userQuote.limit_daily}
+                </button>
+              </div>
+
+              <div className="col-12">
+                <h4 className="cool-font-small mt-2">SETTIMANALE</h4>
+                <button className="yellow-button box w-75">
+                  {userQuote.limit_weekly}
+                </button>
+              </div>
+              <div className="col-12">
+                <h4 className="cool-font-small mt-2 ">MENSILE</h4>
+                <button className="yellow-button box w-75">
+                  {userQuote.limit_monthly}
+                </button>
+              </div>
             </div>
           </div>
         </div>
