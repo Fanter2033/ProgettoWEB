@@ -52,7 +52,6 @@ export default {
                   map,
               );
               map.fitBounds(L.latLngBounds([marker.getLatLng()]));
-              console.log([marker.getLatLng().lat, marker.getLatLng().lng]);
               store.commit('setSInCoor', [marker.getLatLng().lat, marker.getLatLng().lng])
             })
             .addTo(map);
@@ -65,7 +64,6 @@ export default {
             [e.latlng.lat, e.latlng.lng],
             markerOptions,
         ).addTo(map);
-        console.log([e.latlng.lat, e.latlng.lng]);
         store.commit('setSInCoor', [e.latlng.lat, e.latlng.lng]);
       });
     },
