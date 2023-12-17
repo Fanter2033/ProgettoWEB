@@ -972,7 +972,7 @@ function Squeal() {
             console.log("POST Squeal riuscita con successo");
 
             clear();
-            navigate("/received");
+            navigate("../received");
           } else {
             console.error(
               "Errore durante la POST, riprova",

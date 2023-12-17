@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Col, Card, CardHeader } from "react-bootstrap";
+import ReactConfig from "../config/ReactConfig";
 
 // <b className="cool-font-text">DA:&nbsp;</b>
 
@@ -25,7 +26,7 @@ function ShowComment({ arrayComment }) {
             <Col key={index}>
               <Card className="offers m-2">
                 <Card.Header className="d-flex flex-row justify-content-center align-items-center">
-                  <Link to="/infou" state={comment.username} className="link-comment" aria-label="clicca se vuoi avere più informazioni su questo utente">
+                  <Link to={ReactConfig.pathFunction("/infou")} state={comment.username} className="link-comment" aria-label="clicca se vuoi avere più informazioni su questo utente">
                       <b > {comment.username} </b>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

@@ -227,7 +227,7 @@ function InfoChannel() {
   return (
     <div className="pb-5">
       <div className="d-flex flex-row align-items-center justify-content-evenly align-items-center pt-3 pb-3">
-        <Link to="/details" state={channel}>
+        <Link to={ReactConfig.pathFunction("/details")} state={channel}>
           <button className="yellow-button box " aria-label="clicca se vuoi avere informazioni sul canale">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -401,7 +401,7 @@ function InfoChannel() {
                           <div>
                             <b>DA:</b>
 
-                            <Link to="/infou" state={squeal.sender}>
+                            <Link to={ReactConfig.pathFunction("/infou")} state={squeal.sender}>
                               <button className=" ms-2 custom-button box " aria-label="clicca se vuoi avere informazioni sull'utente">
                                 <b>{squeal.sender} </b>
 
@@ -463,7 +463,7 @@ function InfoChannel() {
                           <div>
                             <b>DA:</b>
 
-                            <Link to="/infou" state={squeal.sender}>
+                            <Link to={ReactConfig.pathFunction("/infou")} state={squeal.sender}>
                               <button className=" ms-2 custom-button box " aria-label="clicca se vuoi avere informazioni sull'utente">
                                 <b>{squeal.sender} </b>
 
@@ -526,7 +526,7 @@ function InfoChannel() {
                           <div>
                             <b>DA:</b>
 
-                            <Link to="/infou" state={squeal.sender}>
+                            <Link to={ReactConfig.pathFunction("/infou")} state={squeal.sender}>
                               <button className=" ms-2 custom-button box " aria-label="clicca se vuoi avere informazioni sull'utente">
                                 <b>{squeal.sender} </b>
 
@@ -590,7 +590,7 @@ function InfoChannel() {
                           <div>
                             <b>DA:</b>
 
-                            <Link to="/infou" state={squeal.sender}>
+                            <Link to={ReactConfig.pathFunction("/infou")} state={squeal.sender}>
                               <button className=" ms-2 custom-button box " aria-label="clicca se vuoi avere informazioni sull'utente">
                                 <b>{squeal.sender} </b>
 
@@ -659,7 +659,7 @@ function InfoChannel() {
                   <div>
                     <b>DA:</b>
 
-                    <Link to="/infou" state={squeal.sender}>
+                    <Link to={ReactConfig.pathFunction("/infou")} state={squeal.sender}>
                       <button className=" ms-2 custom-button box " aria-label="clicca se vuoi avere informazioni sull'utente">
                         <b>{squeal.sender} </b>
 
@@ -716,7 +716,7 @@ function InfoChannel() {
                   <div>
                     <b>DA:</b>
 
-                    <Link to="/infou" state={squeal.sender}>
+                    <Link to={ReactConfig.pathFunction("/infou")} state={squeal.sender}>
                       <button className=" ms-2 custom-button box " aria-label="clicca se vuoi avere informazioni sull'utente">
                         <b>{squeal.sender} </b>
 
@@ -755,7 +755,7 @@ function InfoChannel() {
                 <div>
                   <Reactions squeal={squeal._id} reaction={squeal.reaction} />
                 </div>
-                {currentUser.username !== "" && (
+                {typeof currentUser !== 'undefined' && typeof currentUser.username !== 'undefined' && currentUser.username !== "" && (
                   <>
                     <Comment squeal={squeal._id} />
                     <ShowComment arrayComment={squeal.comments} />

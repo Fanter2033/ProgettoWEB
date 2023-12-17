@@ -71,7 +71,16 @@ module.exports = class SquealModel extends Model {
      */
     async replaceSqueal(squealDto, squeal_id) {
         await this.checkMongoose("Squeal", Squeal);
+        let content = squealDto.content;
+        let f = false;
+        if(Array.isArray(content)){
+            f = true;
+            content = `[${content[0]},${content[1]}]`;
+        }
         let squealDoc = this.mongo_escape(squealDto.getDocument());
+        if(f){
+            squealDoc.content = content;
+        }
         delete squealDoc.comments;
         delete squealDoc.reaction;
         squeal_id = parseInt(squeal_id);

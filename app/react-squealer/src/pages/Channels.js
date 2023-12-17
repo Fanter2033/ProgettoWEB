@@ -293,7 +293,7 @@ function Channels() {
                       {officialChannel.map((u) => (
                         <Card key={u.id} className="squeal mb-4">
                           <Card.Header className="d-flex justify-content-center align-items-center">
-                            <Link to="/infoc" state={u}>
+                            <Link to={ReactConfig.pathFunction("/infoc")} state={u}>
                               <button className="custom-button me-2" aria-label="clicca se vuoi avere informazioni sull'utente">
                                 <b className="">{u.channel_name} &nbsp;</b>
 
@@ -375,7 +375,7 @@ function Channels() {
                       {userChannel.map((u) => (
                         <Card key={u.id} className="squeal mb-4">
                           <Card.Header className="d-flex justify-content-center align-items-center">
-                            <Link to="/infoc" state={u}>
+                            <Link to={ReactConfig.pathFunction("/infoc")} state={u}>
                               <button className="custom-button me-2" aria-label="clicca se vuoi avere informazioni sul canale">
                                 <b className="">{u.channel_name} &nbsp;</b>
 
@@ -457,7 +457,7 @@ function Channels() {
                       {tagChannel.map((u) => (
                         <Card key={u.id} className="squeal mb-4">
                           <Card.Header className="d-flex justify-content-center align-items-center">
-                            <Link to="/infoc" state={u}>
+                            <Link to={ReactConfig.pathFunction("/infoc")} state={u}>
                               <button className="custom-button me-2" aria-label="clicca se vuoi avere informazioni sul canale">
                                 <b className="">{u.channel_name} &nbsp;</b>
 
