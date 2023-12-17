@@ -22,17 +22,17 @@
 
         <div class="card bg-dark mt-3 m-5 d-flex justify-content-center align-items-center box">
           <div class="card-body">
-            <h4>Daily quote remaining: <u>{{ quote.rem_daily }}</u></h4>
-            <h4>Weekly quote remaining: <u>{{ quote.rem_weekly }}</u></h4>
-            <h4>Monthly quote remaining: <u>{{ quote.rem_monthly }}</u></h4>
+            <h4 class="daily">Daily quote remaining: <u>{{ quote.rem_daily }}</u></h4>
+            <h4 class="weekly">Weekly quote remaining: <u>{{ quote.rem_weekly }}</u></h4>
+            <h4 class="monthly">Monthly quote remaining: <u>{{ quote.rem_monthly }}</u></h4>
           </div>
         </div>
 
         <div class="card bg-dark mt-3 m-5 d-flex justify-content-center align-items-center box">
           <div class="card-body">
-            <h4>Daily quote limit: <u>{{ quote.limit_daily }}</u></h4>
-            <h4>Weekly quote limit: <u>{{ quote.limit_weekly }}</u></h4>
-            <h4>Monthly quote limit: <u>{{ quote.limit_monthly }}</u></h4>
+            <h4 class="daily">Daily quote limit: <u>{{ quote.limit_daily }}</u></h4>
+            <h4 class="weekly">Weekly quote limit: <u>{{ quote.limit_weekly }}</u></h4>
+            <h4 class="monthly">Monthly quote limit: <u>{{ quote.limit_monthly }}</u></h4>
           </div>
         </div>
 
@@ -208,5 +208,16 @@ async function refillQuote() {
 <style>
 .modal {
   color: #e0bb76;
+}
+.daily{
+  color: rgba(217,202,166,0.98);
+}
+
+.weekly{
+  color: rgba(213,176,112,0.98);
+}
+
+.monthly{
+  color: rgba(224, 179, 75, 0.98);
 }
 </style>
