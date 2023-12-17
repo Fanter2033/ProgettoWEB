@@ -60,7 +60,7 @@ const Dest = ({ onDestinatariSubmit }) => {
             value={destinatari}
             onChange={handleDestinatariChange}
           />
-          <p className="text-wrap cool-font-details mt-1">
+          <p className="text-wrap cool-regular mt-2">
             INSERISCILI SEPARATI DA VIRGOLE
           </p>
         </div>
@@ -91,7 +91,7 @@ const Dest = ({ onDestinatariSubmit }) => {
           </ul>
 
           <button
-            className="reset-button box cool-font-medium mb-4"
+            className="reset-button box cool-medium mb-4 w-50"
             onClick={handleResetDestinatari}
           >
             RESETTA

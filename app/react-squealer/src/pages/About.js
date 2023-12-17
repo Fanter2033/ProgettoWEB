@@ -2,8 +2,16 @@ import Creators from "./Creators";
 
 function About() {
   return (
-    <div className="p-5">
-      <button className="red-button box" onClick={() => window.history.back()} aria-label="Go to previous page">
+    <div className="p-2">
+      <h1 className="cool-font-medium">SU DI NOI:</h1>
+      <Creators />
+      <br></br>
+      <p className="cool-font-link">created with &#x2764;</p>
+      <button
+        className="red-button box"
+        onClick={() => window.history.back()}
+        aria-label="Go to previous page"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"
@@ -19,11 +27,6 @@ function About() {
           />
         </svg>
       </button>
-
-      <h1 className="cool-font-link mt-5">SU DI NOI:</h1>
-      <Creators />
-      <br></br>
-      <p className="cool-font-link">created with &#x2764;</p>
     </div>
   );
 }

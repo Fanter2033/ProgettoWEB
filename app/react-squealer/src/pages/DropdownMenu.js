@@ -11,8 +11,8 @@ const DropdownMenu = ({ onOrderChange }) => {
 
   return (
     <>
-      <div className="d-flex flex-column justify-content-center align-items-center cool-font-details">
-        <label htmlFor="orderOptions">Seleziona l'ordine:</label>
+      <div className="d-flex flex-column justify-content-center align-items-center cool-medium-yellow">
+        <label htmlFor="orderOptions">SELEZIONA L'ORDINE</label>
         <select
           id="orderOptions"
           value={selectedOption}

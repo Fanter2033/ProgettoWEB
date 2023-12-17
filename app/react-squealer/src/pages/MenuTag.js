@@ -9,9 +9,9 @@ function MenuTag({ onOrderChange }) {
   };
 
   return (
-    <div className="d-flex flex-column justify-content-center align-items-center cool-font-details">
+    <div className="d-flex flex-column justify-content-center align-items-center cool-medium-yellow">
       {" "}
-      <label htmlFor="orderOptions">Seleziona l'ordine:</label>
+      <label htmlFor="orderOptions">SELEZIONA L'ORDINE</label>
       <select
         id="orderOptions"
         style={{ height: "20%", width:"70%", borderRadius: "0.5rem" }}

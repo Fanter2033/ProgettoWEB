@@ -53,7 +53,7 @@ function Chat() {
       <div className="container-flex pb-5">
         <div className="row ">
           <div className="col-12 justify-content-center align-items-center">
-            <h1 className="cool-font-medium">CHAT</h1>
+            <h1 className="cool-font mt-2">CHAT</h1>
             <Container className="">
               <Row className="">
                 {squeals.map((squeal) => (
@@ -61,9 +61,12 @@ function Chat() {
                     <Card style={{ width: "100%" }} className="squeal">
                       <Card.Header className="d-flex flex-column justify-content-center align-items-center">
                         <div>
-                          <b className="cool-font-details"> DA: </b>
+                          <span className="cool-medium"> DA: </span>
                           <Link to="/infou" state={squeal.sender}>
-                            <button className=" ms-2 custom-button box" aria-label="clicca se vuoi avere informazioni sull'utente">
+                            <button
+                              className=" ms-2 custom-button box"
+                              aria-label="clicca se vuoi avere informazioni sull'utente"
+                            >
                               <b>{squeal.sender} </b>
 
                               <svg
@@ -79,12 +82,8 @@ function Chat() {
                             </button>
                           </Link>
                         </div>
-                        <div className="row cool-font-details mt-2">
-                          <div>ID: {squeal._id}</div>
-                          <TypeSqueal typeSqueal={squeal.message_type} />
-                        </div>
                       </Card.Header>
-                      <Card.Body className="mb-4 d-flex flex-column justify-content-center align-items-center">
+                      <Card.Body className="d-flex flex-column justify-content-center align-items-center">
                         <SquealContent
                           content={squeal.content}
                           type={squeal.message_type}
@@ -92,6 +91,9 @@ function Chat() {
                         />
                       </Card.Body>
                       <Card.Footer>
+                        <div className="row cool-medium mt-2">
+                          <TypeSqueal typeSqueal={squeal.message_type} />
+                        </div>
                         <Comment squeal={squeal._id} />
                         <ShowComment arrayComment={squeal.comments} />
                       </Card.Footer>

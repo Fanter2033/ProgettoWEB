@@ -7,8 +7,8 @@ function TypeSqueal({ typeSqueal }) {
     <>
       {typeSqueal === "MESSAGE_TEXT" && (
         <>
-          <div className="cool-font-details">
-            TIPO: MESSAGGIO
+          <div className="cool-medium">
+            TIPO: MESSAGGIO&ensp; 
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -24,8 +24,8 @@ function TypeSqueal({ typeSqueal }) {
       )}
       {typeSqueal === "IMAGE" && (
         <>
-          <div className="cool-font-details">
-          TIPO: IMMAGINE
+          <div className="cool-medium">
+          TIPO: IMMAGINE&ensp;
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -42,9 +42,9 @@ function TypeSqueal({ typeSqueal }) {
       )}
       {typeSqueal === "VIDEO_URL" && (
         <>
-          <div className="cool-font-details d-flex justify-content-center">
+          <div className="cool-medium d-flex justify-content-center">
             <div>
-            TIPO: VIDEO
+            TIPO: VIDEO&ensp;
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -62,8 +62,8 @@ function TypeSqueal({ typeSqueal }) {
       )}
       {typeSqueal === "POSITION" && (
         <>
-          <div className="cool-font-details">
-          TIPO: MAPPA
+          <div className="cool-medium">
+          TIPO: MAPPA&ensp;
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -80,8 +80,8 @@ function TypeSqueal({ typeSqueal }) {
       )}
       {typeSqueal === "TEXT_AUTO" && (
         <>
-          <div className="cool-font-details">
-            TIPO: MESSAGGIO A TEMPO
+          <div className="cool-medium">
+            TIPO: MESSAGGIO A TEMPO&ensp;
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -99,9 +99,9 @@ function TypeSqueal({ typeSqueal }) {
       )}
       {typeSqueal === "POSITION_AUTO" && (
         <>
-          <div className="cool-font-details d-flex justify-content-center">
+          <div className="cool-medium d-flex justify-content-center">
             <div>
-            TIPO: MAPPA A TEMPO
+            TIPO: MAPPA A TEMPO&ensp;
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"

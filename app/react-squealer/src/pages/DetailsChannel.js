@@ -378,7 +378,7 @@ function DetailsChannel() {
                     <Col lg={12} key={index} className="mb-4">
                       <Card className="w-100 squeal">
                         {" "}
-                        <Card.Body className="mb-4 d-flex flex-column justify-content-center align-items-center">
+                        <Card.Body className="d-flex flex-column justify-content-center align-items-center">
                           <Link to="/infou" state={user}>
                             <button className="ms-4 me-4 custom-button box mb-3" aria-label="clicca se vuoi avere informazioni sull'utente">
                               <b> {user} </b>

@@ -43,7 +43,7 @@ function SquealContent({ content, type, id }) {
     <>
       {type === "MESSAGE_TEXT" && (
         <>
-          <div className="cool-font-text text-break">
+          <div className="cool-medium text-break">
             <TextLink text={content} />
           </div>
         </>
@@ -73,7 +73,7 @@ function SquealContent({ content, type, id }) {
       )}
       {type === "TEXT_AUTO" && (
         <>
-          <div className="cool-font-text text-break">{content}</div>
+          <div className="cool-medium text-break">{content}</div>
         </>
       )}
       {type === "POSITION_AUTO" && (
