@@ -308,27 +308,6 @@ body {
     cursor: pointer;
 }
 
-/* -------------------- IMG STUFF ------------------*/
-/* Stile predefinito*/
-img {
-    max-width: 100%; /* L'immagine si adatta alla larghezza del suo contenitore */
-    height: auto; /* Altezza automatica per evitare distorsioni */
-}
-
-/* Stile per schermi md */
-@media (max-width: 768px) {
-    img {
-        max-width: 30%; /* Riduci la larghezza dell'immagine al 80% del suo contenitore */
-    }
-}
-
-/* Stile per schermi sm */
-@media (max-width: 300px) {
-    img {
-        max-width: 70vw;
-        max-height: 30vh; /* Riduci ulteriormente la larghezza dell'immagine al 60% del suo contenitore */
-    }
-}
 
 /* -------------------- 3D EFFECT ------------------*/
 .box {

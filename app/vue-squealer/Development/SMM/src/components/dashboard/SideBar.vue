@@ -18,10 +18,10 @@
           <!-- Lista di elementi di navigazione (menu) -->
           <ul
               id="menu"
-              class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start"
+              class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start pe-3"
           >
 
-            <template v-for="vip in myVips ">
+            <template v-for="vip in myVips" >
               <MyVip :vip-name="vip"></MyVip>
             </template>
 

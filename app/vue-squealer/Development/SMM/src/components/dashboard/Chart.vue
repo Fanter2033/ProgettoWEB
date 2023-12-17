@@ -11,9 +11,9 @@
       <div class="col-9 justify-content-center pt-4">
         <h2 class="chill-font-small">Popolarità degli squeal di <u>{{ this.$route.params.vip }}</u></h2>
         <div class="d-flex justify-content-center">
-          <div class="container-fluid box border rounded border-secondary border-2 p-1"
+          <div class="container-fluid box border rounded border-secondary border-2 p-1 h-100"
                style="background-color: rgb(220,209,187) ">
-            <LineChart style="background-color: rgb(220,209,187)"/>
+            <LineChart  style="background-color: rgb(220,209,187)"/>
             <div class="container">
               <div class="d-flex justify-content-start">
 

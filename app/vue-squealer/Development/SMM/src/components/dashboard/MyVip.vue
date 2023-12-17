@@ -2,13 +2,16 @@
   <!-- Elemento di menu con submenu -->
   <li class="nav-item chill-font-xsm">
     <div class="py-1 px-1 d-flex">
-      <i class="fs-4 bi-person-circle m-1 ps-3"></i>   <!--TODO: get_pfp(username)-->
-      <span class="ms-1 d-none d-lg-inline">{{ vipName }}</span>
+
       <a :aria-expanded="isCollapse"
-         class="align-items-center dropdown-toggle"
+         class="align-items-center "
          data-bs-target="#submenu"
          data-bs-toggle="collapse"
-         @click="toggleCollapse"></a>
+         @click="toggleCollapse">
+
+        <i class="fs-4 bi-person-circle m-1 ps-3"></i>
+        <span class="ms-1 d-none d-lg-inline">{{ vipName }}</span>
+      </a>
     </div>
     <!-- Sottomenu -->
     <ul

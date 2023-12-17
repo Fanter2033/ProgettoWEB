@@ -13,11 +13,12 @@
           <div v-for="vip in myVipsData">
             <div class="row m-3">
               <div class="card d-flex align-items-center chill-font-small" style="width: 20rem; height: 25rem">
+
                 <img
                     :src=" 'data:image/jpeg;base64,' + vip.pfp "
                     alt="profile picture"
                     class="m-2 border border-2 border-dark"
-                    style="border-radius: 50%; height: 50%; width: 40%"/>
+                    style="border-radius: 50%; height: 40%; width: 40%"/>
                 <div class="card-body">
                   <h3 class="card-title"> {{ vip.username }} </h3>
 
