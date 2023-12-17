@@ -10,12 +10,12 @@
 
       <div class="col-9 justify-content-center pt-4">
         <h2 class="chill-font-small">Popolarità degli squeal di <u>{{ this.$route.params.vip }}</u></h2>
-        <div class="d-flex justify-content-center ">
-          <div class="container-fluid box border rounded border-secondary border-2 p-1"
+        <div class="d-flex justify-content-center">
+          <div class="container-fluid box border rounded border-secondary border-2 p-1 h-100"
                style="background-color: rgb(220,209,187) ">
-            <LineChart style="background-color: rgb(220,209,187)"/>
+            <LineChart  style="background-color: rgb(220,209,187)"/>
             <div class="container">
-              <div class="d-flex justify-content-start ">
+              <div class="d-flex justify-content-start">
 
                 <div>
                   <form class="mx-sm-auto p-1">
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import {defineComponent, ref, watch} from "vue";
+import {defineComponent} from "vue";
 import VueConfig from "@/config/VueConfig";
 import SideBar from "@/components/dashboard/SideBar.vue";
 import Nav from "../Nav.vue";
@@ -123,7 +123,7 @@ export default defineComponent({
           })
           .then((data) => {
             let arrayToCommit = [];
-            for(let i=0; i< data.length; i++){
+            for (let i = 0; i < data.length; i++) {
               arrayToCommit.push(data[i]._id);
             }
             this.$store.commit('setDoughnutChart', arrayToCommit);

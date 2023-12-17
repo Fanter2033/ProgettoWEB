@@ -4,7 +4,7 @@
     <div class="d-flex flex-column flex-lg-row justify-content-around">
 
       <div class="d-flex align-items-center">
-        <button class="btn nav-button" @click="prevSqueal">
+        <button aria-label="Squeal precedente" class="btn nav-button" @click="prevSqueal">
           <i class="bi bi-caret-left-fill"></i>
         </button>
       </div>
@@ -18,7 +18,7 @@
             </div>
             <div class="flex-nowrap" style="color: var(--squeal-blue)">
               <i class="bi bi-eye me-1"></i>
-              <span> {{actualSqueal.views}} </span>
+              <span> {{ actualSqueal.views }} </span>
             </div>
           </div>
         </div>
@@ -47,7 +47,6 @@
           </div>
 
 
-
         </div>
         <div class="card-footer text-muted reg-font-xsm d-flex justify-content-between align-items-center"
              style="text-align: start">
@@ -56,9 +55,10 @@
           </div>
           <div>
             <!--change view button-->
-            <button class="btn align-items-center border rounded border-dark" @click="switchView">
-              <i class="bi bi-chat-text" v-if="!showComments"></i>
-              <i class="bi bi-pie-chart" v-else-if="showComments"></i>
+            <button aria-label="cambia visualizzazione da commenti a grafici" class="btn align-items-center border rounded border-dark"
+                    @click="switchView">
+              <i v-if="!showComments" class="bi bi-chat-text"></i>
+              <i v-else-if="showComments" class="bi bi-pie-chart"></i>
             </button>
           </div>
           <div>
@@ -69,7 +69,7 @@
 
       <div class="card box squeal  d-lg-inline" style="width: 18rem">
         <div class="card-body">
-          <div class="card-title"  v-if="!showComments"><h3 class="chill-font-small">Statistiche</h3></div>
+          <div v-if="!showComments" class="card-title"><h3 class="chill-font-small">Statistiche</h3></div>
           <div v-if="!showComments">
             <Doughnut
                 ref="chart"
@@ -80,7 +80,7 @@
           <div v-else-if="showComments" class="overflow-auto">
             <h3 class="chill-font-small">Commenti</h3>
             <div v-for="comment in commentsToPrint" class="rounded">
-              <p><b>{{comment.username}}</b> - {{comment.comment}}</p>
+              <p><b>{{ comment.username }}</b> - {{ comment.comment }}</p>
             </div>
           </div>
         </div>
@@ -89,9 +89,12 @@
             <!--end of squeal body-->
             <div class="mt-2">
               <div v-if="actualSqueal.trend !== 'Nothing'">
-                <button v-if="actualSqueal.trend === 'Popular'" class="btn grn-btn-lite" > {{actualSqueal.trend}} </button>
-                <button v-else-if="actualSqueal.trend === 'Unpopular'" class="btn red-btn-lite"> {{actualSqueal.trend}} </button>
-                <button v-else class="btn blue-btn-lite"> {{actualSqueal.trend}} </button>
+                <button v-if="actualSqueal.trend === 'Popular'" class="btn grn-btn-lite"> {{ actualSqueal.trend }}
+                </button>
+                <button v-else-if="actualSqueal.trend === 'Unpopular'" class="btn red-btn-lite">
+                  {{ actualSqueal.trend }}
+                </button>
+                <button v-else class="btn blue-btn-lite"> {{ actualSqueal.trend }}</button>
               </div>
             </div>
           </div>
@@ -99,7 +102,7 @@
       </div>
 
       <div class="d-flex align-items-center">
-        <button class="btn nav-button" @click="nextSqueal">
+        <button aria-label="Squeal successivo" class="btn nav-button" @click="nextSqueal">
           <i class="bi bi-caret-right-fill"></i>
         </button>
       </div>
@@ -109,12 +112,11 @@
 </template>
 
 <script setup>
-import {onBeforeMount, onMounted, onUpdated, ref, watch} from "vue";
-import {Chart as ChartJS, ArcElement, Tooltip, Legend} from 'chart.js'
+import {onBeforeMount, onUpdated, ref, watch} from "vue";
+import {ArcElement, Chart as ChartJS, Legend, Tooltip} from 'chart.js'
 import {Doughnut} from "vue-chartjs";
 import {useStore} from "vuex";
 import L from "leaflet"
-import {func} from "joi";
 import VueConfig from "@/config/VueConfig";
 
 const store = useStore();
@@ -213,20 +215,21 @@ function assebleSqueal(squealFromServer) {
     actualSqueal.value.lng = lng;
   }
   //popular, unpopular, controversial
-  if(squealFromServer.critical_mass < squealFromServer.positive_value
+  if (squealFromServer.critical_mass < squealFromServer.positive_value
       && squealFromServer.critical_mass < squealFromServer.negative_value)
     actualSqueal.value.trend = 'Controversial'
-  else if(squealFromServer.critical_mass < squealFromServer.positive_value)
+  else if (squealFromServer.critical_mass < squealFromServer.positive_value)
     actualSqueal.value.trend = 'Popular'
-  else if(squealFromServer.critical_mass < squealFromServer.negative_value)
+  else if (squealFromServer.critical_mass < squealFromServer.negative_value)
     actualSqueal.value.trend = 'Unpopular'
   else
     actualSqueal.value.trend = 'Nothing'
 }
 
 const commentsToPrint = ref([]);
+
 function assebleComments(commentsFromServer) {
-  for(let i=0; i<commentsFromServer.length; i++){
+  for (let i = 0; i < commentsFromServer.length; i++) {
     let iter = {
       username: commentsFromServer[i].username,
       comment: commentsFromServer[i].comment,
@@ -237,7 +240,7 @@ function assebleComments(commentsFromServer) {
 
 
 function switchView() {
-  if(showComments.value === false){
+  if (showComments.value === false) {
     assebleComments(actualComments.value)
   }
   showComments.value = !showComments.value;
@@ -248,7 +251,7 @@ async function nextSqueal() {
   if (index.value < store.getters.getDoughnutChart.length - 1) {
     try {
       map.remove();
-    } catch (e){
+    } catch (e) {
     }
     index.value = index.value + 1;
     await getSquealData(store.getters.getDoughnutChart[index.value]);
@@ -279,7 +282,7 @@ function fixYTUrl(url) {
 
 //build the map for the position's squeal
 function initMap(lat, lng) {
-  try{
+  try {
     const map = L.map("map", {
       center: L.latLng(lat, lng),
       zoom: 14,
@@ -313,8 +316,6 @@ onUpdated(() => {
     initMap(actualSqueal.value.lat, actualSqueal.value.lng);
   }
 })
-
-
 
 
 </script>

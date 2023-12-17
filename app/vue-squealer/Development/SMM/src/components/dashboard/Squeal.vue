@@ -10,25 +10,26 @@
       <div class="col-9 justify-content-center pt-4">
         <div class="container-fluid justify-content-center">
           <div class="">
-            <div class="">
-              <h3 ><b>Quick Squeal</b></h3>
+            <div class="chill-font-small">
+              <h2><b>Quick Squeal</b></h2>
               <lord-icon
-                  src="https://cdn.lordicon.com/ayhtotha.json"
-                  trigger="in"
                   colors="primary:#e0bb76"
-                  style="width:50px;height:50px">
+                  src="https://cdn.lordicon.com/ayhtotha.json"
+                  style="width:50px;height:50px"
+                  trigger="in">
               </lord-icon>
             </div>
             <div class="">
               <form>
                 <div class="form-group">
                   <div class="container-sm d-flex flex-column">
-                    <label class="col-form-label" for="recipient-name"
+                    <label class="col-form-label chill-font-small" for="recipient-name"
                     >Destinatari:
                     </label>
                     <input
                         id="dest"
                         v-model="inputDest"
+                        aria-label="Destinatari"
                         class="form-control"
                         type="text"
                     />
@@ -43,6 +44,7 @@
                   </div>
                   <div class="btn-group p-2" role="group">
                     <button
+                        aria-label="tipo di input testuale"
                         class="bottoni_omologati"
                         type="button"
                         @click="inputType = 'MESSAGE_TEXT'"
@@ -51,6 +53,7 @@
                       <i class="bi bi-pencil-fill inputIco"></i>
                     </button>
                     <button
+                        aria-label="tipo di input immagine"
                         class="bottoni_omologati"
                         type="button"
                         @click="inputType = 'IMAGE'"
@@ -59,6 +62,7 @@
                       <i class="bi bi-card-image inputIco"></i>
                     </button>
                     <button
+                        aria-label="tipo di input video su you tube"
                         class="bottoni_omologati"
                         type="button"
                         @click="inputType = 'VIDEO_URL'"
@@ -67,6 +71,7 @@
                       <i class="bi bi-youtube inputIco"></i>
                     </button>
                     <button
+                        aria-label="tipo di input posizione"
                         class="bottoni_omologati"
                         type="button"
                         @click="inputType = 'POSITION'"
@@ -75,6 +80,7 @@
                       <i class="bi bi-globe-europe-africa inputIco"></i>
                     </button>
                     <button
+                        aria-label="tipo di input messaggio temporizzato"
                         class="bottoni_omologati"
                         type="button"
                         @click="inputType = 'TEXT_AUTO'"
@@ -86,14 +92,15 @@
                 </div>
 
                 <!--input form-->
-                <div class="container form-group" >
+                <div class="container form-group">
                   <div v-if="inputType === 'MESSAGE_TEXT'">
-                    <label class="col-form-label" for="message-text"
+                    <label class="col-form-label chill-font-small" for="message-text"
                     >Scrivi qualcosa</label
                     >
                     <textarea
                         id="message-text"
                         v-model="inputContent"
+                        aria-label="corpo del messaggio"
                         class="form-control"
                         name="message-text"
                     ></textarea>
@@ -101,10 +108,11 @@
 
                   <div v-else-if="inputType === 'IMAGE'">
                     <label for="message-image">Condividi qualcosa</label>
-                    <br />
+                    <br/>
                     <input
                         id="message-image"
                         accept="image/png, image/jpeg"
+                        aria-label="selezione immagine"
                         class="col-form-label rounded"
                         name="message-image"
                         type="file"
@@ -116,17 +124,18 @@
                     <label class="col-form-label" for="message-video"
                     >Condividi un video su YouTube</label
                     >
-                    <br />
+                    <br/>
                     <input
                         id="message-video"
                         v-model="inputContent"
+                        aria-label="link di youtube"
                         name="message-video"
                         type="url"
                     />
                   </div>
 
                   <div v-else-if="inputType === 'POSITION'">
-                    <Map />
+                    <Map/>
                   </div>
 
                   <div v-else-if="inputType === 'TEXT_AUTO'">
@@ -138,9 +147,10 @@
                         <input
                             id="number1"
                             v-model="inputNumberRep"
+                            aria-label="ripetizioni messaggio tepmorizzato"
+                            class="border rounded"
                             min="1"
                             type="number"
-                            class="border rounded"
                         />
                       </div>
                       <div class="d-flex flex-nowrap justify-content-between mb-1">
@@ -150,21 +160,23 @@
                         <input
                             id="number2"
                             v-model="inputSecRep"
-                            type="number"
+                            aria-label="ritardo in secondi da una ripetizione all'altra "
                             class="border rounded"
-                            min="1"/>
+                            min="1"
+                            type="number"/>
                       </div>
                       <textarea
+                          v-model="inputContent"
+                          aria-label="corpo del messaggio temporizzato"
                           class="container border rounded"
                           placeholder="Inserisci il testo del post..."
-                          v-model="inputContent"
                       ></textarea>
                     </div>
                   </div>
                 </div>
               </form>
               <div class="">
-                <button class="btn grn-btn-lite mt-3" type="button" @click="postSqueal">
+                <button aria-label="invia messaggio" class="btn grn-btn-lite mt-3" type="button" @click="postSqueal">
                   Post from <b>{{ vipName }}</b>
                 </button>
               </div>
@@ -180,18 +192,18 @@
 
 <script setup>
 import VueConfig from "@/config/VueConfig";
-import {reactive, onMounted, defineComponent, watch, onUpdated} from "vue";
-import { ref } from "vue";
-import { store } from "@/store";
+import {defineComponent, onMounted, onUpdated, ref, watch} from "vue";
+import {store} from "@/store";
 import Map from "@/components/dashboard/Map.vue";
 import {useToast} from "vue-toastification";
-import {useRouter, useRoute} from "vue-router"
+import {useRoute} from "vue-router"
 import Nav from "@/components/Nav.vue";
 import SideBar from "@/components/dashboard/SideBar.vue";
 
 const toast = useToast()
 const route = useRoute();
-function showToast(type){
+
+function showToast(type) {
   const options = {
     position: "top-right",
     timeout: 5000,
@@ -206,7 +218,7 @@ function showToast(type){
     icon: true,
     rtl: false
   }
-  if(type === 'success')
+  if (type === 'success')
     toast.success("Squeal posted", options);
   else if (type === 'warning')
     toast.warning("Ops! Something went wrong", options);
@@ -226,15 +238,15 @@ const inputContent = ref("");
 const inputNumberRep = ref(1);
 const inputSecRep = ref(0);
 
-watch(vipName, ()=>{
+watch(vipName, () => {
   vipName.value = route.params.vip;
 })
 
-onMounted(()=>{
+onMounted(() => {
   vipName.value = route.params.vip;
 })
 
-onUpdated(()=>{
+onUpdated(() => {
   vipName.value = route.params.vip;
 })
 
@@ -242,9 +254,9 @@ onUpdated(()=>{
 function checkDest() {
   // Suddivide l'input in destinatari separati da virgole
   const destSep = inputDest.value
-    .toString()
-    .split(",")
-    .map((dest) => dest.trim());
+      .toString()
+      .split(",")
+      .map((dest) => dest.trim());
   const isValid = destSep.every((dest) => /^[@#§]/.test(dest));
   if (!isValid) {
     alert("Ogni destinatario deve iniziare con uno dei simboli: #, §, @");
@@ -268,7 +280,7 @@ function handelImage() {
 
 function checkVideo() {
   const regex =
-    /^(https?:\/\/)?(www\.)?(youtube\.com\/(channel\/|user\/|c\/)?[a-zA-Z0-9_-]{1,})|(youtu\.be\/[a-zA-Z0-9_-]{1,})/;
+      /^(https?:\/\/)?(www\.)?(youtube\.com\/(channel\/|user\/|c\/)?[a-zA-Z0-9_-]{1,})|(youtu\.be\/[a-zA-Z0-9_-]{1,})/;
   return regex.test(inputContent.value);
 }
 
@@ -290,8 +302,8 @@ function assembleContent() {
       break;
     case "POSITION":
       if (
-        store.getters.getSInCoor[0] != null &&
-        store.getters.getSInCoor[1] != null
+          store.getters.getSInCoor[0] != null &&
+          store.getters.getSInCoor[1] != null
       )
         body = [
           store.getters.getSInCoor[0],
@@ -300,7 +312,7 @@ function assembleContent() {
       else body = null;
       break;
     case "TEXT_AUTO":
-      if(inputContent.value.length > 0 && inputNumberRep.value > 0 && inputSecRep.value > 0)
+      if (inputContent.value.length > 0 && inputNumberRep.value > 0 && inputSecRep.value > 0)
         body = inputContent.value;
       break;
   }
@@ -311,11 +323,11 @@ function assembleContent() {
 function postSqueal() {
   const uri = VueConfig.base_url_requests + "/squeal/from-smm/" + vipName.value;
   const destination = checkDest();
-    if(destination == null)
-      return;
+  if (destination == null)
+    return;
   const squealContent = assembleContent();
-    if(squealContent == null)
-      return;
+  if (squealContent == null)
+    return;
   let squealBody = {
     squeal: {
       destinations: destination,
@@ -324,7 +336,7 @@ function postSqueal() {
       content: squealContent
     }
   }
-  if(inputType.value === 'TEXT_AUTO'){
+  if (inputType.value === 'TEXT_AUTO') {
     squealBody.squeal.auto_iterations = inputNumberRep.value;
     squealBody.squeal.auto_seconds_delay = inputSecRep.value;
   }
@@ -338,15 +350,15 @@ function postSqueal() {
     body: JSON.stringify(squealBody)
   }
   fetch(uri, options)
-      .then((res)=>{
-        if(res.ok){
+      .then((res) => {
+        if (res.ok) {
           showToast('success');
         } else {
           console.error("Error during post");
           showToast('warning');
         }
       })
-      .catch((error)=>{
+      .catch((error) => {
         showToast('warning')
         console.error('Network error', error)
       });

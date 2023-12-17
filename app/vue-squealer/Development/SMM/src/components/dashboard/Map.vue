@@ -1,5 +1,5 @@
 <template>
-  <div id="map"></div>
+  <div id="map" ></div>
 </template>
 
 <script>
@@ -40,41 +40,41 @@ export default {
 
       let geoScript = document.createElement("script");
       geoScript.setAttribute(
-        "src",
-        "https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js",
+          "src",
+          "https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js",
       );
       geoScript.onload = () => {
         L.Control.geocoder({
           defaultMarkGeocode: false,
         })
-          .on("markgeocode", function (e) {
-            let marker = L.marker(e.geocode.center, { icon: customIcon }).addTo(
-              map,
-            );
-            map.fitBounds(L.latLngBounds([marker.getLatLng()]));
-            console.log([marker.getLatLng().lat, marker.getLatLng().lng]);
-            store.commit('setSInCoor',[marker.getLatLng().lat, marker.getLatLng().lng])
-          })
-          .addTo(map);
+            .on("markgeocode", function (e) {
+              let marker = L.marker(e.geocode.center, {icon: customIcon}).addTo(
+                  map,
+              );
+              map.fitBounds(L.latLngBounds([marker.getLatLng()]));
+              console.log([marker.getLatLng().lat, marker.getLatLng().lng]);
+              store.commit('setSInCoor', [marker.getLatLng().lat, marker.getLatLng().lng])
+            })
+            .addTo(map);
       };
       document.head.appendChild(geoScript);
 
       map.on("click", function (e) {
         if (currentMarker !== null) map.removeLayer(currentMarker);
         currentMarker = new L.Marker(
-          [e.latlng.lat, e.latlng.lng],
-          markerOptions,
+            [e.latlng.lat, e.latlng.lng],
+            markerOptions,
         ).addTo(map);
         console.log([e.latlng.lat, e.latlng.lng]);
-        store.commit('setSInCoor',[e.latlng.lat, e.latlng.lng]);
+        store.commit('setSInCoor', [e.latlng.lat, e.latlng.lng]);
       });
     },
   },
   mounted() {
     let geoLink = document.createElement("link");
     geoLink.setAttribute(
-      "href",
-      "https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css",
+        "href",
+        "https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css",
     );
     geoLink.setAttribute("rel", "stylesheet");
     document.head.appendChild(geoLink);

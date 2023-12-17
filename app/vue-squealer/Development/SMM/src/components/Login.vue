@@ -1,46 +1,51 @@
 <template>
   <div class="d-flex container-fluid justify-content-center">
     <div class="m-5">
-      <h2 class="chill-font-small"> Social <span style="color: #c94646">M</span>edia <span style="color: #c94646">M</span>anager</h2>
+      <h2 class="chill-font-small"> Social <span style="color: #c94646">M</span>edia <span
+          style="color: #c94646">M</span>anager</h2>
       <form @submit.prevent="loginForm">
         <div class="form-group mt-2 chill-font-small">
-          <label for="username">Username</label>
+          <label for="username">Nome Utente</label>
           <input
-              type="text"
-              class="form-control"
               id="username"
               v-model="formLoginValues.username"
+              aria-label="Nome dell'utente"
+              class="form-control"
+              required
+              type="text"
           />
         </div>
         <div class="form-group mt-2 chill-font-small">
           <label for="password">Password</label>
           <input
-              type="password"
-              class="form-control"
               id="password"
               v-model="formLoginValues.password"
+              aria-label="password dell'utente"
+              class="form-control"
+              required
+              type="password"
           />
         </div>
 
         <button
-            type="submit"
-            class="btn btn-default green-button-static mt-4 chill-font-small"
             id="login"
-            value="Log In"
-            @:click.prevent="loginForm()"
-            v-on:mouseover="isOverButton = true"
-            v-on:mouseleave="isOverButton = false"
             :class="isOverButton ? 'green-button' : 'yellow-button'"
+            class="btn btn-default green-button-static mt-4 chill-font-small"
+            type="submit"
+            value="Log In"
+            v-on:mouseleave="isOverButton = false"
+            v-on:mouseover="isOverButton = true"
+            @:click.prevent="loginForm()"
         >
           <i class="bi bi-door-open"></i>
           Log In
         </button>
 
       </form>
-      <button
-          class="btn red-button mt-4">
-        Go Back
-      </button>
+      <form action="http://localhost:8000">
+        <input class="btn red-button mt-3 chill-font-small" type="submit" value="Go Back"/>
+      </form>
+
     </div>
 
 
@@ -50,7 +55,9 @@
 <script>
 import VueConfig from "../config/VueConfig";
 import router from "../router";
-import VueCookies from 'vue-cookies'
+import {useToast} from "vue-toastification";
+
+const toast = useToast();
 
 export default {
   name: "Login",
@@ -73,15 +80,37 @@ export default {
   },
 
   methods: {
+
+    showToast(type, msg) {
+      const options = {
+        position: "top-right",
+        timeout: 5000,
+        closeOnClick: true,
+        pauseOnFocusLoss: true,
+        pauseOnHover: true,
+        draggable: true,
+        draggablePercent: 0.6,
+        showCloseButtonOnHover: false,
+        hideProgressBar: true,
+        closeButton: "button",
+        icon: true,
+        rtl: false
+      }
+      if (type === 'success')
+        toast.success(msg, options);
+      else if (type === 'warning')
+        toast.warning(msg, options);
+    },
+
     loginForm: function LoginForm() {
       if (
-        this.formLoginValues.password.length === 0 ||
-        this.formLoginValues.username.length === 0
+          this.formLoginValues.password.length === 0 ||
+          this.formLoginValues.username.length === 0
       ) {
         alert("Tutti i campi sono obbligatori");
         return;
       }
-      const passData = { password: this.formLoginValues.password };
+      const passData = {password: this.formLoginValues.password};
 
       let uri = `${VueConfig.base_url_requests}/auth/${this.formLoginValues.username}/1`;
 
@@ -95,16 +124,15 @@ export default {
         },
         body: JSON.stringify(passData)
       })
-        .then((res) => {
-          if (res.ok) {
-            this.$store.commit('setUserZero',this.formLoginValues.username);
-            router.push("/dashboard");
-          } else console.error("Authentication failed", res.statusText);
-        })
-        .catch((error) => {
-          console.error("network error", error);
-        });
-      //router.push("/dashboard"); // !!!!!!
+          .then((res) => {
+            if (res.ok) {
+              this.$store.commit('setUserZero', this.formLoginValues.username);
+              router.push("/dashboard");
+            } else this.showToast('warning', "autenticazione fallita")
+          })
+          .catch((error) => {
+            this.showToast('warning', "errore di rete")
+          });
     },
   },
 };
@@ -115,7 +143,8 @@ export default {
 form {
   font-family: Optima, sans-serif;
 }
-h2::first-letter{
+
+h2::first-letter {
   color: #c94646;
 }
 </style>
