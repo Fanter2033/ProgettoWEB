@@ -386,7 +386,10 @@ function LoginForm() {
             <button className="col-12 mb-5 yellow-button box ">
               <NavLink
                 className="cool-font-text "
-                to={ReactConfig.pathFunction("/")}
+                /*to={ReactConfig.pathFunction("/")} */
+                onClick={() => {
+                  window.location.href = '../'
+                }}
                 style={{ textDecoration: "none" }}
                 aria-label="clicca se vuoi tornare alla pagina precedente"
               >
