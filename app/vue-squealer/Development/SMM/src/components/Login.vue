@@ -156,5 +156,3 @@ h2::first-letter {
   color: #c94646;
 }
 </style>
-
-//TODO: add a searchbar
