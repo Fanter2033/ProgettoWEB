@@ -179,7 +179,7 @@ function Search() {
               <Col lg={12} key={channel.type + channel.channel_name}>
                 <Card style={{ height: "100%" }} className="squeal mb-4">
                   <Card.Header className="d-flex flex-column justify-content-center align-items-center">
-                    <Link to="/infoc" state={channel}>
+                    <Link to={ReactConfig.pathFunction("/infoc")} state={channel}>
                       <button
                         className="custom-button box cool-font-small"
                         aria-label="clicca se vuoi avere più informazioni su questo utente"

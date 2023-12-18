@@ -63,7 +63,7 @@ function Home() {
         <button className="ms-1 green-button mb-1 box col-6">
           <NavLink
             className="cool-font-medium"
-            to={ReactConfig.pathFunction("../")}
+            to={ReactConfig.pathFunction("./")}
             style={{ textDecoration: "none" }}
           >
             LOGIN
@@ -78,7 +78,7 @@ function Home() {
             <div>
               <Card style={{ height: "100%" }} className="squeal mb-4">
                 <Card.Header className="d-flex justify-content-center align-items-center">
-                  <Link to="/infoc" state={channel}>
+                  <Link to={ReactConfig.pathFunction("/infoc")} state={channel}>
                     <button
                       className="custom-button me-2 box cool-font-small"
                       aria-label="clicca se vuoi avere informazioni sul canale"

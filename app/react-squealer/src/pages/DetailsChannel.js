@@ -144,7 +144,7 @@ function DetailsChannel() {
     console.log('HELLO GUYS!!!', channel);
     whoAmI();
     if(channel.channel_name === '' || typeof channel === 'undefined' || typeof channel.channel_name === 'undefined'){
-      navigate('channels');
+      navigate('./channels');
     }
 
     fetchData(channel.channel_name, 0);
@@ -379,7 +379,7 @@ function DetailsChannel() {
                       <Card className="w-100 squeal">
                         {" "}
                         <Card.Body className="d-flex flex-column justify-content-center align-items-center">
-                          <Link to="/infou" state={user}>
+                          <Link to={ReactConfig.pathFunction("/infou")} state={user}>
                             <button className="ms-4 me-4 custom-button box mb-3" aria-label="clicca se vuoi avere informazioni sull'utente">
                               <b> {user} </b>
 

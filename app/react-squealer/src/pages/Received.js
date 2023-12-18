@@ -107,7 +107,7 @@ function Received() {
                           <div className="col-12 d-flex flex-row justify-content-center align-items-center">
                             <div>
                               <span className="cool-medium">DA:</span>
-                              <Link to="/infou" state={squeal.sender}>
+                              <Link to={ReactConfig.pathFunction("/infou")} state={squeal.sender}>
                                 <button
                                   className=" ms-2 custom-button box "
                                   aria-label="clicca se vuoi avere più informazioni su questo utente"
