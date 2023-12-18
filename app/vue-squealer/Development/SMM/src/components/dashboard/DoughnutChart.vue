@@ -126,6 +126,7 @@ const actualSqueal = ref({});
 const actualFetched = ref({});
 const actualComments = ref({});
 const showComments = ref(false);
+const commentsToPrint = ref([]);
 const index = ref(0);
 const listLength = ref(store.getters.getDoughnutChart.length)
 const loaded = ref(false);
@@ -233,7 +234,7 @@ function assebleSqueal(squealFromServer) {
     actualSqueal.value.trend = 'Nothing'
 }
 
-const commentsToPrint = ref([]);
+
 
 function assebleComments(commentsFromServer) {
   commentsToPrint.value = [];
@@ -262,6 +263,7 @@ async function nextSqueal() {
     } catch (e) {
     }
     index.value = index.value + 1;
+    showComments.value = false;
     await getSquealData(store.getters.getDoughnutChart[index.value]);
     await getSquealComments(store.getters.getDoughnutChart[index.value])
     assebleSqueal(actualFetched.value);
@@ -271,6 +273,7 @@ async function nextSqueal() {
 async function prevSqueal() {
   if (index.value > 0) {
     index.value = index.value - 1;
+    showComments.value = false;
     await getSquealData(store.getters.getDoughnutChart[index.value]);
     await getSquealComments(store.getters.getDoughnutChart[index.value])
     assebleSqueal(actualFetched.value);
