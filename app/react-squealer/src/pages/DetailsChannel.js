@@ -348,8 +348,8 @@ function DetailsChannel() {
           </Card.Footer>
         </Card>
 
-        {typeof currentUser !== 'undefined' &&
-            typeof currentUser.username !== 'undefined' &&
+        {typeof localUser !== 'undefined' &&
+            typeof localUser.username !== 'undefined' &&
           channel.owner === localUser.username &&
           channel.type === "CHANNEL_USERS" && (
             <div className="row">
