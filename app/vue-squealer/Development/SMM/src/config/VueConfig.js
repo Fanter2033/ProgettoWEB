@@ -1,5 +1,6 @@
 const VueConfig = {
-    base_url_requests: 'http://localhost:8000',
+    //base_url_requests: 'http://localhost:8000',
+    base_url_requests: '..',
     msgType: {
         text: 'MESSAGE_TEXT',
         img: 'IMAGE',

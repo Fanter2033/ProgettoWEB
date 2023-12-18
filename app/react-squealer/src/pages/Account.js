@@ -312,7 +312,7 @@ function Account() {
       .then((response) => {
         if (response.ok) {
           console.log("logout riuscito con successo");
-          navigate(`/`);
+          navigate(`../`);
         } else {
           notify();
           console.error("Logout failed", response.statusText);
@@ -571,7 +571,7 @@ function Account() {
                               <>
                                 <Card className="w-100 offers m-2">
                                   <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
-                                    <Link to="/infoc" state={channel}>
+                                    <Link to={ReactConfig.pathFunction("/infoc")} state={channel}>
                                       <button
                                         className="custom-button box"
                                         aria-label="clicca se vuoi avere informazioni sul canale"
@@ -600,7 +600,7 @@ function Account() {
                               <>
                                 <Card className="w-100 offers  m-2">
                                   <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
-                                    <Link to="/infoc" state={channel}>
+                                    <Link to={ReactConfig.pathFunction("/infoc")} state={channel}>
                                       <button
                                         className="custom-button box"
                                         aria-label="clicca se vuoi avere informazioni sul canale"
@@ -629,7 +629,7 @@ function Account() {
                               <>
                                 <Card className="w-100 offers  m-2">
                                   <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
-                                    <Link to="/infoc" state={channel}>
+                                    <Link to={ReactConfig.pathFunction("/infoc")} state={channel}>
                                       <button
                                         className="custom-button box"
                                         aria-label="clicca se vuoi avere informazioni sul canale"
@@ -658,7 +658,7 @@ function Account() {
                               <>
                                 <Card className="w-100 offers m-2">
                                   <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
-                                    <Link to="/infoc" state={channel}>
+                                    <Link to={ReactConfig.pathFunction("/infoc")} state={channel}>
                                       <button
                                         className="custom-button box"
                                         aria-label="clicca se vuoi avere informazioni sul canale"
@@ -687,7 +687,7 @@ function Account() {
                               <>
                                 <Card className="w-100 offers  m-2">
                                   <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
-                                    <Link to="/infoc" state={channel}>
+                                    <Link to={ReactConfig.pathFunction("/infoc")} state={channel}>
                                       <button
                                         className="custom-button box"
                                         aria-label="clicca se vuoi avere informazioni sul canale"
