@@ -142,7 +142,7 @@ function ConnectSMM({ openConnect, closeConnect }) {
         </Modal.Header>
         <Modal.Body className="custom-modal-body cool-font-link">
           <div className="row d-flex justify-content-center align-items-center">
-            <div className="col-6">
+            <div className="col-12">
               <p className="cool-font-details" style={{ color: "##528b57" }}>
                 CONNETTI IL TUO SMM
               </p>
@@ -155,21 +155,24 @@ function ConnectSMM({ openConnect, closeConnect }) {
               />
 
               <button
-                className="green-button box mt-2 mb-4 w-100 cool-font-small "
+                className="green-button box mt-2 mb-4 w-50 cool-font-small "
                 onClick={addSmm}
               >
                 CONNETTI
               </button>
-              <p style={{ color: "#072f38" }}>NOME DEL TUO SMM</p>
+
+              <p style={{ color: "#072f38" }} >NOME DEL TUO SMM</p>
               <button
-                className="blue-button box w-100 cool-font-small"
+                className="blue-button box w-50 cool-font-small"
                 onClick={getSmm}
               >
-                VAI
+                OTTIENI
               </button>
               {mySmm && (
                 <>
-                  <button className=" mt-2 cool-font-details blue-button w-100">{mySmm}</button>
+                  <button className=" mt-2 cool-font-details blue-button w-100">
+                    {mySmm}
+                  </button>
                 </>
               )}
 
@@ -177,7 +180,7 @@ function ConnectSMM({ openConnect, closeConnect }) {
                 RIMUOVI SMM
               </p>
               <button
-                className="red-button mb-2 box w-100 cool-font-small"
+                className="red-button mb-2 box w-50 cool-font-small"
                 onClick={removeSmm}
               >
                 RIMUOVI

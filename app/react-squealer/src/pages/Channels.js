@@ -30,20 +30,20 @@ function Channels() {
       mode: "cors",
       credentials: "include",
     })
-        .then((res) => {
-          if (res.ok) {
-            return res.json();
-          } else {
-            navigate('../');
-          }
-        })
-        .then((data) => {
-          setCurrentUser(data);
-          setUserGlobal(data);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          navigate("../");
+        }
+      })
+      .then((data) => {
+        setCurrentUser(data);
+        setUserGlobal(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
     //}
   }
 
@@ -231,25 +231,18 @@ function Channels() {
     <div>
       <div className="container-flex">
         <div className="row" onLoad={getUserData}>
-          <div className="row d-flex justify-content-center ms-1 me-1 w-100">
-            <h3>TODO:</h3>
-            <ul className="list-group col-md-4">
-              <li key={"a1"} className="list-group-item list">GESTIONE CAMBIO RUOLI</li>
-              <li key={"a2"} className="list-group-item list">
-                extra: usare limit, offset
-              </li>
-              <li className="list-group-item list">extra: notifiche</li>
-            </ul>
-          </div>
-          <div className="col-12 mt-5">
+          <div className="col-12 mt-2">
             <div>
               <div>
+                <h1 className="cool-font">HOME</h1>
+                <CreateChannel />
 
-                <div>
+                <div className="m-2">
                   <Row>
+                    <h1 className="cool-font-medium">FILTRA</h1>
                     <div className="col-4">
                       <button
-                        className="green-button box cool-font-xsm"
+                        className="yellow-button w-100 box cool-font-small"
                         onClick={changeClickUser}
                       >
                         UTENTE
@@ -263,7 +256,7 @@ function Channels() {
                     </div>
                     <div className="col-4">
                       <button
-                        className="green-button box cool-font-xsm"
+                        className="yellow-button box w-100 cool-font-small"
                         onClick={changeClickOfficial}
                       >
                         UFFICIALE
@@ -276,7 +269,7 @@ function Channels() {
                     </div>
                     <div className="col-4">
                       <button
-                        className="green-button box cool-font-xsm"
+                        className="yellow-button box w-100 cool-font-small"
                         onClick={changeClickTag}
                       >
                         TAG
@@ -288,15 +281,18 @@ function Channels() {
                       )}
                     </div>
                   </Row>
+
                   {clickOfficial && (
                     <>
                       {officialChannel.map((u) => (
                         <Card key={u.id} className="squeal mb-4">
                           <Card.Header className="d-flex justify-content-center align-items-center">
                             <Link to={ReactConfig.pathFunction("/infoc")} state={u}>
-                              <button className="custom-button me-2" aria-label="clicca se vuoi avere informazioni sull'utente">
+                              <button
+                                className="custom-button me-2"
+                                aria-label="clicca se vuoi avere informazioni sull'utente"
+                              >
                                 <b className="">{u.channel_name} &nbsp;</b>
-
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
                                   width="16"
@@ -309,41 +305,12 @@ function Channels() {
                                 </svg>
                               </button>
                             </Link>
-                            {u.owner === currentUser.username && (
-                              <button className="red-button">TUO</button>
-                            )}
                           </Card.Header>
-                          <Card.Body className="mb-4  w-100 d-flex flex-column justify-content-center align-items-center">
-                            <div className="d-flex flex-row justify-content-center align-items-center">
-                              {u.private === true ? (
-                                <>
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="16"
-                                    height="16"
-                                    fill="currentColor"
-                                    className="bi bi-lock-fill"
-                                    viewBox="0 0 16 16"
-                                  >
-                                    <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2" />
-                                  </svg>
-                                  <div> &nbsp;PRIVATO</div>
-                                </>
-                              ) : (
-                                <>
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="16"
-                                    height="16"
-                                    fill="currentColor"
-                                    className="bi bi-unlock-fill"
-                                    viewBox="0 0 16 16"
-                                  >
-                                    <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2" />
-                                  </svg>
-                                  <div> &nbsp;PUBBLICO</div>
-                                </>
-                              )}
+                          <Card.Body className="w-100 d-flex flex-column justify-content-center align-items-center">
+                            <div className="d-flex flex-column justify-content-center align-items-center cool-medium">
+                              <div>DESCRIPTION:</div>
+                              <div> {u.description}</div>
+                              <div className="mt-2">POST: {u.posts}</div>
                             </div>
 
                             <div className="d-flex flex-row justify-content-center align-items-center">
@@ -370,13 +337,17 @@ function Channels() {
                       ))}
                     </>
                   )}
+
                   {clickUser && (
                     <>
                       {userChannel.map((u) => (
                         <Card key={u.id} className="squeal mb-4">
                           <Card.Header className="d-flex justify-content-center align-items-center">
                             <Link to={ReactConfig.pathFunction("/infoc")} state={u}>
-                              <button className="custom-button me-2" aria-label="clicca se vuoi avere informazioni sul canale">
+                              <button
+                                className="custom-button me-2"
+                                aria-label="clicca se vuoi avere informazioni sul canale"
+                              >
                                 <b className="">{u.channel_name} &nbsp;</b>
 
                                 <svg
@@ -392,11 +363,30 @@ function Channels() {
                               </button>
                             </Link>
                             {u.owner === currentUser.username && (
-                              <button className="red-button">TUO</button>
+                              <button className="red-button box">TUO</button>
                             )}
                           </Card.Header>
-                          <Card.Body className="mb-4  w-100 d-flex flex-column justify-content-center align-items-center">
+                          <Card.Body className="w-100 d-flex flex-column justify-content-center align-items-center">
                             <div className="d-flex flex-row justify-content-center align-items-center">
+                              {u.locked && (
+                                <>
+                                  <div className="altro d-flex flex-row justify-content-center align-items-center cool-font-link">
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="16"
+                                      height="16"
+                                      fill="currentColor"
+                                      className="bi bi-ban"
+                                      viewBox="0 0 16 16"
+                                    >
+                                      <path d="M15 8a6.973 6.973 0 0 0-1.71-4.584l-9.874 9.875A7 7 0 0 0 15 8M2.71 12.584l9.874-9.875a7 7 0 0 0-9.874 9.874ZM16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0" />
+                                    </svg>
+                                    <div> &nbsp;BLOCCATO</div>
+                                  </div>
+                                </>
+                              )}
+                            </div>
+                            <div className="d-flex flex-row justify-content-center align-items-center cool-medium">
                               {u.private === true ? (
                                 <>
                                   <svg
@@ -427,38 +417,31 @@ function Channels() {
                                 </>
                               )}
                             </div>
-
-                            <div className="d-flex flex-row justify-content-center align-items-center">
-                              {u.locked && (
-                                <>
-                                  <div className="altro d-flex flex-row justify-content-center align-items-center">
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      width="16"
-                                      height="16"
-                                      fill="currentColor"
-                                      className="bi bi-ban"
-                                      viewBox="0 0 16 16"
-                                    >
-                                      <path d="M15 8a6.973 6.973 0 0 0-1.71-4.584l-9.874 9.875A7 7 0 0 0 15 8M2.71 12.584l9.874-9.875a7 7 0 0 0-9.874 9.874ZM16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0" />
-                                    </svg>
-                                    <div> &nbsp;BLOCCATO</div>
-                                  </div>
-                                </>
-                              )}
+                            <div className="cool-medium mt-1">
+                              CREATORE: {u.owner}
+                            </div>
+                            <div className="cool-medium mt-1">
+                              ISCRITTI: {u.subscribers}
+                            </div>{" "}
+                            <div className="cool-medium mt-1">
+                              POST: {u.posts}
                             </div>
                           </Card.Body>
                         </Card>
                       ))}
                     </>
                   )}
+
                   {clickTag && (
                     <>
                       {tagChannel.map((u) => (
                         <Card key={u.id} className="squeal mb-4">
                           <Card.Header className="d-flex justify-content-center align-items-center">
                             <Link to={ReactConfig.pathFunction("/infoc")} state={u}>
-                              <button className="custom-button me-2" aria-label="clicca se vuoi avere informazioni sul canale">
+                              <button
+                                className="custom-button me-2"
+                                aria-label="clicca se vuoi avere informazioni sul canale"
+                              >
                                 <b className="">{u.channel_name} &nbsp;</b>
 
                                 <svg
@@ -477,39 +460,7 @@ function Channels() {
                               <button className="red-button">TUO</button>
                             )}
                           </Card.Header>
-                          <Card.Body className="mb-4  w-100 d-flex flex-column justify-content-center align-items-center">
-                            <div className="d-flex flex-row justify-content-center align-items-center">
-                              {u.private === true ? (
-                                <>
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="16"
-                                    height="16"
-                                    fill="currentColor"
-                                    className="bi bi-lock-fill"
-                                    viewBox="0 0 16 16"
-                                  >
-                                    <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2" />
-                                  </svg>
-                                  <div> &nbsp;PRIVATO</div>
-                                </>
-                              ) : (
-                                <>
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="16"
-                                    height="16"
-                                    fill="currentColor"
-                                    className="bi bi-unlock-fill"
-                                    viewBox="0 0 16 16"
-                                  >
-                                    <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2" />
-                                  </svg>
-                                  <div> &nbsp;PUBBLICO</div>
-                                </>
-                              )}
-                            </div>
-
+                          <Card.Body className="w-100 d-flex flex-column justify-content-center align-items-center">
                             <div className="d-flex flex-row justify-content-center align-items-center">
                               {u.locked && (
                                 <>
@@ -528,6 +479,9 @@ function Channels() {
                                   </div>
                                 </>
                               )}
+                            </div>
+                            <div className="cool-medium mt-1">
+                              POST: {u.posts}
                             </div>
                           </Card.Body>
                         </Card>
@@ -540,7 +494,6 @@ function Channels() {
           </div>
         </div>
         <div className="row">
-          <CreateChannel />
           <Search />
         </div>
       </div>

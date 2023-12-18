@@ -85,7 +85,7 @@ const ToggleSMM = ({ mongoData }) => {
   return (
     <button
       onClick={handleToggleClick}
-      className={`toggle-button ${buttonClass} w-50 box`}
+      className={`toggle-button ${buttonClass} w-75 m-0 box`}
     >
       {buttonText}
     </button>

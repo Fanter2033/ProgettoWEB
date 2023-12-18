@@ -89,7 +89,7 @@ function DetailsChannel() {
   const [roles4, setRoles4] = useState([]);
 
   const fetchData = async (channelName, roleNumber) => {
-    const url = `${ReactConfig.base_url_requests}/channel/${channel.type}/${channelName}/roles/${roleNumber}`;
+    const url = `${ReactConfig.base_url_requests}/channel/CHANNEL_USERS/${channelName}/roles/${roleNumber}`;
 
     try {
       const response = await fetch(url);
@@ -127,7 +127,7 @@ function DetailsChannel() {
           if (res.ok) {
             return res.json();
           } else {
-            redirect('./channels');
+            redirect('channels');
           }
         })
         .then((data) => {
@@ -348,8 +348,7 @@ function DetailsChannel() {
           </Card.Footer>
         </Card>
 
-        { (typeof localUser !== 'undefined' && typeof localUser.username !== 'undefined') &&
-          channel.owner === localUser.username &&
+        {channel.owner === localUser.username &&
           channel.type === "CHANNEL_USERS" && (
             <div className="row">
               <h2 className="cool-font-medium mt-3">
@@ -379,7 +378,7 @@ function DetailsChannel() {
                     <Col lg={12} key={index} className="mb-4">
                       <Card className="w-100 squeal">
                         {" "}
-                        <Card.Body className="mb-4 d-flex flex-column justify-content-center align-items-center">
+                        <Card.Body className="d-flex flex-column justify-content-center align-items-center">
                           <Link to={ReactConfig.pathFunction("/infou")} state={user}>
                             <button className="ms-4 me-4 custom-button box mb-3" aria-label="clicca se vuoi avere informazioni sull'utente">
                               <b> {user} </b>
@@ -396,8 +395,7 @@ function DetailsChannel() {
                               </svg>
                             </button>
                           </Link>
-                          {(typeof localUser !== 'undefined' && typeof localUser.username !== 'undefined') &&
-                            roles3.includes(localUser.username) && (
+                          {roles3.includes(localUser.username) && (
                             <>
                               <MatchRole
                                 inputString={user}

@@ -25,7 +25,7 @@
 }
 
 /* ------------ ATTENZIONE AGLI ALTRI FILE CSS -------------*/
-html {
+html, body {
   text-align: center;
   background-color: var(--squeal-blue);
   color: var(--squeal-yellow);
@@ -39,10 +39,7 @@ html {
 
   overflow-x: hidden;
 }
-body {
-  background-color: var(--squeal-blue);
-  color: var(--squeal-yellow);
-}
+
 .App {
   text-align: center;
   background-color: var(--squeal-blue);
@@ -122,6 +119,17 @@ body {
   font-family: "Cool-Regular", sans-serif;
   font-size: 3vw;
 }
+.cool-regular-yellow {
+  font-family: "Cool-Regular", sans-serif;
+  font-size: 3vw;
+  color: var(--squeal-yellow)
+}
+.cool-regular-green {
+  font-family: "Cool-Regular", sans-serif;
+  font-size: 3vw;
+  color: var(--squeal-green)
+}
+
 
 /* -----------------MEDIUM FONT STUFF------------------ */
 @font-face {
@@ -132,6 +140,11 @@ body {
   font-family: "Cool-Medium", sans-serif;
   font-size: 4vw;
   color: var(--squeal-blue)
+}
+.cool-medium-yellow {
+  font-family: "Cool-Medium", sans-serif;
+  font-size: 4vw;
+  color: var(--squeal-yellow)
 }
 
 /* -----------------LIGHT FONT STUFF------------------ */
@@ -405,6 +418,7 @@ body {
 /* -------------------- ANCHOR STUFF ------------------*/
 #about-us {
   color: var(--squeal-red);
+  text-decoration: none;
 }
 
 /* -------------------- MAP STUFF ------------------*/

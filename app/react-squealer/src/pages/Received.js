@@ -28,20 +28,20 @@ function Received() {
       mode: "cors",
       credentials: "include",
     })
-        .then((res) => {
-          if (res.ok) {
-            return res.json();
-          } else {
-            navigate('../');
-          }
-        })
-        .then((data) => {
-          setCurrentUser(data);
-          setUserGlobal(data);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          navigate("../");
+        }
+      })
+      .then((data) => {
+        setCurrentUser(data);
+        setUserGlobal(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
     //}
   }
 
@@ -89,17 +89,9 @@ function Received() {
       <Navbar />
 
       <div className="container-flex">
-        <div className="row d-flex justify-content-center">
-          <h3 className="cool-font-small">TODO:</h3>
-          <ul className="list-group col-md-4">
-            <li className="list-group-item list mb-5">
-              Mappa NON renderizzata?
-            </li>
-          </ul>
-        </div>
         <div className="row">
           <div className="col-12 col-md-8">
-            <h1 className="cool-font-medium">CANALI SEGUITI</h1>
+            <h1 className="cool-font mt-2">CANALI SEGUITI</h1>
 
             <Container className="pb-5">
               <Row className=" ">
@@ -110,16 +102,16 @@ function Received() {
                       key={squeal._id}
                       className="mb-4 d-flex justify-content-center align-items-center"
                     >
-                      <Card
-                        style={{ width: "80%" }}
-                        className="squeal"
-                      >
+                      <Card style={{ width: "80%" }} className="squeal">
                         <Card.Header className="w-100">
-                          <div className="col-12 d-flex flex-row justify-content-between align-items-center">
+                          <div className="col-12 d-flex flex-row justify-content-center align-items-center">
                             <div>
-                              <b className="cool-font-details">DA:</b>
+                              <span className="cool-medium">DA:</span>
                               <Link to={ReactConfig.pathFunction("/infou")} state={squeal.sender}>
-                                <button className=" ms-2 custom-button box "  aria-label="clicca se vuoi avere più informazioni su questo utente">
+                                <button
+                                  className=" ms-2 custom-button box "
+                                  aria-label="clicca se vuoi avere più informazioni su questo utente"
+                                >
                                   <b>{squeal.sender} </b>
 
                                   <svg
@@ -135,27 +127,36 @@ function Received() {
                                 </button>
                               </Link>
                             </div>{" "}
-                            <div className="cool-font-details">
-                              👁️ {squeal.critical_mass / 0.25}
-                            </div>
                           </div>
-                          <div className="col-12 d-flex flex-row justify-content-start align-items-center">
-                            <b className="cool-font-details">PER:</b>
+                          <div className="col-12 d-flex flex-row justify-content-center align-items-center mt-2">
+                            <div className="cool-medium">PER:</div>
                             <ShowDest arrayDest={squeal.destinations} />
                           </div>
-                          <div className="col-12 cool-font-details d-flex flex-column justify-content-start align-items-start mt-2">
-                            <div>ID: {squeal._id}</div>
-                            <TypeSqueal typeSqueal={squeal.message_type} />
-                          </div>
                         </Card.Header>
-                        <Card.Body className="mb-4 d-flex flex-column justify-content-center align-items-center">
+                        <Card.Body className="d-flex flex-column justify-content-center align-items-center">
                           <SquealContent
-                              content={squeal.content}
-                              type={squeal.message_type}
-                              id={squeal._id}
+                            content={squeal.content}
+                            type={squeal.message_type}
+                            id={squeal._id}
                           />
                         </Card.Body>
-                        <Card.Footer className="w-100">
+                        <Card.Footer className="">
+                          <div className="row cool-medium d-flex">
+                            <div className="col-12">
+                              <button className="blue-button p-1 me-1">
+                                👁️ {squeal.critical_mass / 0.25}
+                              </button>
+                              <button className="green-button p-1 ">
+                                👍🏻 {squeal.positive_value}
+                              </button>
+                              <button className="red-button p-1 ms-1">
+                                👎🏻 {squeal.negative_value}
+                              </button>
+                            </div>
+                          </div>
+                          <div className="col-12 cool-medium d-flex justify-content-center align-items-start mt-2">
+                            <TypeSqueal typeSqueal={squeal.message_type} />
+                          </div>
                           <div>
                             <Reactions
                               squeal={squeal._id}

@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
 
@@ -53,20 +53,18 @@ function LoginForm() {
       mode: "cors",
       credentials: "include",
     })
-        .then((res) => {
-          console.log('Hey ris', res);
-          if (res.ok) {
-            navigate(`./received`);
-          }
-        })
-        .then((data) => {
-          if(typeof data === 'undefined') return;
-          setCurrentUser(data);
-          setUserGlobal(data);
-        })
-        .catch((error) => {
-
-        });
+      .then((res) => {
+        console.log("Hey ris", res);
+        if (res.ok) {
+          navigate(`./received`);
+        }
+      })
+      .then((data) => {
+        if (typeof data === "undefined") return;
+        setCurrentUser(data);
+        setUserGlobal(data);
+      })
+      .catch((error) => {});
     //}
   }
 
@@ -170,7 +168,7 @@ function LoginForm() {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    if(typeof userGlobal !== 'undefined') {
+    if (typeof userGlobal !== "undefined") {
       let tmp = userGlobal;
       tmp.username = usernameForm;
       tmp.password = passwordForm;
@@ -179,8 +177,8 @@ function LoginForm() {
 
     let t1 = {
       username: usernameForm,
-      password: passwordForm
-    }
+      password: passwordForm,
+    };
     setCurrentUser(t1);
 
     await login(t1);
@@ -208,10 +206,10 @@ function LoginForm() {
   //*reminder: input tag in React <input/>
   return (
     <div className="container">
-      <div className="col-12 text-center pt-5 animated-title-container">
+      <div className="col-12 text-center pt-4 animated-title-container">
         <div className="row  ">
           <div className="col-12 d-flex flex-col justify-content-center align-items-center">
-            <h1 className="animated-title cool-font">Accedi a </h1>
+            <h1 className="animated-title cool-font">Accedi a&ensp;</h1>
             <h1 className="animated-squeal cool-font" aria-label="Squealer">
               &#129413;
             </h1>
@@ -226,7 +224,9 @@ function LoginForm() {
               <label
                 htmlFor="inputUsername"
                 className="form-label cool-font-medium"
-              ></label>
+              >
+                Username
+              </label>
               <input
                 type="text"
                 className="form-control cool-font-text text-center box"
@@ -242,15 +242,17 @@ function LoginForm() {
               />
             </div>
 
-            <div className="form-group row  mb-3">
+            <div className="form-group row mt-2">
               <label
                 htmlFor="inputPassword5"
                 className="form-label cool-font-medium"
-              ></label>
+              >
+                Password
+              </label>
               <input
                 type="password"
                 id="inputPassword"
-                className="form-control cool-font-text text-center box"
+                className="form-control cool-font-text text-center box mb-3"
                 style={{ color: "#072f38", backgroundColor: "#e0bb76" }}
                 aria-describedby="password"
                 autoComplete="on"
@@ -261,9 +263,9 @@ function LoginForm() {
               />
             </div>
 
-            <div className="form-group row ">
+            <div className="form-group row mt-3">
               <button
-                className="col-12 mb-3 green-button box cool-font-text box"
+                className="col-12 mb-2 green-button box cool-font-text box"
                 type="submit"
                 onKeyDown={handleKeyFinal}
               >
@@ -360,22 +362,50 @@ function LoginForm() {
               </form>
             </Modal>
           )}
-          <div className="row  mb-5">
-            <button className="col-12 mb-3 yellow-button box">
+          <div className="row mt-3 mb-5">
+            <button className="col-12 mb-2 yellow-button box">
               <NavLink
                 className="cool-font-text"
                 to={ReactConfig.pathFunction("/registration")}
+                style={{ textDecoration: "none" }}
               >
                 REGISTRATI
               </NavLink>
             </button>
 
-            <button className="col-12 mb-5 yellow-button box">
+            <button className="col-12 mb-5 yellow-button box ">
               <NavLink
                 className="cool-font-text "
                 to={ReactConfig.pathFunction("/home")}
+                style={{ textDecoration: "none" }}
               >
                 SALTA IL LOGIN
+              </NavLink>
+            </button>
+
+            <button className="col-12 mb-5 yellow-button box ">
+              <NavLink
+                className="cool-font-text "
+                /*to={ReactConfig.pathFunction("/")} */
+                onClick={() => {
+                  window.location.href = '../'
+                }}
+                style={{ textDecoration: "none" }}
+                aria-label="clicca se vuoi tornare alla pagina precedente"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  className="bi bi-arrow-left"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"
+                  />
+                </svg>
               </NavLink>
             </button>
           </div>

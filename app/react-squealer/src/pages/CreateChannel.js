@@ -88,8 +88,8 @@ function CreateChannel() {
 
   return (
     <div>
-      <button id="button-channel" className="box cool-font-small" onClick={handleShow}>
-        NUOVO CANALE
+      <button id="button-channel" className="box cool-font-medium" onClick={handleShow}>
+        CREA CANALE
       </button>
 
       <Modal show={show} onHide={handleClose} centered>

@@ -30,7 +30,7 @@
 
           <div v-else-if="actualSqueal.type === 'IMAGE'"><img
               :src="'data:image/jpeg;base64,' + actualSqueal.content" alt="squeal image"
-              class="border rounded border-dark box">
+              class="img-fluid border rounded border-dark box">
           </div>
 
           <div v-else-if="actualSqueal.type === 'VIDEO_URL'">
@@ -126,6 +126,7 @@ const actualSqueal = ref({});
 const actualFetched = ref({});
 const actualComments = ref({});
 const showComments = ref(false);
+const commentsToPrint = ref([]);
 const index = ref(0);
 const listLength = ref(store.getters.getDoughnutChart.length)
 const loaded = ref(false);
@@ -137,6 +138,12 @@ const chartData = ref({
       actualFetched.value.negative_value],
   }]
 });
+
+const iconOptions = {
+  iconUrl: "/media/MapMarker.png",
+  iconSize: [50, 50],
+  shadowSize: [25, 75],
+};
 
 watch(actualFetched, () => {
   chartData.value = {
@@ -176,6 +183,7 @@ async function getSquealData(id) {
 async function getSquealComments(id) {
   const uri = VueConfig.base_url_requests +
       "/squeal/" + id + "/comment/";
+  actualComments.value = {};
   await fetch(uri, {
     method: 'GET',
     mode: 'cors',
@@ -226,9 +234,10 @@ function assebleSqueal(squealFromServer) {
     actualSqueal.value.trend = 'Nothing'
 }
 
-const commentsToPrint = ref([]);
+
 
 function assebleComments(commentsFromServer) {
+  commentsToPrint.value = [];
   for (let i = 0; i < commentsFromServer.length; i++) {
     let iter = {
       username: commentsFromServer[i].username,
@@ -254,6 +263,7 @@ async function nextSqueal() {
     } catch (e) {
     }
     index.value = index.value + 1;
+    showComments.value = false;
     await getSquealData(store.getters.getDoughnutChart[index.value]);
     await getSquealComments(store.getters.getDoughnutChart[index.value])
     assebleSqueal(actualFetched.value);
@@ -263,6 +273,7 @@ async function nextSqueal() {
 async function prevSqueal() {
   if (index.value > 0) {
     index.value = index.value - 1;
+    showComments.value = false;
     await getSquealData(store.getters.getDoughnutChart[index.value]);
     await getSquealComments(store.getters.getDoughnutChart[index.value])
     assebleSqueal(actualFetched.value);
@@ -289,15 +300,14 @@ function initMap(lat, lng) {
     });
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: "© OpenStreetMap",
-    }).addTo(map)
-    console.log("mapping")
-    L.marker([lat, lng]).addTo(map)
+    }).addTo(map);
+    let customIcon = L.icon(iconOptions);
+    L.marker([lat, lng], {icon: customIcon}).addTo(map);
   } catch (e) {
   }
 
 }
 
-//e quiiii aspettiamo le funzioni di Denis
 
 const chartOptions = ref({
   responsive: true,

@@ -41,7 +41,7 @@ function ShowComment({ arrayComment }) {
                   </Link>
                 </Card.Header>
                 <Card.Footer>
-                  <p className="cool-font-small m-0">{comment.comment}</p>
+                  <p className="cool-medium-yellow m-0">{comment.comment}</p>
                 </Card.Footer>
               </Card>
             </Col>

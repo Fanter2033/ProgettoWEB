@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import ReactConfig from "../config/ReactConfig";
@@ -49,7 +49,7 @@ function Search() {
   const [roleUser, setRoleUser] = useState([]);
   async function getRoles() {
     try {
-      if(typeof currentUser.username === 'undefined') return;
+      if (typeof currentUser.username === "undefined") return;
       const uri = `${ReactConfig.base_url_requests}/user/${currentUser.username}/roles/`;
       const options = {
         method: "GET",
@@ -81,20 +81,20 @@ function Search() {
       mode: "cors",
       credentials: "include",
     })
-        .then((res) => {
-          if (res.ok) {
-            return res.json();
-          } else {
-            return;
-          }
-        })
-        .then((data) => {
-          setCurrentUser(data);
-          setUserGlobal(data);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          return;
+        }
+      })
+      .then((data) => {
+        setCurrentUser(data);
+        setUserGlobal(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
     //}
   }
 
@@ -159,19 +159,6 @@ function Search() {
       });
   }
 
-  /*
-  const response = {
-    "channels": [
-      {
-        "name": "string",
-        "type": "CHANNEL_OFFICIAL",
-        "private": false
-      }
-    ],
-    "totalCount": 0
-  };
-  */
-
   return (
     <div className="col-10 offset-1 pb-5">
       <form className="d-flex mb-3" role="search">
@@ -191,9 +178,12 @@ function Search() {
             {channels.map((channel) => (
               <Col lg={12} key={channel.type + channel.channel_name}>
                 <Card style={{ height: "100%" }} className="squeal mb-4">
-                  <Card.Header className="d-flex justify-content-center align-items-center">
+                  <Card.Header className="d-flex flex-column justify-content-center align-items-center">
                     <Link to={ReactConfig.pathFunction("/infoc")} state={channel}>
-                      <button className="custom-button me-2 box cool-font-small" aria-label="clicca se vuoi avere più informazioni su questo utente">
+                      <button
+                        className="custom-button box cool-font-small"
+                        aria-label="clicca se vuoi avere più informazioni su questo utente"
+                      >
                         <b className="">{channel.channel_name} &nbsp;</b>
 
                         <svg
@@ -208,107 +198,29 @@ function Search() {
                         </svg>
                       </button>
                     </Link>
-
-                    {channel.type === "CHANNEL_USERS" && (
-                      <div>
-                        {roleUser.some(
-                          (role) => role.channel_name === channel.channel_name
-                        ) ? (
-                          <button
-                            className="red-button box cool-font-xsm"
-                            onClick={() =>
-                              unfollow(channel.type, channel.channel_name)
-                            }
-                          >
-                            DISISCRIVITI
-                          </button>
-                        ) : (
-                          <button
-                            className="green-button box cool-font-xsm"
-                            onClick={() =>
-                              follow(channel.type, channel.channel_name)
-                            }
-                          >
-                            ISCRIVITI
-                          </button>
-                        )}
-                      </div>
-                    )}
                   </Card.Header>
-                  <Card.Body className="mb-4  w-100 d-flex flex-column justify-content-center align-items-center">
-                    <div className="d-flex flex-column justify-content-center align-items-center">
-                      {roleUser.map((role, index) => (
+                  <Card.Body className="w-100 d-flex flex-column justify-content-center align-items-center">
+                    <div className="d-flex flex-row justify-content-center align-items-center cool-font-link">
+                      {channel.locked && (
                         <>
-                        <Col key={index}>
-                        
-                          <Row
-                            
-                            lg={12}
-                            className="d-flex justify-content-center align-items-center cool-font-details"
-                          >
-                            {role.role === 0 &&
-                              role.channel_name === channel.channel_name &&
-                              channel.type === "CHANNEL_USERS" && (
-                                <>
-                                  <div>
-                                    RUOLO: <b>IN ATTESA</b>
-                                    <button className="custom-button ms-2 box">
-                                      🕒
-                                    </button>
-                                  </div>
-                                </>
-                              )}
-                            {role.role === 1 &&
-                              role.channel_name === channel.channel_name && (
-                                <>
-                                  <div>
-                                    RUOLO: <b>LETTORE</b>
-                                    <button className="custom-button ms-2 box">
-                                      📖
-                                    </button>
-                                  </div>
-                                </>
-                              )}
-                            {role.role === 2 &&
-                              role.channel_name === channel.channel_name && (
-                                <>
-                                  <div>
-                                    RUOLO: <b>SCRITTORE</b>
-                                    <button className="custom-button ms-2 box">
-                                      ✒️
-                                    </button>
-                                  </div>
-                                </>
-                              )}
-                            {role.role === 3 &&
-                              role.channel_name === channel.channel_name && (
-                                <>
-                                  <div>
-                                    RUOLO: <b>ADMIN</b>
-                                    <button className="custom-button ms-2 box">
-                                      ⚔️
-                                    </button>
-                                  </div>
-                                </>
-                              )}
-                            {role.role === 4 &&
-                              role.channel_name === channel.channel_name && (
-                                <>
-                                  <div>
-                                    RUOLO: <b>OWNER</b>
-                                    <button className="custom-button ms-2 box">
-                                      👑
-                                    </button>
-                                  </div>
-                                </>
-                              )}
-                          </Row>
-                          </Col>
+                          <div className="altro d-flex flex-row justify-content-center align-items-center mb-1">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="20"
+                              height="20"
+                              fill="currentColor"
+                              className="bi bi-ban"
+                              viewBox="0 0 16 16"
+                            >
+                              <path d="M15 8a6.973 6.973 0 0 0-1.71-4.584l-9.874 9.875A7 7 0 0 0 15 8M2.71 12.584l9.874-9.875a7 7 0 0 0-9.874 9.874ZM16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0" />
+                            </svg>
+                            <div> &nbsp;BLOCCATO</div>
+                          </div>
                         </>
-                      ))}
+                      )}
                     </div>
 
-                    <div className="d-flex flex-row justify-content-center align-items-center cool-font-details">
+                    <div className="d-flex flex-row justify-content-center align-items-center cool-medium">
                       {channel.type === "CHANNEL_USERS" && (
                         <>
                           <svg
@@ -355,7 +267,7 @@ function Search() {
                       )}
                     </div>
 
-                    <div className="d-flex flex-row justify-content-center align-items-center cool-font-details">
+                    <div className="d-flex flex-row justify-content-center align-items-center cool-medium">
                       {channel.private === true ? (
                         <>
                           <svg
@@ -387,48 +299,125 @@ function Search() {
                       )}
                     </div>
 
-                    <div className="d-flex flex-row justify-content-center align-items-center cool-font-link">
-                      {channel.locked && (
-                        <>
-                          <div className="altro d-flex flex-row justify-content-center align-items-center">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="20"
-                              height="20"
-                              fill="currentColor"
-                              className="bi bi-ban"
-                              viewBox="0 0 16 16"
-                            >
-                              <path d="M15 8a6.973 6.973 0 0 0-1.71-4.584l-9.874 9.875A7 7 0 0 0 15 8M2.71 12.584l9.874-9.875a7 7 0 0 0-9.874 9.874ZM16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0" />
-                            </svg>
-                            <div> &nbsp;BLOCCATO</div>
-                          </div>
-                        </>
-                      )}
-                    </div>
                     {channel.type === "CHANNEL_USERS" && (
                       <>
-                        <div className="cool-font-details">
+                        <div className="cool-medium mt-1">
                           {channel.owner === userGlobal.username ? (
                             <></>
                           ) : (
                             <> CREATORE: {channel.owner}</>
                           )}
                         </div>
-                        <div className="cool-font-details">
+                        <div className="cool-medium ">
                           ISCRITTI: <b>{channel.subscribers}</b>
                         </div>
                       </>
                     )}
 
-                    <div className="d-flex flex-column justify-content-center align-items-center cool-font-details">
+                    <div className="d-flex flex-column justify-content-center align-items-center cool-medium">
                       <>
                         <div>
                           SQUEAL: <b>{channel.posts}</b>
                         </div>
                       </>
                     </div>
+                    <div className="d-flex flex-column justify-content-center align-items-center">
+                      {roleUser.map((role, index) => (
+                        <>
+                          <Col key={index}>
+                            <Row
+                              lg={12}
+                              className="d-flex justify-content-center align-items-center cool-medium"
+                            >
+                              {role.role === 0 &&
+                                role.channel_name === channel.channel_name &&
+                                channel.type === "CHANNEL_USERS" && (
+                                  <>
+                                    <div>
+                                      RUOLO: <b>IN ATTESA</b>
+                                      <button className="custom-button ms-2 box">
+                                        🕒
+                                      </button>
+                                    </div>
+                                  </>
+                                )}
+                              {role.role === 1 &&
+                                role.channel_name === channel.channel_name && (
+                                  <>
+                                    <div>
+                                      RUOLO: <b>LETTORE</b>
+                                      <button className="custom-button ms-2 box">
+                                        📖
+                                      </button>
+                                    </div>
+                                  </>
+                                )}
+                              {role.role === 2 &&
+                                role.channel_name === channel.channel_name && (
+                                  <>
+                                    <div>
+                                      RUOLO: <b>SCRITTORE</b>
+                                      <button className="custom-button ms-2 box">
+                                        ✒️
+                                      </button>
+                                    </div>
+                                  </>
+                                )}
+                              {role.role === 3 &&
+                                role.channel_name === channel.channel_name && (
+                                  <>
+                                    <div>
+                                      RUOLO: <b>ADMIN</b>
+                                      <button className="custom-button ms-2 box">
+                                        ⚔️
+                                      </button>
+                                    </div>
+                                  </>
+                                )}
+                              {role.role === 4 &&
+                                role.channel_name === channel.channel_name && (
+                                  <>
+                                    <div>
+                                      RUOLO: <b>OWNER</b>
+                                      <button className="custom-button ms-2 box">
+                                        👑
+                                      </button>
+                                    </div>
+                                  </>
+                                )}
+                            </Row>
+                          </Col>
+                        </>
+                      ))}
+                    </div>
                   </Card.Body>
+                  <Card.Footer>
+                    {channel.type === "CHANNEL_USERS" && (
+                      <div>
+                        {roleUser.some(
+                          (role) => role.channel_name === channel.channel_name
+                        ) ? (
+                          <button
+                            className="red-button box cool-font-small w-100 mt-1"
+                            onClick={() =>
+                              unfollow(channel.type, channel.channel_name)
+                            }
+                          >
+                            DISICRIVITI
+                          </button>
+                        ) : (
+                          <button
+                            className="green-button box cool-font-small w-100 mt-1"
+                            onClick={() =>
+                              follow(channel.type, channel.channel_name)
+                            }
+                          >
+                            ISCRIVITI
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </Card.Footer>
                 </Card>
               </Col>
             ))}

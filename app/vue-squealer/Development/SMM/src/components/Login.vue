@@ -27,24 +27,31 @@
           />
         </div>
 
-        <button
-            id="login"
-            :class="isOverButton ? 'green-button' : 'yellow-button'"
-            class="btn btn-default green-button-static mt-4 chill-font-small"
-            type="submit"
-            value="Log In"
-            v-on:mouseleave="isOverButton = false"
-            v-on:mouseover="isOverButton = true"
-            @:click.prevent="loginForm()"
-        >
-          <i class="bi bi-door-open"></i>
-          Log In
-        </button>
+        <div class="container-fluid">
+          <button
+              id="login"
+              :class="isOverButton ? 'green-button' : 'yellow-button'"
+              class="btn green-button-static mt-4 chill-font-small w-100"
+              type="submit"
+              value="Log In"
+              v-on:mouseleave="isOverButton = false"
+              v-on:mouseover="isOverButton = true"
+              @:click.prevent="loginForm()"
+              aria-label="entra nel sito"
+          >
+            <i class="bi bi-door-open"></i>
+            Log In
+          </button>
+        </div>
+
 
       </form>
-      <form action="http://localhost:8000">
-        <input class="btn red-button mt-3 chill-font-small" type="submit" value="Go Back"/>
-      </form>
+      <div class="container-fluid">
+        <form :action="goBack">
+          <input class="btn red-button mt-3 chill-font-small w-100" type="submit" value="Go Back"/>
+        </form>
+      </div>
+
 
     </div>
 
@@ -59,13 +66,14 @@ import {useToast} from "vue-toastification";
 
 const toast = useToast();
 
+
 export default {
   name: "Login",
 
   data() {
     return {
       isOverButton: false,
-
+      goBack: VueConfig.base_url_requests,
       formLoginValues: {
         username: "",
         password: "",
@@ -130,7 +138,7 @@ export default {
               router.push("/dashboard");
             } else this.showToast('warning', "autenticazione fallita")
           })
-          .catch((error) => {
+          .catch(() => {
             this.showToast('warning', "errore di rete")
           });
     },
@@ -148,5 +156,3 @@ h2::first-letter {
   color: #c94646;
 }
 </style>
-
-//TODO: add a searchbar

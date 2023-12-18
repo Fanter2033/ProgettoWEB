@@ -83,7 +83,11 @@ function InfoChannel() {
   //GET /user/{username}/roles/ LISTA CANALI SEGUITI E IL REALATIVO RUOLO DELL'UTENTE
   const [roleUser, setRoleUser] = useState([]);
   async function getRoles() {
-    if (typeof currentUser === "undefined" || typeof currentUser.username === 'undefined') return;
+    if (
+      typeof currentUser === "undefined" ||
+      typeof currentUser.username === "undefined"
+    )
+      return;
     try {
       const uri = `${ReactConfig.base_url_requests}/user/${currentUser.username}/roles/`;
       const options = {
@@ -167,8 +171,12 @@ function InfoChannel() {
   const [newMessageNotification, setNewMessageNotification] = useState(false);
 
   async function logPast() {
-    if(channel.type === 'CHANNEL_USERS')
-      if (typeof currentUser === "undefined" || typeof currentUser.username === 'undefined') return;
+    if (channel.type === "CHANNEL_USERS")
+      if (
+        typeof currentUser === "undefined" ||
+        typeof currentUser.username === "undefined"
+      )
+        return;
 
     try {
       const url = `${ReactConfig.base_url_requests}/utils/squeals/${channel.type}/${channel.channel_name}`;
@@ -226,9 +234,12 @@ function InfoChannel() {
 
   return (
     <div className="pb-5">
-      <div className="d-flex flex-row align-items-center justify-content-evenly align-items-center pt-3 pb-3">
+      <div className="d-flex flex-row align-items-center justify-content-evenly align-items-center pt-3 pb-3 ">
         <Link to={ReactConfig.pathFunction("/details")} state={channel}>
-          <button className="yellow-button box " aria-label="clicca se vuoi avere informazioni sul canale">
+          <button
+            className="yellow-button box "
+            aria-label="clicca se vuoi avere informazioni sul canale"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -270,15 +281,36 @@ function InfoChannel() {
               <button
                 className="red-button box"
                 onClick={() => unfollow(channel.type, channel.channel_name)}
+                arial-label="you are subscsribed, click to unsubscribe"
               >
-                x
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-person-fill-slash"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M13.879 10.414a2.501 2.501 0 0 0-3.465 3.465zm.707.707-3.465 3.465a2.501 2.501 0 0 0 3.465-3.465m-4.56-1.096a3.5 3.5 0 1 1 4.949 4.95 3.5 3.5 0 0 1-4.95-4.95ZM11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0m-9 8c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4" />
+                </svg>
               </button>
             ) : (
               <button
                 className="green-button box"
                 onClick={() => follow(channel.type, channel.channel_name)}
+                arial-label="you are not subscsribed, click to subscribe"
               >
-                +
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-person-fill-check"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.708l.547.548 1.17-1.951a.5.5 0 1 1 .858.514ZM11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                  <path d="M2 13c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4" />
+                </svg>
               </button>
             )}
           </>
@@ -288,7 +320,7 @@ function InfoChannel() {
       <div className="d-flex flex-row justify-content-center align-items-center">
         {channel.locked && (
           <>
-            <div className="altro d-flex flex-row justify-content-center align-items-center">
+            <div className="altro d-flex flex-row justify-content-center align-items-center cool-font-link">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="30"
@@ -364,10 +396,10 @@ function InfoChannel() {
 
       <div>
         <h1 className="cool-font-medium mt-3">
-          SQUEALS DI {channel.channel_name}
+          SQUEALS DI: {channel.channel_name}
         </h1>
-        <br></br>
       </div>
+
       {squealsLogger.length === 0 && (
         <>
           <p className="cool-font m-0 p-0 text-wrap">
@@ -375,6 +407,62 @@ function InfoChannel() {
           </p>
         </>
       )}
+
+      {channel.type === "CHANNEL_USERS" &&
+        channel.private === false &&
+        squealsLogger.map((squeal) => (
+          <Col key={squeal._id} className="m-4">
+            <Card className="squeal">
+              <Card.Header className="row d-flex flex-column justify-content-evenly align-items-center">
+                {" "}
+                <div className="col-12 d-flex flex-row justify-content-between align-items-center">
+                  <div>
+                    <span className="cool-medium">DA:</span>
+
+                    <Link to={ReactConfig.pathFunction("/infou")} state={squeal.sender}>
+                      <button
+                        className=" ms-2 custom-button box "
+                        aria-label="clicca se vuoi avere informazioni sull'utente"
+                      >
+                        <b>{squeal.sender} </b>
+
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          className="bi bi-info-circle-fill"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
+                        </svg>
+                      </button>
+                    </Link>
+                  </div>
+                </div>
+                <div className="col-12 d-flex flex-row justify-content-start align-items-center mt-1">
+                  <span className="cool-medium">PER:</span>
+                  <ShowDest arrayDest={squeal.destinations} />
+                </div>
+              </Card.Header>
+
+              <Card.Body className="d-flex flex-col justify-content-center align-items-center">
+                <SquealContent
+                  content={squeal.content}
+                  type={squeal.message_type}
+                  id={squeal._id}
+                />
+              </Card.Body>
+              <Card.Footer>
+                <div className="col-12 d-flex flex-row justify-content-center align-items-start m-1">
+                  <TypeSqueal typeSqueal={squeal.message_type} />
+                </div>
+                <Comment squeal={squeal._id} />
+                <ShowComment arrayComment={squeal.comments} />
+              </Card.Footer>
+            </Card>
+          </Col>
+        ))}
 
       {roleUser.map((role) => (
         <>
@@ -385,7 +473,8 @@ function InfoChannel() {
               channel.type === "CHANNEL_USERS" && (
                 <>
                   <h1 className="cool-font-medium text-center">
-                    SEI IN ATTESA...
+                    SEI IN ATTESA CHE IL CREATORE O UN ADMIN ACCETTINO LA TUA
+                    RICHIESTA...
                   </h1>
                 </>
               )}
@@ -394,15 +483,18 @@ function InfoChannel() {
               role.channel_name === channel.channel_name &&
               squealsLogger
                 .map((squeal) => (
-                  <Col lg={12} key={squeal._id} className="mb-4">
-                    <Card style={{ height: "100%" }} className="squeal">
+                  <Col key={squeal._id} className="m-4">
+                    <Card className="squeal">
                       <Card.Header className="d-flex flex-column justify-content-evenly align-items-center cool-font-details">
                         <div className="col-12 d-flex flex-row justify-content-between align-items-center">
                           <div>
-                            <b>DA:</b>
+                            <span className="cool-medium">DA:</span>
 
                             <Link to={ReactConfig.pathFunction("/infou")} state={squeal.sender}>
-                              <button className=" ms-2 custom-button box " aria-label="clicca se vuoi avere informazioni sull'utente">
+                              <button
+                                className=" ms-2 custom-button box "
+                                aria-label="clicca se vuoi avere informazioni sull'utente"
+                              >
                                 <b>{squeal.sender} </b>
 
                                 <svg
@@ -420,17 +512,11 @@ function InfoChannel() {
                           </div>
                         </div>
                         <div className="col-12 d-flex flex-row justify-content-start align-items-center">
-                          <b>PER:</b>
+                          <span className="cool-medium">PER:</span>
                           <ShowDest arrayDest={squeal.destinations} />
                         </div>
-                        <div className="col-12 d-flex flex-column justify-content-start align-items-start">
-                          <TypeSqueal typeSqueal={squeal.message_type} />
-                          <div className="cool-font-details">
-                            ID:{squeal._id}
-                          </div>
-                        </div>
                       </Card.Header>
-                      <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center ">
+                      <Card.Body className="d-flex flex-col justify-content-center align-items-center ">
                         <SquealContent
                           content={squeal.content}
                           type={squeal.message_type}
@@ -438,6 +524,22 @@ function InfoChannel() {
                         />
                       </Card.Body>
                       <Card.Footer>
+                        <div className="row cool-medium d-flex">
+                          <div className="col-12">
+                            <button className="blue-button p-1 me-1">
+                              👁️ {squeal.critical_mass / 0.25}
+                            </button>
+                            <button className="green-button p-1 ">
+                              👍🏻 {squeal.positive_value}
+                            </button>
+                            <button className="red-button p-1 ms-1">
+                              👎🏻 {squeal.negative_value}
+                            </button>
+                          </div>
+                        </div>
+                        <div className="col-12 d-flex justify-content-center align-items-start m-1">
+                          <TypeSqueal typeSqueal={squeal.message_type} />
+                        </div>
                         <div>
                           <Reactions
                             squeal={squeal._id}
@@ -455,16 +557,19 @@ function InfoChannel() {
               role.channel_name === channel.channel_name &&
               squealsLogger
                 .map((squeal) => (
-                  <Col lg={12} key={squeal._id} className="mb-4">
-                    <Card style={{ height: "100%" }} className="squeal">
+                  <Col key={squeal._id} className="m-4">
+                    <Card className="squeal">
                       <Card.Header className="row d-flex flex-column justify-content-evenly align-items-center">
                         {" "}
-                        <div className="col-12 d-flex flex-row justify-content-between align-items-center">
+                        <div className="col-12 d-flex flex-row justify-content-between align-items-center cool-medium">
                           <div>
-                            <b>DA:</b>
+                            <span>DA:</span>
 
                             <Link to={ReactConfig.pathFunction("/infou")} state={squeal.sender}>
-                              <button className=" ms-2 custom-button box " aria-label="clicca se vuoi avere informazioni sull'utente">
+                              <button
+                                className=" ms-2 custom-button box "
+                                aria-label="clicca se vuoi avere informazioni sull'utente"
+                              >
                                 <b>{squeal.sender} </b>
 
                                 <svg
@@ -481,18 +586,12 @@ function InfoChannel() {
                             </Link>
                           </div>
                         </div>
-                        <div className="col-12 d-flex flex-row justify-content-start align-items-center">
-                          <b>PER:</b>
+                        <div className="col-12 d-flex flex-row justify-content-start align-items-center cool-medium mt-1">
+                          <span>PER:</span>
                           <ShowDest arrayDest={squeal.destinations} />
                         </div>
-                        <div className="col-12 d-flex flex-column justify-content-start align-items-start">
-                          <TypeSqueal typeSqueal={squeal.message_type} />
-                          <div className="cool-font-details">
-                            ID:{squeal._id}
-                          </div>
-                        </div>
                       </Card.Header>
-                      <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
+                      <Card.Body className="d-flex flex-col justify-content-center align-items-center">
                         <SquealContent
                           content={squeal.content}
                           type={squeal.message_type}
@@ -500,6 +599,22 @@ function InfoChannel() {
                         />
                       </Card.Body>
                       <Card.Footer>
+                        <div className="row cool-medium d-flex">
+                          <div className="col-12">
+                            <button className="blue-button p-1 me-1">
+                              👁️ {squeal.critical_mass / 0.25}
+                            </button>
+                            <button className="green-button p-1 ">
+                              👍🏻 {squeal.positive_value}
+                            </button>
+                            <button className="red-button p-1 ms-1">
+                              👎🏻 {squeal.negative_value}
+                            </button>
+                          </div>
+                        </div>
+                        <div className="col-12 d-flex justify-content-center align-items-start m-2">
+                          <TypeSqueal typeSqueal={squeal.message_type} />
+                        </div>
                         <div>
                           <Reactions
                             squeal={squeal._id}
@@ -518,16 +633,19 @@ function InfoChannel() {
               role.channel_name === channel.channel_name &&
               squealsLogger
                 .map((squeal) => (
-                  <Col lg={12} key={squeal._id} className="mb-4">
-                    <Card style={{ height: "100%" }} className="squeal">
+                  <Col key={squeal._id} className="m-4">
+                    <Card className="squeal">
                       <Card.Header className="row d-flex flex-column justify-content-evenly align-items-center">
                         {" "}
                         <div className="col-12 d-flex flex-row justify-content-between align-items-center">
                           <div>
-                            <b>DA:</b>
+                            <span className="cool-medium">DA:</span>
 
                             <Link to={ReactConfig.pathFunction("/infou")} state={squeal.sender}>
-                              <button className=" ms-2 custom-button box " aria-label="clicca se vuoi avere informazioni sull'utente">
+                              <button
+                                className=" ms-2 custom-button box "
+                                aria-label="clicca se vuoi avere informazioni sull'utente"
+                              >
                                 <b>{squeal.sender} </b>
 
                                 <svg
@@ -544,19 +662,13 @@ function InfoChannel() {
                             </Link>
                           </div>
                         </div>
-                        <div className="col-12 d-flex flex-row justify-content-start align-items-center">
-                          <b>PER:</b>
+                        <div className="col-12 d-flex flex-row justify-content-start align-items-center mt-1">
+                          <span className="cool-medium">PER:</span>
                           <ShowDest arrayDest={squeal.destinations} />
-                        </div>
-                        <div className="col-12 d-flex flex-column justify-content-start align-items-start">
-                          <TypeSqueal typeSqueal={squeal.message_type} />
-                          <div className="cool-font-details">
-                            ID:{squeal._id}
-                          </div>
                         </div>
                       </Card.Header>
 
-                      <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
+                      <Card.Body className="d-flex flex-col justify-content-center align-items-center">
                         <SquealContent
                           content={squeal.content}
                           type={squeal.message_type}
@@ -564,6 +676,23 @@ function InfoChannel() {
                         />
                       </Card.Body>
                       <Card.Footer>
+                        <div className="row cool-medium d-flex">
+                          <div className="col-12">
+                            <button className="blue-button p-1 me-1">
+                              👁️ {squeal.critical_mass / 0.25}
+                            </button>
+                            <button className="green-button p-1 ">
+                              👍🏻 {squeal.positive_value}
+                            </button>
+                            <button className="red-button p-1 ms-1">
+                              👎🏻 {squeal.negative_value}
+                            </button>
+                          </div>
+                        </div>
+                        <div className="col-12 d-flex flex-row justify-content-center align-items-start m-2">
+                          <TypeSqueal typeSqueal={squeal.message_type} />
+                        </div>
+
                         <div>
                           <Reactions
                             squeal={squeal._id}
@@ -582,16 +711,19 @@ function InfoChannel() {
               role.channel_name === channel.channel_name &&
               squealsLogger
                 .map((squeal) => (
-                  <Col lg={12} key={squeal._id} className="mb-5">
-                    <Card style={{ height: "100%" }} className="squeal">
+                  <Col key={squeal._id} className="m-4">
+                    <Card className="squeal">
                       <Card.Header className="row d-flex flex-column justify-content-evenly align-items-center">
                         {" "}
-                        <div className="col-12 d-flex flex-row justify-content-between align-items-center">
+                        <div className="col-12 d-flex flex-row justify-content-center align-items-center">
                           <div>
-                            <b>DA:</b>
+                            <span className="cool-medium">DA:</span>
 
                             <Link to={ReactConfig.pathFunction("/infou")} state={squeal.sender}>
-                              <button className=" ms-2 custom-button box " aria-label="clicca se vuoi avere informazioni sull'utente">
+                              <button
+                                className=" ms-2 custom-button box "
+                                aria-label="clicca se vuoi avere informazioni sull'utente"
+                              >
                                 <b>{squeal.sender} </b>
 
                                 <svg
@@ -608,19 +740,13 @@ function InfoChannel() {
                             </Link>
                           </div>
                         </div>
-                        <div className="col-12 d-flex flex-row justify-content-start align-items-center">
-                          <b>PER:</b>
+                        <div className="col-12 d-flex flex-row justify-content-center align-items-center mt-1">
+                          <span className="cool-medium">PER:</span>
                           <ShowDest arrayDest={squeal.destinations} />
-                        </div>
-                        <div className="col-12 d-flex flex-column justify-content-start align-items-start">
-                          <TypeSqueal typeSqueal={squeal.message_type} />
-                          <div className="cool-font-details">
-                            ID:{squeal._id}
-                          </div>
                         </div>
                       </Card.Header>
 
-                      <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
+                      <Card.Body className="d-flex flex-col justify-content-center align-items-center">
                         <SquealContent
                           content={squeal.content}
                           type={squeal.message_type}
@@ -628,6 +754,22 @@ function InfoChannel() {
                         />
                       </Card.Body>
                       <Card.Footer>
+                        <div className="row cool-medium d-flex">
+                          <div className="col-12">
+                            <button className="blue-button p-1 me-1">
+                              👁️ {squeal.critical_mass / 0.25}
+                            </button>
+                            <button className="green-button p-1 ">
+                              👍🏻 {squeal.positive_value}
+                            </button>
+                            <button className="red-button p-1 ms-1">
+                              👎🏻 {squeal.negative_value}
+                            </button>
+                          </div>
+                        </div>
+                        <div className="col-12 d-flex justify-content-center align-items-start  mt-1">
+                          <TypeSqueal typeSqueal={squeal.message_type} />
+                        </div>
                         <div>
                           <Reactions
                             squeal={squeal._id}
@@ -647,20 +789,19 @@ function InfoChannel() {
 
       {channel.type === "CHANNEL_HASHTAG" &&
         squealsLogger.map((squeal) => (
-          <Col
-            lg={12}
-            key={squeal._id}
-            className=" d-flex flex-row justify-content-evenly align-items-center m-4"
-          >
-            <Card style={{ width: "80%" }} className="squeal">
+          <Col key={squeal._id} className="m-4">
+            <Card className="squeal">
               <Card.Header className="row d-flex flex-column justify-content-evenly align-items-center">
                 {" "}
                 <div className="col-12 d-flex flex-row justify-content-between align-items-center">
                   <div>
-                    <b>DA:</b>
+                    <span className="cool-medium">DA:</span>
 
                     <Link to={ReactConfig.pathFunction("/infou")} state={squeal.sender}>
-                      <button className=" ms-2 custom-button box " aria-label="clicca se vuoi avere informazioni sull'utente">
+                      <button
+                        className=" ms-2 custom-button box "
+                        aria-label="clicca se vuoi avere informazioni sull'utente"
+                      >
                         <b>{squeal.sender} </b>
 
                         <svg
@@ -677,17 +818,13 @@ function InfoChannel() {
                     </Link>
                   </div>
                 </div>
-                <div className="col-12 d-flex flex-row justify-content-start align-items-center">
-                  <b>PER:</b>
+                <div className="col-12 d-flex flex-row justify-content-start align-items-center mt-1">
+                  <span className="cool-medium">PER:</span>
                   <ShowDest arrayDest={squeal.destinations} />
-                </div>
-                <div className="col-12 d-flex flex-column justify-content-start align-items-start">
-                  <TypeSqueal typeSqueal={squeal.message_type} />
-                  <div className="cool-font-details"> ID:{squeal._id}</div>
                 </div>
               </Card.Header>
 
-              <Card.Body className="mb-2 d-flex flex-col justify-content-center align-items-center">
+              <Card.Body className="d-flex flex-col justify-content-center align-items-center">
                 <SquealContent
                   content={squeal.content}
                   type={squeal.message_type}
@@ -695,6 +832,9 @@ function InfoChannel() {
                 />
               </Card.Body>
               <Card.Footer>
+                <div className="col-12 d-flex flex-row justify-content-center align-items-start m-1">
+                  <TypeSqueal typeSqueal={squeal.message_type} />
+                </div>
                 <Comment squeal={squeal._id} />
                 <ShowComment arrayComment={squeal.comments} />
               </Card.Footer>
@@ -709,15 +849,18 @@ function InfoChannel() {
             key={squeal._id}
             className="d-flex flex-row justify-content-evenly align-items-center m-4"
           >
-            <Card style={{ height: "80%" }} className="squeal mb-2">
+            <Card className="squeal">
               <Card.Header className="row d-flex flex-column justify-content-evenly align-items-center">
                 {" "}
                 <div className="col-12 d-flex flex-row justify-content-between align-items-center">
                   <div>
-                    <b>DA:</b>
+                    <span className="cool-medium">DA:</span>
 
                     <Link to={ReactConfig.pathFunction("/infou")} state={squeal.sender}>
-                      <button className=" ms-2 custom-button box " aria-label="clicca se vuoi avere informazioni sull'utente">
+                      <button
+                        className=" ms-2 custom-button box "
+                        aria-label="clicca se vuoi avere informazioni sull'utente"
+                      >
                         <b>{squeal.sender} </b>
 
                         <svg
@@ -734,17 +877,13 @@ function InfoChannel() {
                     </Link>
                   </div>
                 </div>
-                <div className="col-12 d-flex flex-row justify-content-start align-items-center">
-                  <b>PER:</b>
+                <div className="col-12 d-flex flex-row justify-content-start align-items-center mt-1">
+                  <span className="cool-medium">PER:</span>
                   <ShowDest arrayDest={squeal.destinations} />
-                </div>
-                <div className="col-12 d-flex flex-column justify-content-start align-items-start">
-                  <TypeSqueal typeSqueal={squeal.message_type} />
-                  <div className="cool-font-details"> ID:{squeal._id}</div>
                 </div>
               </Card.Header>
 
-              <Card.Body className="mb-4 d-flex flex-col justify-content-center align-items-center">
+              <Card.Body className="d-flex flex-col justify-content-center align-items-center">
                 <SquealContent
                   content={squeal.content}
                   type={squeal.message_type}
@@ -752,10 +891,26 @@ function InfoChannel() {
                 />
               </Card.Body>
               <Card.Footer>
+                <div className="row cool-medium d-flex">
+                  <div className="col-12">
+                    <button className="blue-button p-1 me-1">
+                      👁️ {squeal.critical_mass / 0.25}
+                    </button>
+                    <button className="green-button p-1 ">
+                      👍🏻 {squeal.positive_value}
+                    </button>
+                    <button className="red-button p-1 ms-1">
+                      👎🏻 {squeal.negative_value}
+                    </button>
+                  </div>
+                </div>
+                <div className="col-12 d-flex flex-row justify-content-center align-items-start m-2">
+                  <TypeSqueal typeSqueal={squeal.message_type} />
+                </div>
                 <div>
                   <Reactions squeal={squeal._id} reaction={squeal.reaction} />
                 </div>
-                {typeof currentUser !== 'undefined' && typeof currentUser.username !== 'undefined' && currentUser.username !== "" && (
+                {currentUser.username !== "" && (
                   <>
                     <Comment squeal={squeal._id} />
                     <ShowComment arrayComment={squeal.comments} />
@@ -770,20 +925,3 @@ function InfoChannel() {
 }
 
 export default InfoChannel;
-
-/*
-  //GET /channel/{type}/{channel_name}    channel info PRENDO LE INFO da useLocation
-  const [info, setInfo] = useState([]);
-  const getChTypeName = () => {
-    const url = `${ReactConfig.base_url_requests}/channel/${channel.type}/${channel.channel_name}`;
-    fetch(url)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Channel info:", data);
-        setInfo(data);
-      })
-      .catch((error) => {
-        console.error("Failed to get channel info, errore:", error);
-      });
-  };
-*/

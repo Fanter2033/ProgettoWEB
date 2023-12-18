@@ -334,8 +334,9 @@ function Account() {
   return (
     <div className="container pb-5">
       <div className="row" onLoad={getUserData}>
-        <div className="row d-flex justify-content-center"></div>
-        <div className="mb-3 mt-4">
+        <div className="mb-3 mt-2">
+          <h1 className="cool-font">ACCOUNT</h1>
+
           <div className="col-12 d-flex flex-col align-items-center justify-content-center">
             {userData.pfp && userData.vip && (
               <img
@@ -411,9 +412,6 @@ function Account() {
                   </h2>
                   <h3 className="m-2 cool-font-medium">{userData.email}</h3>
 
-                  <button className="yellow-button box col-12 mb-3">
-                    N SQUEALS PUBBLICI: {squealsLogger.length}
-                  </button>
                   {userData.vip && (
                     <div
                       id="vip_buttons"
@@ -423,7 +421,7 @@ function Account() {
 
                       {!userData.isSmm ? (
                         <button
-                          className="col-6 upgrade-button mb-2 box"
+                          className="col-6 upgrade-button mt-2 box w-75"
                           onClick={openConnect}
                         >
                           MANAGE SMM
@@ -435,7 +433,7 @@ function Account() {
                       />
 
                       <button
-                        className="col-6 upgrade-button mb-2 box"
+                        className="col-6 upgrade-button mt-2 mb-2 box w-75"
                         onClick={openDowngrade}
                       >
                         DOWNGRADE
@@ -465,27 +463,28 @@ function Account() {
           </div>
         </div>
 
-        <div className="row cool-font-text">
+        <div className="cool-font-text d-flex align-content-center justify-content-center ">
           <div className="col-6">
             <div className="row">
               <h3 className="cool-font-medium">QUOTA RIMANENTE</h3>
             </div>
+
             <div className="row d-flex align-items-center justify-content-center mb-4">
               <div className="col-12">
-                <h4 className="cool-font-small mt-2">GIORNALIERO</h4>
-                <button className="yellow-button box w-50">
+                <h4 className="cool-font-small  mt-2">GIORNALIERO</h4>
+                <button className="yellow-button box w-75">
                   {userQuote.remaining_daily}
                 </button>
               </div>
               <div className="col-12">
                 <h4 className="cool-font-small mt-2">SETTIMANALE</h4>
-                <button className="yellow-button box w-50">
+                <button className="yellow-button box w-75">
                   {userQuote.remaining_weekly}
                 </button>
               </div>
               <div className="col-12">
                 <h4 className="cool-font-small mt-2">MENSILE</h4>
-                <button className="yellow-button box w-50">
+                <button className="yellow-button box w-75">
                   {userQuote.remaining_monthly}
                 </button>
               </div>
@@ -499,23 +498,26 @@ function Account() {
               </h3>
             </div>
 
-            <div className="col-12 mt-2">
-              <h4 className="cool-font-small mt-2">GIORNALIERO</h4>
-              <button className="yellow-button box w-50">
-                {userQuote.limit_daily}
-              </button>
-            </div>
-            <div className="col-12">
-              <h4 className="cool-font-small mt-2">SETTIMANALE</h4>
-              <button className="yellow-button box w-50">
-                {userQuote.limit_weekly}
-              </button>
-            </div>
-            <div className="col-12">
-              <h4 className="cool-font-small mt-2 ">MENSILE</h4>
-              <button className="yellow-button box w-50">
-                {userQuote.limit_monthly}
-              </button>
+            <div className="row d-flex align-items-center justify-content-center mb-4">
+              <div className="col-12">
+                <h4 className="cool-font-small mt-2">GIORNALIERO</h4>
+                <button className="yellow-button box w-75">
+                  {userQuote.limit_daily}
+                </button>
+              </div>
+
+              <div className="col-12">
+                <h4 className="cool-font-small mt-2">SETTIMANALE</h4>
+                <button className="yellow-button box w-75">
+                  {userQuote.limit_weekly}
+                </button>
+              </div>
+              <div className="col-12">
+                <h4 className="cool-font-small mt-2 ">MENSILE</h4>
+                <button className="yellow-button box w-75">
+                  {userQuote.limit_monthly}
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -524,7 +526,7 @@ function Account() {
           {show && userData.vip && (
             <button
               id="buy-button"
-              className="box cool-font-medium w-100"
+              className="box cool-font-medium w-75"
               onClick={() => setBuyModal(true)}
             >
               COMPRA QUOTA
@@ -541,6 +543,9 @@ function Account() {
 
         <div className=" mb-5 mt-3">
           <div className=" d-flex flex-column justify-content-center align-items-center ">
+            <button className="yellow-button box col-12 mb-3 w-75 cool-font-link">
+              N SQUEALS PUBBLICI: {squealsLogger.length}
+            </button>
             <button
               className="user_button mb-2 box cool-font-text"
               onClick={followedChannels}
@@ -551,7 +556,7 @@ function Account() {
               <p className="cool-font-small">NON SEGUI ANCORA NESSUN CANALE</p>
             )}
             {following && (
-              <div className="container-flex pb-5">
+              <div className="container-flex pb-2">
                 <div className="row">
                   <div className="col-12">
                     <Row className="ms-4 me-4">
@@ -560,15 +565,15 @@ function Account() {
                           <Col
                             key={channel.channel_name}
                             lg={12}
-                            className="mb-4 d-flex justify-content-center align-items-center"
+                            className="d-flex justify-content-center align-items-center"
                           >
                             {channel.role === 0 && (
                               <>
-                                <Card className="w-100 offers">
+                                <Card className="w-100 offers m-2">
                                   <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
                                     <Link to={ReactConfig.pathFunction("/infoc")} state={channel}>
                                       <button
-                                        className="ms-4 me-4 custom-button box"
+                                        className="custom-button box"
                                         aria-label="clicca se vuoi avere informazioni sul canale"
                                       >
                                         <b>{channel.channel_name} </b>
@@ -585,21 +590,19 @@ function Account() {
                                       </button>
                                     </Link>
                                   </Card.Header>
-                                  <Card.Body className=" d-flex flex-row justify-content-evenly">
-                                    <Card.Title className="ms-4 me-4 cool-font-text">
-                                      RUOLO: IN ATTESA 🕓
-                                    </Card.Title>
+                                  <Card.Body className=" d-flex flex-row justify-content-evenly cool-font-small">
+                                    RUOLO: IN ATTESA 🕓
                                   </Card.Body>
                                 </Card>
                               </>
                             )}
                             {channel.role === 1 && (
                               <>
-                                <Card className="w-100 offers">
+                                <Card className="w-100 offers  m-2">
                                   <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
                                     <Link to={ReactConfig.pathFunction("/infoc")} state={channel}>
                                       <button
-                                        className="ms-4 me-4 custom-button box"
+                                        className="custom-button box"
                                         aria-label="clicca se vuoi avere informazioni sul canale"
                                       >
                                         <b>{channel.channel_name} </b>
@@ -616,21 +619,19 @@ function Account() {
                                       </button>
                                     </Link>
                                   </Card.Header>
-                                  <Card.Body className=" d-flex flex-row justify-content-evenly">
-                                    <Card.Title className="ms-4 me-4 cool-font-text">
-                                      RUOLO: LETTORE 📖
-                                    </Card.Title>
+                                  <Card.Body className=" d-flex flex-row justify-content-evenly cool-font-small">
+                                    RUOLO: LETTORE 📖
                                   </Card.Body>
                                 </Card>
                               </>
                             )}
                             {channel.role === 2 && (
                               <>
-                                <Card className="w-100 offers">
+                                <Card className="w-100 offers  m-2">
                                   <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
                                     <Link to={ReactConfig.pathFunction("/infoc")} state={channel}>
                                       <button
-                                        className="ms-4 me-4 custom-button box"
+                                        className="custom-button box"
                                         aria-label="clicca se vuoi avere informazioni sul canale"
                                       >
                                         <b>{channel.channel_name} </b>
@@ -647,21 +648,19 @@ function Account() {
                                       </button>
                                     </Link>
                                   </Card.Header>
-                                  <Card.Body className=" d-flex flex-row justify-content-evenly">
-                                    <Card.Title className="ms-4 me-4 cool-font-text">
-                                      RUOLO: SCRITTORE ✒️
-                                    </Card.Title>
+                                  <Card.Body className=" d-flex flex-row justify-content-evenly cool-font-small">
+                                    RUOLO: SCRITTORE ✒️
                                   </Card.Body>
                                 </Card>
                               </>
                             )}
                             {channel.role === 3 && (
                               <>
-                                <Card className="w-100 offers">
+                                <Card className="w-100 offers m-2">
                                   <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
                                     <Link to={ReactConfig.pathFunction("/infoc")} state={channel}>
                                       <button
-                                        className="ms-4 me-4 custom-button box"
+                                        className="custom-button box"
                                         aria-label="clicca se vuoi avere informazioni sul canale"
                                       >
                                         <b>{channel.channel_name} </b>
@@ -678,21 +677,19 @@ function Account() {
                                       </button>
                                     </Link>
                                   </Card.Header>
-                                  <Card.Body className=" d-flex flex-row justify-content-evenly">
-                                    <Card.Title className="ms-4 me-4 cool-font-text">
-                                      RUOLO: ADMIN ⚔️
-                                    </Card.Title>
+                                  <Card.Body className=" d-flex flex-row justify-content-evenly cool-font-small">
+                                    RUOLO: ADMIN ⚔️
                                   </Card.Body>
                                 </Card>
                               </>
                             )}
                             {channel.role === 4 && (
                               <>
-                                <Card className="w-100 offers">
+                                <Card className="w-100 offers  m-2">
                                   <Card.Header className="m-2 d-flex flex-row justify-content-evenly">
                                     <Link to={ReactConfig.pathFunction("/infoc")} state={channel}>
                                       <button
-                                        className="ms-4 me-4 custom-button box"
+                                        className="custom-button box"
                                         aria-label="clicca se vuoi avere informazioni sul canale"
                                       >
                                         <b>{channel.channel_name} </b>
@@ -709,10 +706,8 @@ function Account() {
                                       </button>
                                     </Link>
                                   </Card.Header>
-                                  <Card.Body className=" d-flex flex-row justify-content-evenly">
-                                    <Card.Title className="ms-4 me-4 cool-font-text">
-                                      RUOLO: CREATORE 👑
-                                    </Card.Title>
+                                  <Card.Body className=" d-flex flex-row justify-content-evenly cool-font-small">
+                                    RUOLO: CREATORE 👑
                                   </Card.Body>
                                 </Card>
                               </>

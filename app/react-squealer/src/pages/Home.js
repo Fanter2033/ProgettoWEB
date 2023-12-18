@@ -53,16 +53,18 @@ function Home() {
       <div className="col-12 p-4 d-flex flex-row justify-content-evenly align-items-center">
         <button className="me-1 green-button mb-1 box col-6 ">
           <NavLink
-            className="me-1 cool-font-small"
+            className="me-1 cool-font-medium"
             to={ReactConfig.pathFunction("/registration")}
+            style={{ textDecoration: "none" }}
           >
             REGISTRATI
           </NavLink>
         </button>
         <button className="ms-1 green-button mb-1 box col-6">
           <NavLink
-            className="cool-font-small"
-            to={ReactConfig.pathFunction("/")}
+            className="cool-font-medium"
+            to={ReactConfig.pathFunction("./")}
+            style={{ textDecoration: "none" }}
           >
             LOGIN
           </NavLink>
@@ -77,7 +79,10 @@ function Home() {
               <Card style={{ height: "100%" }} className="squeal mb-4">
                 <Card.Header className="d-flex justify-content-center align-items-center">
                   <Link to={ReactConfig.pathFunction("/infoc")} state={channel}>
-                    <button className="custom-button me-2 box cool-font-small" aria-label="clicca se vuoi avere informazioni sul canale">
+                    <button
+                      className="custom-button me-2 box cool-font-small"
+                      aria-label="clicca se vuoi avere informazioni sul canale"
+                    >
                       <b className="">{channel.channel_name} &nbsp;</b>
 
                       <svg
