@@ -457,6 +457,7 @@ function InfoChannel() {
                 <div className="col-12 d-flex flex-row justify-content-center align-items-start m-1">
                   <TypeSqueal typeSqueal={squeal.message_type} />
                 </div>
+                <Reactions squeal={squeal._id} reaction={squeal.reaction} />
                 <Comment squeal={squeal._id} />
                 <ShowComment arrayComment={squeal.comments} />
               </Card.Footer>
@@ -464,7 +465,7 @@ function InfoChannel() {
           </Col>
         ))}
 
-      {roleUser.map((role) => (
+      {channel.private !== false && roleUser.map((role) => (
         <>
           <Row className="w-100" key={role._id}>
             {role.role === 0 &&
@@ -526,13 +527,13 @@ function InfoChannel() {
                       <Card.Footer>
                         <div className="row cool-medium d-flex">
                           <div className="col-12">
-                            <button className="blue-button p-1 me-1">
+                            <button className="blue-button-status p-1 me-1">
                               👁️ {squeal.critical_mass / 0.25}
                             </button>
-                            <button className="green-button p-1 ">
+                            <button className="green-button-status p-1 ">
                               👍🏻 {squeal.positive_value}
                             </button>
-                            <button className="red-button p-1 ms-1">
+                            <button className="red-button-status p-1 ms-1">
                               👎🏻 {squeal.negative_value}
                             </button>
                           </div>
@@ -601,13 +602,13 @@ function InfoChannel() {
                       <Card.Footer>
                         <div className="row cool-medium d-flex">
                           <div className="col-12">
-                            <button className="blue-button p-1 me-1">
+                            <button className="blue-button-status p-1 me-1">
                               👁️ {squeal.critical_mass / 0.25}
                             </button>
-                            <button className="green-button p-1 ">
+                            <button className="green-button-status p-1 ">
                               👍🏻 {squeal.positive_value}
                             </button>
-                            <button className="red-button p-1 ms-1">
+                            <button className="red-button-status p-1 ms-1">
                               👎🏻 {squeal.negative_value}
                             </button>
                           </div>
@@ -678,13 +679,13 @@ function InfoChannel() {
                       <Card.Footer>
                         <div className="row cool-medium d-flex">
                           <div className="col-12">
-                            <button className="blue-button p-1 me-1">
+                            <button className="blue-button-status p-1 me-1">
                               👁️ {squeal.critical_mass / 0.25}
                             </button>
-                            <button className="green-button p-1 ">
+                            <button className="green-button-status p-1 ">
                               👍🏻 {squeal.positive_value}
                             </button>
-                            <button className="red-button p-1 ms-1">
+                            <button className="red-button-status p-1 ms-1">
                               👎🏻 {squeal.negative_value}
                             </button>
                           </div>
@@ -756,13 +757,13 @@ function InfoChannel() {
                       <Card.Footer>
                         <div className="row cool-medium d-flex">
                           <div className="col-12">
-                            <button className="blue-button p-1 me-1">
+                            <button className="blue-button-status p-1 me-1">
                               👁️ {squeal.critical_mass / 0.25}
                             </button>
-                            <button className="green-button p-1 ">
+                            <button className="green-button-status p-1 ">
                               👍🏻 {squeal.positive_value}
                             </button>
-                            <button className="red-button p-1 ms-1">
+                            <button className="red-button-status p-1 ms-1">
                               👎🏻 {squeal.negative_value}
                             </button>
                           </div>
@@ -893,13 +894,13 @@ function InfoChannel() {
               <Card.Footer>
                 <div className="row cool-medium d-flex">
                   <div className="col-12">
-                    <button className="blue-button p-1 me-1">
+                    <button className="blue-button-status p-1 me-1">
                       👁️ {squeal.critical_mass / 0.25}
                     </button>
-                    <button className="green-button p-1 ">
+                    <button className="green-button-status p-1 ">
                       👍🏻 {squeal.positive_value}
                     </button>
-                    <button className="red-button p-1 ms-1">
+                    <button className="red-button-status p-1 ms-1">
                       👎🏻 {squeal.negative_value}
                     </button>
                   </div>

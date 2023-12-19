@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 import ReactConfig from "../config/ReactConfig";
@@ -65,12 +65,14 @@ console.log('Secondi in un mese:', secondiInUnMese);
 console.log('Secondi in un anno:', secondiInUnAnno);
 
 */
-//TODO PUT SQUEAL /squeal/{identifier_id}  SOLO mappeeeeeeeee------------------------------------------------------------------------------------------------------------
+//PUT SQUEAL /squeal/{identifier_id}  SOLO mappeeeeeeeee------------------------------------------------------------------------------------------------------------
 function Squeal() {
   const { userGlobal, setUserGlobal } = useUserContext();
   let [currentUser, setCurrentUser] = useState({});
 
   const navigate = useNavigate();
+
+  const childDestRef = useRef();
 
   //GET WHO AM I--------------------------------------------------------------------------------
   async function whoAmI() {
@@ -115,7 +117,7 @@ function Squeal() {
     });
 
   const notify = () =>
-    toast.error("Manca desinatario. Riprovare", {
+    toast.error("Manca il desinatario. Riprovare", {
       position: "bottom-right",
       autoClose: 5000,
       hideProgressBar: false,
@@ -192,6 +194,18 @@ function Squeal() {
   const notifySquealStart2 = () =>
     toast.success("Non chiudere la pagina", {
       position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
+  const postSuccess = () =>
+    toast.success("Squeal avvenuto con successo!", {
+      position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -718,6 +732,12 @@ function Squeal() {
     );
   }
 
+  const handleResetDestinatariPadre = () => {
+    if (childDestRef.current) {
+      childDestRef.current.handleResetDestinatari();
+    }
+  };
+
   function clear() {
     setNewDay(0);
     setNewWeek(0);
@@ -731,7 +751,7 @@ function Squeal() {
     setNumero2(0);
     setPostText("");
     setClickedButtons([]);
-
+    handleResetDestinatariPadre();
     /*
     setUserData()
     setUserQuote()
@@ -859,7 +879,6 @@ function Squeal() {
         }
       })
       .then((json) => {
-        //console.log(json, "PALLE");
         // Avvia la prima esecuzione
         const id = json._id;
         notifySquealStart();
@@ -977,10 +996,11 @@ function Squeal() {
       fetch(uri, options)
         .then((response) => {
           if (response.ok) {
+            postSuccess();
             console.log("POST Squeal riuscita con successo");
 
             clear();
-            navigate("/received");
+            navigate("/post");
           } else {
             console.error(
               "Errore durante la POST, riprova",
@@ -1010,7 +1030,11 @@ function Squeal() {
 
         <div className="card-body">
           <div className="row">
-            <Dest onDestinatariSubmit={handleDestinatariSubmit} />
+            <Dest
+              onDestinatariSubmit={handleDestinatariSubmit}
+              handleResetDestinatari={handleResetDestinatariPadre}
+              ref={childDestRef}
+            />
           </div>
 
           <div className="mb-3">
@@ -1021,7 +1045,7 @@ function Squeal() {
             >
               <button
                 type="button"
-                className={`bottoni_omologati box ${
+                className={`bottoni_omologati box m-1 ${
                   inputType === "MESSAGE_TEXT" ? "active" : ""
                 }`}
                 onClick={() => setInputType("MESSAGE_TEXT")}
@@ -1041,7 +1065,7 @@ function Squeal() {
 
               <button
                 type="button"
-                className={`bottoni_omologati box ${
+                className={`bottoni_omologati box m-1 ${
                   inputType === "IMAGE" ? "active" : ""
                 }`}
                 onClick={() => setInputType("IMAGE")}
@@ -1062,7 +1086,7 @@ function Squeal() {
 
               <button
                 type="button"
-                className={`bottoni_omologati box ${
+                className={`bottoni_omologati box m-1 ${
                   inputType === "VIDEO_URL" ? "active" : ""
                 }`}
                 onClick={() => setInputType("VIDEO_URL")}
@@ -1083,7 +1107,7 @@ function Squeal() {
 
               <button
                 type="button"
-                className={` bottoni_omologati box ${
+                className={` bottoni_omologati box m-1  ${
                   inputType === "POSITION" ? "active" : ""
                 }`}
                 onClick={() => setInputType("POSITION")}
@@ -1104,7 +1128,7 @@ function Squeal() {
 
               <button
                 type="button"
-                className={`bottoni_omologati box ${
+                className={`bottoni_omologati box m-1 ${
                   inputType === "TEXT_AUTO" ? "active" : ""
                 }`}
                 onClick={() => setInputType("TEXT_AUTO")}
@@ -1126,7 +1150,7 @@ function Squeal() {
 
               <button
                 type="button"
-                className={`bottoni_omologati box ${
+                className={`bottoni_omologati box m-1 ${
                   inputType === "POSITION_AUTO" ? "active" : ""
                 }`}
                 onClick={() => setInputType("POSITION_AUTO")}
@@ -1232,13 +1256,13 @@ function Squeal() {
                 <Card.Footer>
                   <div className="row cool-medium">
                     <div className="col-12">
-                      <button className="blue-button p-1 m-1">
+                      <button className="blue-button-status p-1 m-1">
                         👁️ {squeal.critical_mass / 0.25}
                       </button>
-                      <button className="green-button p-1 m-1">
+                      <button className="green-button-status p-1 m-1">
                         👍🏻 {squeal.positive_value}
                       </button>
-                      <button className="red-button p-1 m-1">
+                      <button className="red-button-status p-1 m-1">
                         👎🏻 {squeal.negative_value}
                       </button>
                     </div>
@@ -1254,6 +1278,18 @@ function Squeal() {
           ))}
         </Row>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </div>
   );
 }

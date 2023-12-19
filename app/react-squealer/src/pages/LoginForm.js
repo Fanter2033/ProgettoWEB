@@ -383,13 +383,13 @@ function LoginForm() {
               </NavLink>
             </button>
 
-            <button className="col-12 mb-5 yellow-button box ">
-              <NavLink
-                className="cool-font-text "
-                to={ReactConfig.pathFunction("/")}
-                style={{ textDecoration: "none" }}
-                aria-label="clicca se vuoi tornare alla pagina precedente"
-              >
+            <NavLink
+              className="cool-font-text "
+              to={ReactConfig.pathFunction("/")}
+              style={{ textDecoration: "none" }}
+              aria-label="clicca se vuoi tornare alla pagina precedente"
+            >
+              <button className="col-12 mb-5 yellow-button box ">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -403,8 +403,8 @@ function LoginForm() {
                     d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"
                   />
                 </svg>
-              </NavLink>
-            </button>
+              </button>
+            </NavLink>
           </div>
         </div>
       </div>

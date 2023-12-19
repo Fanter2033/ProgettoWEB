@@ -73,7 +73,7 @@ function Reactions({ squeal, reaction }) {
           <div className="card-footer d-flex justify-content-center ">
             <button
               id="bottone1"
-              className="my-blu bottoni_omologati m-1"
+              className="my-blu bottoni_omologati m-1 box"
               onClick={love}
             >
               😍
@@ -81,7 +81,7 @@ function Reactions({ squeal, reaction }) {
 
             <button
               id="bottone2"
-              className="bottoni_omologati m-1"
+              className="bottoni_omologati m-1 box"
               onClick={like}
             >
               🙂
@@ -89,14 +89,14 @@ function Reactions({ squeal, reaction }) {
 
             <button
               id="bottone4"
-              className=" bottoni_omologati m-1"
+              className=" bottoni_omologati m-1 box"
               onClick={doNotLike}
             >
               ☹️
             </button>
             <button
               id="bottone5"
-              className=" bottoni_omologati m-1"
+              className=" bottoni_omologati m-1 box"
               onClick={hate}
             >
               😡
