@@ -55,7 +55,8 @@
           </div>
           <div>
             <!--change view button-->
-            <button aria-label="cambia visualizzazione da commenti a grafici" class="btn align-items-center border rounded border-dark"
+            <button aria-label="cambia visualizzazione da commenti a grafici"
+                    class="btn align-items-center border rounded border-dark"
                     @click="switchView">
               <i v-if="!showComments" class="bi bi-chat-text"></i>
               <i v-else-if="showComments" class="bi bi-pie-chart"></i>
@@ -116,11 +117,14 @@ import {onBeforeMount, onUpdated, ref, watch} from "vue";
 import {ArcElement, Chart as ChartJS, Legend, Tooltip} from 'chart.js'
 import {Doughnut} from "vue-chartjs";
 import {useStore} from "vuex";
+import {useRoute} from "vue-router";
 import L from "leaflet"
 import VueConfig from "@/config/VueConfig";
 
 const store = useStore();
+const route = useRoute();
 ChartJS.register(ArcElement, Tooltip, Legend);
+const vipName = ref(route.params.vip);
 
 const actualSqueal = ref({});
 const actualFetched = ref({});
@@ -156,8 +160,39 @@ watch(actualFetched, () => {
   };
 })
 
+//fetch the ids
+async function updateSquealData(vipName) {
+  const squealDataUri = VueConfig.base_url_requests +
+      "/utils/squeals/" +
+      vipName;
+  fetch(squealDataUri, {
+    method: 'GET',
+    credentials: 'include',
+    mode: 'cors',
+  })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        console.error("Error fetching data");
+      })
+      .then((data) => {
+        let arrayToCommit = [];
+        for (let i = 0; i < data.length; i++) {
+          arrayToCommit.push(data[i]._id);
+        }
+        store.commit('setDoughnutChart', arrayToCommit);
+      })
+      .catch((error) => {
+        console.error("Network error", error);
+      })
+}
+
+
 //fetch the squeal given the id
 async function getSquealData(id) {
+  if(typeof id === 'undefined')
+    return false;
   const uri = VueConfig.base_url_requests +
       "/squeal/" + id;
   await fetch(uri, {
@@ -177,10 +212,13 @@ async function getSquealData(id) {
       .catch((error) => {
         console.error("Network error", error);
       })
+  return true;
 }
 
 //get the comments
 async function getSquealComments(id) {
+  if(typeof id === 'undefined')
+    return false;
   const uri = VueConfig.base_url_requests +
       "/squeal/" + id + "/comment/";
   actualComments.value = {};
@@ -201,6 +239,7 @@ async function getSquealComments(id) {
       .catch((error) => {
         console.error("Network error", error);
       })
+  return true;
 }
 
 
@@ -233,7 +272,6 @@ function assebleSqueal(squealFromServer) {
   else
     actualSqueal.value.trend = 'Nothing'
 }
-
 
 
 function assebleComments(commentsFromServer) {
@@ -316,10 +354,13 @@ const chartOptions = ref({
 
 onBeforeMount(async () => {
   index.value = 0;
+  await updateSquealData(route.params.vip);
   await getSquealData(store.getters.getDoughnutChart[index.value]);
-  await getSquealComments(store.getters.getDoughnutChart[index.value])
-  assebleSqueal(actualFetched.value);
+  if(await getSquealComments(store.getters.getDoughnutChart[index.value]) !== false)
+    assebleSqueal(actualFetched.value);
 })
+
+
 
 onUpdated(() => {
   if (actualSqueal.value.type === 'POSITION') {
