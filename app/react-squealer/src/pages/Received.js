@@ -64,7 +64,7 @@ function Received() {
 
       if (result.ok) {
         let json = await result.json();
-        console.log("MMMMMMMMMMMMMMMMMMMMMMMH", json);
+        //console.log("MMMMMMMMMMMMMMMMMMMMMMMH", json);
         setDash(json);
       } else {
         console.error("Errore nella richiesta:", result.statusText);
@@ -75,8 +75,10 @@ function Received() {
   }
 
   useEffect(() => {
-    whoAmI();
-    getDashboard();
+    setTimeout(() => {
+      whoAmI();
+      getDashboard();
+    }, 500)
     const intervalId1 = setInterval(getDashboard, 5000); //10 sec
 
     return () => {
@@ -94,7 +96,7 @@ function Received() {
             <h1 className="cool-font mt-2">CANALI SEGUITI</h1>
 
             <Container className="pb-5">
-              <Row className=" ">
+              <Row className="">
                 {dash
                   .map((squeal) => (
                     <Col
@@ -143,13 +145,13 @@ function Received() {
                         <Card.Footer className="">
                           <div className="row cool-medium d-flex">
                             <div className="col-12">
-                              <button className="blue-button p-1 me-1">
+                              <button className="blue-button-status p-1 me-1">
                                 👁️ {squeal.critical_mass / 0.25}
                               </button>
-                              <button className="green-button p-1 ">
+                              <button className="green-button-status p-1 ">
                                 👍🏻 {squeal.positive_value}
                               </button>
-                              <button className="red-button p-1 ms-1">
+                              <button className="red-button-status p-1 ms-1">
                                 👎🏻 {squeal.negative_value}
                               </button>
                             </div>

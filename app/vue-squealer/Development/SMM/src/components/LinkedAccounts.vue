@@ -12,8 +12,7 @@
         <div class="container-fluid d-flex flex-wrap justify-content-center">
           <div v-for="vip in myVipsData">
             <div class="row m-3">
-              <div class="card d-flex align-items-center chill-font-small" style="width: 20rem; height: 25rem">
-
+              <div class="card d-flex align-items-center chill-font-small" style="width: 20rem; height: 28rem">
                 <img
                     :src=" 'data:image/jpeg;base64,' + vip.pfp "
                     alt="profile picture"
@@ -32,6 +31,17 @@
                   <li class="list-group-item">nome completo: <b>{{ vip.first_name }} {{ vip.last_name }}</b></li>
                   <li class="list-group-item">email: <b>{{ vip.email }}</b></li>
                   <li class="list-group-item">attiv* dal: <b>{{ fixDate(vip.registration_timestamp) }}</b></li>
+                  <li class="list-group-item">
+                    <router-link :to="{ name:'Chart', params: {vip: vip.username} }"
+                                 aria-label="visualizza le statistiche del vip">
+                      <button class="btn green-button-static box">
+                        <router-link :to="{ name:'Chart', params: {vip: vip.username} }"
+                                     aria-label="visualizza le statistiche del vip">
+                          vai al vip
+                        </router-link>
+                      </button>
+                    </router-link>
+                  </li>
                 </ul>
               </div>
             </div>

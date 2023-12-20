@@ -25,7 +25,8 @@
 }
 
 /* ------------ ATTENZIONE AGLI ALTRI FILE CSS -------------*/
-html, body {
+html,
+body {
   text-align: center;
   background-color: var(--squeal-blue);
   color: var(--squeal-yellow);
@@ -33,9 +34,9 @@ html, body {
   margin: 0;
   padding: 0;
 
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+ 
+ 
+ 
 
   overflow-x: hidden;
 }
@@ -122,14 +123,13 @@ html, body {
 .cool-regular-yellow {
   font-family: "Cool-Regular", sans-serif;
   font-size: 3vw;
-  color: var(--squeal-yellow)
+  color: var(--squeal-yellow);
 }
 .cool-regular-green {
   font-family: "Cool-Regular", sans-serif;
   font-size: 3vw;
-  color: var(--squeal-green)
+  color: var(--squeal-green);
 }
-
 
 /* -----------------MEDIUM FONT STUFF------------------ */
 @font-face {
@@ -139,12 +139,12 @@ html, body {
 .cool-medium {
   font-family: "Cool-Medium", sans-serif;
   font-size: 4vw;
-  color: var(--squeal-blue)
+  color: var(--squeal-blue);
 }
 .cool-medium-yellow {
   font-family: "Cool-Medium", sans-serif;
   font-size: 4vw;
-  color: var(--squeal-yellow)
+  color: var(--squeal-yellow);
 }
 
 /* -----------------LIGHT FONT STUFF------------------ */
@@ -223,6 +223,8 @@ html, body {
   min-width: 2em;
   min-height: 2em;
   border-radius: 50%;
+  border: 0px;
+
   background-color: var(--squeal-green);
 }
 
@@ -368,6 +370,62 @@ html, body {
 
   border-radius: 0.5rem;
   cursor: pointer;
+}
+
+.red-button-status {
+  background-color: var(--squeal-red);
+  color: var(--squeal-yellow);
+  width: 20vw;
+
+  padding: 1em;
+  border: none;
+
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+.blue-button-status {
+  background-color: var(--squeal-blue);
+  color: var(--squeal-yellow);
+  width: 20vw;
+  padding: 1em;
+  border: none;
+
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+.yellow-button-status {
+  background-color: var(--squeal-yellow);
+  color: var(--squeal-blue);
+  width: 20vw;
+
+  padding: 1em;
+  border: none;
+
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+.green-button-status {
+  background-color: var(--squeal-green);
+  color: var(--squeal-yellow);
+  width: 20vw;
+
+  padding: 1em;
+  border: none;
+
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+.red-button-status:hover {
+  background-color: var(--squeal-red);
+}
+.blue-button-status:hover {
+  background-color: var(--squeal-blue);
+}
+.yellow--status:hover {
+  background-color: var(--squeal-yellow);
+}
+.green--status:hover {
+  background-color: var(--squeal-green);
 }
 
 .red-button:hover {
