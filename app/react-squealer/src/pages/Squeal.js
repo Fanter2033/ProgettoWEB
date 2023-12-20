@@ -244,7 +244,7 @@ function Squeal() {
     } catch (error) {
       console.error("Errore nella fetch:", error);
     }
-    console.log(userData);
+    //console.log(userData);
   }
 
   //GET QUOTE-----------------------------------------------------------------------------------------------
@@ -307,7 +307,7 @@ function Squeal() {
     } catch (error) {
       console.error("Errore di rete:", error);
     }
-    console.log(squealsLogger);
+    //console.log(squealsLogger);
   }
 
   useEffect(() => {
@@ -376,9 +376,9 @@ function Squeal() {
   const [base64Image, setBase64Image] = useState("");
 
   const costImage = (e) => {
-    console.log("live day", liveDay);
+    //console.log("live day", liveDay);
     const remainingLimitD = liveDay - 125;
-    console.log("remaining daily before", remainingLimitD);
+    //console.log("remaining daily before", remainingLimitD);
 
     const remainingLimitW = liveWeek - 125;
     const remainingLimitM = liveMonth - 125;
@@ -386,7 +386,7 @@ function Squeal() {
     setNewDay(remainingLimitD);
     setNewWeek(remainingLimitW);
     setNewMonth(remainingLimitM);
-    console.log("remaining daily", remainingLimitD);
+    //console.log("remaining daily", remainingLimitD);
 
     const imageFile = e.target.files[0];
     handleImageUpload(imageFile);
@@ -819,17 +819,16 @@ function Squeal() {
 
     fetch(uri, options)
       .then((res) => {
-        //console.log(res);
         if (res.ok) {
           //creation ok
           return res.json();
         }
       })
       .then((data) => {
-        console.log("Cambio mappa went good");
+        console.log("Update map went good");
       })
       .catch((error) => {
-        console.error("Cambio mappa failed, error:", error);
+        console.error("Update map failed, error:", error);
       });
 
     iterazioneCorrente++;
@@ -1006,7 +1005,6 @@ function Squeal() {
               "Errore durante la POST, riprova",
               response.statusText
             );
-            //console.log(response);
             notify2();
           }
         })
@@ -1238,8 +1236,8 @@ function Squeal() {
 
         <Row>
           {squealsLogger.map((squeal) => (
-            <Col className="m-3" key={squeal._id}>
-              <Card className="squeal">
+            <Col lg={12} className="mb-4 d-flex justify-content-center align-items-center" key={squeal._id}>
+              <Card style={{ width: "80%" }}className="squeal">
                 <Card.Header className="row d-flex flex-col justify-content-between align-items-center">
                   <div className="col-12 d-flex flex-row justify-content-start align-items-center mt-2">
                     <div className="cool-medium">PER:</div>

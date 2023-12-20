@@ -11,7 +11,6 @@ import DropdownMenu from "./DropdownMenu";
 import MenuOfficial from "./MenuOfficial";
 import MenuTag from "./MenuTag";
 
-import "../css/LoginForm.css";
 import "react-toastify/dist/ReactToastify.css";
 
 import { Card, Row } from "react-bootstrap";
@@ -497,6 +496,7 @@ function Channels() {
           <Search />
         </div>
       </div>
+
       <Footer />
     </div>
   );

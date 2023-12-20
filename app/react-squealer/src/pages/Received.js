@@ -64,7 +64,7 @@ function Received() {
 
       if (result.ok) {
         let json = await result.json();
-        console.log("MMMMMMMMMMMMMMMMMMMMMMMH", json);
+        //console.log("MMMMMMMMMMMMMMMMMMMMMMMH", json);
         setDash(json);
       } else {
         console.error("Errore nella richiesta:", result.statusText);
@@ -88,13 +88,13 @@ function Received() {
     <>
       <Navbar />
 
-      <div className="container-flex my-blu">
+      <div className="container-flex">
         <div className="row">
           <div className="col-12 col-md-8">
             <h1 className="cool-font mt-2">CANALI SEGUITI</h1>
 
             <Container className="pb-5">
-              <Row className=" ">
+              <Row className="">
                 {dash
                   .map((squeal) => (
                     <Col

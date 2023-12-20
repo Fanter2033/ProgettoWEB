@@ -50,15 +50,15 @@ function Chat() {
 
   return (
     <>
-      <div className="container-flex pb-5">
-        <div className="row ">
+      <div className="container-flex">
+        <div className="row">
           <div className="col-12 justify-content-center align-items-center">
             <h1 className="cool-font mt-2">CHAT</h1>
-            <Container className="">
+            <Container className="pb-5">
               <Row className="">
                 {squeals.map((squeal) => (
-                  <Col lg={12} className="mb-4" key={squeal._id}>
-                    <Card style={{ width: "100%" }} className="squeal">
+                  <Col lg={12} className="mb-4 d-flex justify-content-center align-items-center" key={squeal._id}>
+                    <Card style={{ width: "80%" }} className="squeal">
                       <Card.Header className="d-flex flex-column justify-content-center align-items-center">
                         <div>
                           <span className="cool-medium"> DA: </span>
@@ -133,9 +133,8 @@ function Chat() {
                   width="60"
                   height="60"
                   fill="currentColor"
-                  class="bi bi-people-fill"
+                  className="bi bi-people-fill mt-4"
                   viewBox="0 0 16 16"
-                  className="mt-4"
                 >
                   <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5" />
                 </svg>
