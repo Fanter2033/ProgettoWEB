@@ -1,8 +1,8 @@
 import React from "react";
-import { useState } from "react";
+import { useState, forwardRef, useImperativeHandle } from "react";
 import "../css/App.css";
 
-const Dest = ({ onDestinatariSubmit }) => {
+const Dest = forwardRef(({ onDestinatariSubmit, handleResetDestinatari }, ref) => {
   const [destinatari, setDestinatari] = useState("");
   const [destinatariArray, setDestinatariArray] = useState([]);
   const [error, setError] = useState("");
@@ -36,15 +36,22 @@ const Dest = ({ onDestinatariSubmit }) => {
     onDestinatariSubmit(destinatariSeparati);
   };
 
-  const handleResetDestinatari = () => {
+  const handleResetDestinatariLocal = () => {
     setDestinatari("");
     setDestinatariArray([]);
     setError("");
   };
 
+  useImperativeHandle(ref, () => ({
+    handleResetDestinatari: handleResetDestinatariLocal
+  }));
+
   return (
     <div className="">
-      <form onSubmit={handleDestinatariSubmit} className="row d-flex align-items-center p-1 mb-0">
+      <form
+        onSubmit={handleDestinatariSubmit}
+        className="row d-flex align-items-center p-1 mb-0"
+      >
         <div className="col-10">
           <label
             htmlFor="destinatariInput"
@@ -86,7 +93,9 @@ const Dest = ({ onDestinatariSubmit }) => {
         <div className="row d-flex justify-content-center align-items-center">
           <ul className="list-unstyled">
             {destinatariArray.map((destinatario, index) => (
-              <li className="cool-font-details-md" key={index}>{destinatario}</li>
+              <li className="cool-font-details-md" key={index}>
+                {destinatario}
+              </li>
             ))}
           </ul>
 
@@ -100,6 +109,6 @@ const Dest = ({ onDestinatariSubmit }) => {
       )}
     </div>
   );
-};
+});
 
 export default Dest;
