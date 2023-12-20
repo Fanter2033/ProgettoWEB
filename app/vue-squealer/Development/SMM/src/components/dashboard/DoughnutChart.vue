@@ -132,7 +132,7 @@ const actualComments = ref({});
 const showComments = ref(false);
 const commentsToPrint = ref([]);
 const index = ref(0);
-const listLength = ref(store.getters.getDoughnutChart.length)
+const listLength = ref(store.getters.getDoughnutChart.length);
 const loaded = ref(false);
 const chartData = ref({
   labels: ['pos', 'neg'],
@@ -160,12 +160,23 @@ watch(actualFetched, () => {
   };
 })
 
+watch(()=>route.params.vip, async ()=>{
+  index.value = 0;
+  listLength.value = 0;
+  await updateSquealData(route.params.vip);
+  await getSquealData(store.getters.getDoughnutChart[index.value]);
+  if(await getSquealComments(store.getters.getDoughnutChart[index.value]) !== false){
+    listLength.value = store.getters.getDoughnutChart.length;
+    assebleSqueal(actualFetched.value);
+  }
+})
+
 //fetch the ids
 async function updateSquealData(vipName) {
   const squealDataUri = VueConfig.base_url_requests +
       "/utils/squeals/" +
       vipName;
-  fetch(squealDataUri, {
+  await fetch(squealDataUri, {
     method: 'GET',
     credentials: 'include',
     mode: 'cors',
