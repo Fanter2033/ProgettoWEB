@@ -58,7 +58,7 @@ function Account() {
         }
       })
       .then((data) => {
-        console.log("Tutto ok, io sono:", data);
+        //console.log("Tutto ok, io sono:", data);
         setCurrentUser(data);
       })
       .catch((error) => {

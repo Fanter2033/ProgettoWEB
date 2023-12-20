@@ -20,7 +20,7 @@
             </router-link>
           </a></li>
           <li class="nav-item"><a aria-label="esci dal sito" class="nav-link" role="button"
-                                  @click="logOut" style="color: #E0BB76F9">
+                                  style="color: #E0BB76F9" @click="logOut">
             <i class="bi bi-box-arrow-right"></i>
             <span class="mx-3 d-none d-lg-inline">Log Out</span>
           </a></li>
