@@ -23,7 +23,6 @@ function DowngradeModal({ downgrade, closeDowngrade }) {
 
     fetch(url, options)
       .then((res) => {
-        console.log(res);
         if (res.ok) {
           //creation ok
           return res.json();
@@ -65,13 +64,13 @@ function DowngradeModal({ downgrade, closeDowngrade }) {
         </Modal.Body>
         <Modal.Footer className="my-foot" style={footerStyle}>
           <button
-            className="upgrade-button cool-font-small"
+            className="upgrade-button cool-font-medium h-50"
             onClick={handelDowngrade}
           >
             DOWNGRADE
           </button>
           <button
-            className="custom-button cool-font-small w-100"
+            className="blue-button cool-font-medium w-100"
             onClick={closeDowngrade}
           >
             CHIUDI

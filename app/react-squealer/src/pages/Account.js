@@ -26,7 +26,6 @@ import "../css/App.css";
 import pink from "./media/avvoltoioEli.png";
 import avvoltoio from "./media/avvoltoio.gif";
 
-//TODO: check navigateeeeeeeeeeeeeee ho tolto il . davanti al /
 /*
 col-12 col-md-6
 su schermi md e più grandi ho due colonne
@@ -58,7 +57,6 @@ function Account() {
         }
       })
       .then((data) => {
-        //console.log("Tutto ok, io sono:", data);
         setCurrentUser(data);
       })
       .catch((error) => {
@@ -109,7 +107,7 @@ function Account() {
   };
 
   const handleInternalButtonClick = () => {
-    console.log("Bottone interno cliccato");
+    //console.log("Bottone compra quota cliccato");
     closeBuyModal();
   };
 
@@ -287,7 +285,7 @@ function Account() {
   //LOGOUT  USER------------------------------------------------------------------------------
   const notify = () =>
     toast.error("Errore durante il logout. Riprovare", {
-      position: "bottom-right",
+      position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -575,6 +573,10 @@ function Account() {
                                       <button
                                         className="custom-button box"
                                         aria-label="clicca se vuoi avere informazioni sul canale"
+                                        style={{
+                                          overflowWrap: "break-word",
+                                          wordBreak: "break-all",
+                                        }}
                                       >
                                         <b>{channel.channel_name} </b>
                                         <svg
@@ -604,6 +606,10 @@ function Account() {
                                       <button
                                         className="custom-button box"
                                         aria-label="clicca se vuoi avere informazioni sul canale"
+                                        style={{
+                                          overflowWrap: "break-word",
+                                          wordBreak: "break-all",
+                                        }}
                                       >
                                         <b>{channel.channel_name} </b>
                                         <svg
@@ -633,6 +639,10 @@ function Account() {
                                       <button
                                         className="custom-button box"
                                         aria-label="clicca se vuoi avere informazioni sul canale"
+                                        style={{
+                                          overflowWrap: "break-word",
+                                          wordBreak: "break-all",
+                                        }}
                                       >
                                         <b>{channel.channel_name} </b>
                                         <svg
@@ -662,6 +672,10 @@ function Account() {
                                       <button
                                         className="custom-button box"
                                         aria-label="clicca se vuoi avere informazioni sul canale"
+                                        style={{
+                                          overflowWrap: "break-word",
+                                          wordBreak: "break-all",
+                                        }}
                                       >
                                         <b>{channel.channel_name} </b>
                                         <svg
@@ -691,6 +705,10 @@ function Account() {
                                       <button
                                         className="custom-button box"
                                         aria-label="clicca se vuoi avere informazioni sul canale"
+                                        style={{
+                                          overflowWrap: "break-word",
+                                          wordBreak: "break-all",
+                                        }}
                                       >
                                         <b>{channel.channel_name} </b>
                                         <svg

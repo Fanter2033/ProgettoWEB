@@ -61,8 +61,6 @@ function MatchRole({
       new_role: newValue,
     };
 
-    console.log("valore", newValue);
-
     const options = {
       method: "PATCH",
       mode: "cors",
@@ -76,7 +74,6 @@ function MatchRole({
     await fetch(uri, options)
       .then((response) => {
         if (response.ok) {
-          console.log(response);
           console.log("PATCH cambio ruolo OK", newValue);
         } else {
           console.error("PATCH cambio ruolo ERROR", response.statusText);

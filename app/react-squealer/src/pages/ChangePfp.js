@@ -38,7 +38,7 @@ function ChangePfp() {
 
   const notify = () =>
     toast.error("Immagine troppo grande", {
-      position: "bottom-right",
+      position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -122,7 +122,6 @@ function ChangePfp() {
 
       fetch(url, options)
         .then((res) => {
-          console.log(res);
           if (res.ok) {
             //creation ok
             return res.json();
@@ -140,7 +139,6 @@ function ChangePfp() {
     }
   }
 
-  //console.log("nomeeeeeeeeeeeeeeeeeeee", );
 
   const footerStyle = {
     backgroundColor: "#e0bb76",

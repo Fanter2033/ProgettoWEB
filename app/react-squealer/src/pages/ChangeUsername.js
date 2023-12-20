@@ -118,7 +118,6 @@ function ChangeUsername() {
 
         fetch(url, options)
           .then((res) => {
-            console.log(res);
             if (res.ok) {
               //creation ok
               notify();
@@ -151,7 +150,7 @@ function ChangeUsername() {
     fetch(uri, options)
       .then((response) => {
         if (response.ok) {
-          console.log("logout riuscito con successo");
+          console.log("Logout riuscito con successo");
           navigate(`/`);
           handleClose();
         } else {
@@ -163,8 +162,6 @@ function ChangeUsername() {
         console.error("Network error", error);
       });
   }
-
-  //console.log("nomeeeeeeeeeeeeeeeeeeee", userGlobal.username);
 
   const footerStyle = {
     backgroundColor: "#e0bb76",

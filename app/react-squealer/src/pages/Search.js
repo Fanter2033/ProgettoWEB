@@ -96,7 +96,6 @@ function Search() {
     } catch (error) {
       console.error("Errore nella fetch:", error);
     }
-    //console.log("Successo nella richiesta dei ruoli UTENTE", roleUser);
   }
 
   async function whoAmI() {
@@ -144,7 +143,6 @@ function Search() {
 
     fetch(url, options)
       .then((res) => {
-        console.log(res);
         getRoles();
         if (res.ok) {
           return res.json();
@@ -210,6 +208,8 @@ function Search() {
                         <button
                           className="custom-button box cool-font-small"
                           aria-label="clicca se vuoi avere più informazioni su questo utente"
+                          style={{ overflowWrap: "break-word", wordBreak: "break-all" }}
+                        
                         >
                           <b className="">{channel.channel_name} &nbsp;</b>
 
@@ -409,7 +409,7 @@ function Search() {
                                     channel.channel_name && (
                                     <>
                                       <div>
-                                        RUOLO: <b>OWNER</b>
+                                        RUOLO: <b>CREATORE</b>
                                         <button className="custom-button ms-2 box">
                                           👑
                                         </button>
@@ -434,7 +434,7 @@ function Search() {
                                 unfollow(channel.type, channel.channel_name)
                               }
                             >
-                              DISICRIVITI
+                              DISISCRIVITI
                             </button>
                           ) : (
                             <button
@@ -456,7 +456,7 @@ function Search() {
           }
           {channels.length === 0 && (
             <>
-              <h3 className="cool-font-link">Channel does not exist</h3>
+              <h3 className="cool-font-link">IL CANALE NON ESISTE</h3>
             </>
           )}
         </div>

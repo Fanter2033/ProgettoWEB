@@ -28,7 +28,6 @@ const ToggleSMM = ({ mongoData }) => {
 
       if (result.ok) {
         let data = await result.json();
-        //console.log(data);
         setUserData(data);
         return data;
       } else {
@@ -38,7 +37,6 @@ const ToggleSMM = ({ mongoData }) => {
       console.error("Errore nella fetch:", error);
     }
   }
-  //console.log(userData);
 
   async function becomeSMM() {
     const uri = `${ReactConfig.base_url_requests}/user/${userData.username}/toggle/smm`;
@@ -54,8 +52,7 @@ const ToggleSMM = ({ mongoData }) => {
     await fetch(uri, options)
       .then((response) => {
         if (response.ok) {
-          console.log(response);
-          console.log("SMM CHANGED CORRECTLY");
+          console.log("SMM changed correctly");
         } else {
           console.error("Authentication failed", response.statusText);
         }

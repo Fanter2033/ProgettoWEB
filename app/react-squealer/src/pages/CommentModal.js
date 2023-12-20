@@ -15,7 +15,7 @@ function CommentModal({ squeal, showComment, handleCloseComment }) {
 
   const notify = () =>
     toast.error("Non sei loggato", {
-      position: "bottom-right",
+      position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -50,8 +50,7 @@ function CommentModal({ squeal, showComment, handleCloseComment }) {
         let result = await fetch(uri, options);
 
         if (result.ok) {
-          let json = await result.json();
-          console.log("POST COMMENTOOOOOO OK", json);
+          console.log("POST comment OK");
           handleCloseComment();
         } else {
           console.error("Errore nella POST del commento:", result.statusText);

@@ -28,7 +28,7 @@ function DetailsChannel() {
 
   const notifyCannotChange = () =>
       toast.error("Non puoi cambiare il creatore", {
-        position: "bottom-right",
+        position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -43,7 +43,7 @@ function DetailsChannel() {
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
-        console.log("Following of a channel:", data);
+        //console.log("Following of a channel:", data);
         setFollowing(data.content);
       })
       .catch((error) => {
@@ -79,7 +79,7 @@ function DetailsChannel() {
     } catch (error) {
       console.error("Errore nella fetch:", error);
     }
-    console.log("Successo nella richiesta dei ruoli UTENTE", roleUser);
+    //console.log("Successo nella richiesta dei ruoli UTENTE", roleUser);
   }
 
   const [roles0, setRoles0] = useState([]);
@@ -95,7 +95,7 @@ function DetailsChannel() {
       const response = await fetch(url);
       const data = await response.json();
 
-      console.log(`Get roles for number ${roleNumber}:`, data);
+      //console.log(`Get roles for number ${roleNumber}:`, data);
 
       if (roleNumber === 0) {
         setRoles0(data.content);
@@ -131,7 +131,6 @@ function DetailsChannel() {
           }
         })
         .then((data) => {
-          console.log('DATAAAAAAA', data);
           setLocalUser(data);
         })
         .catch((error) => {
@@ -141,7 +140,6 @@ function DetailsChannel() {
 
   useEffect(() => {
 
-    console.log('HELLO GUYS!!!', channel);
     whoAmI();
     if(channel.channel_name === '' || typeof channel === 'undefined' || typeof channel.channel_name === 'undefined'){
       navigate('./channels');
@@ -154,6 +152,7 @@ function DetailsChannel() {
     fetchData(channel.channel_name, 4);
   }, []);
 
+  /*
   console.log(
     "zzzzzzzzzzzzzz",
     "0",
@@ -167,6 +166,7 @@ function DetailsChannel() {
     "4",
     roles4
   );
+  */
 
   useEffect(() => {
     getRoles();
@@ -255,17 +255,17 @@ function DetailsChannel() {
             )}
 
             {channel.type === "CHANNEL_USERS" && (
-              <p className="cool-font-small mb-0">CREATORE: {channel.owner}</p>
+              <p className="cool-font-medium mb-0">CREATORE: {channel.owner}</p>
             )}
 
-            <p className="cool-font-small mb-0">
+            <p className="cool-font-medium mb-0">
               NUMERO SQUEALS: {channel.posts}
             </p>
           </Card.Body>
 
           <Card.Footer>
             <div>
-              <div className="d-flex flex-row justify-content-center align-items-center cool-font-small">
+              <div className="d-flex flex-row justify-content-center align-items-center cool-font-medium">
                 {channel.type === "CHANNEL_USERS" && (
                   <>
                     <svg
@@ -312,7 +312,7 @@ function DetailsChannel() {
               </div>
 
               {channel.type === "CHANNEL_USERS" && (
-                <div className="d-flex flex-row justify-content-center align-items-center cool-font-small">
+                <div className="d-flex flex-row justify-content-center align-items-center cool-font-medium">
                   {channel.private === true ? (
                     <>
                       <svg

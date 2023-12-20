@@ -24,7 +24,7 @@ function LoginForm() {
 
   const notify = () =>
     toast.error("Errore di autenticazione. Riprovare", {
-      position: "bottom-right",
+      position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -35,7 +35,7 @@ function LoginForm() {
     });
   const notify_success = () =>
     toast.success("Operazione effettuata con successo. Autenticarsi", {
-      position: "bottom-right",
+      position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -54,7 +54,7 @@ function LoginForm() {
       credentials: "include",
     })
       .then((res) => {
-        console.log("Hey ris", res);
+        //console.log("Hey ris", res);
         if (res.ok) {
           navigate(`./received`);
         }
@@ -118,7 +118,7 @@ function LoginForm() {
 
   const notify2 = () =>
     toast.error("Errore. Compila tutti i campi.", {
-      position: "bottom-right",
+      position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -195,7 +195,7 @@ function LoginForm() {
   };
   const handleKeyFinal = (event) => {
     if (event.key === "Enter") {
-      console.log("Tasto Invio premuto!");
+      //console.log("Tasto Invio premuto!");
     }
   };
 
@@ -229,12 +229,12 @@ function LoginForm() {
               </label>
               <input
                 type="text"
-                className="form-control cool-font-text text-center box"
+                className="form-control cool-medium text-center box"
                 style={{ color: "#072f38", backgroundColor: "#e0bb76" }}
                 id="inputUsername"
                 aria-describedby="username"
                 autoComplete="on"
-                placeholder="Username"
+                placeholder="Username qui"
                 value={usernameForm}
                 onChange={(e) => setUsernameForm(e.target.value)}
                 ref={input1Ref}
@@ -252,18 +252,18 @@ function LoginForm() {
               <input
                 type="password"
                 id="inputPassword"
-                className="form-control cool-font-text text-center box mb-3"
+                className="form-control cool-medium text-center box mb-3"
                 style={{ color: "#072f38", backgroundColor: "#e0bb76" }}
                 aria-describedby="password"
                 autoComplete="on"
-                placeholder="Password"
+                placeholder="Password qui"
                 value={passwordForm}
                 ref={input2Ref}
                 onChange={(e) => setPasswordForm(e.target.value)}
               />
             </div>
 
-            <div className="form-group row mt-3">
+            <div className="form-group row mt-2">
               <button
                 className="col-12 mb-2 green-button box cool-font-text box"
                 type="submit"
@@ -362,7 +362,7 @@ function LoginForm() {
               </form>
             </Modal>
           )}
-          <div className="row mt-3 mb-5">
+          <div className="row mt-2 mb-5">
             <button className="col-12 mb-2 yellow-button box">
               <NavLink
                 className="cool-font-text"
@@ -373,7 +373,7 @@ function LoginForm() {
               </NavLink>
             </button>
 
-            <button className="col-12 mb-5 yellow-button box ">
+            <button className="col-12 mb-4 yellow-button box ">
               <NavLink
                 className="cool-font-text "
                 to={ReactConfig.pathFunction("/home")}
@@ -383,16 +383,16 @@ function LoginForm() {
               </NavLink>
             </button>
 
-            <button className="col-12 mb-5 yellow-button box ">
-              <NavLink
-                className="cool-font-text "
-                /*to={ReactConfig.pathFunction("/")} */
-                onClick={() => {
+            <NavLink
+              className="cool-font-text"
+              /*to={ReactConfig.pathFunction("/")}*/
+              onClick={() => {
                   window.location.href = '../'
-                }}
-                style={{ textDecoration: "none" }}
-                aria-label="clicca se vuoi tornare alla pagina precedente"
-              >
+              }}
+              style={{ textDecoration: "none" }}
+              aria-label="clicca se vuoi tornare alla pagina precedente"
+            >
+              <button className="col-12 mb-5 yellow-button box w-50">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"

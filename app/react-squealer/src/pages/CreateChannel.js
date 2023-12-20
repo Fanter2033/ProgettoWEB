@@ -22,7 +22,7 @@ function CreateChannel() {
 
   const notify = () =>
     toast.error("Compila tutti i campi.", {
-      position: "bottom-right",
+      position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -63,14 +63,13 @@ function CreateChannel() {
 
         fetch(url, options)
           .then((res) => {
-            console.log(res);
             if (res.ok) {
               //creation ok
               return res.json();
             }
           })
           .then((data) => {
-            console.log("Creazione canali went good", data);
+            console.log("Creazione canale went good", data);
           })
           .catch((error) => {
             console.error("Creazione canali failed, error:", error);

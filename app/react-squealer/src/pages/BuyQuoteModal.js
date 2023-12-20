@@ -37,7 +37,7 @@ function VipModal({ onInternalButtonClick, closeBuyModal }) {
       const data = {
         percentage: increment,
       };
-      console.log("aumento", increment);
+      //console.log("aumento", increment);
 
       const url = `${ReactConfig.base_url_requests}/user/${userGlobal.username}/quote/buy`;
       const options = {
@@ -83,9 +83,9 @@ function VipModal({ onInternalButtonClick, closeBuyModal }) {
           <div className="m-3">
             <div className="card text-center offers">
               <div className="card-header">PACCHETTO 1</div>
-              <div className="card-body p-2">
-                <h5 className="card-title">AUMENTO DEL 10%</h5>
-                <h5 className="card-title">COSTO: 5,00€</h5>
+              <div className="card-body  p-2">
+                <h5 className="cool-font-medium">AUMENTO DEL 10%</h5>
+                <h5 className="cool-font-small">COSTO: 5,00€</h5>
               </div>
               <div className="card-footer text-muted">
                 <label>
@@ -103,8 +103,8 @@ function VipModal({ onInternalButtonClick, closeBuyModal }) {
             <div className="card text-center offers">
               <div className="card-header">PACCHETTO 2</div>
               <div className="card-body p-2">
-                <h5 className="card-title">AUMENTO DEL 30%</h5>
-                <h5 className="card-title">COSTO: 12,00€</h5>
+                <h5 className="cool-font-medium">AUMENTO DEL 30%</h5>
+                <h5 className="cool-font-small">COSTO: 12,00€</h5>
               </div>
               <div className="card-footer text-muted">
                 <label>
@@ -122,8 +122,8 @@ function VipModal({ onInternalButtonClick, closeBuyModal }) {
             <div className="card text-center offers">
               <div className="card-header">PACCHETTO 3</div>
               <div className="card-body p-2">
-                <h5 className="card-title">AUMENTO DEL 50%</h5>
-                <h5 className="card-title">COSTO: 24,00€</h5>
+                <h5 className="cool-font-medium">AUMENTO DEL 50%</h5>
+                <h5 className="cool-font-small">COSTO: 24,00€</h5>
               </div>
               <div className="card-footer text-muted">
                 <label>
@@ -139,7 +139,7 @@ function VipModal({ onInternalButtonClick, closeBuyModal }) {
           </div>
         </Modal.Body>
         <Modal.Footer
-          className="my-foot d-flex justify-content-center cool-font-small "
+          className="my-foot d-flex justify-content-center cool-font-medium "
           style={footerStyle}
         >
           <button className="green-button box w-100" onClick={buyQuote}>

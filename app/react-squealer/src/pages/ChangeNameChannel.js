@@ -14,7 +14,6 @@ import "../css/App.css";
 function ChangeNameChannel() {
   const location = useLocation();
   const channel = location.state;
-  console.log(channel);
 
   const { userGlobal, setUserGlobal } = useUserContext();
 
@@ -64,7 +63,7 @@ function ChangeNameChannel() {
 
   const handleChangeChannelName = (e) => {
     e.preventDefault();
-    console.log("Cambiato il nome del canale:", channel.channel_name);
+    //console.log("Cambiato il nome del canale:", channel.channel_name);
 
     if (newName.trim() === "") {
       nofity_error();
@@ -92,7 +91,6 @@ function ChangeNameChannel() {
 
         fetch(url, options)
           .then((res) => {
-            console.log(res);
             if (!res.ok) {
               notify_exist();
             } else {

@@ -38,7 +38,6 @@ function Home() {
     }
   }
 
-  //console.log("LISTA CANALI", channels);
 
   useEffect(() => {
     const intervalId1 = setInterval(getChannels, 5000);
@@ -82,6 +81,8 @@ function Home() {
                     <button
                       className="custom-button me-2 box cool-font-small"
                       aria-label="clicca se vuoi avere informazioni sul canale"
+                      style={{ overflowWrap: "break-word", wordBreak: "break-all" }}
+      
                     >
                       <b className="">{channel.channel_name} &nbsp;</b>
 

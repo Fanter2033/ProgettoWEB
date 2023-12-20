@@ -56,7 +56,7 @@ function Reactions({ squeal, reaction }) {
     fetch(uri, options)
       .then((response) => {
         if (response.ok) {
-          console.log("Reaction riuscita con successo");
+          console.log("Reaction messa con successo");
         } else {
           console.error("Reaction fallito", response.statusText);
         }

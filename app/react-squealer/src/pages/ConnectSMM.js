@@ -56,7 +56,7 @@ function ConnectSMM({ openConnect, closeConnect }) {
   //PATCH /user/{username}/pick-smm/{smm} ----------------------------------------------------------------------------------------------------------
   async function addSmm(e) {
     e.preventDefault();
-    console.log("sono vip?", userData.vip);
+    //console.log("sono vip?", userData.vip);
     const uri = `${ReactConfig.base_url_requests}/user/${userData.username}/pick-smm/${smm}`;
     const options = {
       method: "PATCH",
@@ -70,7 +70,7 @@ function ConnectSMM({ openConnect, closeConnect }) {
     await fetch(uri, options)
       .then((response) => {
         if (response.ok) {
-          console.log("PATCH smm riuscita con successo");
+          console.log("PATCH SMM riuscita con successo");
         } else {
           console.error("Connection SMM failed", response.statusText);
         }
@@ -95,7 +95,7 @@ function ConnectSMM({ openConnect, closeConnect }) {
     await fetch(uri2, options)
       .then((response) => {
         if (response.ok) {
-          console.log("smm removed successfully");
+          console.log("SMM removed successfully");
         } else {
           console.error("Authentication failed", response.statusText);
         }

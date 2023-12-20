@@ -10,7 +10,6 @@ import "../css/App.css";
 function InfoUser() {
   const location = useLocation();
   const username = location.state;
-  //console.log(username);
 
   const [userData, setUserData] = useState("");
 
@@ -30,7 +29,6 @@ function InfoUser() {
 
       if (result.ok) {
         let data = await result.json();
-        console.log(data);
         setUserData(data);
         return data;
       } else {
@@ -41,7 +39,6 @@ function InfoUser() {
     }
   }
 
-  console.log("aaaaaaaaaaaaaa", userData);
 
   //GET USER QUOTE-----------------------------------------------------------------------------------------------
   const [userQuote, setUserQuote] = useState("");
@@ -63,7 +60,6 @@ function InfoUser() {
 
       if (result.ok) {
         let quote = await result.json();
-        console.log(quote);
         setUserQuote(quote);
         return quote;
       } else {
@@ -74,7 +70,6 @@ function InfoUser() {
     }
   }
 
-  //console.log(userQuote);
 
   //GET LOG SQUEALS VECCHI--------------------------------------------------------------
   const [squealsLogger, setSquealsLogger] = useState([]);
