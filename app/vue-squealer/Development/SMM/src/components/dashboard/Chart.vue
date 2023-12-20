@@ -13,7 +13,7 @@
         <div class="d-flex justify-content-center">
           <div class="container-fluid box border rounded border-secondary border-2 p-1 h-100"
                style="background-color: rgb(220,209,187) ">
-            <LineChart  style="background-color: rgb(220,209,187)"/>
+            <LineChart style="background-color: rgb(220,209,187)"/>
             <div class="container">
               <div class="d-flex justify-content-start">
 

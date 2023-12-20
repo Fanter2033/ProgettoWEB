@@ -31,13 +31,13 @@
           <button
               id="login"
               :class="isOverButton ? 'green-button' : 'yellow-button'"
+              aria-label="entra nel sito"
               class="btn green-button-static mt-4 chill-font-small w-100"
               type="submit"
               value="Log In"
               v-on:mouseleave="isOverButton = false"
               v-on:mouseover="isOverButton = true"
               @:click.prevent="loginForm()"
-              aria-label="entra nel sito"
           >
             <i class="bi bi-door-open"></i>
             Log In

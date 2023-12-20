@@ -160,12 +160,12 @@ watch(actualFetched, () => {
   };
 })
 
-watch(()=>route.params.vip, async ()=>{
+watch(() => route.params.vip, async () => {
   index.value = 0;
   listLength.value = 0;
   await updateSquealData(route.params.vip);
   await getSquealData(store.getters.getDoughnutChart[index.value]);
-  if(await getSquealComments(store.getters.getDoughnutChart[index.value]) !== false){
+  if (await getSquealComments(store.getters.getDoughnutChart[index.value]) !== false) {
     listLength.value = store.getters.getDoughnutChart.length;
     assebleSqueal(actualFetched.value);
   }
@@ -202,7 +202,7 @@ async function updateSquealData(vipName) {
 
 //fetch the squeal given the id
 async function getSquealData(id) {
-  if(typeof id === 'undefined')
+  if (typeof id === 'undefined')
     return false;
   const uri = VueConfig.base_url_requests +
       "/squeal/" + id;
@@ -228,7 +228,7 @@ async function getSquealData(id) {
 
 //get the comments
 async function getSquealComments(id) {
-  if(typeof id === 'undefined')
+  if (typeof id === 'undefined')
     return false;
   const uri = VueConfig.base_url_requests +
       "/squeal/" + id + "/comment/";
@@ -367,10 +367,9 @@ onBeforeMount(async () => {
   index.value = 0;
   await updateSquealData(route.params.vip);
   await getSquealData(store.getters.getDoughnutChart[index.value]);
-  if(await getSquealComments(store.getters.getDoughnutChart[index.value]) !== false)
+  if (await getSquealComments(store.getters.getDoughnutChart[index.value]) !== false)
     assebleSqueal(actualFetched.value);
 })
-
 
 
 onUpdated(() => {

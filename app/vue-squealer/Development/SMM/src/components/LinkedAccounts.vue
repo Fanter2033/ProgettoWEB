@@ -32,9 +32,11 @@
                   <li class="list-group-item">email: <b>{{ vip.email }}</b></li>
                   <li class="list-group-item">attiv* dal: <b>{{ fixDate(vip.registration_timestamp) }}</b></li>
                   <li class="list-group-item">
-                    <router-link :to="{ name:'Chart', params: {vip: vip.username} }" aria-label="visualizza le statistiche del vip">
+                    <router-link :to="{ name:'Chart', params: {vip: vip.username} }"
+                                 aria-label="visualizza le statistiche del vip">
                       <button class="btn green-button-static box">
-                        <router-link :to="{ name:'Chart', params: {vip: vip.username} }" aria-label="visualizza le statistiche del vip">
+                        <router-link :to="{ name:'Chart', params: {vip: vip.username} }"
+                                     aria-label="visualizza le statistiche del vip">
                           vai al vip
                         </router-link>
                       </button>

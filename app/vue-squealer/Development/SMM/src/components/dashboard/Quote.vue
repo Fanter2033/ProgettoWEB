@@ -209,15 +209,16 @@ async function refillQuote() {
 .modal {
   color: #e0bb76;
 }
-.daily{
-  color: rgba(217,202,166,0.98);
+
+.daily {
+  color: rgba(217, 202, 166, 0.98);
 }
 
-.weekly{
-  color: rgba(213,176,112,0.98);
+.weekly {
+  color: rgba(213, 176, 112, 0.98);
 }
 
-.monthly{
+.monthly {
   color: rgba(224, 179, 75, 0.98);
 }
 </style>
