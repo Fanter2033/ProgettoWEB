@@ -26,7 +26,6 @@ import "../css/App.css";
 import pink from "./media/avvoltoioEli.png";
 import avvoltoio from "./media/avvoltoio.gif";
 
-//TODO: check navigateeeeeeeeeeeeeee ho tolto il . davanti al /
 /*
 col-12 col-md-6
 su schermi md e più grandi ho due colonne

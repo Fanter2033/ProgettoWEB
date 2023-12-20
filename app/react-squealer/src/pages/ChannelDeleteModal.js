@@ -10,7 +10,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { Modal } from "react-bootstrap";
 import "../css/App.css";
 
-//TODO:CHECK NAVIGATE!!!!!!!!!!!!!!!!!!!! NO ./, SI /
 const ChannelDeleteModal = () => {
   const location = useLocation();
   const channel = location.state;
