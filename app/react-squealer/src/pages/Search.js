@@ -208,6 +208,8 @@ function Search() {
                         <button
                           className="custom-button box cool-font-small"
                           aria-label="clicca se vuoi avere più informazioni su questo utente"
+                          style={{ overflowWrap: "break-word", wordBreak: "break-all" }}
+                        
                         >
                           <b className="">{channel.channel_name} &nbsp;</b>
 

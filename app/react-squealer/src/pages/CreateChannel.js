@@ -22,7 +22,7 @@ function CreateChannel() {
 
   const notify = () =>
     toast.error("Compila tutti i campi.", {
-      position: "bottom-right",
+      position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,

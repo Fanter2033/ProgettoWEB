@@ -28,7 +28,7 @@ function DetailsChannel() {
 
   const notifyCannotChange = () =>
       toast.error("Non puoi cambiare il creatore", {
-        position: "bottom-right",
+        position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -255,17 +255,17 @@ function DetailsChannel() {
             )}
 
             {channel.type === "CHANNEL_USERS" && (
-              <p className="cool-font-small mb-0">CREATORE: {channel.owner}</p>
+              <p className="cool-font-medium mb-0">CREATORE: {channel.owner}</p>
             )}
 
-            <p className="cool-font-small mb-0">
+            <p className="cool-font-medium mb-0">
               NUMERO SQUEALS: {channel.posts}
             </p>
           </Card.Body>
 
           <Card.Footer>
             <div>
-              <div className="d-flex flex-row justify-content-center align-items-center cool-font-small">
+              <div className="d-flex flex-row justify-content-center align-items-center cool-font-medium">
                 {channel.type === "CHANNEL_USERS" && (
                   <>
                     <svg
@@ -312,7 +312,7 @@ function DetailsChannel() {
               </div>
 
               {channel.type === "CHANNEL_USERS" && (
-                <div className="d-flex flex-row justify-content-center align-items-center cool-font-small">
+                <div className="d-flex flex-row justify-content-center align-items-center cool-font-medium">
                   {channel.private === true ? (
                     <>
                       <svg

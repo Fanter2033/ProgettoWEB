@@ -38,7 +38,7 @@ function Register() {
 
   const notify = () =>
     toast.error("Errore. Compila tutti i campi.", {
-      position: "bottom-right",
+      position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -169,16 +169,15 @@ function Register() {
               <label
                 htmlFor="inputName"
                 className="form-label cool-font-medium"
-              >
-              </label>
+              >Nome</label>
               <input
                 type="text"
                 name="name"
-                className="form-control cool-font-text text-center box"
+                className="form-control cool-medium text-center box"
                 style={{ color: "#072f38", backgroundColor: "#e0bb76" }}
                 id="inputName"
                 value={name}
-                placeholder="Nome"
+                placeholder="Metti il nome qui"
                 onChange={(e) => setName(e.target.value)}
                 required
               />
@@ -188,16 +187,15 @@ function Register() {
               <label
                 htmlFor="inputSurname"
                 className="form-label cool-font-medium"
-              >
-              </label>
+              >Cognome</label>
               <input
                 type="text"
                 name="surname"
-                className="form-control cool-font-text text-center box"
+                className="form-control cool-medium text-center box"
                 style={{ color: "#072f38", backgroundColor: "#e0bb76" }}
                 id="inputSurname"
                 value={surname}
-                placeholder="Cognome"
+                placeholder="Metti il cognome"
                 onChange={(e) => setSurname(e.target.value)}
                 required
               />
@@ -207,32 +205,33 @@ function Register() {
               <label
                 htmlFor="inputUsername"
                 className="form-label cool-font-medium"
-              >
-              </label>
+              >Username</label>
               <input
                 type="text"
                 name="username"
-                className="form-control cool-font-text text-center box"
+                className="form-control cool-medium text-center box"
                 style={{ color: "#072f38", backgroundColor: "#e0bb76" }}
                 id="inputUsername"
                 value={username}
-                placeholder="Username"
+                placeholder="Nome su Squealer"
                 onChange={(e) => setUsername(e.target.value)}
                 required
               />
             </div>
 
             <div className="form-group row mb-3">
-              <label htmlFor="email" className="form-label cool-font-medium">
-              </label>
+              <label
+                htmlFor="email"
+                className="form-label cool-font-medium"
+              >Email</label>
               <input
                 type="text"
                 name="email"
-                className="form-control cool-font-text text-center box"
+                className="form-control cool-medium text-center box"
                 style={{ color: "#072f38", backgroundColor: "#e0bb76" }}
                 id="email"
                 value={email}
-                placeholder="Email"
+                placeholder="you@esempio.it"
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
@@ -242,12 +241,11 @@ function Register() {
               <label
                 htmlFor="inputPassword5"
                 className="form-label cool-font-medium"
-              >
-              </label>
+              >Password</label>
               <input
                 type="password"
                 name="password"
-                className="form-control cool-font-text text-center box"
+                className="form-control cool-medium text-center box"
                 style={{ color: "#072f38", backgroundColor: "#e0bb76" }}
                 id="inputPassword"
                 value={password}
@@ -276,11 +274,11 @@ function Register() {
               <input
                 type="text"
                 name="reset"
-                className="form-control cool-font-text text-center box"
+                className="form-control cool-medium text-center box"
                 id="inputReset"
                 style={{ color: "#072f38", backgroundColor: "#e0bb76" }}
                 value={reset}
-                placeholder="Passatempo"
+                placeholder="Passatempo qui"
                 onChange={(e) => setReset(e.target.value)}
                 required
               />
@@ -295,14 +293,27 @@ function Register() {
                 <ToastContainer />
                 REGISTRATI
               </button>
-              <button className="col-12 col-md-4 offset-md-4 mb-5 red-button box cool-font-medium">
-                <NavLink
-                  style={{ color: "#e0bb76" }}
-                  to={ReactConfig.pathFunction("/")}
-                >
-                  INDIETRO
-                </NavLink>
-              </button>
+              <NavLink
+                style={{ color: "#e0bb76", textDecoration: "none" }}
+                to={ReactConfig.pathFunction("/")}
+                aria-label="clicca se vuoi tornare alla pagina precedente"
+              >
+                <button className="col-12 col-md-4 offset-md-4 mb-5 red-button box cool-font-medium w-50">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    className="bi bi-arrow-left"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"
+                    />
+                  </svg>
+                </button>
+              </NavLink>
             </div>
           </form>
         </div>

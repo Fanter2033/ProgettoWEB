@@ -68,7 +68,7 @@ function Squeal() {
 
   const notify_quote = () =>
     toast.error("Quota esaurita", {
-      position: "bottom-right",
+      position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -80,7 +80,7 @@ function Squeal() {
 
   const notify = () =>
     toast.error("Manca il desinatario. Riprovare", {
-      position: "bottom-right",
+      position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -92,9 +92,23 @@ function Squeal() {
 
   const notify2 = () =>
     toast.error(
-      "Manca il contenuto? Il dest esiste? Sei iscritta al canale? Sei scrittrice nel canale?",
+      "Sei iscritta al canale? Sei scrittrice?",
       {
-        position: "bottom-right",
+        position: "top-right",
+        autoClose: 10000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      }
+    );
+  const notify21 = () =>
+    toast.error(
+      "Manca il contenuto? Il dest esiste?",
+      {
+        position: "top-right",
         autoClose: 10000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -107,7 +121,7 @@ function Squeal() {
 
   const notify3 = () =>
     toast.error("Riempi tutti i campi", {
-      position: "bottom-right",
+      position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -119,7 +133,7 @@ function Squeal() {
 
   const notify4 = () =>
     toast.error("Minimo 5 sec", {
-      position: "bottom-right",
+      position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -131,7 +145,7 @@ function Squeal() {
 
   const notify5 = () =>
     toast.error("Minimo 2 sec", {
-      position: "bottom-right",
+      position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -143,7 +157,7 @@ function Squeal() {
 
   const notifySquealStart = () =>
     toast.success("Aggiornamento della posizione!", {
-      position: "bottom-right",
+      position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -155,7 +169,7 @@ function Squeal() {
 
   const notifySquealStart2 = () =>
     toast.success("Non chiudere la pagina", {
-      position: "bottom-right",
+      position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -166,9 +180,9 @@ function Squeal() {
     });
 
   const postSuccess = () =>
-    toast.success("Squeal avvenuto con successo!", {
+    toast.success("🦅 con successo!", {
       position: "top-right",
-      autoClose: 5000,
+      autoClose: 3000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -951,6 +965,7 @@ function Squeal() {
               response.statusText
             );
             notify2();
+            notify21();
           }
         })
         .catch((error) => {

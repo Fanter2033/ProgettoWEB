@@ -2,15 +2,13 @@ import React from "react";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import "./media/MapMarker.png";
 
 function RenderMap({ coordinates }) {
-
-  if(!Array.isArray(coordinates)){
-    try{
+  if (!Array.isArray(coordinates)) {
+    try {
       coordinates = JSON.parse(coordinates);
-    } catch (ignored) {
-
-    }
+    } catch (ignored) {}
   }
 
   if (!Array.isArray(coordinates)) {
@@ -23,7 +21,7 @@ function RenderMap({ coordinates }) {
   }
 
   const skater = new L.Icon({
-    iconUrl: require("./media/icone/geo.png"),
+    iconUrl: require("./media/MapMarker.png"),
     iconSize: [25, 25],
   });
 

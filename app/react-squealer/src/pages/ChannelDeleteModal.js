@@ -55,7 +55,7 @@ const ChannelDeleteModal = () => {
   return (
     <>
       <button className="cool-font-link red-button box w-100" onClick={handleShow}>
-        CANCELLA CHANNEL
+        CANCELLA CANALE
       </button>
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header

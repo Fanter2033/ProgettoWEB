@@ -38,7 +38,7 @@ function ChangePfp() {
 
   const notify = () =>
     toast.error("Immagine troppo grande", {
-      position: "bottom-right",
+      position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,

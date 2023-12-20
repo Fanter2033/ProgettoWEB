@@ -19,8 +19,11 @@ function TextLink({ text }) {
         const [_, keywordType, keywordValue] = match; // ignora l'elemento 0, contiene la stringa completa
         const linkTo = keywordType === "@" ? "/infou" : "/infoc";
 
+        console.log(linkTo);
+        console.log(keywordValue);
+
         return (
-          <Link key={index} to={linkTo} state={keywordValue}>
+          <Link key={index} to={linkTo} state={keywordValue} style={{color : "#528b57", fontWeight: "bold"}}>
             {part}
           </Link>
         );

@@ -284,12 +284,13 @@ function Channels() {
                   {clickOfficial && (
                     <>
                       {officialChannel.map((u) => (
-                        <Card key={u.id} className="squeal mb-4">
-                          <Card.Header className="d-flex justify-content-center align-items-center">
+                        <Card key={u.id} className="squeal mt-2 mb-2">
+                          <Card.Header className="d-flex justify-content-center align-items-center ">
                             <Link to="/infoc" state={u}>
                               <button
-                                className="custom-button me-2"
-                                aria-label="clicca se vuoi avere informazioni sull'utente"
+                                className="custom-button me-2 text-wrap box"
+                                aria-label="clicca se vuoi avere informazioni sull'utente "
+                                style={{ overflowWrap: "break-word", wordBreak: "break-all" }}
                               >
                                 <b className="">{u.channel_name} &nbsp;</b>
                                 <svg
@@ -340,11 +341,12 @@ function Channels() {
                   {clickUser && (
                     <>
                       {userChannel.map((u) => (
-                        <Card key={u.id} className="squeal mb-4">
+                        <Card key={u.id} className="squeal mt-2 mb-2">
                           <Card.Header className="d-flex justify-content-center align-items-center">
                             <Link to="/infoc" state={u}>
                               <button
-                                className="custom-button me-2"
+                                className="custom-button me-2 text-wrap box"
+                                style={{ overflowWrap: "break-word", wordBreak: "break-all" }}
                                 aria-label="clicca se vuoi avere informazioni sul canale"
                               >
                                 <b className="">{u.channel_name} &nbsp;</b>
@@ -434,12 +436,14 @@ function Channels() {
                   {clickTag && (
                     <>
                       {tagChannel.map((u) => (
-                        <Card key={u.id} className="squeal mb-4">
+                        <Card key={u.id} className="squeal mt-2 mb-2">
                           <Card.Header className="d-flex justify-content-center align-items-center">
                             <Link to="/infoc" state={u}>
                               <button
-                                className="custom-button me-2"
+                                className="custom-button me-2 text-wrap box" 
                                 aria-label="clicca se vuoi avere informazioni sul canale"
+                                style={{ overflowWrap: "break-word", wordBreak: "break-all" }}
+
                               >
                                 <b className="">{u.channel_name} &nbsp;</b>
 

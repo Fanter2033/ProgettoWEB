@@ -285,7 +285,7 @@ function Account() {
   //LOGOUT  USER------------------------------------------------------------------------------
   const notify = () =>
     toast.error("Errore durante il logout. Riprovare", {
-      position: "bottom-right",
+      position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -573,6 +573,10 @@ function Account() {
                                       <button
                                         className="custom-button box"
                                         aria-label="clicca se vuoi avere informazioni sul canale"
+                                        style={{
+                                          overflowWrap: "break-word",
+                                          wordBreak: "break-all",
+                                        }}
                                       >
                                         <b>{channel.channel_name} </b>
                                         <svg
@@ -602,6 +606,10 @@ function Account() {
                                       <button
                                         className="custom-button box"
                                         aria-label="clicca se vuoi avere informazioni sul canale"
+                                        style={{
+                                          overflowWrap: "break-word",
+                                          wordBreak: "break-all",
+                                        }}
                                       >
                                         <b>{channel.channel_name} </b>
                                         <svg
@@ -631,6 +639,10 @@ function Account() {
                                       <button
                                         className="custom-button box"
                                         aria-label="clicca se vuoi avere informazioni sul canale"
+                                        style={{
+                                          overflowWrap: "break-word",
+                                          wordBreak: "break-all",
+                                        }}
                                       >
                                         <b>{channel.channel_name} </b>
                                         <svg
@@ -660,6 +672,10 @@ function Account() {
                                       <button
                                         className="custom-button box"
                                         aria-label="clicca se vuoi avere informazioni sul canale"
+                                        style={{
+                                          overflowWrap: "break-word",
+                                          wordBreak: "break-all",
+                                        }}
                                       >
                                         <b>{channel.channel_name} </b>
                                         <svg
@@ -689,6 +705,10 @@ function Account() {
                                       <button
                                         className="custom-button box"
                                         aria-label="clicca se vuoi avere informazioni sul canale"
+                                        style={{
+                                          overflowWrap: "break-word",
+                                          wordBreak: "break-all",
+                                        }}
                                       >
                                         <b>{channel.channel_name} </b>
                                         <svg
