@@ -37,7 +37,7 @@ function VipModal({ onInternalButtonClick, closeBuyModal }) {
       const data = {
         percentage: increment,
       };
-      console.log("aumento", increment);
+      //console.log("aumento", increment);
 
       const url = `${ReactConfig.base_url_requests}/user/${userGlobal.username}/quote/buy`;
       const options = {

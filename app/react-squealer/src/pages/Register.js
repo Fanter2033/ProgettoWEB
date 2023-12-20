@@ -62,8 +62,6 @@ function Register() {
       reset: reset,
     });
 
-    //console.log("GLOBALEEEEEEEEEEEEEEE" + userGlobal);
-
     //se i campi sono vuoti apri modale
     if (
       name.trim() === "" ||
@@ -104,7 +102,6 @@ function Register() {
 
         fetch(url, options)
           .then((res) => {
-            console.log(res);
             if (res.ok) {
               //registration ok
               return res.json();
@@ -114,7 +111,7 @@ function Register() {
             setName("");
             setSurname("");
             setEmail("");
-            console.log("Registrazione went good", data);
+            console.log("Registration went good", data);
 
             //authenticateUserconst
             const authData = { password: password };

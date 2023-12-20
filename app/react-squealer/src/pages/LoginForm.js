@@ -54,7 +54,7 @@ function LoginForm() {
       credentials: "include",
     })
       .then((res) => {
-        console.log("Hey ris", res);
+        //console.log("Hey ris", res);
         if (res.ok) {
           navigate(`./received`);
         }
@@ -195,7 +195,7 @@ function LoginForm() {
   };
   const handleKeyFinal = (event) => {
     if (event.key === "Enter") {
-      console.log("Tasto Invio premuto!");
+      //console.log("Tasto Invio premuto!");
     }
   };
 

@@ -43,7 +43,7 @@ function DetailsChannel() {
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
-        console.log("Following of a channel:", data);
+        //console.log("Following of a channel:", data);
         setFollowing(data.content);
       })
       .catch((error) => {
@@ -79,7 +79,7 @@ function DetailsChannel() {
     } catch (error) {
       console.error("Errore nella fetch:", error);
     }
-    console.log("Successo nella richiesta dei ruoli UTENTE", roleUser);
+    //console.log("Successo nella richiesta dei ruoli UTENTE", roleUser);
   }
 
   const [roles0, setRoles0] = useState([]);
@@ -95,7 +95,7 @@ function DetailsChannel() {
       const response = await fetch(url);
       const data = await response.json();
 
-      console.log(`Get roles for number ${roleNumber}:`, data);
+      //console.log(`Get roles for number ${roleNumber}:`, data);
 
       if (roleNumber === 0) {
         setRoles0(data.content);
@@ -131,7 +131,6 @@ function DetailsChannel() {
           }
         })
         .then((data) => {
-          console.log('DATAAAAAAA', data);
           setLocalUser(data);
         })
         .catch((error) => {
@@ -141,7 +140,6 @@ function DetailsChannel() {
 
   useEffect(() => {
 
-    console.log('HELLO GUYS!!!', channel);
     whoAmI();
     if(channel.channel_name === '' || typeof channel === 'undefined' || typeof channel.channel_name === 'undefined'){
       navigate('channels');
@@ -154,6 +152,7 @@ function DetailsChannel() {
     fetchData(channel.channel_name, 4);
   }, []);
 
+  /*
   console.log(
     "zzzzzzzzzzzzzz",
     "0",
@@ -167,6 +166,7 @@ function DetailsChannel() {
     "4",
     roles4
   );
+  */
 
   useEffect(() => {
     getRoles();

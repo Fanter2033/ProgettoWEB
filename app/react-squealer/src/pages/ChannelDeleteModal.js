@@ -14,8 +14,6 @@ import "../css/App.css";
 const ChannelDeleteModal = () => {
   const location = useLocation();
   const channel = location.state;
-  console.log(channel);
-  console.log("Canale da eliminare:", channel.channel_name);
 
   const { userGlobal, setUserGlobal } = useUserContext();
   const navigate = useNavigate();
@@ -39,7 +37,7 @@ const ChannelDeleteModal = () => {
     fetch(uri, options)
       .then((response) => {
         if (response.ok) {
-          console.log("Cancellazione riuscita con successo");
+          console.log("Cancellazione canale riuscita con successo");
           navigate("/channels");
         } else {
           console.error("Delete failed", response.statusText);

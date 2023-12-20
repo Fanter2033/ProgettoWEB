@@ -50,8 +50,7 @@ function CommentModal({ squeal, showComment, handleCloseComment }) {
         let result = await fetch(uri, options);
 
         if (result.ok) {
-          let json = await result.json();
-          console.log("POST COMMENTOOOOOO OK", json);
+          console.log("POST comment OK");
           handleCloseComment();
         } else {
           console.error("Errore nella POST del commento:", result.statusText);

@@ -64,7 +64,6 @@ function Received() {
 
       if (result.ok) {
         let json = await result.json();
-        //console.log("MMMMMMMMMMMMMMMMMMMMMMMH", json);
         setDash(json);
       } else {
         console.error("Errore nella richiesta:", result.statusText);

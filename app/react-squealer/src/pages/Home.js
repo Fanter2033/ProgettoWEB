@@ -38,7 +38,6 @@ function Home() {
     }
   }
 
-  //console.log("LISTA CANALI", channels);
 
   useEffect(() => {
     const intervalId1 = setInterval(getChannels, 5000);

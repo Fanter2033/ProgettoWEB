@@ -58,7 +58,6 @@ function Account() {
         }
       })
       .then((data) => {
-        //console.log("Tutto ok, io sono:", data);
         setCurrentUser(data);
       })
       .catch((error) => {
@@ -109,7 +108,7 @@ function Account() {
   };
 
   const handleInternalButtonClick = () => {
-    console.log("Bottone interno cliccato");
+    //console.log("Bottone compra quota cliccato");
     closeBuyModal();
   };
 
@@ -311,7 +310,7 @@ function Account() {
     fetch(uri, options)
       .then((response) => {
         if (response.ok) {
-          console.log("logout riuscito con successo");
+          console.log("Logout riuscito con successo");
           navigate(`/`);
         } else {
           notify();

@@ -27,44 +27,6 @@ di andare a capo su più righe se lo spazio orizzontale è limitato.
 
 //offset mi tenere centrata la colonna
 
-/*
-<div className="col-4">
-                {userData.pfp && !userData.vip && (
-                  <img
-                    src={"data:image/png;base64," + userData.pfp}
-                    alt="Foto Profilo"
-                    className="rounded-circle pfp-small box"
-                  />
-                )}
-                {userData.pfp && userData.vip && (
-                  <img
-                    src={"data:image/png;base64," + userData.pfp}
-                    alt="Foto Profilo"
-                    className="rounded-circle pfp-vip box"
-                  />
-                )}
-
-                <h5 className="mt-0">{userGlobal.username}</h5>
-              </div>
-*/
-
-/*
-
-const secondiInUnMinuto = 60;
-const secondiInUnOra = 60 * secondiInUnMinuto;
-const secondiInUnGiorno = 24 * secondiInUnOra;
-const giorniInUnMese = 30; // un'approssimazione media
-const secondiInUnMese = giorniInUnMese * secondiInUnGiorno;
-const giorniInUnAnno = 365; // un'approssimazione media, non considerando anni bisestili
-const secondiInUnAnno = giorniInUnAnno * secondiInUnGiorno;
-
-console.log('Secondi in un minuto:', secondiInUnMinuto);
-console.log('Secondi in un'ora:', secondiInUnOra);
-console.log('Secondi in un giorno:', secondiInUnGiorno);
-console.log('Secondi in un mese:', secondiInUnMese);
-console.log('Secondi in un anno:', secondiInUnAnno);
-
-*/
 //PUT SQUEAL /squeal/{identifier_id}  SOLO mappeeeeeeeee------------------------------------------------------------------------------------------------------------
 function Squeal() {
   const { userGlobal, setUserGlobal } = useUserContext();
@@ -244,7 +206,6 @@ function Squeal() {
     } catch (error) {
       console.error("Errore nella fetch:", error);
     }
-    //console.log(userData);
   }
 
   //GET QUOTE-----------------------------------------------------------------------------------------------
@@ -307,7 +268,6 @@ function Squeal() {
     } catch (error) {
       console.error("Errore di rete:", error);
     }
-    //console.log(squealsLogger);
   }
 
   useEffect(() => {
@@ -376,9 +336,7 @@ function Squeal() {
   const [base64Image, setBase64Image] = useState("");
 
   const costImage = (e) => {
-    //console.log("live day", liveDay);
     const remainingLimitD = liveDay - 125;
-    //console.log("remaining daily before", remainingLimitD);
 
     const remainingLimitW = liveWeek - 125;
     const remainingLimitM = liveMonth - 125;
@@ -386,7 +344,6 @@ function Squeal() {
     setNewDay(remainingLimitD);
     setNewWeek(remainingLimitW);
     setNewMonth(remainingLimitM);
-    //console.log("remaining daily", remainingLimitD);
 
     const imageFile = e.target.files[0];
     handleImageUpload(imageFile);
@@ -453,8 +410,6 @@ function Squeal() {
     setNewDay(remainingLimitD);
     setNewWeek(remainingLimitW);
     setNewMonth(remainingLimitM);
-
-    //console.log("Coordinate utente:", position);
   };
 
   //TEXT_AUTO domande per utente--------------------------------------------------------------
@@ -515,8 +470,6 @@ function Squeal() {
   const [autoCoordinates, setAutoCoordinates] = useState(null);
   const handleAutoMaps = (position) => {
     setAutoCoordinates(position);
-
-    //console.log("Coordinate utente:", position);
 
     const remainingLimitD = liveDay - 125;
     const remainingLimitW = liveWeek - 125;
@@ -792,7 +745,7 @@ function Squeal() {
     autoCoordinates
   ) {
     //PUT SQUEAL /squeal/ per MAPPE TEMPORIZZATE------------------------------------------------------------------------------------------------------------
-    console.log("coordinate", autoCoordinates);
+    //console.log("coordinate", autoCoordinates);
     getLocation();
 
     //per numero1 volte ongi 5sec
@@ -832,7 +785,7 @@ function Squeal() {
       });
 
     iterazioneCorrente++;
-    console.log("ITERAZIONE ORA", iterazioneCorrente);
+    console.log("ITERAZIONE NUM", iterazioneCorrente);
     if (iterazioneCorrente <= lim) {
       setTimeout(
         () => eseguiOgni10Secondi(iterazioneCorrente, lim, id, userLocation),
@@ -855,9 +808,6 @@ function Squeal() {
         content: coordinates,
       },
     };
-
-    //console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbb", coordinates);
-    //console.log("aaaaaaaaaaaaaaaaaaaa", markerCoordinates);
 
     const uri = `${ReactConfig.base_url_requests}/squeal/`;
     const options = {
@@ -896,7 +846,6 @@ function Squeal() {
       notify_quote();
 
       const extra = -newDay;
-      console.log(extra);
       return null;
     }
 
@@ -913,7 +862,6 @@ function Squeal() {
     }
     */
 
-    //console.log(destinatariFromDest);
     if (destinatariFromDest.length !== 0) {
       let data = {};
       if (inputType === "IMAGE") {
@@ -927,7 +875,6 @@ function Squeal() {
         };
       } else if (inputType === "POSITION") {
         const coordinates = markerCoordinates;
-        console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbb", coordinates);
         data = {
           squeal: {
             destinations: destinatariFromDest,
@@ -938,12 +885,10 @@ function Squeal() {
             auto_seconds_delay: numero2,
           },
         };
-
-        //console.log("aaaaaaaaaaaaaaaaaaaa", markerCoordinates);
       } else if (inputType === "TEXT_AUTO") {
         // Esegui le operazioni desiderate con il testo del post e i bottoni cliccati
-        console.log("Testo del post:", postText);
-        console.log("Bottoni cliccati:", clickedButtons);
+        //console.log("Testo del post:", postText);
+        //console.log("Bottoni cliccati:", clickedButtons);
 
         data = {
           squeal: {
@@ -1236,15 +1181,19 @@ function Squeal() {
 
         <Row>
           {squealsLogger.map((squeal) => (
-            <Col lg={12} className="mb-4 d-flex justify-content-center align-items-center" key={squeal._id}>
-              <Card style={{ width: "80%" }}className="squeal">
+            <Col
+              lg={12}
+              className="mb-4 d-flex justify-content-center align-items-center"
+              key={squeal._id}
+            >
+              <Card style={{ width: "80%" }} className="squeal">
                 <Card.Header className="row d-flex flex-col justify-content-between align-items-center">
                   <div className="col-12 d-flex flex-row justify-content-start align-items-center mt-2">
                     <div className="cool-medium">PER:</div>
                     <ShowDest arrayDest={squeal.destinations} />
                   </div>
                 </Card.Header>
-                <Card.Body className="d-flex flex-col justify-content-center align-items-center">
+                <Card.Body className="d-flex flex-col justify-content-center align-items-center text-wrap">
                   <SquealContent
                     content={squeal.content}
                     type={squeal.message_type}

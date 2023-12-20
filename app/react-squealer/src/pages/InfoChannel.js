@@ -19,38 +19,7 @@ function InfoChannel() {
   const location = useLocation();
 
   const [channel, setChannel] = useState(location.state);
-  console.log(channel);
   let [currentUser, setCurrentUser] = useState({});
-
-  /*
-  if (channel.owner === "") {
-    //GET /channel/{type}/{name}/ LISTA INFO CANALE
-    try {
-      const uri = `${ReactConfig.base_url_requests}/channel/${channel.type}/${channel.channel_name}/`;
-      const options = {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        mode: "cors",
-        credentials: "include",
-      };
-
-      let result = fetch(uri, options);
-
-      if (result.ok) {
-        let data = result.json();
-        console.log("Successo nella richiesta dei ruoli UTENTE", data);
-        setChannel(data);
-      } else {
-        console.error("Errore nella richiesta:", result.statusText);
-      }
-    } catch (error) {
-      console.error("Errore nella fetch:", error);
-    }
-    //console.log("Successo nella richiesta dei ruoli UTENTE", roleUser);
-  }
-  */
 
   //GET WHO AM I--------------------------------------------------------------------------------
   async function whoAmI() {
@@ -65,7 +34,7 @@ function InfoChannel() {
         }
       })
       .then((data) => {
-        console.log("Tutto ok, io sono:", data);
+        //console.log("Tutto ok, io sono:", data);
         setCurrentUser(data);
       })
       .catch((error) => {
@@ -111,7 +80,6 @@ function InfoChannel() {
     } catch (error) {
       console.error("Errore nella fetch:", error);
     }
-    //console.log("Successo nella richiesta dei ruoli UTENTE", roleUser);
   }
 
   //PATCH /channel/{type}/{channel_name}  follow channel
@@ -191,7 +159,6 @@ function InfoChannel() {
 
       let result = await fetch(url, options);
 
-      //console.log(result);
       if (result.ok) {
         let json = await result.json();
 
@@ -209,7 +176,6 @@ function InfoChannel() {
     } catch (error) {
       console.error("Errore nella fetch:", error);
     }
-    console.log("LOGGERRRRRRRRRRRRRR", squealsLogger);
   }
 
   useEffect(() => {
