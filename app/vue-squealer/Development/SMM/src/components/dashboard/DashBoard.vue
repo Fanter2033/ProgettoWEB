@@ -1,7 +1,18 @@
 <template>
-  <NavAndSide :user-zero="userZero" is-dashboard="true"/>
-  <div class="container-fluid d-flex justify-content-end align-items-end justify-content-end align-content-end m-0 p-0">
-    <img alt="Responsive image" class="img-fluid position-static m-0" src="/media/SforSqueal.jpeg">
+  <div class="container-fluid mx-0 px-0">
+    <div class="row">
+      <Nav/>
+    </div>
+    <div class="row d-flex">
+      <div class="col-2">
+        <SideBar/>
+      </div>
+      <div class="col-10">
+        <div class="container-fluid d-flex justify-content-end align-items-end justify-content-end align-content-end m-0 p-0">
+          <img alt="Responsive image" class="img-fluid position-static m-0" src="/media/SforSqueal.jpeg">
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
