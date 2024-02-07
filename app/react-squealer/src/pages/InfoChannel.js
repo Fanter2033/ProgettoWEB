@@ -881,7 +881,9 @@ function InfoChannel() {
                 <div>
                   <Reactions squeal={squeal._id} reaction={squeal.reaction} />
                 </div>
-                {currentUser.username !== "" && (
+                {typeof currentUser !== 'undefined' &&
+                    typeof currentUser.username !== 'undefined' &&
+                  currentUser.username !== "" && (
                   <>
                     <Comment squeal={squeal._id} />
                     <ShowComment arrayComment={squeal.comments} />

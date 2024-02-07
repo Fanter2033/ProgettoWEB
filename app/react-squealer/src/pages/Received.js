@@ -74,8 +74,10 @@ function Received() {
   }
 
   useEffect(() => {
-    whoAmI();
-    getDashboard();
+    setTimeout(() => {
+      whoAmI();
+      getDashboard();
+    }, 500)
     const intervalId1 = setInterval(getDashboard, 5000); //10 sec
 
     return () => {

@@ -3,7 +3,7 @@
 exports._APPLICATION_NAME = 'squealer';
 
 //Developing mode
-exports.isDebug = true;
+exports.isDebug = false;
 
 //Webserver
 exports._WEBSERVER_PORT = 8000;

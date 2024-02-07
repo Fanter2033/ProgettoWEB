@@ -493,13 +493,13 @@ module.exports = class SquealController extends Controller {
 
         if(this.isAuthenticatedUser(authUser) === false){
             output['code'] = 403;
-            output['code'] = 'Not authenticated';
+            output['msg'] = 'Not authenticated';
             return output;
         }
 
         if(authUser.isAdmin === false){
             output['code'] = 401;
-            output['code'] = 'Not authorized';
+            output['msg'] = 'Not authorized';
             return output;
         }
 
